@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import NavLink from "@/components/NavLink";
+import Header from "@/components/Header";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -28,20 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 min-h-screen flex flex-col`}
       >
-        <header className="w-full border-b bg-white/80 backdrop-blur sticky top-0 z-30 shadow-sm">
-          <div className="max-w-5xl mx-auto flex items-center justify-between px-6 py-4">
-            <a
-              href="/"
-              className="text-xl font-bold tracking-tight text-gray-900 hover:text-blue-600 transition"
-            >
-              Lab Essentials
-            </a>
-            <nav className="flex gap-6 text-gray-700 text-base">
-              <NavLink href="/">Home</NavLink>
-              <NavLink href="/cart">Cart</NavLink>
-            </nav>
-          </div>
-        </header>
+        <Header />
         <main className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 py-8">
           {children}
         </main>
