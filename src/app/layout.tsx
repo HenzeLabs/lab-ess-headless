@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Header from "@/components/Header";
+import AnnouncementBar from "@/components/AnnouncementBar";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -28,12 +29,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 min-h-screen flex flex-col`}
       >
+        <AnnouncementBar />
         <Header />
-        <main className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 py-8">
+        <main className="flex-1 w-full mx-auto max-w-7xl px-6 mt-10 md:mt-12">
           {children}
         </main>
         <footer className="w-full border-t bg-white/80 backdrop-blur py-4 mt-8">
-          <div className="max-w-5xl mx-auto px-6 text-center text-gray-500 text-sm">
+          <div className="max-w-7xl mx-auto px-6 text-center text-gray-500 text-sm">
             &copy; {new Date().getFullYear()} Lab Essentials. Powered by Shopify
             &amp; Next.js.
           </div>

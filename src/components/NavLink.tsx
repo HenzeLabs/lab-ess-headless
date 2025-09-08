@@ -14,7 +14,7 @@ export default function NavLink({ href, children }: NavLinkProps) {
     pathname === href || (href !== "/" && pathname.startsWith(href));
   const base = "text-sm transition-colors hover:text-black";
   const active = "text-black font-medium underline underline-offset-4";
-  const inactive = "text-gray-600";
+  const inactive = "text-gray-700";
   return (
     <Link
       href={href}

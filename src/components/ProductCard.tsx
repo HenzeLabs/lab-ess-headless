@@ -21,7 +21,7 @@ const ProductCard: FC<ProductCardProps> = ({
     key={id}
     href={`/products/${handle}`}
     role="group"
-    className="border rounded-xl p-4 transition transform bg-white group hover:shadow-lg hover:-translate-y-0.5 focus-within:shadow-lg flex flex-col overflow-hidden"
+    className="group border rounded-xl p-4 bg-white transition hover:shadow-lg hover:-translate-y-0.5 flex flex-col overflow-hidden"
     tabIndex={0}
   >
     {featuredImage?.url && (
@@ -31,17 +31,19 @@ const ProductCard: FC<ProductCardProps> = ({
           alt={featuredImage.altText || title}
           fill
           sizes="(max-width: 768px) 100vw, 33vw"
-          className="object-contain transition-transform duration-300 group-hover:scale-105"
+          className="object-contain group-hover:scale-105 transition-transform"
           priority={true}
         />
       </div>
     )}
     <div className="flex-1 flex flex-col">
-      <div className="mt-3 font-medium line-clamp-2">{title}</div>
+      <div className="mt-3 font-medium tracking-tight line-clamp-2">
+        {title}
+      </div>
       <div className="text-sm text-gray-600 mb-2">
         {price.amount} {price.currencyCode}
       </div>
-      <span className="text-blue-600 hover:text-blue-700 underline-offset-4 hover:underline mt-auto">
+      <span className="text-gray-700 hover:text-black underline-offset-4 hover:underline mt-auto transition">
         View product
       </span>
     </div>

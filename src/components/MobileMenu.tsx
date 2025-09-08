@@ -21,7 +21,7 @@ export default function MobileMenu({ items, onClose }: MobileMenuProps) {
               <div className="flex items-center justify-between">
                 <Link
                   href={toAppHref(item.url)}
-                  className="text-base text-gray-800 font-medium py-2 block"
+                  className="text-base text-gray-700 hover:text-black font-medium py-2 block transition"
                   onClick={onClose}
                 >
                   {item.title}
@@ -42,7 +42,7 @@ export default function MobileMenu({ items, onClose }: MobileMenuProps) {
                     <li key={child.id}>
                       <Link
                         href={toAppHref(child.url)}
-                        className="text-sm text-gray-700 py-1 block"
+                        className="text-sm text-gray-700 hover:text-black py-1 block transition"
                         onClick={onClose}
                       >
                         {child.title}
@@ -53,7 +53,7 @@ export default function MobileMenu({ items, onClose }: MobileMenuProps) {
                             <li key={sub.id}>
                               <Link
                                 href={toAppHref(sub.url)}
-                                className="text-sm text-gray-600 py-1 block"
+                                className="text-sm text-gray-600 hover:text-black py-1 block transition"
                                 onClick={onClose}
                               >
                                 {sub.title}

@@ -15,7 +15,7 @@ interface MegaMenuProps {
 
 export default function MegaMenu({ items }: MegaMenuProps) {
   return (
-    <nav className="hidden md:flex h-14 items-center gap-6 relative">
+    <nav className="hidden md:flex h-16 items-center gap-8 relative justify-center">
       {items.map((item) => {
         const hasChildren = item.items && item.items.length > 0;
         return (
@@ -25,20 +25,20 @@ export default function MegaMenu({ items }: MegaMenuProps) {
           >
             <Link
               href={toAppHref(item.url)}
-              className="text-sm font-semibold text-gray-800 hover:text-black px-2 py-1 transition border-b-2 border-transparent group-hover:border-black group-focus-within:border-black"
+              className="text-sm font-medium tracking-tight text-gray-700 hover:text-black px-3 py-1 transition border-b-2 border-transparent group-hover:border-black group-focus-visible:border-black underline-offset-8 focus-visible:outline-none"
             >
               {item.title}
             </Link>
             {hasChildren && item.items && (
-              <div className="absolute left-0 right-0 bg-white shadow-lg border-t mt-2 p-8 hidden group-hover:block group-focus-within:block z-40">
+              <div className="absolute left-0 right-0 bg-white border-y shadow-xl mt-3 p-8 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0 group-focus-within:pointer-events-auto transition-all duration-150 z-40">
                 <div
                   className={`grid gap-8 ${
                     (item.items?.length ?? 0) <= 2
-                      ? "grid-cols-3"
-                      : "grid-cols-3"
+                      ? "grid-cols-4 md:grid-cols-3"
+                      : "grid-cols-4"
                   }`}
                 >
-                  {(item.items ?? []).map((child, idx) => (
+                  {(item.items ?? []).map((child) => (
                     <div key={child.id} className="min-w-[160px]">
                       <div className="font-semibold text-sm mb-2 text-gray-900">
                         {child.title}
@@ -49,7 +49,7 @@ export default function MegaMenu({ items }: MegaMenuProps) {
                             <li key={sub.id}>
                               <Link
                                 href={toAppHref(sub.url)}
-                                className="text-sm text-gray-700 hover:text-black block"
+                                className="text-sm text-gray-700 hover:text-black block transition"
                               >
                                 {sub.title}
                               </Link>
