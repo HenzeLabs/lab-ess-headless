@@ -20,28 +20,28 @@ const ProductCard: FC<ProductCardProps> = ({
   <Link
     key={id}
     href={`/products/${handle}`}
-    className="group bg-white rounded-xl shadow-md hover:shadow-xl transition border border-gray-100 flex flex-col overflow-hidden"
+    role="group"
+    className="border rounded-xl p-4 transition transform bg-white group hover:shadow-lg hover:-translate-y-0.5 focus-within:shadow-lg flex flex-col overflow-hidden"
+    tabIndex={0}
   >
     {featuredImage?.url && (
-      <div className="relative w-full aspect-square bg-gray-50 overflow-hidden">
+      <div className="aspect-square bg-gray-100 relative rounded-md overflow-hidden">
         <Image
           src={featuredImage.url}
           alt={featuredImage.altText || title}
           fill
           sizes="(max-width: 768px) 100vw, 33vw"
-          className="object-contain group-hover:scale-105 transition-transform duration-300"
+          className="object-contain transition-transform duration-300 group-hover:scale-105"
           priority={true}
         />
       </div>
     )}
-    <div className="p-5 flex-1 flex flex-col">
-      <div className="font-semibold text-lg text-gray-900 mb-1 group-hover:text-blue-700 transition">
-        {title}
-      </div>
-      <div className="text-gray-700 mb-2 text-base">
+    <div className="flex-1 flex flex-col">
+      <div className="mt-3 font-medium line-clamp-2">{title}</div>
+      <div className="text-sm text-gray-600 mb-2">
         {price.amount} {price.currencyCode}
       </div>
-      <span className="mt-auto text-blue-600 font-medium hover:underline">
+      <span className="text-blue-600 hover:text-blue-700 underline-offset-4 hover:underline mt-auto">
         View product
       </span>
     </div>
