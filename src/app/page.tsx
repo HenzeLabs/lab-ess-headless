@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import ProductCard from "@/components/ProductCard";
 
 export default async function Home() {
   const res = await fetch("http://localhost:3000/api/products", {
@@ -47,36 +48,14 @@ export default async function Home() {
         ) : null}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {data.products?.map((p: any) => (
-            <Link
+            <ProductCard
               key={p.id}
-              href={`/products/${p.handle}`}
-              className="group bg-white rounded-xl shadow-md hover:shadow-xl transition border border-gray-100 flex flex-col overflow-hidden"
-            >
-              {p.featuredImage?.url && (
-                <div className="relative w-full aspect-square bg-gray-50 overflow-hidden">
-                  <Image
-                    src={p.featuredImage.url}
-                    alt={p.featuredImage.altText || p.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-contain group-hover:scale-105 transition-transform duration-300"
-                    priority={true}
-                  />
-                </div>
-              )}
-              <div className="p-5 flex-1 flex flex-col">
-                <div className="font-semibold text-lg text-gray-900 mb-1 group-hover:text-blue-700 transition">
-                  {p.title}
-                </div>
-                <div className="text-gray-700 mb-2 text-base">
-                  {p.priceRange?.minVariantPrice?.amount}{" "}
-                  {p.priceRange?.minVariantPrice?.currencyCode}
-                </div>
-                <span className="mt-auto text-blue-600 font-medium hover:underline">
-                  View product
-                </span>
-              </div>
-            </Link>
+              id={p.id}
+              handle={p.handle}
+              title={p.title}
+              featuredImage={p.featuredImage}
+              price={p.priceRange?.minVariantPrice}
+            />
           ))}
         </div>
       </section>
