@@ -25,9 +25,35 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 min-h-screen flex flex-col`}
       >
-        {children}
+        <header className="w-full border-b bg-white/80 backdrop-blur sticky top-0 z-30">
+          <div className="max-w-5xl mx-auto flex items-center justify-between px-6 py-4">
+            <a
+              href="/"
+              className="text-xl font-bold tracking-tight text-gray-900 hover:text-blue-600 transition"
+            >
+              Lab Essentials
+            </a>
+            <nav className="flex gap-6 text-gray-700 text-base">
+              <a href="/" className="hover:text-blue-600 transition">
+                Home
+              </a>
+              <a href="/cart" className="hover:text-blue-600 transition">
+                Cart
+              </a>
+            </nav>
+          </div>
+        </header>
+        <main className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 py-8">
+          {children}
+        </main>
+        <footer className="w-full border-t bg-white/80 backdrop-blur py-4 mt-8">
+          <div className="max-w-5xl mx-auto px-6 text-center text-gray-500 text-sm">
+            &copy; {new Date().getFullYear()} Lab Essentials. Powered by Shopify
+            &amp; Next.js.
+          </div>
+        </footer>
       </body>
     </html>
   );
