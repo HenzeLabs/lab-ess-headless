@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 
 const ANNOUNCE_KEY = "announce.hidden";
