@@ -3,7 +3,7 @@ export function toAppHref(url: string): string {
   // Remove protocol and domain for Shopify/cdn links
   url = url.replace(
     /^https?:\/\/(cdn\.|www\.)?([\w-]+\.)?(shopify|myshopify)\.[^/]+/,
-    ""
+    "",
   );
   // Product handle
   const prodMatch = url.match(/\/products\/([a-zA-Z0-9-_]+)/);

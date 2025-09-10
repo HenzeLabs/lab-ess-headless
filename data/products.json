@@ -1,0 +1,23 @@
+[
+  {
+    "id": "1",
+    "name": "Sample Product Name",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "image": "/placeholders/product1.jpg",
+    "price": "$49.99"
+  },
+  {
+    "id": "2",
+    "name": "Another Product",
+    "description": "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "image": "/placeholders/product2.jpg",
+    "price": "$59.99"
+  },
+  {
+    "id": "3",
+    "name": "Third Product",
+    "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco.",
+    "image": "/placeholders/product3.jpg",
+    "price": "$39.99"
+  }
+]

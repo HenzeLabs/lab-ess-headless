@@ -1,28 +1,31 @@
+import Link from "next/link";
+
 export default function Hero() {
   return (
-    <section className="rounded-2xl bg-gray-50 border border-gray-200 px-8 py-12 text-center mb-10 md:mb-12 shadow-sm">
-      <h1 className="text-3xl md:text-4xl font-medium tracking-tight text-gray-900 mb-3">
-        Modern Lab Equipment, Delivered
-      </h1>
-      <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-        Shop microscopes, centrifuges, and accessories—engineered for
-        reliability, shipped fast, and supported by real scientists. Built for
-        labs of every size.
-      </p>
-      <div className="flex flex-col sm:flex-row gap-3 justify-center">
-        <a
-          href="/products"
-          className="inline-block rounded-lg bg-black text-white px-6 py-2 font-medium hover:bg-gray-800 transition"
-        >
-          Shop Bestsellers
-        </a>
-        <a
-          href="/about"
-          className="inline-block rounded-lg border border-gray-300 text-gray-800 px-6 py-2 font-medium hover:bg-gray-100 transition"
-        >
-          Learn More
-        </a>
+    <section className="relative bg-koala-cream overflow-hidden">
+      <div className="container-koala">
+        <div className="flex flex-col items-center justify-center text-center py-20 md:py-32">
+          <h1 className="text-hero-mobile md:text-hero text-koala-green mb-6 max-w-4xl animate-fade-in">
+            Essential Lab Equipment
+            <br />
+            for Scientific Excellence
+          </h1>
+          <p className="text-lg md:text-xl text-koala-gray mb-10 max-w-2xl animate-slide-up">
+            Discover professional microscopes, centrifuges, and lab equipment
+            for research, education, and clinical applications
+          </p>
+          <Link
+            href="/collections/microscopes"
+            className="btn-primary uppercase tracking-wide animate-slide-up"
+            style={{ animationDelay: "0.2s" }}
+          >
+            Shop Microscopes
+          </Link>
+        </div>
       </div>
+
+      {/* Decorative element */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-koala-green/20 to-transparent"></div>
     </section>
   );
 }

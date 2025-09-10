@@ -1,26 +1,107 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@layer base {
+  body {
+    background-color: #fff;
+    color: var(--color-foreground, #222);
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "kern" 1;
+    text-rendering: optimizeLegibility;
+  }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading, inherit);
+    letter-spacing: -0.015em;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .btn-primary {
+    background-color: var(--koala-green, #22c55e);
+    color: #fff;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .btn-secondary {
+    background-color: #fff;
+    color: var(--koala-green, #22c55e);
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--koala-green, #22c55e);
+  }
+
+  .product-badge {
+    display: inline-block;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: var(--rounded-badge, 9999px);
+  }
+
+  .star-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .container-koala {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    max-width: 80rem;
+  }
+
+  .section-padding {
+    padding-top: var(--section-mobile, 2rem);
+    padding-bottom: var(--section-mobile, 2rem);
+  }
+
+  @media (min-width: 768px) {
+    .container-koala {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+    .section-padding {
+      padding-top: var(--section, 4rem);
+      padding-bottom: var(--section, 4rem);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container-koala {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  .btn-primary:active {
+    transform: scale(0.98);
+  }
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    /* .btn-secondary styles already defined above */
+
+    /* .product-badge styles already defined above */
+
+    /* .star-rating styles already defined above */
+
+    /* .container-koala styles already defined above */
+
+    /* .section-padding styles already defined above */
+  }
 }

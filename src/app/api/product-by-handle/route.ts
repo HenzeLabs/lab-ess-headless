@@ -1,6 +1,34 @@
 import { NextResponse } from "next/server";
 import { storefront } from "@/lib/shopify";
 
+interface ImageNode {
+  id: string;
+  url: string;
+  altText?: string;
+}
+
+interface ProductByHandle {
+  id: string;
+  title: string;
+  handle: string;
+  descriptionHtml: string;
+  featuredImage: {
+    url: string;
+    altText?: string;
+  };
+  images: {
+    edges: {
+      node: ImageNode;
+    }[];
+  };
+  priceRange: {
+    minVariantPrice: {
+      amount: string;
+      currencyCode: string;
+    };
+  };
+}
+
 const QUERY = /* GraphQL */ `
   query ProductByHandle($handle: String!) {
     productByHandle(handle: $handle) {
@@ -37,7 +65,9 @@ export async function GET(req: Request) {
   if (!handle)
     return NextResponse.json({ error: "Missing handle" }, { status: 400 });
   try {
-    const data = await storefront<{ data: { productByHandle: any } }>(QUERY, {
+    const data = await storefront<{
+      data: { productByHandle: ProductByHandle };
+    }>(QUERY, {
       handle,
     });
     const p = data?.data?.productByHandle;
@@ -45,13 +75,18 @@ export async function GET(req: Request) {
     return NextResponse.json({
       product: {
         ...p,
-        images: p.images?.edges?.map((e: any) => e.node) || [],
+        images: p.images?.edges?.map((e: { node: ImageNode }) => e.node) || [],
       },
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     return NextResponse.json(
-      { error: err.message ?? "Unknown error" },
-      { status: 500 }
+      {
+        error:
+          typeof err === "object" && err && "message" in err
+            ? (err as { message?: string }).message
+            : "Unknown error",
+      },
+      { status: 500 },
     );
   }
 }

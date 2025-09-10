@@ -1,3 +1,64 @@
+# TL;DR: Project Audit & Launch Checklist (2025)
+
+**Project:** Headless Next.js Shopify Theme
+
+**Audit Summary:**
+
+- Uses Next.js App Router (`/src/app`), not Pages Router
+- Modern stack: Next.js, Tailwind, Shopify, Framer Motion
+- No CMS (Sanity/Contentful) detected
+- Custom API endpoints for Shopify GraphQL
+- No `.env` file found, but required for Shopify integration
+
+**What Was Fixed/Flagged:**
+
+- Confirmed all main components are present and styled
+- No broken styles or hacky workarounds found
+- Accessibility (a11y) is solid (aria-labels, focus, alt text)
+- Added checklist for production readiness (see below)
+- Recommend adding: 404 page, loading states, SEO meta tags, `.env.example`, error boundaries
+
+**How to Keep It Clean:**
+
+- Use atomic, reusable components
+- Keep mock data in `/mock` or use Shopify API
+- Document required environment variables
+- Use TypeScript types for all data
+- Run `npm run lint` and `npm run typecheck` before deploy
+
+**Run Locally:**
+
+```bash
+npm install
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+```
+
+**Deploy:**
+
+- Recommended: [Vercel](https://vercel.com/)
+- See Next.js docs for [deployment](https://nextjs.org/docs/app/building-your-application/deploying)
+
+**Production-Ready Checklist:**
+
+- [ ] Add `.env.example` with:
+  - `SHOPIFY_STORE_DOMAIN=`
+  - `SHOPIFY_API_VERSION=`
+  - `SHOPIFY_STOREFRONT_API_TOKEN=`
+- [ ] Add `/src/app/not-found.tsx` for 404s
+- [ ] Add `/src/app/loading.tsx` for loading states
+- [ ] Add Open Graph/Twitter meta tags in `layout.tsx`
+- [ ] Fill out `/collections/[handle]/page.tsx` with real data or fallback
+- [ ] Add SEO best practices (canonical, robots, etc)
+- [ ] Test on mobile and desktop for responsiveness
+- [ ] Run `npm run lint` and `npm run typecheck`
+- [ ] Add error boundaries for API failures
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

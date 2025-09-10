@@ -1,57 +1,98 @@
-"use client";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { toAppHref } from "@/lib/links";
 
-export type MenuItem = {
+export type MegaMenuItem = {
   id: string;
   title: string;
   url: string;
-  items?: MenuItem[];
+  items?: MegaMenuItem[];
 };
 
-interface MegaMenuProps {
-  items: MenuItem[];
-}
+export default function MegaMenu() {
+  const [menu, setMenu] = useState<MegaMenuItem[]>([]);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
-export default function MegaMenu({ items }: MegaMenuProps) {
+  useEffect(() => {
+    fetch("/api/menu")
+      .then((res) => res.json())
+      .then((data) => setMenu(data.items || []));
+  }, []);
+
+  // Close on outside click
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpenIndex(null);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  if (!menu.length) return null;
+
   return (
-    <nav className="hidden md:flex h-16 items-center gap-8 relative justify-center">
-      {items.map((item) => {
-        const hasChildren = item.items && item.items.length > 0;
-        return (
-          <div
-            key={item.id}
-            className="relative group h-full flex items-center"
-          >
-            <Link
-              href={toAppHref(item.url)}
-              className="text-sm font-medium tracking-tight text-gray-700 hover:text-black px-3 py-1 transition border-b-2 border-transparent group-hover:border-black group-focus-visible:border-black underline-offset-8 focus-visible:outline-none"
+    <div ref={menuRef} className="relative z-50">
+      <ul className="flex gap-4 items-center justify-center px-2">
+        {menu.map((item, idx) => (
+          <li key={item.id} className="relative group">
+            <button
+              className={`px-4 py-2 rounded-full font-semibold text-koala-dark-grey bg-transparent hover:bg-koala-pale-green focus:outline-none focus:ring-2 focus:ring-koala-green/40 flex items-center gap-1 whitespace-nowrap text-sm uppercase tracking-wider transition-all duration-150 ${
+                openIndex === idx ? "ring-2 ring-koala-green/30" : ""
+              }`}
+              onMouseEnter={() => setOpenIndex(idx)}
+              onMouseLeave={() => setOpenIndex(null)}
+              onFocus={() => setOpenIndex(idx)}
+              onBlur={() => setOpenIndex(null)}
+              aria-haspopup={!!item.items?.length}
+              aria-expanded={openIndex === idx}
             >
               {item.title}
-            </Link>
-            {hasChildren && item.items && (
-              <div className="absolute left-0 right-0 bg-white border-y shadow-xl mt-3 p-8 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0 group-focus-within:pointer-events-auto transition-all duration-150 z-40">
-                <div
-                  className={`grid gap-8 ${
-                    (item.items?.length ?? 0) <= 2
-                      ? "grid-cols-4 md:grid-cols-3"
-                      : "grid-cols-4"
-                  }`}
+              {item.items?.length ? (
+                <svg
+                  className="w-4 h-4 ml-1 text-koala-green"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
                 >
-                  {(item.items ?? []).map((child) => (
-                    <div key={child.id} className="min-w-[160px]">
-                      <div className="font-semibold text-sm mb-2 text-gray-900">
-                        {child.title}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              ) : null}
+            </button>
+            {item.items?.length ? (
+              <div
+                className={`absolute left-1/2 -translate-x-1/2 top-full w-[700px] bg-white shadow-lg rounded-2xl border border-gray-200 mt-4 p-8 flex transition-all duration-200 ${
+                  openIndex === idx
+                    ? "opacity-100 visible pointer-events-auto"
+                    : "opacity-0 invisible pointer-events-none"
+                }`}
+                onMouseEnter={() => setOpenIndex(idx)}
+                onMouseLeave={() => setOpenIndex(null)}
+              >
+                {/* Main Columns */}
+                <div className="flex-1 grid grid-cols-2 gap-8 pr-8 border-r border-gray-200/60">
+                  {item.items.map((sub) => (
+                    <div key={sub.id}>
+                      <div className="mb-2 text-xs font-bold text-koala-dark-grey uppercase tracking-wider flex items-center gap-2">
+                        <span className="inline-block w-4 h-4 bg-koala-green/10 rounded mr-1" />
+                        {sub.title}
                       </div>
-                      {child.items && child.items.length > 0 ? (
+                      {sub.items?.length ? (
                         <ul className="space-y-1">
-                          {child.items.map((sub) => (
-                            <li key={sub.id}>
+                          {sub.items.map((leaf) => (
+                            <li key={leaf.id}>
                               <Link
-                                href={toAppHref(sub.url)}
-                                className="text-sm text-gray-700 hover:text-black block transition"
+                                href={leaf.url}
+                                className="block whitespace-nowrap px-3 py-2 text-koala-dark-grey hover:bg-koala-pale-green hover:text-koala-green rounded-md transition-colors font-medium"
+                                prefetch={false}
                               >
-                                {sub.title}
+                                {leaf.title}
                               </Link>
                             </li>
                           ))}
@@ -59,18 +100,13 @@ export default function MegaMenu({ items }: MegaMenuProps) {
                       ) : null}
                     </div>
                   ))}
-                  {/* Feature card placeholder if 1–2 columns only */}
-                  {(item.items?.length ?? 0) <= 2 && (
-                    <div className="rounded-lg bg-gray-100 h-40 flex items-center justify-center col-span-1">
-                      <span className="text-gray-400">Feature image</span>
-                    </div>
-                  )}
                 </div>
+                {/* Right: Optionally add promo or image here */}
               </div>
-            )}
-          </div>
-        );
-      })}
-    </nav>
+            ) : null}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

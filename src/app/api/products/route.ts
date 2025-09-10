@@ -1,6 +1,39 @@
 import { NextResponse } from "next/server";
 import { storefront } from "@/lib/shopify";
 
+interface ProductNode {
+  id: string;
+  title: string;
+  handle: string;
+  availableForSale: boolean;
+  featuredImage: {
+    url: string;
+    altText?: string;
+  };
+  priceRange: {
+    minVariantPrice: {
+      amount: string;
+      currencyCode: string;
+    };
+  };
+}
+
+interface ProductItem {
+  id: string;
+  title: string;
+  handle: string;
+  featuredImage: {
+    url: string;
+    altText?: string;
+  } | null;
+  priceRange: {
+    minVariantPrice: {
+      amount: string;
+      currencyCode: string;
+    };
+  };
+}
+
 const QUERY = /* GraphQL */ `
   query Products($first: Int!) {
     products(first: $first) {
@@ -28,11 +61,10 @@ const QUERY = /* GraphQL */ `
 
 export async function GET() {
   try {
-    const data = await storefront<{ data: { products: { edges: any[] } } }>(
-      QUERY,
-      { first: 5 }
-    );
-    const items =
+    const data = await storefront<{
+      data: { products: { edges: { node: ProductNode }[] } };
+    }>(QUERY, { first: 5 });
+    const items: ProductItem[] =
       data?.data?.products?.edges?.map((e) => {
         const n = e.node;
         return {
@@ -48,10 +80,15 @@ export async function GET() {
         };
       }) ?? [];
     return NextResponse.json({ count: items.length, products: items });
-  } catch (err: any) {
+  } catch (err: unknown) {
     return NextResponse.json(
-      { error: err.message ?? "Unknown error" },
-      { status: 500 }
+      {
+        error:
+          typeof err === "object" && err && "message" in err
+            ? (err as { message?: string }).message
+            : "Unknown error",
+      },
+      { status: 500 },
     );
   }
 }
