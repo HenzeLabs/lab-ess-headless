@@ -14,14 +14,18 @@ import RelatedProducts from "@/components/RelatedProducts";
 import type { MenuItem, Product } from "@/lib/types";
 import { getProductByHandleQuery, getCollectionsQuery } from "@/lib/queries";
 
-interface ProductPageProps {
+const REVALIDATE_SECONDS = 60;
+export const revalidate = REVALIDATE_SECONDS;
+
+export default async function ProductPage({
+  params,
+}: {
   params: { handle: string };
-}
-
-export const revalidate = 3600;
-
-export default async function ProductPage({ params }: ProductPageProps) {
+}) {
+  // Sanitize handle
   const { handle } = params;
+  if (typeof handle !== "string" || !/^[a-zA-Z0-9-_]+$/.test(handle))
+    notFound();
 
   const collectionsResponse = await shopifyFetch<{
     collections: { edges: { node: MenuItem }[] };
@@ -112,7 +116,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   .map(
                     (
                       image: { url: string; altText?: string },
-                      index: number,
+                      index: number
                     ) => (
                       <div
                         key={index}
@@ -128,7 +132,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                           />
                         </div>
                       </div>
-                    ),
+                    )
                   )}
               </div>
             </div>

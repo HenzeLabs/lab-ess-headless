@@ -1,4 +1,6 @@
 import { notFound } from "next/navigation";
+
+const REVALIDATE_SECONDS = 60;
 import type { MenuItem, CollectionData, Product } from "@/lib/types";
 import { shopifyFetch } from "@/lib/shopify";
 import Header from "@/components/Header";
@@ -8,16 +10,25 @@ import CollectionFilters from "@/components/CollectionFilters";
 import { getCollectionByHandleQuery, getCollectionsQuery } from "@/lib/queries";
 import AxeA11yScriptClient from "@/components/AxeA11yScriptClient";
 
-export const revalidate = 3600;
+export const revalidate = REVALIDATE_SECONDS;
 
 export default async function CollectionPage({
   params,
-  searchParams,
+  searchParams = {},
 }: {
   params: { handle: string };
   searchParams?: { [key: string]: string | string[] };
 }) {
+  // Sanitize handle
   const { handle } = params;
+  if (typeof handle !== "string" || !/^[a-zA-Z0-9-_]+$/.test(handle))
+    notFound();
+
+  // Whitelist/sanitize pagination
+  const allowedSorts = ["title", "price", "createdAt"];
+  const sort = allowedSorts.includes(searchParams.sort as string)
+    ? searchParams.sort
+    : "title";
 
   const collectionsResponse = await shopifyFetch<{
     collections: { edges: { node: MenuItem }[] };
@@ -30,7 +41,7 @@ export default async function CollectionPage({
     {
       query: getCollectionByHandleQuery,
       variables: { handle, first: 20 },
-    },
+    }
   );
 
   if (!collectionResponse.success || !collectionResponse.data.collection) {
@@ -44,10 +55,10 @@ export default async function CollectionPage({
   const page =
     Number(
       searchParams?.page ||
-        (Array.isArray(searchParams?.page) ? searchParams?.page[0] : 1),
+        (Array.isArray(searchParams?.page) ? searchParams?.page[0] : 1)
     ) || 1;
   const hasFilters = Object.keys(searchParams || {}).some(
-    (key) => key !== "page" && searchParams?.[key],
+    (key) => key !== "page" && searchParams?.[key]
   );
   const baseUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/collections/${handle}`;
   const prevUrl = page > 2 ? `${baseUrl}?page=${page - 1}` : baseUrl;

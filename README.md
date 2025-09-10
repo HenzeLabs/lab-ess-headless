@@ -1,3 +1,15 @@
+## Revalidate API Example
+
+To trigger a revalidation (ISR) for a path:
+
+```bash
+curl -X POST \
+  -H "x-revalidate-secret: $REVALIDATE_SECRET" \
+  -H "Content-Type: application/json" \
+  -d '{"path":"/products/your-product-handle"}' \
+  https://your-site.com/api/revalidate
+```
+
 # TL;DR: Project Audit & Launch Checklist (2025)
 
 **Project:** Headless Next.js Shopify Theme

@@ -12,19 +12,19 @@ export async function POST(request: NextRequest) {
   if (!path) {
     return NextResponse.json(
       { message: "Missing path to revalidate" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   try {
     revalidatePath(path);
-    return NextResponse.json({ revalidated: true, now: Date.now() });
+    return NextResponse.json({ ok: true });
   } catch (error: unknown) {
     const errorMessage =
       error instanceof Error ? error.message : "An unknown error occurred.";
     return NextResponse.json(
       { message: `Error revalidating: ${errorMessage}` },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
