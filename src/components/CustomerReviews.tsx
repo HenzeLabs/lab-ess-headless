@@ -56,7 +56,7 @@ const StarIcon = ({ filled }: { filled: boolean }) => (
   </svg>
 );
 
-export default function CustomerReviews() {
+function CustomerReviews() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
@@ -175,3 +175,6 @@ export default function CustomerReviews() {
     </section>
   );
 }
+
+import dynamic from 'next/dynamic';
+export default dynamic(() => Promise.resolve(CustomerReviews), { ssr: false });

@@ -1,9 +1,13 @@
 'use client';
-import ProductCard from '@/components/ProductCard';
 
+import dynamic from 'next/dynamic';
 import { useState } from 'react';
-
 import type { Product } from '@/lib/types';
+import { Button } from './ui/button';
+
+const ProductCard = dynamic(() => import('@/components/ProductCard'), {
+  ssr: false,
+});
 
 interface BestsellersProps {
   productsByCollection: Record<string, Product[]>;
@@ -28,13 +32,13 @@ export default function Bestsellers({
   const productsToDisplay = productsByCollection[activeTab] || [];
 
   return (
-    <section className="py-16 bg-white">
-      <div className="container-koala">
+    <section className="py-16 bg-background">
+      <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-koala-green mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
             Our Bestsellers
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
             Explore our most popular lab equipment, trusted by professionals
             worldwide.
           </p>
@@ -43,17 +47,16 @@ export default function Bestsellers({
         {/* Tabs */}
         <div className="flex justify-center flex-wrap gap-2 mb-12">
           {tabs.map((tab) => (
-            <button
+            <Button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${
-                activeTab === tab.id
-                  ? 'bg-koala-green text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
+              variant={activeTab === tab.id ? 'default' : 'outline'}
+              size="sm"
+              className="rounded-full text-sm font-medium"
+              aria-pressed={activeTab === tab.id}
             >
               {tab.name}
-            </button>
+            </Button>
           ))}
         </div>
 

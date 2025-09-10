@@ -59,20 +59,23 @@ const SocialIcon = ({ type }: { type: string }) => {
   return icons[type.toLowerCase()] || null;
 };
 
+import { Input } from './ui/input';
+import { Button } from './ui/button';
+
 export default function Footer() {
   return (
-    <footer className="bg-koala-gray-dark text-white">
-      <div className="container-koala py-12 md:py-16">
+    <footer className="bg-background text-foreground border-t border-border">
+      <div className="container mx-auto px-4 py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
           {/* Shop Column */}
           <div>
-            <h3 className="font-semibold text-white mb-4">Shop</h3>
+            <h3 className="font-semibold text-foreground mb-4">Shop</h3>
             <ul className="space-y-2">
               {footerLinks.shop.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-gray-300 hover:text-white transition-colors text-sm"
+                    className="text-muted-foreground hover:text-primary transition-colors text-sm"
                   >
                     {link.name}
                   </Link>
@@ -83,13 +86,13 @@ export default function Footer() {
 
           {/* Support Column */}
           <div>
-            <h3 className="font-semibold text-white mb-4">Support</h3>
+            <h3 className="font-semibold text-foreground mb-4">Support</h3>
             <ul className="space-y-2">
               {footerLinks.support.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-gray-300 hover:text-white transition-colors text-sm"
+                    className="text-muted-foreground hover:text-primary transition-colors text-sm"
                   >
                     {link.name}
                   </Link>
@@ -100,13 +103,13 @@ export default function Footer() {
 
           {/* Company Column */}
           <div>
-            <h3 className="font-semibold text-white mb-4">Company</h3>
+            <h3 className="font-semibold text-foreground mb-4">Company</h3>
             <ul className="space-y-2">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-gray-300 hover:text-white transition-colors text-sm"
+                    className="text-muted-foreground hover:text-primary transition-colors text-sm"
                   >
                     {link.name}
                   </Link>
@@ -117,10 +120,10 @@ export default function Footer() {
 
           {/* Newsletter Signup */}
           <div className="lg:col-span-2">
-            <h3 className="font-semibold text-white mb-4">
+            <h3 className="font-semibold text-foreground mb-4">
               Join the Lab Essentials community
             </h3>
-            <p className="text-gray-300 text-sm mb-4">
+            <p className="text-muted-foreground text-sm mb-4">
               Get exclusive offers, lab tips, and be the first to know about new
               products.
             </p>
@@ -128,15 +131,16 @@ export default function Footer() {
               className="flex flex-col sm:flex-row gap-2"
               onSubmit={(e) => e.preventDefault()}
             >
-              <input
+              <Input
                 type="email"
                 required
                 placeholder="Enter your email"
-                className="bg-white/10 border border-white/20 rounded-button px-4 py-2.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-primary focus:outline-none flex-grow"
+                inputSize="md"
+                className="flex-grow"
               />
-              <button type="submit" className="btn-primary whitespace-nowrap">
+              <Button type="submit" className="whitespace-nowrap">
                 Subscribe
-              </button>
+              </Button>
             </form>
 
             {/* Social Icons */}
@@ -151,7 +155,7 @@ export default function Footer() {
                   }
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-muted-foreground hover:text-primary transition-colors"
                   aria-label={`Follow us on ${social}`}
                 >
                   <SocialIcon type={social} />
@@ -162,9 +166,9 @@ export default function Footer() {
         </div>
 
         {/* Bottom Section */}
-        <div className="border-t border-white/10 pt-8">
+        <div className="border-t border-border pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex flex-col md:flex-row items-center gap-4 text-sm text-gray-400">
+            <div className="flex flex-col md:flex-row items-center gap-4 text-sm text-muted-foreground">
               <p>
                 © {new Date().getFullYear()} Lab Essentials. All rights
                 reserved.
@@ -172,14 +176,14 @@ export default function Footer() {
               <span className="hidden md:inline">•</span>
               <Link
                 href="/privacy"
-                className="hover:text-white transition-colors"
+                className="hover:text-primary transition-colors"
               >
                 Privacy Policy
               </Link>
               <span className="hidden md:inline">•</span>
               <Link
                 href="/terms"
-                className="hover:text-white transition-colors"
+                className="hover:text-primary transition-colors"
               >
                 Terms of Service
               </Link>
@@ -187,8 +191,12 @@ export default function Footer() {
 
             {/* Certifications */}
             <div className="flex items-center gap-4">
-              <span className="text-xs text-gray-400">B Corp Certified</span>
-              <span className="text-xs text-gray-400">1% for the Planet</span>
+              <span className="text-xs text-muted-foreground">
+                B Corp Certified
+              </span>
+              <span className="text-xs text-muted-foreground">
+                1% for the Planet
+              </span>
             </div>
           </div>
         </div>

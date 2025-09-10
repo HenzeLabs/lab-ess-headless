@@ -3,11 +3,7 @@ import { shopifyFetch } from '@/lib/shopify';
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import Hero from '../components/Hero';
-import Collections from '../components/Bestsellers';
-
-import CustomerReviews from '../components/CustomerReviews';
-import BrandValues from '../components/BrandValues';
+import HomeClient from './HomeClient';
 
 import { getSiteUrl } from '@/lib/siteUrl';
 import type { Metadata } from 'next';
@@ -35,6 +31,9 @@ export async function generateMetadata(): Promise<Metadata> {
       description: 'Premium Lab Equipment for Research and Industry',
       images: [siteUrl + '/logo.svg'],
     },
+    alternates: {
+      canonical: siteUrl,
+    },
   };
 }
 
@@ -44,17 +43,12 @@ export default async function HomePage() {
   return (
     <>
       <Header collections={collections} />
-      <main className="bg-koala-light-grey">
-        <Hero />
-        <section className="py-16">
-          <Collections productsByCollection={{}} />
-        </section>
-        <section className="py-16 bg-white">
-          <CustomerReviews />
-        </section>
-        <section className="py-16">
-          <BrandValues />
-        </section>
+      <main
+        id="main-content"
+        className="container mx-auto px-4 lg:px-8 space-y-8 lg:space-y-12 bg-background"
+        role="main"
+      >
+        <HomeClient collections={collections} />
       </main>
       <Footer />
     </>
@@ -95,7 +89,7 @@ async function getCollections() {
       return response.data.data.menu.items.map((item) => ({
         ...item,
         handle: item.url?.includes('/collections/')
-          ? (item.url.split('/collections/')[1]?.split('?')[0] ?? '')
+          ? item.url.split('/collections/')[1]?.split('?')[0] ?? ''
           : item.title.toLowerCase(),
       }));
     }

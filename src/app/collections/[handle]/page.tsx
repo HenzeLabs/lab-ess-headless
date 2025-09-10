@@ -128,15 +128,15 @@ export default async function CollectionPage({
       ))}
       {process.env.NODE_ENV === 'development' && <AxeA11yScriptClient />}
       <Header collections={collections} />
-      <main className="bg-koala-light-grey py-24">
+      <main id="main-content" className="bg-background py-24" role="main">
+        <h1
+          className="text-3xl lg:text-4xl font-semibold tracking-tight text-foreground text-center mb-16"
+          tabIndex={-1}
+          aria-label={`Collection: ${collection.title}`}
+        >
+          {collection.title}
+        </h1>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1
-            className="text-4xl font-extrabold tracking-tight text-koala-dark-grey sm:text-5xl text-center mb-16"
-            tabIndex={-1}
-            aria-label={`Collection: ${collection.title}`}
-          >
-            {collection.title}
-          </h1>
           <div className="flex flex-col lg:flex-row gap-8">
             <aside className="lg:w-72 flex-shrink-0">
               <CollectionFilters products={products as Product[]} />
@@ -152,7 +152,16 @@ export default async function CollectionPage({
                 </div>
               ) : (
                 <>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 animate-fade-in items-stretch">
+                  <h2
+                    className="text-2xl font-bold text-foreground mb-8"
+                    id="products-heading"
+                  >
+                    Products
+                  </h2>
+                  <div
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 animate-fade-in items-stretch"
+                    aria-labelledby="products-heading"
+                  >
                     {products.map((product: Product) => (
                       <ProductCard key={product.id} product={product} />
                     ))}

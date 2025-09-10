@@ -1,8 +1,16 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
-const sans = Inter({ subsets: ['latin'], variable: '--font-sans' });
-const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
+const sans = Inter({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
+});
+const mono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'Lab Essentials',
@@ -22,9 +30,19 @@ export default function RootLayout({
           href="https://cdn.shopify.com"
           crossOrigin="anonymous"
         />
-        {/* Uncomment and update if using GA4 or Clarity */}
-        {/* <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" /> */}
-        {/* <link rel="preconnect" href="https://www.clarity.ms" crossOrigin="anonymous" /> */}
+        <link
+          rel="preconnect"
+          href="https://fonts.googleapis.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        {/* GA/Clarity example: */}
+        {/* <script src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID" strategy="afterInteractive"></script> */}
+        {/* <script src="https://www.clarity.ms/tag/CLARITY_ID" strategy="lazyOnload"></script> */}
       </head>
       <body>{children}</body>
     </html>

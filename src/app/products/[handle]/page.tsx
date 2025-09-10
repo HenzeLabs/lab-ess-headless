@@ -93,13 +93,12 @@ export default async function ProductPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <AnnouncementBar />
       <Header collections={collections} />
-      <main>
+      <main id="main-content" role="main">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-24 items-start">
             <div className="flex flex-col gap-6">
-              <div className="w-full aspect-square bg-koala-light-grey rounded-lg overflow-hidden">
+              <div className="w-full aspect-square bg-background rounded-lg overflow-hidden">
                 <div className="relative w-full h-full">
                   <Image
                     src={
@@ -122,7 +121,7 @@ export default async function ProductPage({
                     ) => (
                       <div
                         key={index}
-                        className="aspect-square bg-koala-light-grey rounded-lg overflow-hidden"
+                        className="aspect-square bg-background rounded-lg overflow-hidden"
                       >
                         <div className="relative w-full h-full">
                           <Image
@@ -140,24 +139,37 @@ export default async function ProductPage({
             </div>
 
             <div className="flex flex-col sticky top-8">
-              <h1 className="text-4xl font-extrabold tracking-tight text-koala-dark-grey sm:text-5xl">
+              <h1 className="text-3xl lg:text-4xl font-semibold tracking-tight text-foreground">
                 {product.title}
               </h1>
               <div className="mt-4 mb-2">
                 <StarRating rating={5} count={1234} />
               </div>
-              <p className="mt-6 text-3xl text-koala-dark-grey">
+              <p className="mt-6 text-2xl text-foreground">
                 {product.priceRange.minVariantPrice.amount}{' '}
                 {product.priceRange.minVariantPrice.currencyCode}
               </p>
               <div className="mt-6">
+                <h2
+                  className="text-xl font-bold text-foreground mb-4"
+                  id="trust-signals-heading"
+                >
+                  Why Shop With Us?
+                </h2>
                 <TrustSignals />
               </div>
               <div className="mt-8">
-                <h3 className="text-base text-koala-dark-grey font-medium">
+                <label
+                  htmlFor="variant-select"
+                  className="text-base text-foreground font-medium"
+                >
                   Options
-                </h3>
-                <select className="mt-2 block w-full pl-4 pr-12 py-3 text-base border-koala-dark-grey/20 focus:outline-none focus:ring-koala-green focus:border-koala-green sm:text-sm rounded-lg">
+                </label>
+                <select
+                  id="variant-select"
+                  className="mt-2 block w-full pl-4 pr-12 py-3 text-base border-border focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-lg"
+                  aria-label="Product options"
+                >
                   {variants.map((variant) => (
                     <option key={variant.id} value={variant.id}>
                       {variant.title}
@@ -168,7 +180,7 @@ export default async function ProductPage({
               <button type="button" className="btn-primary w-full mt-12">
                 Add to cart
               </button>
-              <div className="text-sm text-gray-500 mt-2">
+              <div className="text-sm text-muted-foreground mt-2">
                 or 4 payments of $
                 {(
                   Number(product.priceRange.minVariantPrice.amount) / 4
