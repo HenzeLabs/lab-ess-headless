@@ -86,14 +86,8 @@ export async function GET() {
       return NextResponse.json({ error: response.errors }, { status: 500 });
     }
   } catch (err: unknown) {
-    return NextResponse.json(
-      {
-        error:
-          typeof err === "object" && err && "message" in err
-            ? (err as { message?: string }).message
-            : "Unknown error",
-      },
-      { status: 500 },
-    );
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error(`[api/products]`, msg);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

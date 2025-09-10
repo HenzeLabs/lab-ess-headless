@@ -19,11 +19,11 @@ export async function POST(request: NextRequest) {
   try {
     revalidatePath(path);
     return NextResponse.json({ ok: true });
-  } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : "An unknown error occurred.";
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error(`[api/revalidate]`, msg);
     return NextResponse.json(
-      { message: `Error revalidating: ${errorMessage}` },
+      { message: `Error revalidating: ${msg}` },
       { status: 500 }
     );
   }
