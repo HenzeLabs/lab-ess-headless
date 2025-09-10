@@ -1,11 +1,13 @@
-import Link from "next/link";
-import Image from "next/image";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import { getSiteUrl } from "../../lib/siteUrl";
-import { toAppHref } from "../../lib/links";
-import type { MenuItem } from "@/lib/types";
-import { shopifyFetch } from "@/lib/shopify";
+export const dynamic = 'force-static';
+export const revalidate = 60;
+import Link from 'next/link';
+import Image from 'next/image';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import { getSiteUrl } from '../../lib/siteUrl';
+import { toAppHref } from '../../lib/links';
+import type { MenuItem } from '@/lib/types';
+import { shopifyFetch } from '@/lib/shopify';
 
 // GraphQL query for collections
 const COLLECTIONS_QUERY = /* GraphQL */ `
@@ -42,7 +44,9 @@ const COLLECTIONS_QUERY = /* GraphQL */ `
 async function getMenuCollections() {
   const baseUrl = getSiteUrl();
   try {
-    const res = await fetch(`${baseUrl}/api/menu`, { cache: "no-store" });
+    const res = await fetch(`${baseUrl}/api/menu`, {
+      next: { revalidate: 60 },
+    });
     if (!res.ok) {
       console.error(
         `[getMenuCollections] Error fetching /api/menu (${res.status})`,
@@ -52,13 +56,13 @@ async function getMenuCollections() {
     const data = await res.json();
     return (data.items || []).map((item: MenuItem) => ({
       handle: item.url
-        ? toAppHref(item.url).replace("/collections/", "")
+        ? toAppHref(item.url).replace('/collections/', '')
         : item.title.toLowerCase(),
       title: item.title,
       image: item.image || null,
     }));
   } catch (error) {
-    console.error("[getMenuCollections] Error:", error);
+    console.error('[getMenuCollections] Error:', error);
     return [];
   }
 }
@@ -85,7 +89,7 @@ async function getShopifyCollections() {
         id: node.id,
         handle: node.handle,
         title: node.title,
-        description: node.description || "",
+        description: node.description || '',
         productCount: node.productsCount?.count || 0,
         image: node.image?.url || null,
         badge: undefined,
@@ -93,7 +97,7 @@ async function getShopifyCollections() {
     }
     return [];
   } catch (error) {
-    console.error("[getShopifyCollections] Error fetching collections:", error);
+    console.error('[getShopifyCollections] Error fetching collections:', error);
     return [];
   }
 }
@@ -249,8 +253,8 @@ export default async function CollectionsPage() {
                       />
                     </svg>
                   ),
-                  title: "Free Shipping",
-                  description: "Australia-wide delivery at no extra cost",
+                  title: 'Free Shipping',
+                  description: 'Australia-wide delivery at no extra cost',
                 },
                 {
                   icon: (
@@ -268,8 +272,8 @@ export default async function CollectionsPage() {
                       />
                     </svg>
                   ),
-                  title: "120-Night Trial",
-                  description: "Try it at home with our sleep trial",
+                  title: '120-Night Trial',
+                  description: 'Try it at home with our sleep trial',
                 },
                 {
                   icon: (
@@ -287,8 +291,8 @@ export default async function CollectionsPage() {
                       />
                     </svg>
                   ),
-                  title: "Made in Australia",
-                  description: "Proudly designed and crafted locally",
+                  title: 'Made in Australia',
+                  description: 'Proudly designed and crafted locally',
                 },
                 {
                   icon: (
@@ -306,8 +310,8 @@ export default async function CollectionsPage() {
                       />
                     </svg>
                   ),
-                  title: "Sustainable",
-                  description: "Eco-friendly materials and practices",
+                  title: 'Sustainable',
+                  description: 'Eco-friendly materials and practices',
                 },
               ].map((benefit, index) => (
                 <div key={index} className="text-center">

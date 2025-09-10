@@ -1,12 +1,12 @@
-import { MetadataRoute } from "next";
-import { shopifyFetch } from "@/lib/shopify";
-import { getCollectionsQuery, getProductsQuery } from "@/lib/queries";
-import type { CollectionData, Product } from "@/lib/types";
+import { MetadataRoute } from 'next';
+import { shopifyFetch } from '@/lib/shopify';
+import { getCollectionsQuery, getProductsQuery } from '@/lib/queries';
+import type { CollectionData, Product } from '@/lib/types';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
   if (!siteUrl) {
-    throw new Error("NEXT_PUBLIC_SITE_URL is not set");
+    throw new Error('NEXT_PUBLIC_SITE_URL is not set');
   }
 
   const collectionsResponse = await shopifyFetch<{

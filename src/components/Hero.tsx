@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 export default function Hero() {
   return (
@@ -17,7 +17,7 @@ export default function Hero() {
           <Link
             href="/collections/microscopes"
             className="btn-primary uppercase tracking-wide animate-slide-up"
-            style={{ animationDelay: "0.2s" }}
+            style={{ animationDelay: '0.2s' }}
           >
             Shop Microscopes
           </Link>

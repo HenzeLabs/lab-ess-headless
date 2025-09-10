@@ -3,7 +3,7 @@ export function toAppHref(url: string): string {
   // Remove protocol and domain for Shopify/cdn links
   url = url.replace(
     /^https?:\/\/(cdn\.|www\.)?([\w-]+\.)?(shopify|myshopify)\.[^/]+/,
-    "",
+    '',
   );
   // Product handle
   const prodMatch = url.match(/\/products\/([a-zA-Z0-9-_]+)/);
@@ -12,5 +12,5 @@ export function toAppHref(url: string): string {
   const collMatch = url.match(/\/collections\/([a-zA-Z0-9-_]+)/);
   if (collMatch) return `/collections/${collMatch[1]}`;
   // Otherwise, return as-is (strip domain if present)
-  return url.startsWith("/") ? url : `/${url.split("/").slice(1).join("/")}`;
+  return url.startsWith('/') ? url : `/${url.split('/').slice(1).join('/')}`;
 }

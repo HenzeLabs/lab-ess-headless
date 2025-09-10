@@ -1,14 +1,14 @@
-import { ShopifyFetchResponse } from "@/lib/types";
+import { ShopifyFetchResponse } from '@/lib/types';
 
 const SHOPIFY_STORE_DOMAIN = process.env.SHOPIFY_STORE_DOMAIN;
 const SHOPIFY_STOREFRONT_API_TOKEN = process.env.SHOPIFY_STOREFRONT_API_TOKEN;
-const SHOPIFY_API_VERSION = process.env.SHOPIFY_API_VERSION || "2025-01";
+const SHOPIFY_API_VERSION = process.env.SHOPIFY_API_VERSION || '2025-01';
 
 async function fetchWithRetry(
   endpoint: string,
   options: RequestInit,
   retries = 3,
-  delay = 1000
+  delay = 1000,
 ): Promise<Response> {
   try {
     const res = await fetch(endpoint, options);
@@ -16,13 +16,13 @@ async function fetchWithRetry(
     if (res.status === 429 || res.status >= 500) {
       if (retries > 0) {
         console.warn(
-          `Shopify API returned ${res.status}. Retrying in ${delay}ms...`
+          `Shopify API returned ${res.status}. Retrying in ${delay}ms...`,
         );
         await new Promise((resolve) => setTimeout(resolve, delay));
         return fetchWithRetry(endpoint, options, retries - 1, delay * 2);
       } else {
         throw new Error(
-          `Shopify API returned ${res.status} after multiple retries.`
+          `Shopify API returned ${res.status} after multiple retries.`,
         );
       }
     }
@@ -58,17 +58,17 @@ export async function shopifyFetch<T>({
 }): Promise<ShopifyFetchResponse<T>> {
   if (!SHOPIFY_STORE_DOMAIN || !SHOPIFY_STOREFRONT_API_TOKEN) {
     throw new Error(
-      "Missing Shopify environment variables. Make sure SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_API_TOKEN are set."
+      'Missing Shopify environment variables. Make sure SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_API_TOKEN are set.',
     );
   }
 
   const endpoint = `https://${SHOPIFY_STORE_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
 
   const options: RequestInit = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      "X-Shopify-Storefront-Access-Token": SHOPIFY_STOREFRONT_API_TOKEN,
+      'Content-Type': 'application/json',
+      'X-Shopify-Storefront-Access-Token': SHOPIFY_STOREFRONT_API_TOKEN,
     },
     body: JSON.stringify({ query, variables }),
     signal: AbortSignal.timeout(timeout),
@@ -81,14 +81,14 @@ export async function shopifyFetch<T>({
     if (errors) {
       return {
         success: false,
-        errors: errors.map((e: { message: string }) => e.message).join("\n"),
+        errors: errors.map((e: { message: string }) => e.message).join('\n'),
       };
     }
 
     if (!data) {
       return {
         success: false,
-        errors: "No data returned from Shopify.",
+        errors: 'No data returned from Shopify.',
       };
     }
 
@@ -97,9 +97,9 @@ export async function shopifyFetch<T>({
       data,
     };
   } catch (err: unknown) {
-    console.error("❌ Shopify Fetch Failed:", err);
+    console.error('❌ Shopify Fetch Failed:', err);
     const message =
-      err instanceof Error ? err.message : "An unknown error occurred.";
+      err instanceof Error ? err.message : 'An unknown error occurred.';
     return {
       success: false,
       errors: message,

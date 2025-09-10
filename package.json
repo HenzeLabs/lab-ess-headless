@@ -11,6 +11,12 @@
     "lh": "lhci autorun --config=./lighthouse.config.js"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-separator": "^1.1.7",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-tooltip": "^1.2.8",
+    "class-variance-authority": "^0.7.1",
+    "lucide-react": "^0.543.0",
     "next": "^15.5.2",
     "react": "19.1.0",
     "react-dom": "19.1.0"
@@ -18,10 +24,13 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@next/bundle-analyzer": "^15.5.2",
+    "@tailwindcss/postcss": "^4.1.13",
     "@types/node": "^24.3.1",
     "@types/react": "^19",
+    "autoprefixer": "^10.4.21",
     "axe-core": "^4.10.3",
     "eslint": "^9.35.0",
+    "eslint-config-next": "^15.5.2",
     "typescript": "^5"
   }
 }

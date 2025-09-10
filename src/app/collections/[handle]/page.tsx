@@ -1,34 +1,34 @@
-import { notFound } from "next/navigation";
+import { notFound } from 'next/navigation';
 
-const REVALIDATE_SECONDS = 60;
-import type { MenuItem, CollectionData, Product } from "@/lib/types";
-import { shopifyFetch } from "@/lib/shopify";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import ProductCard from "@/components/ProductCard";
-import CollectionFilters from "@/components/CollectionFilters";
-import { getCollectionByHandleQuery, getCollectionsQuery } from "@/lib/queries";
-import AxeA11yScriptClient from "@/components/AxeA11yScriptClient";
+import type { MenuItem, CollectionData, Product } from '@/lib/types';
+import { shopifyFetch } from '@/lib/shopify';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import ProductCard from '@/components/ProductCard';
+import CollectionFilters from '@/components/CollectionFilters';
+import { getCollectionByHandleQuery, getCollectionsQuery } from '@/lib/queries';
+import AxeA11yScriptClient from '@/components/AxeA11yScriptClient';
 
-export const revalidate = REVALIDATE_SECONDS;
+export const revalidate = 60;
 
 export default async function CollectionPage({
-  params,
-  searchParams = {},
+  params: paramsPromise,
+  searchParams: searchParamsPromise = Promise.resolve({}),
 }: {
-  params: { handle: string };
-  searchParams?: { [key: string]: string | string[] };
+  params: Promise<{ handle: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] }>;
 }) {
-  // Sanitize handle
-  const { handle } = params;
-  if (typeof handle !== "string" || !/^[a-zA-Z0-9-_]+$/.test(handle))
+  // Next.js 15: params and searchParams are Promises
+  const { handle } = await paramsPromise;
+  const searchParams = await searchParamsPromise;
+  if (typeof handle !== 'string' || !/^[a-zA-Z0-9-_]+$/.test(handle))
     notFound();
 
   // Whitelist/sanitize pagination
-  const allowedSorts = ["title", "price", "createdAt"];
+  const allowedSorts = ['title', 'price', 'createdAt'];
   const sort = allowedSorts.includes(searchParams.sort as string)
     ? searchParams.sort
-    : "title";
+    : 'title';
 
   const collectionsResponse = await shopifyFetch<{
     collections: { edges: { node: MenuItem }[] };
@@ -41,7 +41,7 @@ export default async function CollectionPage({
     {
       query: getCollectionByHandleQuery,
       variables: { handle, first: 20 },
-    }
+    },
   );
 
   if (!collectionResponse.success || !collectionResponse.data.collection) {
@@ -55,24 +55,24 @@ export default async function CollectionPage({
   const page =
     Number(
       searchParams?.page ||
-        (Array.isArray(searchParams?.page) ? searchParams?.page[0] : 1)
+        (Array.isArray(searchParams?.page) ? searchParams?.page[0] : 1),
     ) || 1;
   const hasFilters = Object.keys(searchParams || {}).some(
-    (key) => key !== "page" && searchParams?.[key]
+    (key) => key !== 'page' && searchParams?.[key],
   );
   const baseUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/collections/${handle}`;
   const prevUrl = page > 2 ? `${baseUrl}?page=${page - 1}` : baseUrl;
   const nextUrl = `${baseUrl}?page=${page + 1}`;
   const breadcrumbs = [
-    { name: "Home", url: "/" },
-    { name: "Collections", url: "/collections" },
+    { name: 'Home', url: '/' },
+    { name: 'Collections', url: '/collections' },
     { name: collection.title, url: `/collections/${collection.handle}` },
   ];
   const breadcrumbJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
     itemListElement: breadcrumbs.map((crumb, i) => ({
-      "@type": "ListItem",
+      '@type': 'ListItem',
       position: i + 1,
       name: crumb.name,
       item: `${process.env.NEXT_PUBLIC_SITE_URL}${crumb.url}`,
@@ -80,13 +80,13 @@ export default async function CollectionPage({
   };
 
   const collectionJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
     name: collection.title,
     url: `${process.env.NEXT_PUBLIC_SITE_URL}/collections/${collection.handle}`,
     ...(collection.image?.url && {
       image: {
-        "@type": "ImageObject",
+        '@type': 'ImageObject',
         url: collection.image.url,
         ...(collection.image.altText && { alt: collection.image.altText }),
       },
@@ -94,8 +94,8 @@ export default async function CollectionPage({
   };
 
   const productJsonLds = products.map((product) => ({
-    "@context": "https://schema.org",
-    "@type": "Product",
+    '@context': 'https://schema.org',
+    '@type': 'Product',
     name: product.title,
     url: `${process.env.NEXT_PUBLIC_SITE_URL}/products/${product.handle}`,
     ...(product.featuredImage?.url && {
@@ -126,7 +126,7 @@ export default async function CollectionPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(json) }}
         />
       ))}
-      {process.env.NODE_ENV === "development" && <AxeA11yScriptClient />}
+      {process.env.NODE_ENV === 'development' && <AxeA11yScriptClient />}
       <Header collections={collections} />
       <main className="bg-koala-light-grey py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

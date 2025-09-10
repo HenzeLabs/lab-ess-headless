@@ -78,12 +78,6 @@ export const createCartMutation = `
   }
 `;
 
-
-
-
-
-
-
 export const getCartQuery = `
   query getCart($cartId: ID!) {
     cart(id: $cartId) {
@@ -119,4 +113,4 @@ export const getCartQuery = `
   }
 `;
 
-export { getCollectionProductsQuery as getCollectionByHandleQuery } from "./collectionProductsQuery";
+export { getCollectionProductsQuery as getCollectionByHandleQuery } from './collectionProductsQuery';

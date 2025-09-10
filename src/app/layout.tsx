@@ -1,16 +1,12 @@
-import "./globals.css";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-inter",
-});
+import './globals.css';
+import type { Metadata } from 'next';
+import { Inter, JetBrains_Mono } from 'next/font/google';
+const sans = Inter({ subsets: ['latin'], variable: '--font-sans' });
+const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
 
 export const metadata: Metadata = {
-  title: "Lab Essentials",
-  description: "Premium Lab Equipment for Research and Industry",
+  title: 'Lab Essentials',
+  description: 'Premium Lab Equipment for Research and Industry',
 };
 
 export default function RootLayout({
@@ -19,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
       <head>
         <link
           rel="preconnect"
@@ -30,9 +26,7 @@ export default function RootLayout({
         {/* <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" /> */}
         {/* <link rel="preconnect" href="https://www.clarity.ms" crossOrigin="anonymous" /> */}
       </head>
-      <body className={`${inter.variable} font-sans bg-white text-gray-900`}>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

@@ -1,4 +1,3 @@
-
 export type ProductNode = {
   id: string;
   title: string;

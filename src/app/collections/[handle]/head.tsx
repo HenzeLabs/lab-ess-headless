@@ -1,9 +1,9 @@
 // Dynamic SEO metadata for collection pages
-import type { Metadata } from "next";
-import { getSiteUrl } from "@/lib/siteUrl";
-import { shopifyFetch } from "@/lib/shopify";
-import { getCollectionByHandleQuery } from "../../../lib/queries";
-import type { CollectionData } from "@/lib/types";
+import type { Metadata } from 'next';
+import { getSiteUrl } from '@/lib/siteUrl';
+import { shopifyFetch } from '@/lib/shopify';
+import { getCollectionByHandleQuery } from '../../../lib/queries';
+import type { CollectionData } from '@/lib/types';
 
 // Accept searchParams for pagination/filtering SEO
 export async function generateMetadata({
@@ -20,7 +20,7 @@ export async function generateMetadata({
         (Array.isArray(searchParams?.page) ? searchParams?.page[0] : 1),
     ) || 1;
   const hasFilters = Object.keys(searchParams || {}).some(
-    (key) => key !== "page" && searchParams?.[key],
+    (key) => key !== 'page' && searchParams?.[key],
   );
   let collection: CollectionData | null = null;
   try {
@@ -34,7 +34,7 @@ export async function generateMetadata({
   } catch {}
   if (!collection) {
     return {
-      title: "Collection Not Found",
+      title: 'Collection Not Found',
       description: "Sorry, we couldn't find that collection.",
       robots: { index: false, follow: false },
     };
@@ -45,7 +45,7 @@ export async function generateMetadata({
   const alternates = {
     canonical: baseUrl,
     languages: {},
-  } as Metadata["alternates"] & { pagination?: Record<string, string> };
+  } as Metadata['alternates'] & { pagination?: Record<string, string> };
   // Pagination rel links using the 'pagination' property if available
   if (page > 1 || (page >= 1 && productsLikelyHaveNextPage(searchParams))) {
     alternates.pagination = {};
@@ -67,7 +67,7 @@ export async function generateMetadata({
       title: collection.title,
       description: `Shop the ${collection.title} collection.`,
       url: baseUrl,
-      type: "website",
+      type: 'website',
       images: collection.image?.url
         ? [
             {
@@ -78,7 +78,7 @@ export async function generateMetadata({
         : [],
     },
     twitter: {
-      card: "summary_large_image",
+      card: 'summary_large_image',
       title: collection.title,
       description: `Shop the ${collection.title} collection.`,
       images: collection.image?.url ? [collection.image.url] : [],

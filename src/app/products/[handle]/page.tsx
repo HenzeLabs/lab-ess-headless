@@ -1,30 +1,32 @@
-import { notFound } from "next/navigation";
-import Image from "next/image";
-import { shopifyFetch } from "@/lib/shopify";
-import AnnouncementBar from "@/components/AnnouncementBar";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import TrustSignals from "@/components/TrustSignals";
-import CustomerReviews from "@/components/CustomerReviews";
-import DeliveryInfo from "@/components/DeliveryInfo";
-import StarRating from "@/components/StarRating";
-import DeliveryCalculator from "@/components/DeliveryCalculator";
-import FAQ from "@/components/FAQ";
-import RelatedProducts from "@/components/RelatedProducts";
-import type { MenuItem, Product } from "@/lib/types";
-import { getProductByHandleQuery, getCollectionsQuery } from "@/lib/queries";
+import { notFound } from 'next/navigation';
+import Image from 'next/image';
+import { shopifyFetch } from '@/lib/shopify';
+import AnnouncementBar from '@/components/AnnouncementBar';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import TrustSignals from '@/components/TrustSignals';
+import CustomerReviews from '@/components/CustomerReviews';
+import DeliveryInfo from '@/components/DeliveryInfo';
+import StarRating from '@/components/StarRating';
+import DeliveryCalculator from '@/components/DeliveryCalculator';
+import FAQ from '@/components/FAQ';
+import RelatedProducts from '@/components/RelatedProducts';
+import type { MenuItem, Product } from '@/lib/types';
+import { getProductByHandleQuery, getCollectionsQuery } from '@/lib/queries';
 
-const REVALIDATE_SECONDS = 60;
-export const revalidate = REVALIDATE_SECONDS;
+export const revalidate = 60;
 
 export default async function ProductPage({
-  params,
+  params: paramsPromise,
+  searchParams: searchParamsPromise = Promise.resolve({}),
 }: {
-  params: { handle: string };
+  params: Promise<{ handle: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] }>;
 }) {
-  // Sanitize handle
-  const { handle } = params;
-  if (typeof handle !== "string" || !/^[a-zA-Z0-9-_]+$/.test(handle))
+  // Next.js 15: params and searchParams are Promises
+  const { handle } = await paramsPromise;
+  const searchParams = await searchParamsPromise;
+  if (typeof handle !== 'string' || !/^[a-zA-Z0-9-_]+$/.test(handle))
     notFound();
 
   const collectionsResponse = await shopifyFetch<{
@@ -49,32 +51,32 @@ export default async function ProductPage({
   const variants = product.variants?.edges?.map((edge) => edge.node) || [];
 
   const productJsonLd = {
-    "@context": "https://schema.org/",
-    "@type": "Product",
+    '@context': 'https://schema.org/',
+    '@type': 'Product',
     name: product.title,
     image: product.featuredImage?.url ? [product.featuredImage.url] : [],
-    description: product.description ?? "",
+    description: product.description ?? '',
     sku: product.id,
     offers: {
-      "@type": "Offer",
-      priceCurrency: product.priceRange?.minVariantPrice?.currencyCode ?? "USD",
-      price: product.priceRange?.minVariantPrice?.amount ?? "",
-      availability: "https://schema.org/InStock",
+      '@type': 'Offer',
+      priceCurrency: product.priceRange?.minVariantPrice?.currencyCode ?? 'USD',
+      price: product.priceRange?.minVariantPrice?.amount ?? '',
+      availability: 'https://schema.org/InStock',
       url: `${process.env.NEXT_PUBLIC_SITE_URL}/products/${product.handle}`,
     },
   };
 
   const breadcrumbs = [
-    { name: "Home", url: "/" },
-    { name: "Collections", url: "/collections" },
+    { name: 'Home', url: '/' },
+    { name: 'Collections', url: '/collections' },
     { name: product.title, url: `/products/${product.handle}` },
   ];
 
   const breadcrumbJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
     itemListElement: breadcrumbs.map((crumb, i) => ({
-      "@type": "ListItem",
+      '@type': 'ListItem',
       position: i + 1,
       name: crumb.name,
       item: `${process.env.NEXT_PUBLIC_SITE_URL}${crumb.url}`,
@@ -101,7 +103,7 @@ export default async function ProductPage({
                 <div className="relative w-full h-full">
                   <Image
                     src={
-                      product.featuredImage?.url ?? "/placeholder-product.jpg"
+                      product.featuredImage?.url ?? '/placeholder-product.jpg'
                     }
                     alt={product.featuredImage?.altText ?? product.title}
                     width={600}
@@ -116,7 +118,7 @@ export default async function ProductPage({
                   .map(
                     (
                       image: { url: string; altText?: string },
-                      index: number
+                      index: number,
                     ) => (
                       <div
                         key={index}
@@ -132,7 +134,7 @@ export default async function ProductPage({
                           />
                         </div>
                       </div>
-                    )
+                    ),
                   )}
               </div>
             </div>
@@ -145,7 +147,7 @@ export default async function ProductPage({
                 <StarRating rating={5} count={1234} />
               </div>
               <p className="mt-6 text-3xl text-koala-dark-grey">
-                {product.priceRange.minVariantPrice.amount}{" "}
+                {product.priceRange.minVariantPrice.amount}{' '}
                 {product.priceRange.minVariantPrice.currencyCode}
               </p>
               <div className="mt-6">
@@ -170,7 +172,7 @@ export default async function ProductPage({
                 or 4 payments of $
                 {(
                   Number(product.priceRange.minVariantPrice.amount) / 4
-                ).toFixed(2)}{" "}
+                ).toFixed(2)}{' '}
                 with Afterpay
               </div>
               <div className="mt-8">

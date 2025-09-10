@@ -1,15 +1,12 @@
-"use server";
+'use server';
 
-import { cookies } from "next/headers";
-import { shopifyFetch } from "@/lib/shopify";
-import {
-  createCartMutation,
-  getCartQuery,
-} from "@/lib/queries";
-import type { Cart } from "@/lib/types";
+import { cookies } from 'next/headers';
+import { shopifyFetch } from '@/lib/shopify';
+import { createCartMutation, getCartQuery } from '@/lib/queries';
+import type { Cart } from '@/lib/types';
 
 export async function getCart() {
-  const cartId = (await cookies()).get("cartId")?.value;
+  const cartId = (await cookies()).get('cartId')?.value;
   if (!cartId) {
     return null;
   }
@@ -25,14 +22,8 @@ export async function createCart() {
     query: createCartMutation,
   });
   if (cartResponse.success) {
-    (await cookies()).set("cartId", cartResponse.data.cartCreate.cart.id);
+    (await cookies()).set('cartId', cartResponse.data.cartCreate.cart.id);
     return cartResponse.data.cartCreate.cart;
   }
   return null;
 }
-
-
-
-
-
-

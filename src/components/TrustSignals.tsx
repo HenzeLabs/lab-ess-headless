@@ -1,5 +1,5 @@
-import React from "react";
-import { IconQuality, IconWarranty } from "./Icons";
+import React from 'react';
+import { IconQuality, IconWarranty } from './Icons';
 
 const signals = [
   {
@@ -19,13 +19,13 @@ const signals = [
         />
       </svg>
     ),
-    title: "120-Night Trial",
+    title: '120-Night Trial',
     description: "No-stress returns if you don't love it.",
   },
   {
     Icon: IconWarranty,
-    title: "5-Year Warranty",
-    description: "We stand by our quality for the long haul.",
+    title: '5-Year Warranty',
+    description: 'We stand by our quality for the long haul.',
   },
   {
     Icon: (props: React.SVGProps<SVGSVGElement>) => (
@@ -44,13 +44,13 @@ const signals = [
         />
       </svg>
     ),
-    title: "Fast & Free Delivery",
-    description: "Shipped straight from our warehouse to your door.",
+    title: 'Fast & Free Delivery',
+    description: 'Shipped straight from our warehouse to your door.',
   },
   {
     Icon: IconQuality,
-    title: "Award-Winning Comfort",
-    description: "Loved by customers and critics alike.",
+    title: 'Award-Winning Comfort',
+    description: 'Loved by customers and critics alike.',
   },
 ];
 

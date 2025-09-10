@@ -6,12 +6,12 @@ export function getSiteUrl() {
   }
   // VERCEL_URL is just the domain, so add protocol if present
   if (process.env.VERCEL_URL) {
-    if (process.env.VERCEL_URL.startsWith("http")) {
+    if (process.env.VERCEL_URL.startsWith('http')) {
       return process.env.VERCEL_URL;
     }
     return `https://${process.env.VERCEL_URL}`;
   }
   // Fallback to localhost
-  return "http://localhost:3000";
+  return 'http://localhost:3000';
   // (no trailing brace)
 }

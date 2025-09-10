@@ -1,9 +1,9 @@
-"use client";
-import ProductCard from "@/components/ProductCard";
+'use client';
+import ProductCard from '@/components/ProductCard';
 
-import { useState } from "react";
+import { useState } from 'react';
 
-import type { Product } from "@/lib/types";
+import type { Product } from '@/lib/types';
 
 interface BestsellersProps {
   productsByCollection: Record<string, Product[]>;
@@ -12,16 +12,16 @@ interface BestsellersProps {
 export default function Bestsellers({
   productsByCollection,
 }: BestsellersProps) {
-  const [activeTab, setActiveTab] = useState("microscopes");
+  const [activeTab, setActiveTab] = useState('microscopes');
 
   const tabs = [
-    { id: "microscopes", name: "Microscopes" },
-    { id: "microscope-cameras", name: "Microscope Cameras" },
-    { id: "centrifuges", name: "Centrifuges" },
-    { id: "lab-equipment", name: "Lab Equipment" },
+    { id: 'microscopes', name: 'Microscopes' },
+    { id: 'microscope-cameras', name: 'Microscope Cameras' },
+    { id: 'centrifuges', name: 'Centrifuges' },
+    { id: 'lab-equipment', name: 'Lab Equipment' },
     {
-      id: "incubators-slide-preparation",
-      name: "Incubators & Slide Preparation",
+      id: 'incubators-slide-preparation',
+      name: 'Incubators & Slide Preparation',
     },
   ];
 
@@ -48,8 +48,8 @@ export default function Bestsellers({
               onClick={() => setActiveTab(tab.id)}
               className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${
                 activeTab === tab.id
-                  ? "bg-koala-green text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  ? 'bg-koala-green text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
               {tab.name}

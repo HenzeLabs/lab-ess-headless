@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export const IconWarranty = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>

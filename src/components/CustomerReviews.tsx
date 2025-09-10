@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 interface Testimonial {
   id: number;
@@ -14,41 +14,41 @@ interface Testimonial {
 const testimonials: Testimonial[] = [
   {
     id: 1,
-    name: "Sarah M.",
-    product: "Koala Sofa Bed",
+    name: 'Sarah M.',
+    product: 'Koala Sofa Bed',
     rating: 5,
     text: "Absolutely love my Koala Sofa Bed! It's incredibly comfortable as both a sofa and a bed. The transformation is so easy, even my kids can do it.",
     verified: true,
   },
   {
     id: 2,
-    name: "James L.",
-    product: "Koala Mattress",
+    name: 'James L.',
+    product: 'Koala Mattress',
     rating: 5,
     text: "Best mattress I've ever owned. The support is perfect and I wake up feeling refreshed every morning. Highly recommend!",
     verified: true,
   },
   {
     id: 3,
-    name: "Emma K.",
-    product: "Cushy Sofa Bed",
+    name: 'Emma K.',
+    product: 'Cushy Sofa Bed',
     rating: 5,
-    text: "The quality is outstanding and it looks beautiful in our living room. Guests always comment on how comfortable it is to sleep on.",
+    text: 'The quality is outstanding and it looks beautiful in our living room. Guests always comment on how comfortable it is to sleep on.',
     verified: true,
   },
   {
     id: 4,
-    name: "Michael R.",
-    product: "Calm As Mattress",
+    name: 'Michael R.',
+    product: 'Calm As Mattress',
     rating: 5,
-    text: "Worth every penny! The cooling technology actually works and I no longer wake up hot during the night.",
+    text: 'Worth every penny! The cooling technology actually works and I no longer wake up hot during the night.',
     verified: true,
   },
 ];
 
 const StarIcon = ({ filled }: { filled: boolean }) => (
   <svg
-    className={`h-4 w-4 ${filled ? "text-koala-yellow" : "text-gray-200"}`}
+    className={`h-4 w-4 ${filled ? 'text-koala-yellow' : 'text-gray-200'}`}
     fill="currentColor"
     viewBox="0 0 20 20"
   >
@@ -133,7 +133,7 @@ export default function CustomerReviews() {
                             </svg>
                             Verified Buyer
                           </span>
-                        )}{" "}
+                        )}{' '}
                         • {testimonial.product}
                       </p>
                     </div>
@@ -151,8 +151,8 @@ export default function CustomerReviews() {
                 onClick={() => goToSlide(index)}
                 className={`h-2 w-2 rounded-full transition-all duration-300 ${
                   index === currentIndex
-                    ? "bg-koala-green w-8"
-                    : "bg-koala-gray/30 hover:bg-koala-gray/50"
+                    ? 'bg-koala-green w-8'
+                    : 'bg-koala-gray/30 hover:bg-koala-gray/50'
                 }`}
                 aria-label={`Go to testimonial ${index + 1}`}
               />

@@ -1,8 +1,8 @@
-import { shopifyFetch } from "../../../lib/shopify";
-import { getSiteUrl } from "@/lib/siteUrl";
-import { getProductByHandleQuery } from "../../../lib/queries";
-import type { Metadata } from "next";
-import type { ProductNode } from "@/lib/types";
+import { shopifyFetch } from '../../../lib/shopify';
+import { getSiteUrl } from '@/lib/siteUrl';
+import { getProductByHandleQuery } from '../../../lib/queries';
+import type { Metadata } from 'next';
+import type { ProductNode } from '@/lib/types';
 
 export async function generateMetadata({
   params,
@@ -23,13 +23,13 @@ export async function generateMetadata({
     if (apiResponse.success) {
       product = apiResponse.data.product ?? null;
     } else {
-      console.error("Failed to fetch product:", apiResponse.errors);
+      console.error('Failed to fetch product:', apiResponse.errors);
       product = null;
     }
   } catch {}
   if (!product) {
     return {
-      title: "Product Not Found",
+      title: 'Product Not Found',
       description: "Sorry, we couldn't find that product.",
       robots: { index: false, follow: false },
     };
@@ -43,13 +43,13 @@ export async function generateMetadata({
       title: product.title,
       description: product.title,
       url,
-      type: "website",
+      type: 'website',
       images: product.featuredImage?.url
         ? [{ url: product.featuredImage.url, alt: product.title }]
         : [],
     },
     twitter: {
-      card: "summary_large_image",
+      card: 'summary_large_image',
       title: product.title,
       description: product.title,
       images: product.featuredImage?.url ? [product.featuredImage.url] : [],

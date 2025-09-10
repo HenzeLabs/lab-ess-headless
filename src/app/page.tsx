@@ -1,39 +1,39 @@
-import type { MenuItem } from "@/lib/types";
-import { shopifyFetch } from "@/lib/shopify";
+import type { MenuItem } from '@/lib/types';
+import { shopifyFetch } from '@/lib/shopify';
 
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import Hero from "../components/Hero";
-import Collections from "../components/Bestsellers";
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import Hero from '../components/Hero';
+import Collections from '../components/Bestsellers';
 
-import CustomerReviews from "../components/CustomerReviews";
-import BrandValues from "../components/BrandValues";
+import CustomerReviews from '../components/CustomerReviews';
+import BrandValues from '../components/BrandValues';
 
-import { getSiteUrl } from "@/lib/siteUrl";
-import type { Metadata } from "next";
+import { getSiteUrl } from '@/lib/siteUrl';
+import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {
   const siteUrl = getSiteUrl();
   return {
-    title: "Lab Essentials",
-    description: "Premium Lab Equipment for Research and Industry",
+    title: 'Lab Essentials',
+    description: 'Premium Lab Equipment for Research and Industry',
     openGraph: {
-      title: "Lab Essentials",
-      description: "Premium Lab Equipment for Research and Industry",
+      title: 'Lab Essentials',
+      description: 'Premium Lab Equipment for Research and Industry',
       url: siteUrl,
-      type: "website",
+      type: 'website',
       images: [
         {
-          url: siteUrl + "/logo.svg",
-          alt: "Lab Essentials Logo",
+          url: siteUrl + '/logo.svg',
+          alt: 'Lab Essentials Logo',
         },
       ],
     },
     twitter: {
-      card: "summary_large_image",
-      title: "Lab Essentials",
-      description: "Premium Lab Equipment for Research and Industry",
-      images: [siteUrl + "/logo.svg"],
+      card: 'summary_large_image',
+      title: 'Lab Essentials',
+      description: 'Premium Lab Equipment for Research and Industry',
+      images: [siteUrl + '/logo.svg'],
     },
   };
 }
@@ -94,8 +94,8 @@ async function getCollections() {
     if (response.success) {
       return response.data.data.menu.items.map((item) => ({
         ...item,
-        handle: item.url?.includes("/collections/")
-          ? (item.url.split("/collections/")[1]?.split("?")[0] ?? "")
+        handle: item.url?.includes('/collections/')
+          ? (item.url.split('/collections/')[1]?.split('?')[0] ?? '')
           : item.title.toLowerCase(),
       }));
     }
@@ -103,7 +103,7 @@ async function getCollections() {
     return [];
   } catch (err: unknown) {
     console.error(
-      "[getCollections] Error fetching menu from Shopify Storefront API",
+      '[getCollections] Error fetching menu from Shopify Storefront API',
       err,
     );
     return [];

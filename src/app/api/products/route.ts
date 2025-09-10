@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
-import { shopifyFetch } from "@/lib/shopify";
+import { NextResponse } from 'next/server';
+import { shopifyFetch } from '@/lib/shopify';
 
 interface ProductNode {
   id: string;

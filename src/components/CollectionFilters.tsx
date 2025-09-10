@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useState, useMemo } from "react";
+import { useState, useMemo } from 'react';
 
 interface FilterSection {
   title: string;
   options: { label: string; count?: number }[];
 }
 
-import { Product } from "@/lib/types";
+import { Product } from '@/lib/types';
 
 interface CollectionFiltersProps {
   products: Product[];
@@ -16,7 +16,7 @@ interface CollectionFiltersProps {
 export default function CollectionFilters({
   products = [],
 }: CollectionFiltersProps) {
-  const [openSections, setOpenSections] = useState<string[]>(["Price Range"]);
+  const [openSections, setOpenSections] = useState<string[]>(['Price Range']);
   const [selectedFilters, setSelectedFilters] = useState<
     Record<string, string[]>
   >({});
@@ -27,18 +27,18 @@ export default function CollectionFilters({
 
     // Price Range filters
     const priceRanges = [
-      { label: "Under $1,000", min: 0, max: 1000 },
-      { label: "$1,000 - $5,000", min: 1000, max: 5000 },
-      { label: "$5,000 - $10,000", min: 5000, max: 10000 },
-      { label: "$10,000 - $20,000", min: 10000, max: 20000 },
-      { label: "$20,000+", min: 20000, max: Infinity },
+      { label: 'Under $1,000', min: 0, max: 1000 },
+      { label: '$1,000 - $5,000', min: 1000, max: 5000 },
+      { label: '$5,000 - $10,000', min: 5000, max: 10000 },
+      { label: '$10,000 - $20,000', min: 10000, max: 20000 },
+      { label: '$20,000+', min: 20000, max: Infinity },
     ];
 
     const priceOptions = priceRanges
       .map((range) => {
         const count = products.filter((product) => {
           const price = parseFloat(
-            product.priceRange?.minVariantPrice?.amount || "0",
+            product.priceRange?.minVariantPrice?.amount || '0',
           );
           return (
             price >= range.min &&
@@ -51,7 +51,7 @@ export default function CollectionFilters({
 
     if (priceOptions.length > 0) {
       filters.push({
-        title: "Price Range",
+        title: 'Price Range',
         options: priceOptions,
       });
     }
@@ -75,7 +75,7 @@ export default function CollectionFilters({
 
       if (tagOptions.length > 0) {
         filters.push({
-          title: "Tags",
+          title: 'Tags',
           options: tagOptions,
         });
       }
@@ -182,7 +182,7 @@ export default function CollectionFilters({
               </h4>
               <svg
                 className={`w-4 h-4 transition-transform ${
-                  openSections.includes(section.title) ? "rotate-180" : ""
+                  openSections.includes(section.title) ? 'rotate-180' : ''
                 }`}
                 fill="none"
                 stroke="currentColor"

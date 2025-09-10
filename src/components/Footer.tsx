@@ -1,38 +1,34 @@
-"use client";
+'use client';
 
-import Link from "next/link";
+import Link from 'next/link';
 
 const footerLinks = {
   shop: [
-    { name: "Sofa Beds", href: "/collections/sofa-beds" },
-    { name: "Mattresses", href: "/collections/mattresses" },
-    { name: "Bed Bases", href: "/collections/bed-bases" },
-    { name: "Pillows", href: "/collections/pillows" },
-    { name: "Bedding", href: "/collections/bedding" },
-    { name: "All Products", href: "/collections/all" },
+    { name: 'Lab Glassware', href: '/collections/glassware' },
+    { name: 'Instruments', href: '/collections/instruments' },
+    { name: 'Consumables', href: '/collections/consumables' },
+    { name: 'Safety', href: '/collections/safety' },
+    { name: 'All Products', href: '/collections/all' },
   ],
   support: [
-    { name: "Contact Us", href: "/support/contact" },
-    { name: "FAQ", href: "/support/faq" },
-    { name: "Delivery", href: "/support/delivery" },
-    { name: "Returns", href: "/support/returns" },
-    { name: "120-Day Trial", href: "/support/trial" },
-    { name: "Warranty", href: "/support/warranty" },
+    { name: 'Contact Us', href: '/support/contact' },
+    { name: 'FAQ', href: '/support/faq' },
+    { name: 'Shipping', href: '/support/shipping' },
+    { name: 'Returns', href: '/support/returns' },
+    { name: 'Warranty', href: '/support/warranty' },
   ],
   company: [
-    { name: "About Us", href: "/about" },
-    { name: "Reviews", href: "/reviews" },
-    { name: "Blog", href: "/blog" },
-    { name: "Careers", href: "/careers" },
-    { name: "Sustainability", href: "/sustainability" },
-    { name: "Press", href: "/press" },
+    { name: 'About Lab Essentials', href: '/about' },
+    { name: 'Reviews', href: '/reviews' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'Careers', href: '/careers' },
+    { name: 'Sustainability', href: '/sustainability' },
+    { name: 'Press', href: '/press' },
   ],
   connect: [
-    { name: "Instagram", href: "https://instagram.com/koala" },
-    { name: "Facebook", href: "https://facebook.com/koala" },
-    { name: "Twitter", href: "https://twitter.com/koala" },
-    { name: "YouTube", href: "https://youtube.com/koala" },
-    { name: "LinkedIn", href: "https://linkedin.com/company/koala" },
+    { name: 'Instagram', href: 'https://instagram.com/labessentials' },
+    { name: 'Facebook', href: 'https://facebook.com/labessentials' },
+    { name: 'LinkedIn', href: 'https://linkedin.com/company/labessentials' },
   ],
 };
 
@@ -122,11 +118,11 @@ export default function Footer() {
           {/* Newsletter Signup */}
           <div className="lg:col-span-2">
             <h3 className="font-semibold text-white mb-4">
-              Join the Koala community
+              Join the Lab Essentials community
             </h3>
             <p className="text-gray-300 text-sm mb-4">
-              Get exclusive offers, sleep tips, and be the first to know about
-              new products.
+              Get exclusive offers, lab tips, and be the first to know about new
+              products.
             </p>
             <form
               className="flex flex-col sm:flex-row gap-2"
@@ -136,7 +132,7 @@ export default function Footer() {
                 type="email"
                 required
                 placeholder="Enter your email"
-                className="bg-white/10 border border-white/20 rounded-button px-4 py-2.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-koala-green focus:outline-none flex-grow"
+                className="bg-white/10 border border-white/20 rounded-button px-4 py-2.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-primary focus:outline-none flex-grow"
               />
               <button type="submit" className="btn-primary whitespace-nowrap">
                 Subscribe
@@ -145,10 +141,14 @@ export default function Footer() {
 
             {/* Social Icons */}
             <div className="flex items-center space-x-4 mt-6">
-              {["instagram", "facebook", "twitter", "youtube"].map((social) => (
+              {['instagram', 'facebook', 'linkedin'].map((social) => (
                 <a
                   key={social}
-                  href={`https://${social}.com/koala`}
+                  href={
+                    footerLinks.connect.find(
+                      (l) => l.name.toLowerCase() === social,
+                    )?.href
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-white transition-colors"
@@ -165,7 +165,10 @@ export default function Footer() {
         <div className="border-t border-white/10 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex flex-col md:flex-row items-center gap-4 text-sm text-gray-400">
-              <p>© {new Date().getFullYear()} Koala. All rights reserved.</p>
+              <p>
+                © {new Date().getFullYear()} Lab Essentials. All rights
+                reserved.
+              </p>
               <span className="hidden md:inline">•</span>
               <Link
                 href="/privacy"

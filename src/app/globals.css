@@ -1,107 +1,85 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/preflight';
+@import 'tailwindcss/utilities';
 
-@layer base {
-  body {
-    background-color: #fff;
-    color: var(--color-foreground, #222);
-    -webkit-font-smoothing: antialiased;
-    font-feature-settings: "kern" 1;
-    text-rendering: optimizeLegibility;
-  }
+:root {
+  /* Light theme tokens (adjust later if needed) */
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: var(--font-heading, inherit);
-    letter-spacing: -0.015em;
-  }
+  /* Brand: teal-based */
+  --primary: 173 80% 32%;
+  --primary-foreground: 210 40% 98%;
+
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+
+  --accent: 200 94% 40%;
+  --accent-foreground: 210 40% 98%;
+
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 173 80% 32%;
+
+  --radius: 12px; /* global rounding */
 }
 
-@layer components {
-  .btn-primary {
-    background-color: var(--koala-green, #22c55e);
-    color: #fff;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
-  }
+.dark {
+  /* Dark theme tokens */
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
 
-  .btn-secondary {
-    background-color: #fff;
-    color: var(--koala-green, #22c55e);
-    border-width: 2px;
-    border-style: solid;
-    border-color: var(--koala-green, #22c55e);
-  }
+  --primary: 173 80% 45%;
+  --primary-foreground: 222.2 84% 4.9%;
 
-  .product-badge {
-    display: inline-block;
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    border-radius: var(--rounded-badge, 9999px);
-  }
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
 
-  .star-rating {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-  }
+  --accent: 200 94% 50%;
+  --accent-foreground: 222.2 84% 4.9%;
 
-  .container-koala {
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    max-width: 80rem;
-  }
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
 
-  .section-padding {
-    padding-top: var(--section-mobile, 2rem);
-    padding-bottom: var(--section-mobile, 2rem);
-  }
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
 
-  @media (min-width: 768px) {
-    .container-koala {
-      padding-left: 1.5rem;
-      padding-right: 1.5rem;
-    }
-    .section-padding {
-      padding-top: var(--section, 4rem);
-      padding-bottom: var(--section, 4rem);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .container-koala {
-      padding-left: 2rem;
-      padding-right: 2rem;
-    }
-  }
-
-  .btn-primary:active {
-    transform: scale(0.98);
-  }
-  .btn-primary:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    /* .btn-secondary styles already defined above */
-
-    /* .product-badge styles already defined above */
-
-    /* .star-rating styles already defined above */
-
-    /* .container-koala styles already defined above */
-
-    /* .section-padding styles already defined above */
-  }
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 173 80% 45%;
 }
+
+html {
+  color-scheme: light;
+}
+.dark html {
+  color-scheme: dark;
+}
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'kern' 1;
+  text-rendering: optimizeLegibility;
+}
+a {
+  text-underline-offset: 4px;
+  text-decoration: underline;
+}
+:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px hsl(var(--ring)),
+    0 0 0 4px hsl(var(--background));
+}
+*,
+::before,
+::after {
+  border-color: hsl(var(--border));
+}
+/* Brand: teal-based */

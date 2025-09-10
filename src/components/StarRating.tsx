@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export default function StarRating({
   rating,
@@ -14,7 +14,7 @@ export default function StarRating({
           <svg
             key={i}
             className={`h-5 w-5 ${
-              i < rating ? "fill-yellow-400" : "fill-gray-200"
+              i < rating ? 'fill-yellow-400' : 'fill-gray-200'
             }`}
             viewBox="0 0 20 20"
             fill="currentColor"

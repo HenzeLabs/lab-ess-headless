@@ -1,30 +1,30 @@
 // Mock Shopify products
 export const products = [
   {
-    title: "The Feed Lab Hydration",
-    handle: "the-feed-lab-hydration",
-    description: "450mg Sodium with Complete Electrolyte Support.",
+    title: 'The Feed Lab Hydration',
+    handle: 'the-feed-lab-hydration',
+    description: '450mg Sodium with Complete Electrolyte Support.',
     featuredImage: {
-      url: "/placeholders/product1.jpg",
+      url: '/placeholders/product1.jpg',
     },
-    price: "$24.00",
+    price: '$24.00',
   },
   {
-    title: "Feed Endurance Bar",
-    handle: "feed-endurance-bar",
-    description: "Delicious, high-carb bar for long rides.",
+    title: 'Feed Endurance Bar',
+    handle: 'feed-endurance-bar',
+    description: 'Delicious, high-carb bar for long rides.',
     featuredImage: {
-      url: "/placeholders/product2.jpg",
+      url: '/placeholders/product2.jpg',
     },
-    price: "$3.50",
+    price: '$3.50',
   },
   {
-    title: "Feed Recovery Mix",
-    handle: "feed-recovery-mix",
-    description: "Protein and carbs for fast recovery.",
+    title: 'Feed Recovery Mix',
+    handle: 'feed-recovery-mix',
+    description: 'Protein and carbs for fast recovery.',
     featuredImage: {
-      url: "/placeholders/product3.jpg",
+      url: '/placeholders/product3.jpg',
     },
-    price: "$34.00",
+    price: '$34.00',
   },
 ];

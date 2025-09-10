@@ -1,21 +1,21 @@
-import Image from "next/image";
-import Link from "next/link";
-import type { Product } from "@/lib/types";
+import Image from 'next/image';
+import Link from 'next/link';
+import type { Product } from '@/lib/types';
 
-const PLACEHOLDER_IMG = "/placeholder-product.jpg";
+const PLACEHOLDER_IMG = '/placeholder-product.jpg';
 
 const ProductBadge = ({ type }: { type: string }) => {
   const getBadgeStyles = () => {
     switch (type.toLowerCase()) {
-      case "best seller":
-      case "bestseller":
-        return "bg-koala-badge-bestseller text-white";
-      case "most luxurious":
-        return "bg-koala-badge-luxury text-white";
-      case "new":
-        return "bg-koala-badge-new text-white";
+      case 'best seller':
+      case 'bestseller':
+        return 'bg-koala-badge-bestseller text-white';
+      case 'most luxurious':
+        return 'bg-koala-badge-luxury text-white';
+      case 'new':
+        return 'bg-koala-badge-new text-white';
       default:
-        return "bg-koala-green text-white";
+        return 'bg-koala-green text-white';
     }
   };
 
@@ -81,7 +81,7 @@ export default function ProductCard({
           <p className="text-xl font-bold text-koala-green">
             {price
               ? `From ${parseFloat(price).toFixed(0)}`
-              : "Contact for price"}
+              : 'Contact for price'}
           </p>
         </div>
 

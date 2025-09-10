@@ -1,18 +1,18 @@
-import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
+import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 
 export async function POST(request: NextRequest) {
-  const secret = request.headers.get("x-revalidate-secret");
+  const secret = request.headers.get('x-revalidate-secret');
   if (secret !== process.env.REVALIDATE_SECRET) {
-    return NextResponse.json({ message: "Invalid secret" }, { status: 401 });
+    return NextResponse.json({ message: 'Invalid secret' }, { status: 401 });
   }
 
   const { path } = await request.json();
 
   if (!path) {
     return NextResponse.json(
-      { message: "Missing path to revalidate" },
-      { status: 400 }
+      { message: 'Missing path to revalidate' },
+      { status: 400 },
     );
   }
 
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     console.error(`[api/revalidate]`, msg);
     return NextResponse.json(
       { message: `Error revalidating: ${msg}` },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

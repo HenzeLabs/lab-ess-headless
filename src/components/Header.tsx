@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import Image from "next/image";
-import { useState, useEffect } from "react";
+import Link from 'next/link';
+import Image from 'next/image';
+import { useState, useEffect } from 'react';
 
 interface MenuItem {
   id: string;
@@ -18,33 +18,33 @@ interface MenuItem {
 
 // Extract handle from Shopify URL
 function extractHandle(url: string | undefined): string {
-  if (!url) return "";
+  if (!url) return '';
   const matches = url.match(/\/collections\/([^?]+)/);
-  return matches ? matches[1] : "";
+  return matches ? matches[1] : '';
 }
 
 // Determine item type from URL
 function getItemType(
   url: string | undefined,
-): "collection" | "product" | "page" {
-  if (!url) return "page";
-  if (url.includes("/collections/")) return "collection";
-  if (url.includes("/products/")) return "product";
-  return "page";
+): 'collection' | 'product' | 'page' {
+  if (!url) return 'page';
+  if (url.includes('/collections/')) return 'collection';
+  if (url.includes('/products/')) return 'product';
+  return 'page';
 }
 
 // Get appropriate action text for item type
 function getActionText(url: string | undefined): string {
   const type = getItemType(url);
   switch (type) {
-    case "collection":
-      return "View Collection";
-    case "product":
-      return "View Product";
-    case "page":
-      return "View Page";
+    case 'collection':
+      return 'View Collection';
+    case 'product':
+      return 'View Product';
+    case 'page':
+      return 'View Page';
     default:
-      return "View";
+      return 'View';
   }
 }
 
@@ -65,8 +65,8 @@ export default function Header({ collections }: HeaderProps) {
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 0);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handleMouseEnter = (handle: string) => setActiveMenu(handle);
@@ -82,7 +82,7 @@ export default function Header({ collections }: HeaderProps) {
       {/* Main Sticky Header */}
       <div
         className={`sticky top-0 z-50 bg-white transition-shadow duration-200 ${
-          isScrolled ? "shadow-md" : "border-b border-gray-100"
+          isScrolled ? 'shadow-md' : 'border-b border-gray-100'
         }`}
       >
         <header className="relative">
@@ -219,8 +219,8 @@ export default function Header({ collections }: HeaderProps) {
                 key={menuItem.handle}
                 className={`absolute top-full left-0 right-0 bg-white shadow-2xl border-t border-gray-100 transition-all duration-500 ease-out ${
                   activeMenu === menuItem.handle
-                    ? "opacity-100 visible translate-y-0"
-                    : "opacity-0 invisible -translate-y-4"
+                    ? 'opacity-100 visible translate-y-0'
+                    : 'opacity-0 invisible -translate-y-4'
                 }`}
                 onMouseEnter={() => handleMouseEnter(menuItem.handle)}
                 onMouseLeave={handleMouseLeave}
@@ -236,7 +236,7 @@ export default function Header({ collections }: HeaderProps) {
                           {menuItem.title}
                         </h2>
                         <p className="text-lg text-gray-600 max-w-md">
-                          Discover our premium range of professional{" "}
+                          Discover our premium range of professional{' '}
                           {menuItem.title.toLowerCase()} for research and
                           industry
                         </p>
@@ -268,7 +268,7 @@ export default function Header({ collections }: HeaderProps) {
                         ?.filter(
                           (item) =>
                             item.title &&
-                            item.title.trim() !== "" &&
+                            item.title.trim() !== '' &&
                             (item.url || item.handle),
                         )
                         .map((subMenuItem, index) => (

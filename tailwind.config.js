@@ -1,86 +1,67 @@
 module.exports = {
+  darkMode: ['class'],
   content: [
-    "./src/**/*.{js,ts,jsx,tsx}",
-    "./app/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
+    './app/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
   ],
   theme: {
+    container: {
+      center: true,
+      padding: '1rem',
+      screens: {
+        '2xl': '1280px',
+      },
+    },
     extend: {
       colors: {
-        koala: {
-          green: "#2D5A3D",
-          "green-light": "#4A7861",
-          "green-dark": "#1F3B2A",
-          beige: "#F7F5F2",
-          cream: "#FBF9F6",
-          gray: "#6B7280",
-          "gray-light": "#F5F5F5",
-          "gray-dark": "#374151",
-          yellow: "#FFC107",
-          badge: {
-            bestseller: "#FF6B6B",
-            luxury: "#8B5CF6",
-            new: "#10B981",
-          },
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
         },
-        primary: "#2D5A3D",
-        secondary: "#F7F5F2",
-        accent: "#FFC107",
-        background: "#FFFFFF",
-        foreground: "#1F2937",
-      },
-      fontFamily: {
-        sans: [
-          "Inter",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "sans-serif",
-        ],
-        heading: ["Inter", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
-      },
-      fontSize: {
-        hero: ["3.5rem", { lineHeight: "1.1", fontWeight: "700" }],
-        "hero-mobile": ["2.5rem", { lineHeight: "1.15", fontWeight: "700" }],
-        section: ["2.5rem", { lineHeight: "1.2", fontWeight: "600" }],
-        "card-title": ["1.125rem", { lineHeight: "1.4", fontWeight: "600" }],
-      },
-      boxShadow: {
-        soft: "0 1px 3px 0 rgba(0, 0, 0, 0.05)",
-        card: "0 2px 8px 0 rgba(0, 0, 0, 0.08)",
-        elevated: "0 10px 25px -5px rgba(0, 0, 0, 0.1)",
-        button: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
       },
       borderRadius: {
-        card: "12px",
-        button: "8px",
-        badge: "20px",
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
       },
-      spacing: {
-        section: "5rem",
-        "section-mobile": "3rem",
+      boxShadow: {
+        sm: '0 1px 2px 0 hsl(var(--foreground) / 0.05)',
+        md: '0 4px 6px -1px hsl(var(--foreground) / 0.07), 0 2px 4px -2px hsl(var(--foreground) / 0.06)',
+        lg: '0 10px 15px -3px hsl(var(--foreground) / 0.08), 0 4px 6px -4px hsl(var(--foreground) / 0.07)',
+        xl: '0 20px 25px -5px hsl(var(--foreground) / 0.10), 0 8px 10px -6px hsl(var(--foreground) / 0.08)',
       },
-      animation: {
-        "fade-in": "fadeIn 0.5s ease-in",
-        "slide-up": "slideUp 0.6s ease-out",
-        "slide-in": "slideIn 0.3s ease-out",
-      },
-      keyframes: {
-        fadeIn: {
-          "0%": { opacity: "0" },
-          "100%": { opacity: "1" },
-        },
-        slideUp: {
-          "0%": { transform: "translateY(20px)", opacity: "0" },
-          "100%": { transform: "translateY(0)", opacity: "1" },
-        },
-        slideIn: {
-          "0%": { transform: "translateX(-10px)", opacity: "0" },
-          "100%": { transform: "translateX(0)", opacity: "1" },
-        },
+      fontFamily: {
+        sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: [
+          'var(--font-mono)',
+          'ui-monospace',
+          'SFMono-Regular',
+          'monospace',
+        ],
       },
     },
   },
-  plugins: [],
+  plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography')],
 };

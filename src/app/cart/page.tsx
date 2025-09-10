@@ -1,11 +1,11 @@
-import { getCart } from "@/lib/cart";
-import type { MenuItem } from "@/lib/types";
-import { getCollectionsQuery } from "@/lib/queries";
-import { shopifyFetch } from "@/lib/shopify";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import Image from "next/image";
-import Link from "next/link";
+import { getCart } from '@/lib/cart';
+import type { MenuItem } from '@/lib/types';
+import { getCollectionsQuery } from '@/lib/queries';
+import { shopifyFetch } from '@/lib/shopify';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export default async function CartPage() {
   const collectionsResponse = await shopifyFetch<{
@@ -62,7 +62,7 @@ export default async function CartPage() {
                               </a>
                             </h3>
                             <p className="ml-4">
-                              {item.node.merchandise.price.amount}{" "}
+                              {item.node.merchandise.price.amount}{' '}
                               {item.node.merchandise.price.currencyCode}
                             </p>
                           </div>
