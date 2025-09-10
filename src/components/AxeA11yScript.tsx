@@ -7,7 +7,6 @@ if (typeof window !== "undefined") {
   window.addEventListener("load", () => {
     axe.run(document, {}, (err, results) => {
       if (err) throw err;
-      // eslint-disable-next-line no-console
       console.log("axe accessibility results:", results);
     });
   });

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { storefront } from "@/lib/shopify";
+import { shopifyFetch } from "@/lib/shopify";
 
 interface ProductNode {
   id: string;
@@ -61,25 +61,30 @@ const QUERY = /* GraphQL */ `
 
 export async function GET() {
   try {
-    const data = await storefront<{
+    const response = await shopifyFetch<{
       data: { products: { edges: { node: ProductNode }[] } };
-    }>(QUERY, { first: 5 });
-    const items: ProductItem[] =
-      data?.data?.products?.edges?.map((e) => {
-        const n = e.node;
-        return {
-          id: n.id,
-          title: n.title,
-          handle: n.handle,
-          featuredImage: n.featuredImage
-            ? { url: n.featuredImage.url, altText: n.featuredImage.altText }
-            : null,
-          priceRange: {
-            minVariantPrice: n.priceRange?.minVariantPrice,
-          },
-        };
-      }) ?? [];
-    return NextResponse.json({ count: items.length, products: items });
+    }>({ query: QUERY, variables: { first: 5 } });
+
+    if (response.success) {
+      const items: ProductItem[] =
+        response.data.data.products?.edges?.map((e: { node: ProductNode }) => {
+          const n = e.node;
+          return {
+            id: n.id,
+            title: n.title,
+            handle: n.handle,
+            featuredImage: n.featuredImage
+              ? { url: n.featuredImage.url, altText: n.featuredImage.altText }
+              : null,
+            priceRange: {
+              minVariantPrice: n.priceRange?.minVariantPrice,
+            },
+          };
+        }) ?? [];
+      return NextResponse.json({ count: items.length, products: items });
+    } else {
+      return NextResponse.json({ error: response.errors }, { status: 500 });
+    }
   } catch (err: unknown) {
     return NextResponse.json(
       {

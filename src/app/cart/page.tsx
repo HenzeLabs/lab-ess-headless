@@ -1,72 +1,28 @@
+import { getCart } from "@/lib/cart";
 import type { MenuItem } from "@/lib/types";
-import { getSiteUrl } from "@/lib/siteUrl";
+import { getCollectionsQuery } from "@/lib/queries";
+import { shopifyFetch } from "@/lib/shopify";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import Link from "next/link";
-import { toAppHref } from "@/lib/links";
-
-async function getCollections() {
-  const baseUrl = getSiteUrl();
-  const res = await fetch(`${baseUrl}/api/menu`, { cache: "no-store" });
-  if (!res.ok) {
-    console.error(`[getCollections] Error fetching /api/menu (${res.status})`);
-    return [];
-  }
-  const data = await res.json();
-  return (data.items || []).map((item: MenuItem) => ({
-    handle: item.url
-      ? toAppHref(item.url).replace("/collections/", "")
-      : item.title.toLowerCase(),
-    title: item.title,
-    image: item.image?.url
-      ? { url: item.image.url, altText: item.image.altText ?? "" }
-      : null,
-  }));
-}
-
-const mockCartItems = [
-  {
-    id: "1",
-    title: "Microscope",
-    handle: "microscope",
-    featuredImage: {
-      url: "/placeholders/product1.jpg",
-      altText: "Microscope",
-    },
-    priceRange: {
-      minVariantPrice: {
-        amount: "150.00",
-        currencyCode: "USD",
-      },
-    },
-    quantity: 1,
-  },
-  {
-    id: "2",
-    title: "Centrifuge",
-    handle: "centrifuge",
-    featuredImage: {
-      url: "/placeholders/product2.jpg",
-      altText: "Centrifuge",
-    },
-    priceRange: {
-      minVariantPrice: {
-        amount: "300.00",
-        currencyCode: "USD",
-      },
-    },
-    quantity: 2,
-  },
-];
 
 export default async function CartPage() {
-  const collections = await getCollections();
-  const subtotal = mockCartItems.reduce(
-    (acc, item) =>
-      acc + parseFloat(item.priceRange.minVariantPrice.amount) * item.quantity,
-    0,
-  );
+  const collectionsResponse = await shopifyFetch<{
+    collections: { edges: { node: MenuItem }[] };
+  }>({ query: getCollectionsQuery });
+  const collections = collectionsResponse.success
+    ? collectionsResponse.data.collections.edges.map((edge) => edge.node)
+    : [];
+  const cart = await getCart();
+
+  const subtotal =
+    cart?.lines.edges.reduce(
+      (acc, item) =>
+        acc +
+        parseFloat(item.node.merchandise.price.amount) * item.node.quantity,
+      0,
+    ) || 0;
 
   return (
     <>
@@ -77,17 +33,18 @@ export default async function CartPage() {
             Your Cart
           </h1>
 
-          {mockCartItems.length > 0 ? (
+          {cart && cart.lines.edges.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
-              {/* Cart Items */}
               <div className="md:col-span-2">
                 <ul role="list" className="divide-y divide-koala-dark-grey/20">
-                  {mockCartItems.map((product) => (
-                    <li key={product.id} className="flex py-8">
+                  {cart.lines.edges.map((item) => (
+                    <li key={item.node.id} className="flex py-8">
                       <div className="h-28 w-28 flex-shrink-0 overflow-hidden rounded-md border border-koala-dark-grey/20">
                         <Image
-                          src={product.featuredImage.url}
-                          alt={product.featuredImage.altText}
+                          src={item.node.merchandise.product.featuredImage.url}
+                          alt={
+                            item.node.merchandise.product.featuredImage.altText
+                          }
                           width={112}
                           height={112}
                           className="h-full w-full object-cover object-center"
@@ -98,19 +55,21 @@ export default async function CartPage() {
                         <div>
                           <div className="flex justify-between text-lg font-medium text-koala-dark-grey">
                             <h3>
-                              <a href={`/products/${product.handle}`}>
-                                {product.title}
+                              <a
+                                href={`/products/${item.node.merchandise.product.handle}`}
+                              >
+                                {item.node.merchandise.product.title}
                               </a>
                             </h3>
                             <p className="ml-4">
-                              {product.priceRange.minVariantPrice.amount}{" "}
-                              {product.priceRange.minVariantPrice.currencyCode}
+                              {item.node.merchandise.price.amount}{" "}
+                              {item.node.merchandise.price.currencyCode}
                             </p>
                           </div>
                         </div>
                         <div className="flex flex-1 items-end justify-between text-base">
                           <p className="text-koala-dark-grey/80">
-                            Qty {product.quantity}
+                            Qty {item.node.quantity}
                           </p>
 
                           <div className="flex">
@@ -128,7 +87,6 @@ export default async function CartPage() {
                 </ul>
               </div>
 
-              {/* Order summary */}
               <div className="bg-white p-10 rounded-lg shadow-md">
                 <h2 className="text-xl font-medium text-koala-dark-grey">
                   Order summary
@@ -152,7 +110,12 @@ export default async function CartPage() {
                   </div>
                 </div>
                 <div className="mt-10">
-                  <button className="btn-primary w-full">Checkout</button>
+                  <a
+                    href={cart.checkoutUrl}
+                    className="btn-primary w-full text-center"
+                  >
+                    Checkout
+                  </a>
                 </div>
               </div>
             </div>

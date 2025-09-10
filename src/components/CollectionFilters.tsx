@@ -7,17 +7,7 @@ interface FilterSection {
   options: { label: string; count?: number }[];
 }
 
-interface Product {
-  id: string;
-  title: string;
-  tags: string[];
-  priceRange: {
-    minVariantPrice: {
-      amount: string;
-      currencyCode: string;
-    };
-  };
-}
+import { Product } from "@/lib/types";
 
 interface CollectionFiltersProps {
   products: Product[];
@@ -70,9 +60,7 @@ export default function CollectionFilters({
     if (products.length > 0) {
       const allTags: string[] = [];
       products.forEach((product) => {
-        if (product.tags && Array.isArray(product.tags)) {
-          allTags.push(...product.tags);
-        }
+        allTags.push(...(product.tags || []));
       });
 
       const tagCounts: Record<string, number> = {};

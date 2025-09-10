@@ -1,6 +1,6 @@
-import { storefront } from "../../../lib/shopify";
+import { shopifyFetch } from "../../../lib/shopify";
 import { getSiteUrl } from "@/lib/siteUrl";
-import { getCollectionByHandleQuery } from "../../../lib/queries";
+import { getProductByHandleQuery } from "../../../lib/queries";
 import type { Metadata } from "next";
 import type { ProductNode } from "@/lib/types";
 
@@ -13,14 +13,19 @@ export async function generateMetadata({
   let product: ProductNode | null = null;
   try {
     // You may need to adjust this query to fetch a single product by handle
-    const apiResponse = await storefront<{
+    const apiResponse = await shopifyFetch<{
       product: ProductNode;
-      data?: { product: ProductNode };
-    }>(
-      getCollectionByHandleQuery, // Replace with getProductByHandleQuery if available
-      { handle, first: 1 },
-    );
-    product = apiResponse?.product ?? apiResponse?.data?.product ?? null;
+    }>({
+      query: getProductByHandleQuery,
+      variables: { handle, first: 1 },
+    });
+
+    if (apiResponse.success) {
+      product = apiResponse.data.product ?? null;
+    } else {
+      console.error("Failed to fetch product:", apiResponse.errors);
+      product = null;
+    }
   } catch {}
   if (!product) {
     return {

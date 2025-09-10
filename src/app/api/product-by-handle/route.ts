@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { storefront } from "@/lib/shopify";
+import { shopifyFetch } from "@/lib/shopify";
 
 interface ImageNode {
   id: string;
@@ -65,19 +65,23 @@ export async function GET(req: Request) {
   if (!handle)
     return NextResponse.json({ error: "Missing handle" }, { status: 400 });
   try {
-    const data = await storefront<{
+    const response = await shopifyFetch<{
       data: { productByHandle: ProductByHandle };
-    }>(QUERY, {
-      handle,
-    });
-    const p = data?.data?.productByHandle;
-    if (!p) return NextResponse.json({ error: "Not found" }, { status: 404 });
-    return NextResponse.json({
-      product: {
-        ...p,
-        images: p.images?.edges?.map((e: { node: ImageNode }) => e.node) || [],
-      },
-    });
+    }>({ query: QUERY, variables: { handle } });
+
+    if (response.success) {
+      const p = response.data.data.productByHandle;
+      if (!p) return NextResponse.json({ error: "Not found" }, { status: 404 });
+      return NextResponse.json({
+        product: {
+          ...p,
+          images:
+            p.images?.edges?.map((e: { node: ImageNode }) => e.node) || [],
+        },
+      });
+    } else {
+      return NextResponse.json({ error: response.errors }, { status: 500 });
+    }
   } catch (err: unknown) {
     return NextResponse.json(
       {

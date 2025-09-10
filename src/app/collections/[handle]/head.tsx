@@ -1,7 +1,7 @@
 // Dynamic SEO metadata for collection pages
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/siteUrl";
-import { storefront } from "../../../lib/shopify";
+import { shopifyFetch } from "@/lib/shopify";
 import { getCollectionByHandleQuery } from "../../../lib/queries";
 import type { CollectionData } from "@/lib/types";
 
@@ -24,12 +24,13 @@ export async function generateMetadata({
   );
   let collection: CollectionData | null = null;
   try {
-    const apiResponse = await storefront<{
+    const apiResponse = await shopifyFetch<{
       collection: CollectionData;
       data?: { collection: CollectionData };
-    }>(getCollectionByHandleQuery, { handle, first: 1 });
-    collection =
-      apiResponse?.collection ?? apiResponse?.data?.collection ?? null;
+    }>({ query: getCollectionByHandleQuery, variables: { handle, first: 1 } });
+    collection = apiResponse.success
+      ? (apiResponse.data.collection ?? apiResponse.data.data?.collection)
+      : null;
   } catch {}
   if (!collection) {
     return {

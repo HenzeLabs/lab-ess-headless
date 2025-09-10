@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { storefront } from "@/lib/shopify";
+import { shopifyFetch } from "@/lib/shopify";
 
 interface MenuItem {
   id: string;
@@ -32,10 +32,14 @@ const QUERY = /* GraphQL */ `
 
 export async function GET() {
   try {
-    const data = await storefront<{ data: { menu: { items: MenuItem[] } } }>(
-      QUERY,
-    );
-    return NextResponse.json({ items: data?.data?.menu?.items || [] });
+    const response = await shopifyFetch<{
+      data: { menu: { items: MenuItem[] } };
+    }>({ query: QUERY });
+    if (response.success) {
+      return NextResponse.json({ items: response.data.data.menu.items || [] });
+    } else {
+      return NextResponse.json({ error: response.errors }, { status: 500 });
+    }
   } catch (err: unknown) {
     return NextResponse.json(
       {

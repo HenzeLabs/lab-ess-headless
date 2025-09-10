@@ -95,3 +95,17 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## On-Demand Revalidation
+
+This project includes an API endpoint to manually revalidate pages. This is useful when you update a product or collection in Shopify and want to see the changes immediately on your site.
+
+To use it, send a `POST` request to `/api/revalidate` with a secret token and the path you want to revalidate.
+
+**Example:**
+
+```bash
+curl -X POST -H "Content-Type: application/json" -H "x-revalidate-secret: YOUR_SECRET_TOKEN" -d '{"path": "/products/your-product-handle"}' https://your-site.com/api/revalidate
+```
+
+You need to set the `REVALIDATE_SECRET` environment variable to a secret token of your choice.

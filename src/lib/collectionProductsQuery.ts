@@ -1,5 +1,5 @@
 // GraphQL query to fetch products for a given collection handle
-export const COLLECTION_PRODUCTS_QUERY = `
+export const getCollectionProductsQuery = `
   query CollectionByHandle($handle: String!, $first: Int!) {
     collectionByHandle(handle: $handle) {
       id

@@ -5,7 +5,7 @@ import Footer from "../../components/Footer";
 import { getSiteUrl } from "../../lib/siteUrl";
 import { toAppHref } from "../../lib/links";
 import type { MenuItem } from "@/lib/types";
-import { storefront } from "../../lib/shopify";
+import { shopifyFetch } from "@/lib/shopify";
 
 // GraphQL query for collections
 const COLLECTIONS_QUERY = /* GraphQL */ `
@@ -38,76 +38,6 @@ const COLLECTIONS_QUERY = /* GraphQL */ `
 `;
 
 // Fallback collections data
-const fallbackCollectionsData = [
-  {
-    id: "mattresses",
-    handle: "mattresses",
-    title: "Mattresses",
-    description:
-      "Award-winning comfort with advanced support and cooling technology",
-    productCount: 15,
-    image: "/placeholders/collection-mattresses.jpg",
-    badge: "Most Popular",
-  },
-  {
-    id: "sofa-beds",
-    handle: "sofa-beds",
-    title: "Sofa Beds",
-    description: "Cosy by day, dreamy by night - perfect for modern living",
-    productCount: 8,
-    image: "/placeholders/collection-sofa-beds.jpg",
-    badge: "Best Seller",
-  },
-  {
-    id: "sofas-couches",
-    handle: "sofas-couches",
-    title: "Sofas & Couches",
-    description: "Stylish comfort for your living space",
-    productCount: 12,
-    image: "/placeholders/collection-sofas.jpg",
-  },
-  {
-    id: "bed-bases",
-    handle: "bed-bases",
-    title: "Bed Bases",
-    description: "Strong foundations for better sleep",
-    productCount: 10,
-    image: "/placeholders/collection-bed-bases.jpg",
-  },
-  {
-    id: "pillows",
-    handle: "pillows",
-    title: "Pillows",
-    description: "Perfect support for your head and neck",
-    productCount: 6,
-    image: "/placeholders/collection-pillows.jpg",
-  },
-  {
-    id: "bedding",
-    handle: "bedding",
-    title: "Bedding",
-    description: "Complete your sleep sanctuary",
-    productCount: 18,
-    image: "/placeholders/collection-bedding.jpg",
-  },
-  {
-    id: "bedroom-furniture",
-    handle: "bedroom-furniture",
-    title: "Bedroom Furniture",
-    description: "Essential pieces for your bedroom",
-    productCount: 14,
-    image: "/placeholders/collection-bedroom-furniture.jpg",
-  },
-  {
-    id: "living-room",
-    handle: "living-room",
-    title: "Living Room",
-    description: "Transform your living space",
-    productCount: 22,
-    image: "/placeholders/collection-living-room.jpg",
-    badge: "New",
-  },
-];
 
 async function getMenuCollections() {
   const baseUrl = getSiteUrl();
@@ -135,7 +65,7 @@ async function getMenuCollections() {
 
 async function getShopifyCollections() {
   try {
-    const { collections } = await storefront<{
+    const response = await shopifyFetch<{
       collections: {
         edges: Array<{
           node: {
@@ -148,31 +78,24 @@ async function getShopifyCollections() {
           };
         }>;
       };
-    }>(COLLECTIONS_QUERY, { first: 10 });
+    }>({ query: COLLECTIONS_QUERY, variables: { first: 10 } });
 
-    return collections.edges.map(({ node }) => ({
-      id: node.id,
-      handle: node.handle,
-      title: node.title,
-      description: node.description || "",
-      productCount: node.productsCount?.count || 0,
-      image: node.image?.url || null,
-      badge: getBadgeForCollection(node.handle),
-    }));
+    if (response.success) {
+      return response.data.collections.edges.map(({ node }) => ({
+        id: node.id,
+        handle: node.handle,
+        title: node.title,
+        description: node.description || "",
+        productCount: node.productsCount?.count || 0,
+        image: node.image?.url || null,
+        badge: undefined,
+      }));
+    }
+    return [];
   } catch (error) {
     console.error("[getShopifyCollections] Error fetching collections:", error);
-    return fallbackCollectionsData;
+    return [];
   }
-}
-
-function getBadgeForCollection(handle: string): string | undefined {
-  const badgeMap: Record<string, string> = {
-    mattresses: "Most Popular",
-    "sofa-beds": "Best Seller",
-    "living-room": "New",
-    "bedroom-furniture": "Featured",
-  };
-  return badgeMap[handle];
 }
 
 export default async function CollectionsPage() {
@@ -182,10 +105,17 @@ export default async function CollectionsPage() {
   ]);
 
   // Use Shopify collections if available, otherwise fall back to menu collections
-  const collectionsToDisplay =
-    shopifyCollections.length > 0
-      ? shopifyCollections
-      : fallbackCollectionsData;
+  type DisplayCollection = {
+    id: string;
+    handle: string;
+    title: string;
+    description: string;
+    productCount: number;
+    image: string | null;
+    badge: undefined;
+  };
+
+  const collectionsToDisplay: DisplayCollection[] = shopifyCollections;
 
   return (
     <>
@@ -216,72 +146,74 @@ export default async function CollectionsPage() {
         <section className="py-16">
           <div className="container-koala">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {collectionsToDisplay.map((collection, index) => (
-                <Link
-                  key={collection.id}
-                  href={`/collections/${collection.handle}`}
-                  className="group block bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  {/* Collection Image */}
-                  <div className="relative h-64 bg-gray-100 overflow-hidden">
-                    {collection.image ? (
-                      <Image
-                        src={collection.image}
-                        alt={collection.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center h-full bg-gradient-to-br from-koala-green to-green-600">
-                        <span className="text-white text-2xl font-bold">
-                          {collection.title.charAt(0)}
-                        </span>
-                      </div>
-                    )}
-
-                    {/* Badge */}
-                    {collection.badge && (
-                      <div className="absolute top-4 left-4 bg-koala-green text-white px-3 py-1 rounded-full text-sm font-medium">
-                        {collection.badge}
-                      </div>
-                    )}
-
-                    {/* Product Count */}
-                    <div className="absolute bottom-4 right-4 bg-white/90 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">
-                      {collection.productCount} products
-                    </div>
-                  </div>
-
-                  {/* Collection Info */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-koala-green transition-colors">
-                      {collection.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-4">
-                      {collection.description}
-                    </p>
-
-                    {/* CTA */}
-                    <div className="flex items-center text-koala-green font-medium text-sm">
-                      Shop Collection
-                      <svg
-                        className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5l7 7-7 7"
+              {collectionsToDisplay.map(
+                (collection: DisplayCollection, index: number) => (
+                  <Link
+                    key={collection.id}
+                    href={`/collections/${collection.handle}`}
+                    className="group block bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    {/* Collection Image */}
+                    <div className="relative h-64 bg-gray-100 overflow-hidden">
+                      {collection.image ? (
+                        <Image
+                          src={collection.image}
+                          alt={collection.title}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
                         />
-                      </svg>
+                      ) : (
+                        <div className="flex items-center justify-center h-full bg-gradient-to-br from-koala-green to-green-600">
+                          <span className="text-white text-2xl font-bold">
+                            {collection.title.charAt(0)}
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Badge */}
+                      {collection.badge && (
+                        <div className="absolute top-4 left-4 bg-koala-green text-white px-3 py-1 rounded-full text-sm font-medium">
+                          {collection.badge}
+                        </div>
+                      )}
+
+                      {/* Product Count */}
+                      <div className="absolute bottom-4 right-4 bg-white/90 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">
+                        {collection.productCount} products
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
+
+                    {/* Collection Info */}
+                    <div className="p-6">
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-koala-green transition-colors">
+                        {collection.title}
+                      </h3>
+                      <p className="text-gray-600 text-sm mb-4">
+                        {collection.description}
+                      </p>
+
+                      {/* CTA */}
+                      <div className="flex items-center text-koala-green font-medium text-sm">
+                        Shop Collection
+                        <svg
+                          className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </Link>
+                ),
+              )}
             </div>
           </div>
         </section>

@@ -1,80 +1,44 @@
-import { type NextRequest } from "next/server";
-import { getSiteUrl } from "@/lib/siteUrl";
-import { storefront } from "@/lib/shopify";
-import { COLLECTION_PRODUCTS_QUERY } from "@/lib/collectionProductsQuery";
+import { MetadataRoute } from "next";
+import { shopifyFetch } from "@/lib/shopify";
+import { getCollectionsQuery, getProductsQuery } from "@/lib/queries";
+import type { CollectionData, Product } from "@/lib/types";
 
-const COLLECTIONS_QUERY = `
-  query Collections {
-    collections(first: 100) {
-      edges {
-        node {
-          handle
-        }
-      }
-    }
-  }
-`;
-
-const PRODUCTS_QUERY = `
-  query Products {
-    products(first: 100) {
-      edges {
-        node {
-          handle
-        }
-      }
-    }
-  }
-`;
-
-export async function GET() {
-  const siteUrl = getSiteUrl();
-  const urls = [`${siteUrl}/`];
-
-  // Fetch collections
-  const collectionsRes = await storefront(COLLECTIONS_QUERY);
-  type CollectionNode = { node: { handle: string } };
-  const collections =
-    typeof collectionsRes === "object" &&
-    collectionsRes &&
-    "data" in collectionsRes
-      ? (
-          collectionsRes as {
-            data?: { collections?: { edges?: CollectionNode[] } };
-          }
-        ).data?.collections?.edges || []
-      : [];
-  for (const { node } of collections) {
-    urls.push(`${siteUrl}/collections/${node.handle}`);
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  if (!siteUrl) {
+    throw new Error("NEXT_PUBLIC_SITE_URL is not set");
   }
 
-  // Fetch products
-  const productsRes = await storefront(PRODUCTS_QUERY);
-  type ProductNode = { node: { handle: string } };
-  const products =
-    typeof productsRes === "object" && productsRes && "data" in productsRes
-      ? (productsRes as { data?: { products?: { edges?: ProductNode[] } } })
-          .data?.products?.edges || []
-      : [];
-  for (const { node } of products) {
-    urls.push(`${siteUrl}/products/${node.handle}`);
-  }
+  const collectionsResponse = await shopifyFetch<{
+    collections: { edges: { node: CollectionData }[] };
+  }>({ query: getCollectionsQuery });
+  const collections = collectionsResponse.success
+    ? collectionsResponse.data.collections.edges.map((edge) => edge.node)
+    : [];
 
-  const lastmod = new Date().toISOString().split("T")[0];
-  const xml =
-    `<?xml version="1.0" encoding="UTF-8"?>\n` +
-    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
-    urls
-      .map(
-        (url) =>
-          `  <url>\n    <loc>${url}</loc>\n    <changefreq>daily</changefreq>\n    <lastmod>${lastmod}</lastmod>\n  </url>`,
-      )
-      .join("\n") +
-    "\n</urlset>";
+  const productsResponse = await shopifyFetch<{
+    products: { edges: { node: Product }[] };
+  }>({ query: getProductsQuery });
+  const products = productsResponse.success
+    ? productsResponse.data.products.edges.map((edge) => edge.node)
+    : [];
 
-  return new Response(xml, {
-    headers: {
-      "Content-Type": "application/xml",
+  const collectionUrls = collections.map((collection) => ({
+    url: `${siteUrl}/collections/${collection.handle}`,
+    lastModified: new Date(),
+  }));
+
+  const productUrls = products.map((product) => ({
+    url: `${siteUrl}/products/${product.handle}`,
+    lastModified: new Date(),
+  }));
+
+  return [
+    {
+      url: siteUrl,
+      lastModified: new Date(),
     },
-  });
+    ...collectionUrls,
+    ...productUrls,
+  ];
 }
