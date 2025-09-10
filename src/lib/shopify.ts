@@ -8,7 +8,7 @@ async function fetchWithRetry(
   endpoint: string,
   options: RequestInit,
   retries = 3,
-  delay = 1000,
+  delay = 1000
 ): Promise<Response> {
   try {
     const res = await fetch(endpoint, options);
@@ -16,13 +16,13 @@ async function fetchWithRetry(
     if (res.status === 429 || res.status >= 500) {
       if (retries > 0) {
         console.warn(
-          `Shopify API returned ${res.status}. Retrying in ${delay}ms...`,
+          `Shopify API returned ${res.status}. Retrying in ${delay}ms...`
         );
         await new Promise((resolve) => setTimeout(resolve, delay));
         return fetchWithRetry(endpoint, options, retries - 1, delay * 2);
       } else {
         throw new Error(
-          `Shopify API returned ${res.status} after multiple retries.`,
+          `Shopify API returned ${res.status} after multiple retries.`
         );
       }
     }
@@ -39,6 +39,14 @@ async function fetchWithRetry(
   }
 }
 
+/**
+ * Typed Shopify Storefront API client for server use only.
+ *
+ * Usage:
+ *   const result = await shopifyFetch<MyType>({ query, variables });
+ *   if (!result.success) { throw new Error(result.errors); }
+ *   // result.data: MyType
+ */
 export async function shopifyFetch<T>({
   query,
   variables,
@@ -50,7 +58,7 @@ export async function shopifyFetch<T>({
 }): Promise<ShopifyFetchResponse<T>> {
   if (!SHOPIFY_STORE_DOMAIN || !SHOPIFY_STOREFRONT_API_TOKEN) {
     throw new Error(
-      "Missing Shopify environment variables. Make sure SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_API_TOKEN are set.",
+      "Missing Shopify environment variables. Make sure SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_API_TOKEN are set."
     );
   }
 
