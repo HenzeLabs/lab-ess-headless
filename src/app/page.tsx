@@ -1,4 +1,4 @@
-import type { CollectionData } from "@/lib/types";
+import type { CollectionData, MenuItem, ProductNode } from "@/lib/types";
 import { storefront } from "../lib/shopify";
 import { toAppHref } from "../lib/links";
 import Header from "../components/Header";
@@ -132,7 +132,7 @@ const PRODUCT_IMAGE_QUERY = /* GraphQL */ `
 async function getCollections() {
   try {
     const data = await storefront<{ data: { menu: { items: MenuItem[] } } }>(
-      MENU_QUERY,
+      MENU_QUERY
     );
 
     // Process menu items and fetch images for collections
@@ -142,7 +142,7 @@ async function getCollections() {
           if (!subItem?.title?.trim()) return null;
 
           const subHandle = subItem.url?.includes("/collections/")
-            ? (subItem.url.split("/collections/")[1]?.split("?")[0] ?? "")
+            ? subItem.url.split("/collections/")[1]?.split("?")[0] ?? ""
             : subItem.title.toLowerCase();
 
           let image: MenuItem["image"] = null;
@@ -178,14 +178,14 @@ async function getCollections() {
             image,
             items: [],
           } satisfies MenuItem;
-        }),
+        })
       )
     ).filter(notNull) as MenuItem[];
     return menuItems;
   } catch (err: unknown) {
     console.error(
       "[getCollections] Error fetching menu from Shopify Storefront API",
-      err,
+      err
     );
     return [];
   }
