@@ -24,14 +24,33 @@ const nextConfig = {
     ],
   },
   async headers() {
+    const isDev = process.env.NODE_ENV === 'development';
+    const csp = isDev
+      ? [
+          "script-src * 'unsafe-inline' 'unsafe-eval' data: blob:",
+          'object-src *',
+          'base-uri *',
+          'connect-src *',
+          'img-src * data: blob:',
+          "style-src 'self' 'unsafe-inline' data: blob:",
+          'frame-ancestors *',
+        ].join('; ') + ';'
+      : [
+          "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
+          "object-src 'none'",
+          "base-uri 'self'",
+          "connect-src 'self' https://cdn.shopify.com",
+          "img-src 'self' data: https://cdn.shopify.com https://images.pexels.com https://images.ctfassets.net",
+          "style-src 'self' 'unsafe-inline'",
+          "frame-ancestors 'none'",
+        ].join('; ') + ';';
     return [
       {
         source: '/(.*)',
         headers: [
           {
             key: 'Content-Security-Policy',
-            value:
-              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; object-src 'none'; base-uri 'self'; connect-src 'self' https://cdn.shopify.com; img-src 'self' data: https://cdn.shopify.com https://images.pexels.com https://images.ctfassets.net; style-src 'self' 'unsafe-inline'; frame-ancestors 'none';",
+            value: csp,
           },
           {
             key: 'Referrer-Policy',

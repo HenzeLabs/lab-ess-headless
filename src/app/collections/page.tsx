@@ -124,20 +124,20 @@ export default async function CollectionsPage() {
   return (
     <>
       <Header collections={menuCollections} />
-      <main className="bg-white">
+      <main className="bg-background">
         {/* Hero Section */}
         <section className="relative bg-gradient-to-b from-gray-50 to-white py-16 lg:py-24">
           <div className="container-koala text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-koala-green mb-6">
               Shop by Category
             </h1>
-            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
               Discover our complete range of premium furniture and bedding
               designed for modern Australian homes.
             </p>
 
             {/* Quick Stats */}
-            <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-500">
+            <div className="flex flex-wrap justify-center gap-8 text-sm text-muted-foreground">
               <span>8+ Collections</span>
               <span>100+ Products</span>
               <span>Free Shipping Australia-wide</span>
@@ -155,11 +155,11 @@ export default async function CollectionsPage() {
                   <Link
                     key={collection.id}
                     href={`/collections/${collection.handle}`}
-                    className="group block bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in"
+                    className="group block bg-card text-card-foreground rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     {/* Collection Image */}
-                    <div className="relative h-64 bg-gray-100 overflow-hidden">
+                    <div className="relative h-64 bg-muted overflow-hidden">
                       {collection.image ? (
                         <Image
                           src={collection.image}
@@ -183,17 +183,17 @@ export default async function CollectionsPage() {
                       )}
 
                       {/* Product Count */}
-                      <div className="absolute bottom-4 right-4 bg-white/90 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">
+                      <div className="absolute bottom-4 right-4 bg-card/90 text-muted-foreground px-3 py-1 rounded-full text-sm font-medium">
                         {collection.productCount} products
                       </div>
                     </div>
 
                     {/* Collection Info */}
                     <div className="p-6">
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-koala-green transition-colors">
+                      <h3 className="text-xl font-semibold text-foreground mb-2 group-hover:text-koala-green transition-colors">
                         {collection.title}
                       </h3>
-                      <p className="text-gray-600 text-sm mb-4">
+                      <p className="text-muted-foreground text-sm mb-4">
                         {collection.description}
                       </p>
 

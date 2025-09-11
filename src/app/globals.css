@@ -1,5 +1,5 @@
 @import 'tailwindcss/preflight';
-@import 'tailwindcss/utilities';
+@tailwind utilities;
 
 :root {
   /* Light theme tokens (adjust later if needed) */
@@ -7,8 +7,11 @@
   --foreground: 222.2 84% 4.9%;
 
   /* Brand: teal-based */
-  --primary: 173 80% 32%;
+  --primary: 173 70% 26%; /* deeper teal */
   --primary-foreground: 210 40% 98%;
+  /* dark card surfaces in LIGHT theme */
+  --card: 222 47% 11%;
+  --card-foreground: 210 40% 98%;
 
   --secondary: 210 40% 96.1%;
   --secondary-foreground: 222.2 47.4% 11.2%;
@@ -36,6 +39,8 @@
 
   --primary: 173 80% 45%;
   --primary-foreground: 222.2 84% 4.9%;
+  --card: 222 40% 14%;
+  --card-foreground: 210 40% 98%;
 
   --secondary: 217.2 32.6% 17.5%;
   --secondary-foreground: 210 40% 98%;
@@ -73,9 +78,7 @@ a {
 }
 :focus-visible {
   outline: none;
-  box-shadow:
-    0 0 0 2px hsl(var(--ring)),
-    0 0 0 4px hsl(var(--background));
+  box-shadow: 0 0 0 2px hsl(var(--ring)), 0 0 0 4px hsl(var(--background));
 }
 *,
 ::before,

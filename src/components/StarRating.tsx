@@ -23,7 +23,7 @@ export default function StarRating({
           </svg>
         ))}
       </div>
-      <span className="text-sm text-gray-600">({count} reviews)</span>
+      <span className="text-sm text-muted-foreground">({count} reviews)</span>
     </div>
   );
 }

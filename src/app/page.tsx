@@ -48,6 +48,9 @@ export default async function HomePage() {
         className="container mx-auto px-4 lg:px-8 space-y-8 lg:space-y-12 bg-background"
         role="main"
       >
+        <div className="bg-primary text-primary-foreground p-3 rounded-md">
+          Tokens/Tailwind OK
+        </div>
         <HomeClient collections={collections} />
       </main>
       <Footer />

@@ -48,7 +48,9 @@ const testimonials: Testimonial[] = [
 
 const StarIcon = ({ filled }: { filled: boolean }) => (
   <svg
-    className={`h-4 w-4 ${filled ? 'text-koala-yellow' : 'text-gray-200'}`}
+    className={`h-4 w-4 ${
+      filled ? 'text-koala-yellow' : 'text-muted-foreground'
+    }`}
     fill="currentColor"
     viewBox="0 0 20 20"
   >
@@ -97,7 +99,7 @@ function CustomerReviews() {
             >
               {testimonials.map((testimonial) => (
                 <div key={testimonial.id} className="w-full flex-shrink-0 px-4">
-                  <div className="bg-white rounded-card p-8 shadow-card">
+                  <div className="bg-card text-card-foreground rounded-card p-8 shadow-card">
                     {/* Rating */}
                     <div className="flex items-center justify-center gap-1 mb-4">
                       {[...Array(5)].map((_, i) => (

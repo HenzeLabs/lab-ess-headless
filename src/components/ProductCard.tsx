@@ -5,7 +5,7 @@ import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 
-const PLACEHOLDER_IMG = '/placeholder-product.jpg';
+const PLACEHOLDER_IMG = '/placeholders/product1.jpg';
 
 type ProductWithExtras = Product & {
   priceRange?: {
@@ -45,8 +45,8 @@ export default function ProductCard({
       aria-label={product.title}
       className="group h-full flex flex-col"
     >
-      <Card className="flex flex-col p-0 overflow-hidden transition-all duration-300 hover:shadow-elevated flex-1">
-        <div className="relative aspect-square w-full bg-background rounded-t-lg">
+      <Card className="flex flex-col p-0 overflow-hidden flex-1 transition-shadow duration-200 hover:shadow-lg focus-within:shadow-lg">
+        <div className="relative aspect-square w-full bg-background rounded-t-lg transition-transform duration-500 motion-reduce:transition-none motion-reduce:transform-none motion-safe:group-hover:scale-105">
           {product.badge && (
             <Badge
               variant={badgeVariant}
@@ -56,14 +56,10 @@ export default function ProductCard({
             </Badge>
           )}
           <Image
-            src={product.featuredImage?.url ?? PLACEHOLDER_IMG}
-            alt={
-              product.featuredImage?.altText
-                ? product.featuredImage.altText
-                : product.title
-            }
+            src={PLACEHOLDER_IMG}
+            alt={product.title}
             fill
-            className="object-contain transition-transform duration-500 group-hover:scale-105"
+            className="object-contain w-full h-full"
             sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
             style={{ aspectRatio: '1/1' }}
             priority={false}

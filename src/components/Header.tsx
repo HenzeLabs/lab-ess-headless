@@ -98,7 +98,7 @@ export default function Header({ collections }: HeaderProps) {
             {/* Logo */}
             <Link href="/" className="flex items-center">
               <Image
-                src="https://cdn.shopify.com/s/files/1/0338/9141/8171/files/logo.svg?v=1756320517"
+                src="/logo.svg"
                 alt="Lab Essentials"
                 width={100}
                 height={40}
@@ -218,7 +218,7 @@ export default function Header({ collections }: HeaderProps) {
           .map((menuItem) => (
             <div
               key={menuItem.handle}
-              className={`absolute top-full left-0 right-0 bg-white shadow-2xl border-t border-gray-100 transition-all duration-500 ease-out ${
+              className={`absolute top-full left-0 right-0 bg-background shadow-2xl border-t border-border transition-all duration-500 ease-out ${
                 activeMenu === menuItem.handle
                   ? 'opacity-100 visible translate-y-0'
                   : 'opacity-0 invisible -translate-y-4'
@@ -285,10 +285,10 @@ export default function Header({ collections }: HeaderProps) {
                           <div className="relative aspect-square bg-gradient-to-br from-muted to-background rounded-full mb-5 overflow-hidden group-hover:shadow-xl transition-all duration-300 border-4 border-white">
                             {subMenuItem.image?.url ? (
                               <Image
-                                src={subMenuItem.image.url}
-                                alt={
-                                  subMenuItem.image.altText || subMenuItem.title
-                                }
+                                src={`/placeholders/collection${
+                                  (index % 2) + 1
+                                }.jpg`}
+                                alt={subMenuItem.title}
                                 fill
                                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                               />
@@ -348,10 +348,10 @@ export default function Header({ collections }: HeaderProps) {
                           </svg>
                         </div>
                         <div>
-                          <p className="font-semibold text-gray-900 text-sm">
+                          <p className="font-semibold text-foreground text-sm">
                             Satisfaction Guaranteed
                           </p>
-                          <p className="text-xs text-gray-600">
+                          <p className="text-xs text-muted-foreground">
                             We stand by our products and aim for your complete
                             satisfaction.
                           </p>
@@ -386,10 +386,10 @@ export default function Header({ collections }: HeaderProps) {
                           </svg>
                         </div>
                         <div>
-                          <p className="font-semibold text-gray-900 text-sm">
+                          <p className="font-semibold text-foreground text-sm">
                             Secure Checkout
                           </p>
-                          <p className="text-xs text-gray-600">
+                          <p className="text-xs text-muted-foreground">
                             Your transactions are protected with our secure
                             checkout process.
                           </p>
@@ -414,10 +414,10 @@ export default function Header({ collections }: HeaderProps) {
                           </svg>
                         </div>
                         <div>
-                          <p className="font-semibold text-gray-900 text-sm">
+                          <p className="font-semibold text-foreground text-sm">
                             Trusted by 1,200+ Labs
                           </p>
-                          <p className="text-xs text-gray-600">
+                          <p className="text-xs text-muted-foreground">
                             We are a trusted partner for leading healthcare
                             suppliers worldwide
                           </p>

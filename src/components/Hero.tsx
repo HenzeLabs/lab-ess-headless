@@ -18,7 +18,7 @@ export default function Hero() {
           </p>
           <div className="w-full max-w-3xl aspect-[3/1] relative mb-10">
             <Image
-              src="/hero-lab.jpg"
+              src="https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png"
               alt="Modern laboratory with microscopes and scientific equipment"
               fill
               priority

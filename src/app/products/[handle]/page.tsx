@@ -194,7 +194,7 @@ export default async function ProductPage({
           </div>
         </div>
 
-        <section className="py-12 bg-white border-b">
+        <section className="py-12 bg-background border-b">
           <div className="max-w-4xl mx-auto px-4">
             <h2 className="text-2xl font-bold text-koala-green mb-6 text-center">
               Product Description
