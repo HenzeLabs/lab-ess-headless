@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers';
 import { shopifyFetch } from '@/lib/shopify';
-import { createCartMutation, getCartQuery } from '@/lib/queries';
+import { getCartQuery } from '@/lib/queries';
 import type { Cart } from '@/lib/types';
 
 export async function getCart() {
@@ -14,16 +14,11 @@ export async function getCart() {
     query: getCartQuery,
     variables: { cartId },
   });
-  return cartResponse.success ? cartResponse.data.cart : null;
-}
+  return cartResponse.success && cartResponse.data
+    ? cartResponse.data.cart
+    : null;
+  // ...existing code...
 
-export async function createCart() {
-  const cartResponse = await shopifyFetch<{ cartCreate: { cart: Cart } }>({
-    query: createCartMutation,
-  });
-  if (cartResponse.success) {
-    (await cookies()).set('cartId', cartResponse.data.cartCreate.cart.id);
-    return cartResponse.data.cartCreate.cart;
-  }
+  // TODO: Implement createCart mutation
   return null;
 }

@@ -69,7 +69,7 @@ export async function GET(req: Request) {
       data: { productByHandle: ProductByHandle };
     }>({ query: QUERY, variables: { handle } });
 
-    if (response.success) {
+    if (response.success && response.data?.data?.productByHandle) {
       const p = response.data.data.productByHandle;
       if (!p) return NextResponse.json({ error: 'Not found' }, { status: 404 });
       return NextResponse.json({
@@ -79,8 +79,10 @@ export async function GET(req: Request) {
             p.images?.edges?.map((e: { node: ImageNode }) => e.node) || [],
         },
       });
+    } else if (response.success) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
     } else {
-      return NextResponse.json({ error: response.errors }, { status: 500 });
+      return NextResponse.json({ error: 'Unknown error' }, { status: 500 });
     }
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);

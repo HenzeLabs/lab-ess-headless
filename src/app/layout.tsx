@@ -1,6 +1,10 @@
 import './globals.css';
+import '../../styles/persona.css';
 import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
+import HeaderServer from '@/components/HeaderServer';
+import Footer from '@/components/Footer';
+
 const sans = Inter({
   subsets: ['latin'],
   variable: '--font-sans',
@@ -44,7 +48,11 @@ export default function RootLayout({
         {/* <script src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID" strategy="afterInteractive"></script> */}
         {/* <script src="https://www.clarity.ms/tag/CLARITY_ID" strategy="lazyOnload"></script> */}
       </head>
-      <body>{children}</body>
+      <body>
+        <HeaderServer />
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }

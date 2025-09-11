@@ -1,8 +1,7 @@
-export type ProductNode = {
+type ProductNode = {
   id: string;
   title: string;
   handle: string;
-  featuredImage?: { url: string; altText?: string } | null;
 };
 
 export type CollectionData = {
@@ -19,6 +18,7 @@ export type MenuItem = {
   handle: string;
   image?: { url: string; altText?: string } | null;
   items?: MenuItem[];
+  hasMegaMenu?: boolean;
 };
 
 export type Product = {
@@ -52,22 +52,17 @@ export type Product = {
   };
 };
 
-export type CartLine = {
+type CartLine = {
   id: string;
   quantity: number;
   merchandise: {
-    id: string;
-    title: string;
-    price: {
-      amount: string;
-      currencyCode: string;
-    };
+    price: { amount: string; currencyCode: string };
     product: {
-      title: string;
       handle: string;
+      title: string;
       featuredImage: {
         url: string;
-        altText: string;
+        altText?: string;
       };
     };
   };
@@ -83,12 +78,8 @@ export type Cart = {
   };
 };
 
-export type ShopifyFetchResponse<T> =
-  | {
-      success: true;
-      data: T;
-    }
-  | {
-      success: false;
-      errors: string;
-    };
+export type ShopifyFetchResponse<T> = {
+  success: boolean;
+  data?: T;
+  errors?: string;
+};

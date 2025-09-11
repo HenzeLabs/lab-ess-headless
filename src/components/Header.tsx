@@ -2,74 +2,46 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import {
-  Button,
-  Input,
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetClose,
-} from './ui';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
 import { useState, useEffect } from 'react';
 
-interface MenuItem {
-  id: string;
-  title: string;
-  url?: string;
-  items?: MenuItem[];
-  handle?: string;
-  image?: {
-    url: string;
-    altText?: string;
-  } | null;
-}
+import type { MenuItem } from '@/lib/types';
 
-// Extract handle from Shopify URL
+// Extracts the handle from a Shopify menu item URL
 function extractHandle(url: string | undefined): string {
   if (!url) return '';
-  const matches = url.match(/\/collections\/([^?]+)/);
-  return matches ? matches[1] : '';
-}
-
-// Determine item type from URL
-
-function getItemType(
-  url: string | undefined,
-): 'collection' | 'product' | 'page' {
-  if (!url) return 'page';
-  if (url.includes('/collections/')) return 'collection';
-  if (url.includes('/products/')) return 'product';
-  return 'page';
-}
-
-// Get appropriate action text for item type
-function getActionText(url: string | undefined): string {
-  const type = getItemType(url);
-  switch (type) {
-    case 'collection':
-      return 'View Collection';
-    case 'product':
-      return 'View Product';
-    case 'page':
-      return 'View Page';
-    default:
-      return 'View';
+  try {
+    const parsedUrl = new URL(url);
+    const pathParts = parsedUrl.pathname.split('/');
+    return pathParts[pathParts.length - 1] || '';
+  } catch (e) {
+    // Fallback for relative URLs
+    const parts = url.split('/');
+    return parts[parts.length - 1] || '';
   }
 }
 
 interface HeaderProps {
   collections: MenuItem[];
+  logoUrl: string;
+  shopName: string;
+  logoAlt?: string;
 }
 
-export default function Header({ collections }: HeaderProps) {
+export default function Header({
+  collections,
+  logoUrl,
+  shopName,
+  logoAlt,
+}: HeaderProps) {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // Process all menu items while preserving order and adding handles
+  // Use collections directly as menu items
   const menuItems = collections.map((item) => ({
     ...item,
     handle: extractHandle(item.url),
-    hasMegaMenu: item.items && item.items.length > 0,
   }));
 
   useEffect(() => {
@@ -87,32 +59,36 @@ export default function Header({ collections }: HeaderProps) {
         isScrolled ? 'shadow-md' : 'border-b border-border'
       }`}
     >
-      <header className="relative">
-        {/* Announcement Bar */}
-        <div className="w-full bg-primary text-primary-foreground text-sm py-2.5 px-4 text-center font-medium">
-          Free Shipping on Orders Over $300 - No Hassle Returns
-        </div>
-        <div className="max-w-[1440px] mx-auto px-4 lg:px-8">
-          {/* Logo Row and nav/actions */}
-          <div className="w-full flex justify-between items-center pt-5 pb-1">
-            {/* Logo */}
-            <Link href="/" className="flex items-center">
+      <header className="relative bg-[hsl(var(--bg))]">
+        <div className="max-w-[1440px] mx-auto px-4 lg:px-8 pt-8 pb-2 flex flex-col items-center">
+          {/* Logo centered */}
+          <div className="flex justify-center w-full mb-2">
+            <Link href="/" className="flex items-center mx-auto">
               <Image
-                src="/logo.svg"
-                alt="Lab Essentials"
-                width={100}
-                height={40}
-                className="h-20 w-auto"
+                src={logoUrl}
+                alt={logoAlt || shopName}
+                width={140}
+                height={48}
+                className="h-12 w-auto object-contain drop-shadow-sm"
+                style={{ maxWidth: 180, maxHeight: 60 }}
+                priority
               />
             </Link>
-            {/* Desktop nav and actions */}
-            <div className="hidden lg:flex items-center space-x-3">
-              <nav
-                aria-label="Main"
-                className="flex items-center justify-center flex-1 px-8"
-              >
-                <ul className="flex items-center space-x-1">
-                  {menuItems.map((menuItem) => (
+          </div>
+          {/* Main nav: always a full-width row under the logo */}
+          <nav
+            aria-label="Main"
+            className="w-full flex items-center justify-center mb-2"
+          >
+            {menuItems.length === 0 ? (
+              <div className="text-red-600 font-bold py-2">
+                No navigation items found. (Check Shopify menu data)
+              </div>
+            ) : (
+              <ul className="flex items-center space-x-1">
+                {menuItems
+                  .filter((item) => item.handle && item.title)
+                  .map((menuItem) => (
                     <li
                       key={menuItem.handle || menuItem.title}
                       className="relative"
@@ -162,57 +138,59 @@ export default function Header({ collections }: HeaderProps) {
                       )}
                     </li>
                   ))}
-                </ul>
-              </nav>
-              <form role="search" className="hidden lg:block">
-                <Input
-                  inputSize="md"
-                  placeholder="Search..."
-                  className="max-w-xs"
-                />
-              </form>
-              <Button asChild variant="ghost">
-                <Link href="/account" aria-label="Account">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    />
-                  </svg>
-                </Link>
-              </Button>
-              <Button asChild variant="ghost">
-                <Link href="/cart" aria-label="Cart" className="relative">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6.5-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6"
-                    />
-                  </svg>
-                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs font-medium flex items-center justify-center">
-                    0
-                  </span>
-                </Link>
-              </Button>
-            </div>
+              </ul>
+            )}
+          </nav>
+          {/* Actions: Search, Account, Cart */}
+          <div className="w-full flex items-center justify-end gap-2">
+            <form role="search" className="hidden lg:block">
+              <Input
+                inputSize="md"
+                placeholder="Search..."
+                className="max-w-xs"
+              />
+            </form>
+            <Button asChild variant="ghost">
+              <Link href="/account" aria-label="Account">
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+              </Link>
+            </Button>
+            <Button asChild variant="ghost">
+              <Link href="/cart" aria-label="Cart" className="relative">
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6.5-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6"
+                  />
+                </svg>
+                <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs font-medium flex items-center justify-center">
+                  0
+                </span>
+              </Link>
+            </Button>
           </div>
         </div>
 
-        {/* Enhanced Koala-style Mega Menu Panels */}
+        {/* Mega Menu Panels */}
         {menuItems
           .filter((item) => item.hasMegaMenu)
           .map((menuItem) => (
@@ -312,7 +290,7 @@ export default function Header({ collections }: HeaderProps) {
 
                           {/* Dynamic description based on item type */}
                           <p className="text-xs text-muted-foreground mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            {getActionText(subMenuItem.url)}
+                            View Item
                           </p>
                         </Link>
                       ))}

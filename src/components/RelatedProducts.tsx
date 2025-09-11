@@ -6,11 +6,11 @@ import type { Product } from '@/lib/types';
 const related: Product[] = [
   {
     id: '1',
-    title: 'Cushy Sofa Bed',
-    handle: 'cushy-sofa-bed',
+    title: 'Precision Microscope',
+    handle: 'precision-microscope',
     featuredImage: {
       url: '/placeholders/product1.jpg',
-      altText: 'Cushy Sofa Bed',
+      altText: 'Precision Microscope',
     },
     description: '',
     priceRange: {
@@ -22,11 +22,11 @@ const related: Product[] = [
   },
   {
     id: '2',
-    title: 'Kirra Sofa Bed',
-    handle: 'kirra-sofa-bed',
+    title: 'Digital Centrifuge',
+    handle: 'digital-centrifuge',
     featuredImage: {
       url: '/placeholders/product2.jpg',
-      altText: 'Kirra Sofa Bed',
+      altText: 'Digital Centrifuge',
     },
     description: '',
     priceRange: {
@@ -40,9 +40,9 @@ const related: Product[] = [
 
 export default function RelatedProducts() {
   return (
-    <section className="py-16 bg-blue-50 border-t">
+    <section className="py-16 bg-muted border-t">
       <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-2xl font-bold text-koala-green mb-8 text-center">
+        <h2 className="text-2xl font-bold text-primary mb-8 text-center">
           You might also like
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">

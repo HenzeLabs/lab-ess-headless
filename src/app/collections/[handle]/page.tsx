@@ -1,13 +1,8 @@
 import { notFound } from 'next/navigation';
 
-import type { MenuItem, CollectionData, Product } from '@/lib/types';
-import { shopifyFetch } from '@/lib/shopify';
-import Header from '@/components/Header';
+import type { Product } from '@/lib/types';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
-import CollectionFilters from '@/components/CollectionFilters';
-import { getCollectionByHandleQuery, getCollectionsQuery } from '@/lib/queries';
-import AxeA11yScriptClient from '@/components/AxeA11yScriptClient';
 
 export const revalidate = 60;
 
@@ -24,33 +19,9 @@ export default async function CollectionPage({
   if (typeof handle !== 'string' || !/^[a-zA-Z0-9-_]+$/.test(handle))
     notFound();
 
-  // Whitelist/sanitize pagination
-  const allowedSorts = ['title', 'price', 'createdAt'];
-  const sort = allowedSorts.includes(searchParams.sort as string)
-    ? searchParams.sort
-    : 'title';
-
-  const collectionsResponse = await shopifyFetch<{
-    collections: { edges: { node: MenuItem }[] };
-  }>({ query: getCollectionsQuery });
-  const collections = collectionsResponse.success
-    ? collectionsResponse.data.collections.edges.map((edge) => edge.node)
-    : [];
-
-  const collectionResponse = await shopifyFetch<{ collection: CollectionData }>(
-    {
-      query: getCollectionByHandleQuery,
-      variables: { handle, first: 20 },
-    },
-  );
-
-  if (!collectionResponse.success || !collectionResponse.data.collection) {
-    notFound();
-  }
-
-  const collection = collectionResponse.data.collection;
-  const products: Product[] =
-    (collection.products?.edges.map((edge) => edge.node) as Product[]) || [];
+  // Placeholder fallback for now
+  const collection = { title: 'Collection', handle };
+  const products: Product[] = [];
 
   const page =
     Number(
@@ -84,13 +55,6 @@ export default async function CollectionPage({
     '@type': 'CollectionPage',
     name: collection.title,
     url: `${process.env.NEXT_PUBLIC_SITE_URL}/collections/${collection.handle}`,
-    ...(collection.image?.url && {
-      image: {
-        '@type': 'ImageObject',
-        url: collection.image.url,
-        ...(collection.image.altText && { alt: collection.image.altText }),
-      },
-    }),
   };
 
   const productJsonLds = products.map((product) => ({
@@ -126,8 +90,7 @@ export default async function CollectionPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(json) }}
         />
       ))}
-      {process.env.NODE_ENV === 'development' && <AxeA11yScriptClient />}
-      <Header collections={collections} />
+      {/* AxeA11yScriptClient removed */}
       <main id="main-content" className="bg-background py-24" role="main">
         <h1
           className="text-3xl lg:text-4xl font-semibold tracking-tight text-foreground text-center mb-16"
@@ -138,13 +101,11 @@ export default async function CollectionPage({
         </h1>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-8">
-            <aside className="lg:w-72 flex-shrink-0">
-              <CollectionFilters products={products as Product[]} />
-            </aside>
+            {/* CollectionFilters removed */}
             <div className="flex-1">
               {products.length === 0 ? (
                 <div
-                  className="text-center py-24 text-koala-dark-grey text-lg"
+                  className="text-center py-24 text-muted-foreground text-lg"
                   role="status"
                   aria-live="polite"
                 >
@@ -168,7 +129,7 @@ export default async function CollectionPage({
                   </div>
                   <div className="mt-12 text-center">
                     <button
-                      className="bg-koala-green hover:bg-koala-green-dark text-white px-8 py-3 rounded-full font-medium transition-colors"
+                      className="bg-primary hover:bg-primary/80 text-white px-8 py-3 rounded-full font-medium transition-colors"
                       aria-label="Load more products"
                       tabIndex={0}
                       type="button"

@@ -1,0 +1,10 @@
+{
+  "name": "shopify-cleanup",
+  "version": "1.0.0",
+  "description": "CLI tool to safely clean legacy Shopify project files",
+  "bin": {
+    "shopify-cleanup": "bin/index.sh"
+  },
+  "author": "Your Name",
+  "license": "MIT"
+}

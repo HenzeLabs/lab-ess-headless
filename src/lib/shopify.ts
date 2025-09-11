@@ -76,22 +76,48 @@ export async function shopifyFetch<T>({
 
   try {
     const res = await fetchWithRetry(endpoint, options);
-    const { data, errors } = await res.json();
-
+    const contentType = res.headers.get('content-type');
+    if (!res.ok) {
+      const text = await res.text();
+      console.error('❌ Shopify API error:', res.status, text);
+      return {
+        success: false,
+        errors: `Shopify API error: ${res.status} ${text}`,
+      };
+    }
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await res.text();
+      console.error('❌ Shopify non-JSON response:', text);
+      return {
+        success: false,
+        errors: 'Non-JSON response from Shopify: ' + text,
+      };
+    }
+    let json;
+    try {
+      json = await res.json();
+    } catch (parseErr) {
+      console.error('❌ Failed to parse Shopify JSON:', parseErr);
+      return {
+        success: false,
+        errors:
+          'Failed to parse Shopify JSON: ' +
+          (parseErr instanceof Error ? parseErr.message : String(parseErr)),
+      };
+    }
+    const { data, errors } = json;
     if (errors) {
       return {
         success: false,
         errors: errors.map((e: { message: string }) => e.message).join('\n'),
       };
     }
-
     if (!data) {
       return {
         success: false,
         errors: 'No data returned from Shopify.',
       };
     }
-
     return {
       success: true,
       data,
@@ -105,4 +131,35 @@ export async function shopifyFetch<T>({
       errors: message,
     };
   }
+}
+
+export const getMainMenuQuery = /* GraphQL */ `
+  query GetMainMenu {
+    menu(handle: "main-menu") {
+      items {
+        id
+        title
+        url
+      }
+    }
+  }
+`;
+
+export async function fetchShopBrand<T>() {
+  const query = /* GraphQL */ `
+    query GetShopBrand {
+      shop {
+        name
+        brand {
+          logo {
+            alt
+            image {
+              url
+            }
+          }
+        }
+      }
+    }
+  `;
+  return shopifyFetch<T>({ query });
 }

@@ -1,4 +1,22 @@
-@import 'tailwindcss/preflight';
+/* === Persona Shared Tokens (appended, do not remove or replace existing tokens) === */
+:root {
+  --brand: 173 70% 36%;
+  --bg: 0 0% 100%;
+  --ink: 222.2 84% 4.9%;
+  --muted: 210 40% 96.1%;
+}
+
+body {
+  background-color: hsl(var(--bg));
+  color: hsl(var(--ink));
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: 'ss01' on, 'cv01' on;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@tailwind base;
+@tailwind components;
 @tailwind utilities;
 
 :root {
@@ -6,8 +24,8 @@
   --background: 0 0% 100%;
   --foreground: 222.2 84% 4.9%;
 
-  /* Brand: teal-based */
-  --primary: 173 70% 26%; /* deeper teal */
+  /* Brand: indigo-based */
+  --primary: 243 75% 59%; /* indigo */
   --primary-foreground: 210 40% 98%;
   /* dark card surfaces in LIGHT theme */
   --card: 222 47% 11%;
@@ -37,7 +55,7 @@
   --background: 222.2 84% 4.9%;
   --foreground: 210 40% 98%;
 
-  --primary: 173 80% 45%;
+  --primary: 243 80% 70%;
   --primary-foreground: 222.2 84% 4.9%;
   --card: 222 40% 14%;
   --card-foreground: 210 40% 98%;

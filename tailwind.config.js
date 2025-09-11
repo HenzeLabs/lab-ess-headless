@@ -55,9 +55,17 @@ module.exports = {
         xl: '0 20px 25px -5px hsl(var(--foreground) / 0.10), 0 8px 10px -6px hsl(var(--foreground) / 0.08)',
       },
       fontFamily: {
-        sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: [
+          'var(--font-sans)',
+          'Inter',
+          'ui-sans-serif',
+          'system-ui',
+          'sans-serif',
+        ],
+        serif: ['ui-serif', 'Georgia', 'serif'],
         mono: [
           'var(--font-mono)',
+          'JetBrains Mono',
           'ui-monospace',
           'SFMono-Regular',
           'monospace',

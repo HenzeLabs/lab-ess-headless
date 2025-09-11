@@ -1,5 +1,4 @@
 import React from 'react';
-import { IconQuality, IconWarranty } from './Icons';
 
 const signals = [
   {
@@ -23,7 +22,26 @@ const signals = [
     description: "No-stress returns if you don't love it.",
   },
   {
-    Icon: IconWarranty,
+    Icon: (props: React.SVGProps<SVGSVGElement>) => (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={1.5}
+        stroke="currentColor"
+        {...props}
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
+        <circle
+          cx="12"
+          cy="12"
+          r="9"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          fill="none"
+        />
+      </svg>
+    ),
     title: '5-Year Warranty',
     description: 'We stand by our quality for the long haul.',
   },
@@ -48,7 +66,22 @@ const signals = [
     description: 'Shipped straight from our warehouse to your door.',
   },
   {
-    Icon: IconQuality,
+    Icon: (props: React.SVGProps<SVGSVGElement>) => (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={1.5}
+        stroke="currentColor"
+        {...props}
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M12 17.25l6.16 3.24-1.18-6.88 5-4.87-6.91-1-3.09-6.26-3.09 6.26-6.91 1 5 4.87-1.18 6.88L12 17.25z"
+        />
+      </svg>
+    ),
     title: 'Award-Winning Comfort',
     description: 'Loved by customers and critics alike.',
   },
@@ -64,7 +97,7 @@ export default function TrustSignals() {
               key={signal.title}
               className="bg-white p-6 text-center flex flex-col items-center"
             >
-              <signal.Icon className="h-8 w-8 mb-3 text-blue-600" />
+              <signal.Icon className="h-8 w-8 mb-3 text-primary" />
               <h3 className="text-base font-bold text-gray-800">
                 {signal.title}
               </h3>

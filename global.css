@@ -1,24 +1,20 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #f5f5f5; /* Koala light gray */
-  --foreground: #2d5a3d; /* Koala dark green */
-  --primary: #2d5a3d; /* Koala green (main brand) */
-  --primary-accent: #00a878; /* Koala accent green */
-  --secondary: #f0f2f0; /* Koala pale green */
-  --accent: #f5f5f5; /* Koala light gray */
-  --star: #ffd600; /* Koala gold for stars */
-  --button-gradient: linear-gradient(90deg, #2d5a3d 0%, #00a878 100%);
-  --gradient: linear-gradient(90deg, #2d5a3d 0%, #00a878 100%);
+  --background: #f5f5f5;
+  --foreground: #222;
+  --primary: #0055a5;
+  --primary-accent: #008060;
+  --secondary: #e5e5e5;
+  --accent: #e5e5e5;
+  --star: #ffd600;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: 'Inter', 'Geist', 'system-ui', '-apple-system', 'sans-serif';
-  font-feature-settings:
-    'rlig' 1,
-    'calt' 1;
+  font-feature-settings: 'rlig' 1, 'calt' 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
@@ -26,7 +22,7 @@ body {
   line-height: 1.6;
 }
 
-/* Headings: Koala uses bold, tight, modern sans-serif */
+/* Headings: Modern bold, tight, sans-serif */
 h1,
 h2,
 h3,
@@ -40,7 +36,7 @@ h6 {
   color: var(--foreground);
 }
 
-/* Koala link style */
+/* Link style */
 a {
   color: var(--primary-accent);
   text-decoration: none;
@@ -52,7 +48,7 @@ a:focus {
   text-decoration: underline;
 }
 
-/* Koala-style button for hero and primary actions */
+/* Button for hero and primary actions */
 .hero-btn,
 .btn-primary {
   background: var(--button-gradient);
@@ -62,8 +58,7 @@ a:focus {
   text-transform: uppercase;
   font-size: 1rem;
   letter-spacing: 0.05em;
-  box-shadow:
-    0 2px 4px rgba(45, 90, 61, 0.08),
+  box-shadow: 0 2px 4px rgba(45, 90, 61, 0.08),
     0 1.5px 0 rgba(255, 255, 255, 0.12) inset;
   padding: 1rem 2rem;
   border: none;
@@ -74,8 +69,7 @@ a:focus {
 .btn-primary:hover,
 .btn-primary:focus {
   background: linear-gradient(90deg, #00a878 0%, #2d5a3d 100%);
-  box-shadow:
-    0 4px 8px rgba(45, 90, 61, 0.12),
+  box-shadow: 0 4px 8px rgba(45, 90, 61, 0.12),
     0 1.5px 0 rgba(255, 255, 255, 0.12) inset;
   transform: translateY(-2px) scale(1.03);
 }
@@ -87,31 +81,7 @@ select {
   border: 1px solid #e0e7ef;
   padding: 0.75rem 1.25rem;
   font-size: 1rem;
-  background: #fff;
-  color: var(--foreground);
-  transition: border 0.2s;
-}
-input:focus,
-textarea:focus,
-select:focus {
-  border-color: var(--primary-accent);
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(0, 168, 120, 0.18);
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #f0f2f0;
-}
-::-webkit-scrollbar-thumb {
-  background: #b6c3d6;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-accent);
+  /* Removed legacy button for hero and primary actions */
 }
 
 /* Focus styles */

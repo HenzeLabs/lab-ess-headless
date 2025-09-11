@@ -35,10 +35,12 @@ export async function GET() {
     const response = await shopifyFetch<{
       data: { menu: { items: MenuItem[] } };
     }>({ query: QUERY });
-    if (response.success) {
-      return NextResponse.json({ items: response.data.data.menu.items || [] });
+    if (response.success && response.data?.data?.menu?.items) {
+      return NextResponse.json({ items: response.data.data.menu.items });
+    } else if (response.success) {
+      return NextResponse.json({ items: [] });
     } else {
-      return NextResponse.json({ error: response.errors }, { status: 500 });
+      return NextResponse.json({ error: 'Unknown error' }, { status: 500 });
     }
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);

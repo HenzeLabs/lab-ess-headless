@@ -1,24 +1,28 @@
-export const getCollectionsQuery = `
-  query getCollections {
-    collections(first: 250) {
-      edges {
-        node {
-          id
-          title
-          handle
+export const getShopBrandQuery = `
+  query getShopBrand {
+    shop {
+      name
+      brand {
+        logo {
+          image {
+            url
+            altText
+          }
         }
       }
     }
   }
 `;
 
-export const getProductsQuery = `
-  query getProducts {
-    products(first: 250) {
-      edges {
-        node {
-          id
-          handle
+export const getMainMenuQuery = `
+  query getMainMenu {
+    menu(handle: "main-menu") {
+      items {
+        title
+        url
+        items {
+          title
+          url
         }
       }
     }
@@ -67,17 +71,6 @@ export const getProductByHandleQuery = `
   }
 `;
 
-export const createCartMutation = `
-  mutation cartCreate {
-    cartCreate {
-      cart {
-        id
-        checkoutUrl
-      }
-    }
-  }
-`;
-
 export const getCartQuery = `
   query getCart($cartId: ID!) {
     cart(id: $cartId) {
@@ -112,5 +105,3 @@ export const getCartQuery = `
     }
   }
 `;
-
-export { getCollectionProductsQuery as getCollectionByHandleQuery } from './collectionProductsQuery';

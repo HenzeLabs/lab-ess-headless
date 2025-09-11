@@ -65,9 +65,9 @@ export async function GET() {
       data: { products: { edges: { node: ProductNode }[] } };
     }>({ query: QUERY, variables: { first: 5 } });
 
-    if (response.success) {
-      const items: ProductItem[] =
-        response.data.data.products?.edges?.map((e: { node: ProductNode }) => {
+    if (response.success && response.data?.data?.products?.edges) {
+      const items: ProductItem[] = response.data.data.products.edges.map(
+        (e: { node: ProductNode }) => {
           const n = e.node;
           return {
             id: n.id,
@@ -80,10 +80,13 @@ export async function GET() {
               minVariantPrice: n.priceRange?.minVariantPrice,
             },
           };
-        }) ?? [];
-      return NextResponse.json({ count: items.length, products: items });
+        },
+      );
+      return NextResponse.json({ products: items });
+    } else if (response.success) {
+      return NextResponse.json({ products: [] });
     } else {
-      return NextResponse.json({ error: response.errors }, { status: 500 });
+      return NextResponse.json({ error: 'Unknown error' }, { status: 500 });
     }
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);

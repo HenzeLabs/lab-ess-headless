@@ -8,30 +8,34 @@
     "start": "next start",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
-    "lh": "lhci autorun --config=./lighthouse.config.js"
+    "lh": "lhci autorun --config=./lighthouse.config.js",
+    "clean:shopify": "tools/shopify-cleanup/bin/index.sh"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
-    "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.3",
-    "@radix-ui/react-tooltip": "^1.2.8",
     "class-variance-authority": "^0.7.1",
-    "lucide-react": "^0.543.0",
     "next": "^15.5.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "tailwindcss": "^3.4.3"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
     "@next/bundle-analyzer": "^15.5.2",
     "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^24.3.1",
     "@types/react": "^19",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
     "autoprefixer": "^10.4.21",
-    "axe-core": "^4.10.3",
-    "eslint": "^9.35.0",
-    "eslint-config-next": "^15.5.2",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^15.5.3",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jsx-a11y": "^6.10.0",
+    "eslint-plugin-react": "^7.37.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "lhci": "^4.1.1",
+    "postcss": "^8.5.6",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5"
   }
