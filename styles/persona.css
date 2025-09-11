@@ -1,0 +1,34 @@
+/* Persona-aware CSS variables. No resets or global overrides. */
+
+/* Educator: calm clarity, cool sky/indigo, slate backgrounds */
+:root[data-persona='educator'] {
+  --brand: 226 80% 54%; /* indigo (action, links, badges) */
+  --bg: 210 40% 98%; /* slate-50/white */
+  --ink: 222 47% 11%; /* slate-900 */
+  --muted: 215 16% 47%; /* slate-500 */
+  --accent: 234 89% 68%; /* indigo accent */
+}
+/* Clinical: precision/authority, cyan/blue, white surfaces */
+:root[data-persona='clinical'] {
+  --brand: 192 100% 44%; /* cyan/blue (CTA, focus) */
+  --bg: 0 0% 100%; /* white */
+  --ink: 222 47% 11%; /* slate-900 */
+  --muted: 217 16% 82%; /* slate-300 */
+  --accent: 200 100% 60%; /* blue accent */
+}
+/* Research: innovative/high-contrast, fuchsia/violet, dark bg */
+:root[data-persona='research'] {
+  --brand: 292 80% 54%; /* fuchsia/violet (brand) */
+  --bg: 222 47% 11%; /* slate-900 */
+  --ink: 0 0% 100%; /* white */
+  --muted: 250 16% 70%; /* slate-500/violet-300 */
+  --accent: 265 100% 70%; /* violet accent */
+}
+
+/* Utility: .persona-brand-bg, .persona-brand-text */
+[data-persona] .persona-brand-bg {
+  background-color: hsl(var(--brand));
+}
+[data-persona] .persona-brand-text {
+  color: hsl(var(--brand));
+}
