@@ -267,3 +267,50 @@ export const getHomepageProductsQuery = `
     }
   }
 `;
+
+export const getCollectionsListQuery = `
+  query getCollectionsList {
+    collections(first: 20) {
+      edges {
+        node {
+          id
+          title
+          handle
+          image {
+            url
+            altText
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const getCollectionProductsByHandleQuery = `
+  query getCollectionProductsByHandle($handle: String!, $first: Int = 4) {
+    collection(handle: $handle) {
+      id
+      title
+      handle
+      products(first: $first) {
+        edges {
+          node {
+            id
+            title
+            handle
+            featuredImage {
+              url
+              altText
+            }
+            priceRange {
+              minVariantPrice {
+                amount
+                currencyCode
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
