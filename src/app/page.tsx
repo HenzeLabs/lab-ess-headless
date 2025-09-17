@@ -1,123 +1,85 @@
-import Image from 'next/image';
+import type { Metadata } from 'next';
 
-// import BrandValues from '../components/BrandValues';
-// import CustomerReviews from '../components/CustomerReviews';
-// import FAQ from '../components/FAQ';
-// import PersonaHero from '../../components/PersonaHero';
-// import PersonaEmphasisBlock from '../../components/PersonaEmphasisBlock';
-import {
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetClose,
-} from '../components/ui/sheet';
-import { Button } from '../components/ui/button';
+import Hero from '@/components/Hero';
+import FeaturedCollections from '@/components/FeaturedCollections';
+import CTASection from '@/components/CTASection';
+import ProductGrid from '@/components/ProductGrid';
+import TestimonialBlock from '@/components/TestimonialBlock';
+import { absoluteUrl, jsonLd } from '@/lib/seo';
 
-import { getCart } from '@/lib/cart';
+export const revalidate = 60;
+
+const homeTitle = 'Lab Essentials | Precision Lab Equipment & Supplies';
+const homeDescription =
+  'Lab Essentials delivers calibrated instruments, consumables, and support services that keep research teams compliant and efficient.';
+
+export const metadata: Metadata = {
+  title: homeTitle,
+  description: homeDescription,
+  alternates: {
+    canonical: absoluteUrl('/'),
+  },
+  openGraph: {
+    title: homeTitle,
+    description: homeDescription,
+    url: absoluteUrl('/'),
+    siteName: 'Lab Essentials',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: homeTitle,
+    description: homeDescription,
+  },
+};
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Lab Essentials',
+  url: absoluteUrl('/'),
+  logo: absoluteUrl('/logo.svg'),
+  sameAs: [
+    'https://www.linkedin.com/company/labessentials',
+    'https://www.facebook.com/labessentials',
+  ],
+};
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Lab Essentials',
+  url: absoluteUrl('/'),
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: `${absoluteUrl('/search')}?q={search_term_string}`,
+    'query-input': 'required name=search_term_string',
+  },
+};
 
 export default async function HomePage() {
-  const cart = await getCart();
   return (
     <>
-      {/* <AnnouncementBar /> */}
-      {/* <PersonaGate> */}
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button className="fixed bottom-8 right-8 z-[60] rounded-full shadow-2xl bg-primary text-primary-foreground px-7 py-4 text-base font-semibold flex items-center gap-2 hover:scale-105 hover:shadow-3xl transition-all focus:outline-none focus:ring-4 focus:ring-primary/30">
-            <svg
-              className="w-5 h-5 mr-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6.5-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6"
-              />
-            </svg>
-            View Cart
-            <span className="ml-2 inline-flex items-center justify-center h-6 w-6 rounded-full bg-accent text-white text-xs font-bold">
-              {cart?.lines?.edges?.length ?? 0}
-            </span>
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="right">
-          <div className="flex items-center justify-between border-b pb-2 mb-4">
-            <div className="text-lg font-semibold">Your Cart</div>
-            <SheetClose asChild>
-              <Button variant="ghost" className="absolute top-2 right-2">
-                Close
-              </Button>
-            </SheetClose>
-          </div>
-          {/* Cart content preview (minimal, for now) */}
-          {cart && cart.lines.edges.length > 0 ? (
-            <ul className="divide-y divide-border my-4">
-              {cart.lines.edges.map((item) => (
-                <li key={item.node.id} className="flex items-center gap-4 py-4">
-                  <Image
-                    src={item.node.merchandise.product.featuredImage.url}
-                    alt={
-                      item.node.merchandise.product.featuredImage.altText || ''
-                    }
-                    width={48}
-                    height={48}
-                    className="w-12 h-12 rounded object-cover border"
-                  />
-                  <div className="flex-1">
-                    <div className="font-medium">
-                      {item.node.merchandise.product.title}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      Qty {item.node.quantity}
-                    </div>
-                  </div>
-                  <div className="font-semibold">
-                    {item.node.merchandise.price.amount}{' '}
-                    {item.node.merchandise.price.currencyCode}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="text-center text-muted-foreground my-8">
-              Your cart is empty.
-            </div>
-          )}
-          {cart && cart.lines.edges.length > 0 && (
-            <a
-              href={cart.checkoutUrl}
-              className="block w-full mt-6 bg-primary text-primary-foreground font-bold py-3 rounded-lg text-center hover:bg-primary/90 transition"
-            >
-              Checkout
-            </a>
-          )}
-        </SheetContent>
-      </Sheet>
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(organizationJsonLd)} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(websiteJsonLd)} />
       <main
         id="main-content"
-        className="container mx-auto px-4 lg:px-8 space-y-20 lg:space-y-32 bg-[hsl(var(--bg))] text-[hsl(var(--ink))] pt-8 lg:pt-12"
+        className="bg-[hsl(var(--bg))] text-[hsl(var(--ink))]"
         role="main"
       >
-        {/* <section className="mb-8 lg:mb-12">
-            <PersonaHero />
-          </section>
-          <section className="mb-8 lg:mb-12">
-            <PersonaEmphasisBlock />
-          </section>
-          <section className="mb-8 lg:mb-12">
-            <BrandValues />
-          </section>
-          <section className="mb-8 lg:mb-12">
-            <CustomerReviews />
-          </section>
-          <section className="mb-8 lg:mb-12">
-            <FAQ />
-          </section> */}
+      <Hero
+        title="Modern Lab Equipment. Simplified. Delivered."
+        subtitle="Equip your schools, clinical labs, and research teams with high-performance tools, from essential consumables to precision instruments. We provide reliable solutions, backed by U.S.-based support and fast shipping, to help you maintain compliance and accelerate discovery."
+        ctaText="Shop Microscopes"
+        ctaHref="/collections/microscopes"
+        ctaSecondaryText="Find Your Microscope"
+        ctaSecondaryHref="/pages/microscope-selector-quiz"
+      />
+        <FeaturedCollections />
+        <CTASection />
+        <ProductGrid />
+        <TestimonialBlock />
       </main>
-      {/* </PersonaGate> */}
     </>
   );
 }
