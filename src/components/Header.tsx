@@ -193,6 +193,7 @@ export default function Header({
               onMouseLeave={handleMouseLeave}
               style={{ zIndex: 40, width: '80vw', maxWidth: '1200px' }}
               role="menu"
+              tabIndex={-1}
             >
               {/* Full-width background with subtle gradient */}
               <div className="bg-gradient-to-b from-white via-gray-50/30 to-white">
@@ -418,7 +419,6 @@ export default function Header({
                 inputSize="lg"
                 placeholder="Search for products..."
                 className="w-full text-2xl"
-                autoFocus
               />
             </form>
           </div>
