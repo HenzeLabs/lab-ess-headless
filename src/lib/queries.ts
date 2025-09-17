@@ -18,11 +18,61 @@ export const getMainMenuQuery = `
   query getMainMenu {
     menu(handle: "main-menu") {
       items {
+        id
         title
         url
+        resourceId
         items {
+          id
           title
           url
+          resourceId
+          items {
+            id
+            title
+            url
+            resourceId
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const getCollectionsByIdQuery = `
+  query getCollectionsById($ids: [ID!]!) {
+    nodes(ids: $ids) {
+      ... on Collection {
+        id
+        title
+        image {
+          url
+          altText
+        }
+        products(first: 1) {
+          edges {
+            node {
+              featuredImage {
+                url
+                altText
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const getProductsByIdQuery = `
+  query getProductsById($ids: [ID!]!) {
+    nodes(ids: $ids) {
+      ... on Product {
+        id
+        title
+        featuredImage {
+          url
+          altText
         }
       }
     }
@@ -34,7 +84,7 @@ export const getProductByHandleQuery = `
     product(handle: $handle) {
       id
       title
-      description
+      descriptionHtml
       tags
       images(first: 10) {
         edges {
@@ -98,6 +148,118 @@ export const getCartQuery = `
                   }
                 }
               }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const getCollectionByHandleQuery = `
+  query getCollectionByHandle($handle: String!, $first: Int = 8) {
+    collection(handle: $handle) {
+      id
+      title
+      handle
+      description
+      image {
+        url
+        altText
+      }
+      products(first: $first) {
+        edges {
+          node {
+            id
+            title
+            handle
+            descriptionHtml
+            featuredImage {
+              url
+              altText
+            }
+            priceRange {
+              minVariantPrice {
+                amount
+                currencyCode
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const cartLinesRemoveMutation = `
+  mutation cartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
+    cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
+      cart {
+        id
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+export const getHomepageCollectionsQuery = `
+  query getHomepageCollections($first: Int = 4) {
+    collections(first: $first) {
+      edges {
+        node {
+          id
+          title
+          handle
+          description
+          image {
+            url
+            altText
+          }
+          products(first: 1) {
+            edges {
+              node {
+                id
+                featuredImage {
+                  url
+                  altText
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const getHomepageProductsQuery = `
+  query getHomepageProducts($first: Int = 8) {
+    products(first: $first) {
+      edges {
+        node {
+          id
+          title
+          handle
+          descriptionHtml
+          featuredImage {
+            url
+            altText
+          }
+          images(first: 4) {
+            edges {
+              node {
+                url
+                altText
+              }
+            }
+          }
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
             }
           }
         }

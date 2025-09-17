@@ -2,10 +2,11 @@ import Header from '@/components/Header';
 import {
   getMainMenuQuery,
   getCollectionsByIdQuery,
+  getProductsByIdQuery,
   fetchShopBrand,
   shopifyFetch,
 } from '@/lib/shopify';
-import type { CollectionDetail, MenuItem } from '@/lib/types';
+import type { CollectionDetail, MenuItem, Product } from '@/lib/types';
 import { normalizeMenuItems } from '@/lib/menu';
 
 interface MainMenuData {
@@ -16,6 +17,9 @@ interface MainMenuData {
 
 const isCollectionId = (value?: string | null) =>
   typeof value === 'string' && value.startsWith('gid://shopify/Collection/');
+
+const isProductId = (value?: string | null) =>
+  typeof value === 'string' && value.startsWith('gid://shopify/Product/');
 
 const collectCollectionIds = (items: MenuItem[], set: Set<string>) => {
   items.forEach((item) => {
@@ -28,38 +32,63 @@ const collectCollectionIds = (items: MenuItem[], set: Set<string>) => {
   });
 };
 
-const enhanceMenuWithCollections = (
+const collectProductIds = (items: MenuItem[], set: Set<string>) => {
+  items.forEach((item) => {
+    if (isProductId(item.resourceId)) {
+      set.add(item.resourceId as string);
+    }
+    if (item.items) {
+      collectProductIds(item.items, set);
+    }
+  });
+};
+
+const enhanceMenuItems = (
   items: MenuItem[],
   collectionMap: Map<string, CollectionDetail>,
+  productMap: Map<string, Product>,
 ): MenuItem[] =>
   items.map((item) => {
     const enhancedChildren = item.items
-      ? enhanceMenuWithCollections(item.items, collectionMap)
+      ? enhanceMenuItems(item.items, collectionMap, productMap)
       : undefined;
 
-    const collection = item.resourceId ? collectionMap.get(item.resourceId) : undefined;
     let image = item.image ?? null;
-    if (!image && collection) {
-      const candidate = collection.image ?? collection.products?.edges?.[0]?.node.featuredImage ?? null;
-      if (candidate?.url) {
-        image = {
-          url: candidate.url,
-          altText: candidate.altText ?? undefined,
-        };
+    let description = item.description ?? null;
+
+    if (isCollectionId(item.resourceId)) {
+      const collection = item.resourceId ? collectionMap.get(item.resourceId) : undefined;
+      if (collection) {
+        description = collection.description ?? null;
+        if (!image) {
+          const candidate = collection.image ?? collection.products?.edges?.[0]?.node.featuredImage ?? null;
+          if (candidate?.url) {
+            image = {
+              url: candidate.url,
+              altText: candidate.altText ?? undefined,
+            };
+          }
+        }
       }
-    } else if (image?.url) {
-      image = {
-        url: image.url,
-        altText: image.altText ?? undefined,
-      };
+    } else if (isProductId(item.resourceId)) {
+      const product = item.resourceId ? productMap.get(item.resourceId) : undefined;
+      if (product && !image) {
+        const candidate = product.featuredImage ?? null;
+        if (candidate?.url) {
+          image = {
+            url: candidate.url,
+            altText: candidate.altText ?? undefined,
+          };
+        }
+      }
     }
 
     return {
       ...item,
       image,
+      description,
       items: enhancedChildren,
       hasMegaMenu: Boolean(enhancedChildren && enhancedChildren.length > 0),
-      description: collection?.description,
     };
   });
 
@@ -88,9 +117,12 @@ export default async function SiteHeader() {
   const collectionIds = new Set<string>();
   collectCollectionIds(normalizedMenu, collectionIds);
 
+  const productIds = new Set<string>();
+  collectProductIds(normalizedMenu, productIds);
+
   let collectionsMap = new Map<string, CollectionDetail>();
   if (collectionIds.size > 0) {
-    const { data: collectionData } = await shopifyFetch<{ nodes: (CollectionDetail | null)[]}>({
+    const { data: collectionData } = await shopifyFetch<{ nodes: (CollectionDetail | null)[] }>({
       query: getCollectionsByIdQuery,
       variables: { ids: Array.from(collectionIds) },
     });
@@ -102,7 +134,21 @@ export default async function SiteHeader() {
     );
   }
 
-  const enrichedMenu = enhanceMenuWithCollections(normalizedMenu, collectionsMap);
+  let productsMap = new Map<string, Product>();
+  if (productIds.size > 0) {
+    const { data: productData } = await shopifyFetch<{ nodes: (Product | null)[] }>({
+      query: getProductsByIdQuery,
+      variables: { ids: Array.from(productIds) },
+    });
+
+    productsMap = new Map(
+      (productData.nodes || [])
+        .filter((node): node is Product => Boolean(node))
+        .map((node) => [node.id, node]),
+    );
+  }
+
+  const enrichedMenu = enhanceMenuItems(normalizedMenu, collectionsMap, productsMap);
 
   // Note: AnnouncementBar is already rendered inside Header.tsx in this codebase.
   // To avoid duplication, we only render Header here.

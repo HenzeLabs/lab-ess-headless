@@ -44,7 +44,6 @@ async function fetchWithRetry(
  *
  * Usage:
  *   const result = await shopifyFetch<MyType>({ query, variables });
- *   if (!result.success) { throw new Error(result.errors); }
  *   // result.data: MyType
  */
 export async function shopifyFetch<T>({
@@ -79,57 +78,35 @@ export async function shopifyFetch<T>({
     const contentType = res.headers.get('content-type');
     if (!res.ok) {
       const text = await res.text();
-      console.error('❌ Shopify API error:', res.status, text);
-      return {
-        success: false,
-        errors: `Shopify API error: ${res.status} ${text}`,
-      };
+      throw new Error(`Shopify API error: ${res.status} ${text}`);
     }
     if (!contentType || !contentType.includes('application/json')) {
       const text = await res.text();
-      console.error('❌ Shopify non-JSON response:', text);
-      return {
-        success: false,
-        errors: 'Non-JSON response from Shopify: ' + text,
-      };
+      throw new Error(`Non-JSON response from Shopify: ${text}`);
     }
-    let json;
-    try {
-      json = await res.json();
-    } catch (parseErr) {
-      console.error('❌ Failed to parse Shopify JSON:', parseErr);
-      return {
-        success: false,
-        errors:
-          'Failed to parse Shopify JSON: ' +
-          (parseErr instanceof Error ? parseErr.message : String(parseErr)),
-      };
-    }
-    const { data, errors } = json;
-    if (errors) {
-      return {
-        success: false,
-        errors: errors.map((e: { message: string }) => e.message).join('\n'),
-      };
+
+    const json = await res.json();
+    const { data, errors } = json as {
+      data?: T;
+      errors?: { message: string }[];
+    };
+
+    if (errors && errors.length > 0) {
+      throw new Error(errors.map((e) => e.message).join('\n'));
     }
     if (!data) {
-      return {
-        success: false,
-        errors: 'No data returned from Shopify.',
-      };
+      throw new Error('No data returned from Shopify.');
     }
+
     return {
       success: true,
       data,
     };
   } catch (err: unknown) {
     console.error('❌ Shopify Fetch Failed:', err);
-    const message =
-      err instanceof Error ? err.message : 'An unknown error occurred.';
-    return {
-      success: false,
-      errors: message,
-    };
+    throw err instanceof Error
+      ? err
+      : new Error('An unknown error occurred while contacting Shopify.');
   }
 }
 
@@ -140,6 +117,59 @@ export const getMainMenuQuery = /* GraphQL */ `
         id
         title
         url
+        resourceId
+        items {
+          id
+          title
+          url
+          resourceId
+          items {
+            id
+            title
+            url
+            resourceId
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const getCollectionsByIdQuery = /* GraphQL */ `
+  query getCollectionsById($ids: [ID!]!) {
+    nodes(ids: $ids) {
+      ... on Collection {
+        id
+        title
+        image {
+          url
+          altText
+        }
+        products(first: 1) {
+          edges {
+            node {
+              featuredImage {
+                url
+                altText
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const getProductsByIdQuery = /* GraphQL */ `
+  query getProductsById($ids: [ID!]!) {
+    nodes(ids: $ids) {
+      ... on Product {
+        id
+        title
+        featuredImage {
+          url
+          altText
+        }
       }
     }
   }
@@ -152,9 +182,9 @@ export async function fetchShopBrand<T>() {
         name
         brand {
           logo {
-            alt
             image {
               url
+              altText
             }
           }
         }

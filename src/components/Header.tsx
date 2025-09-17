@@ -172,7 +172,7 @@ export default function Header({
                     </div>
                     <Link
                       href={menuItem.url || `/collections/${menuItem.handle}`}
-                      className="inline-flex items-center bg-purple-600 hover:bg-purple-700 text-white px-10 py-4 rounded-full font-semibold text-sm uppercase tracking-wider transition-all duration-300 hover:shadow-lg hover:scale-105"
+                      className="inline-flex items-center bg-purple-600 hover:bg-purple-700 text-white px-10 py-4 rounded-full font-semibold text-sm uppercase tracking-wider transition-all duration-300 hover:shadow-lg hover:scale-105 hover:text-white"
                     >
                       <span>SHOP ALL {menuItem.title.toUpperCase()}</span>
                       <svg
@@ -211,13 +211,13 @@ export default function Header({
                           style={{ animationDelay: `${index * 50}ms` }}
                         >
                           {/* Product/Collection Image */}
-                          <div className="relative aspect-square bg-gradient-to-br from-muted to-background rounded-full mb-5 overflow-hidden group-hover:shadow-xl transition-all duration-300 border-4 border-white">
+                          <div className="relative aspect-square bg-gradient-to-br from-muted to-background rounded-full mb-5 overflow-hidden shadow-xl transition-all duration-300 border-4 border-white">
                             {subMenuItem.image?.url ? (
                               <Image
                                 src={subMenuItem.image.url}
                                 alt={subMenuItem.title}
                                 fill
-                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                                className="w-full h-full object-cover transition-transform duration-300 scale-110"
                               />
                             ) : (
                               <div className="w-full h-full bg-gradient-to-br from-primary/15 to-primary/25 flex items-center justify-center relative">
@@ -227,9 +227,9 @@ export default function Header({
                               </div>
                             )}
                             {/* Hover overlay */}
-                            <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-all duration-300" />
+                            <div className="absolute inset-0 bg-primary/20 opacity-100 transition-all duration-300" />
                             {/* Subtle border ring on hover */}
-                            <div className="absolute inset-0 rounded-full border-2 border-primary/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            <div className="absolute inset-0 rounded-full border-2 border-primary/30 opacity-100 transition-opacity duration-300" />
                           </div>
 
                           {/* Enhanced title styling */}
@@ -238,7 +238,7 @@ export default function Header({
                           </h3>
 
                           {/* Dynamic description based on item type */}
-                          <p className="text-xs text-muted-foreground mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <p className="text-xs text-muted-foreground mt-1 opacity-100 transition-opacity duration-300">
                             View Item
                           </p>
                         </Link>
