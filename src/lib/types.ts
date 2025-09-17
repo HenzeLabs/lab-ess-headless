@@ -1,31 +1,47 @@
-type ProductNode = {
-  id: string;
-  title: string;
-  handle: string;
-};
-
 export type CollectionData = {
   id: string;
   title: string;
   handle: string;
+  description?: string | null;
   image?: { url: string; altText?: string } | null;
-  products?: { edges: { node: ProductNode }[] };
+  products?: { edges: { node: Product }[] };
+};
+
+export type CollectionDetail = {
+  id: string;
+  description?: string | null;
+  image?: {
+    url: string;
+    altText?: string | null;
+  } | null;
+  products?: {
+    edges: {
+      node: {
+        featuredImage?: {
+          url: string;
+          altText?: string | null;
+        } | null;
+      };
+    }[];
+  } | null;
 };
 export type MenuItem = {
   id: string;
   title: string;
   url: string;
-  handle: string;
+  handle?: string;
+  resourceId?: string | null;
   image?: { url: string; altText?: string } | null;
   items?: MenuItem[];
   hasMegaMenu?: boolean;
+  description?: string | null;
 };
 
 export type Product = {
   id: string;
   title: string;
   handle: string;
-  description: string;
+  descriptionHtml?: string;
   tags?: string[];
   featuredImage?: { url: string; altText?: string };
   images?: {
@@ -79,7 +95,6 @@ export type Cart = {
 };
 
 export type ShopifyFetchResponse<T> = {
-  success: boolean;
-  data?: T;
-  errors?: string;
+  success: true;
+  data: T;
 };

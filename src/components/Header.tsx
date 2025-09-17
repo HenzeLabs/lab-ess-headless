@@ -4,8 +4,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import type { MenuItem } from '@/lib/types';
+import { Search, User, ShoppingCart, X } from 'lucide-react';
 
 function extractHandle(url: string | undefined): string {
   if (!url) return '';
@@ -35,9 +36,6 @@ export default function Header({
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const menuRefs = useRef<{
-    [key: string]: { trigger: HTMLLIElement | null; panel: HTMLDivElement | null };
-  }>({});
 
   const menuItems = collections.map((item) => ({
     ...item,
@@ -60,28 +58,6 @@ export default function Header({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
-
-  useEffect(() => {
-    if (activeMenu && menuRefs.current[activeMenu]) {
-      const { trigger, panel } = menuRefs.current[activeMenu];
-      if (trigger && panel) {
-        const triggerRect = trigger.getBoundingClientRect();
-        const panelRect = panel.getBoundingClientRect();
-        const viewportWidth = window.innerWidth;
-
-        let left = triggerRect.left + triggerRect.width / 2 - panelRect.width / 2;
-
-        if (left < 16) {
-          left = 16; // Add some padding from the edge
-        } else if (left + panelRect.width > viewportWidth - 16) {
-          left = viewportWidth - panelRect.width - 16;
-        }
-
-        panel.style.left = `${left}px`;
-        panel.style.top = `${triggerRect.bottom}px`; // Position below the trigger
-      }
-    }
-  }, [activeMenu]);
 
   const handleMouseEnter = (handle: string) => setActiveMenu(handle);
   const handleMouseLeave = () => setActiveMenu(null);
@@ -112,24 +88,18 @@ export default function Header({
                 </Link>
               </div>
               {/* Actions: Search, Account, Cart */}
-              <div className="flex-1 flex items-center justify-end gap-4">
+              <div className="flex-1 flex items-center justify-end gap-2">
                 <Button variant="ghost" onClick={() => setIsSearchOpen(true)} aria-label="Open search">
-                  <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
+                  <Search className="h-6 w-6" />
                 </Button>
                 <Button asChild variant="ghost">
                   <Link href="/account" aria-label="Account">
-                    <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
+                    <User className="h-6 w-6" />
                   </Link>
                 </Button>
                 <Button asChild variant="ghost">
                   <Link href="/cart" aria-label="Cart" className="relative">
-                    <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6.5-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6" />
-                    </svg>
+                    <ShoppingCart className="h-6 w-6" />
                     <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs font-medium flex items-center justify-center">0</span>
                   </Link>
                 </Button>
@@ -147,10 +117,6 @@ export default function Header({
                       className="relative"
                       onMouseEnter={menuItem.hasMegaMenu ? () => handleMouseEnter(menuItem.handle) : undefined}
                       onMouseLeave={menuItem.hasMegaMenu ? handleMouseLeave : undefined}
-                      ref={el => {
-                        if (!menuRefs.current[menuItem.handle]) menuRefs.current[menuItem.handle] = { trigger: null, panel: null };
-                        menuRefs.current[menuItem.handle].trigger = el;
-                      }}
                     >
                       {menuItem.hasMegaMenu ? (
                         <Button
@@ -180,11 +146,7 @@ export default function Header({
           {menuItems.filter(item => item.hasMegaMenu).map(menuItem => (
             <div
               key={menuItem.handle}
-              ref={el => {
-                if (!menuRefs.current[menuItem.handle]) menuRefs.current[menuItem.handle] = { trigger: null, panel: null };
-                menuRefs.current[menuItem.handle].panel = el;
-              }}
-              className={`fixed bg-background shadow-2xl border-t border-border transition-all duration-300 ease-in-out ${
+              className={`absolute top-full bg-background shadow-2xl border-t border-border transition-all duration-300 ease-in-out left-1/2 -translate-x-1/2 ${
                 activeMenu === menuItem.handle
                   ? 'opacity-100 visible translate-y-0'
                   : 'opacity-0 invisible -translate-y-4'
@@ -205,13 +167,12 @@ export default function Header({
                         {menuItem.title}
                       </h2>
                       <p className="text-lg text-muted-foreground max-w-md">
-                        Discover our premium range of professional{' '}
-                        {menuItem.title.toLowerCase()} for research and industry
+                        {menuItem.description || `Discover our premium range of professional ${menuItem.title.toLowerCase()} for research and industry`}
                       </p>
                     </div>
                     <Link
                       href={menuItem.url || `/collections/${menuItem.handle}`}
-                      className="inline-flex items-center bg-primary hover:bg-primary/90 text-primary-foreground px-10 py-4 rounded-full font-semibold text-sm uppercase tracking-wider transition-all duration-300 hover:shadow-lg hover:scale-105"
+                      className="inline-flex items-center bg-purple-600 hover:bg-purple-700 text-white px-10 py-4 rounded-full font-semibold text-sm uppercase tracking-wider transition-all duration-300 hover:shadow-lg hover:scale-105"
                     >
                       <span>SHOP ALL {menuItem.title.toUpperCase()}</span>
                       <svg
@@ -253,9 +214,7 @@ export default function Header({
                           <div className="relative aspect-square bg-gradient-to-br from-muted to-background rounded-full mb-5 overflow-hidden group-hover:shadow-xl transition-all duration-300 border-4 border-white">
                             {subMenuItem.image?.url ? (
                               <Image
-                                src={`/placeholders/collection${
-                                  (index % 2) + 1
-                                }.jpg`}
+                                src={subMenuItem.image.url}
                                 alt={subMenuItem.title}
                                 fill
                                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
@@ -410,9 +369,7 @@ export default function Header({
               onClick={() => setIsSearchOpen(false)}
               aria-label="Close search"
             >
-              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <X className="h-8 w-8" />
             </Button>
             <form role="search">
               <Input
