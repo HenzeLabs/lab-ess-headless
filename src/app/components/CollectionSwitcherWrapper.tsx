@@ -14,7 +14,17 @@ export default async function CollectionSwitcherWrapper() {
     query: getCollectionsListQuery,
   });
 
-  const initialCollections = data.collections.edges.map((edge) => edge.node);
+  const initialCollections = data.collections.edges
+    .map((edge) => edge.node)
+    .filter((collection) =>
+      [
+        'microscopes',
+        'centrifuges',
+        'microscope-cameras',
+        'incubators-slide-preparation',
+        'measuring-testing-instruments',
+      ].includes(collection.handle),
+    );
 
   return <CollectionSwitcher initialCollections={initialCollections} />;
 }
