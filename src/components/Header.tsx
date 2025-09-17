@@ -4,11 +4,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { useState, useEffect } from 'react';
-
+import { useState, useEffect, useRef } from 'react';
 import type { MenuItem } from '@/lib/types';
 
-// Extracts the handle from a Shopify menu item URL
 function extractHandle(url: string | undefined): string {
   if (!url) return '';
   try {
@@ -16,7 +14,6 @@ function extractHandle(url: string | undefined): string {
     const pathParts = parsedUrl.pathname.split('/');
     return pathParts[pathParts.length - 1] || '';
   } catch (e) {
-    // Fallback for relative URLs
     const parts = url.split('/');
     return parts[parts.length - 1] || '';
   }
@@ -37,8 +34,11 @@ export default function Header({
 }: HeaderProps) {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const menuRefs = useRef<{
+    [key: string]: { trigger: HTMLLIElement | null; panel: HTMLDivElement | null };
+  }>({});
 
-  // Use collections directly as menu items
   const menuItems = collections.map((item) => ({
     ...item,
     handle: extractHandle(item.url),
@@ -50,160 +50,149 @@ export default function Header({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setActiveMenu(null);
+        setIsSearchOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  useEffect(() => {
+    if (activeMenu && menuRefs.current[activeMenu]) {
+      const { trigger, panel } = menuRefs.current[activeMenu];
+      if (trigger && panel) {
+        const triggerRect = trigger.getBoundingClientRect();
+        const panelRect = panel.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+
+        let left = triggerRect.left + triggerRect.width / 2 - panelRect.width / 2;
+
+        if (left < 16) {
+          left = 16; // Add some padding from the edge
+        } else if (left + panelRect.width > viewportWidth - 16) {
+          left = viewportWidth - panelRect.width - 16;
+        }
+
+        panel.style.left = `${left}px`;
+        panel.style.top = `${triggerRect.bottom}px`; // Position below the trigger
+      }
+    }
+  }, [activeMenu]);
+
   const handleMouseEnter = (handle: string) => setActiveMenu(handle);
   const handleMouseLeave = () => setActiveMenu(null);
 
   return (
-    <div
-      className={`sticky top-0 z-50 bg-background transition-shadow duration-200 ${
-        isScrolled ? 'shadow-md' : 'border-b border-border'
-      }`}
-    >
-      <header className="relative bg-[hsl(var(--bg))]">
-        <div className="max-w-[1440px] mx-auto px-4 lg:px-8 pt-8 pb-2 flex flex-col items-center">
-          {/* Logo centered */}
-          <div className="flex justify-center w-full mb-2">
-            <Link href="/" className="flex items-center mx-auto">
-              <Image
-                src={logoUrl}
-                alt={logoAlt || shopName}
-                width={140}
-                height={48}
-                className="h-12 w-auto object-contain drop-shadow-sm"
-                style={{ maxWidth: 180, maxHeight: 60 }}
-                priority
-              />
-            </Link>
-          </div>
-          {/* Main nav: always a full-width row under the logo */}
-          <nav
-            aria-label="Main"
-            className="w-full flex items-center justify-center mb-2"
-          >
-            {menuItems.length === 0 ? (
-              <div className="text-red-600 font-bold py-2">
-                No navigation items found. (Check Shopify menu data)
+    <>
+      <div
+        className={`sticky top-0 z-50 bg-background transition-shadow duration-200 ${
+          isScrolled ? 'shadow-md' : ''
+        }`}
+      >
+        <header className="relative bg-[hsl(var(--bg))]">
+          <div className="max-w-[1440px] mx-auto px-4 lg:px-8">
+            <div className="flex items-center justify-between py-4 border-b border-border">
+              {/* Left spacer */}
+              <div className="flex-1"></div>
+              {/* Logo centered */}
+              <div className="flex-1 flex justify-center">
+                <Link href="/" className="flex items-center">
+                  <Image
+                    src={logoUrl}
+                    alt={logoAlt || shopName}
+                    width={180}
+                    height={60}
+                    className="h-14 w-auto object-contain drop-shadow-sm"
+                    priority
+                  />
+                </Link>
               </div>
-            ) : (
-              <ul className="flex items-center space-x-1">
-                {menuItems
-                  .filter((item) => item.handle && item.title)
-                  .map((menuItem) => (
+              {/* Actions: Search, Account, Cart */}
+              <div className="flex-1 flex items-center justify-end gap-4">
+                <Button variant="ghost" onClick={() => setIsSearchOpen(true)} aria-label="Open search">
+                  <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </Button>
+                <Button asChild variant="ghost">
+                  <Link href="/account" aria-label="Account">
+                    <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </Link>
+                </Button>
+                <Button asChild variant="ghost">
+                  <Link href="/cart" aria-label="Cart" className="relative">
+                    <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6.5-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6" />
+                    </svg>
+                    <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs font-medium flex items-center justify-center">0</span>
+                  </Link>
+                </Button>
+              </div>
+            </div>
+            {/* Main nav */}
+            <nav aria-label="Main" className="hidden lg:flex items-center justify-center py-2">
+              {menuItems.length === 0 ? (
+                <div className="text-red-600 font-bold py-2">No navigation items found.</div>
+              ) : (
+                <ul className="flex items-center space-x-2">
+                  {menuItems.filter(item => item.handle && item.title).map(menuItem => (
                     <li
                       key={menuItem.handle || menuItem.title}
                       className="relative"
-                      onMouseEnter={
-                        menuItem.hasMegaMenu
-                          ? () => handleMouseEnter(menuItem.handle)
-                          : undefined
-                      }
-                      onMouseLeave={
-                        menuItem.hasMegaMenu ? handleMouseLeave : undefined
-                      }
+                      onMouseEnter={menuItem.hasMegaMenu ? () => handleMouseEnter(menuItem.handle) : undefined}
+                      onMouseLeave={menuItem.hasMegaMenu ? handleMouseLeave : undefined}
+                      ref={el => {
+                        if (!menuRefs.current[menuItem.handle]) menuRefs.current[menuItem.handle] = { trigger: null, panel: null };
+                        menuRefs.current[menuItem.handle].trigger = el;
+                      }}
                     >
                       {menuItem.hasMegaMenu ? (
                         <Button
                           variant="ghost"
-                          className="px-4 py-2 text-sm font-medium flex items-center gap-1"
+                          className="px-4 py-2 text-base font-medium flex items-center gap-1"
+                          aria-haspopup="true"
+                          aria-expanded={activeMenu === menuItem.handle}
                         >
                           {menuItem.title}
-                          <svg
-                            className="w-3 h-3"
-                            fill="none"
-                            viewBox="0 0 12 12"
-                          >
-                            <path
-                              d="M3 4.5L6 7.5L9 4.5"
-                              stroke="currentColor"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 12 12">
+                            <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         </Button>
                       ) : (
-                        <Button
-                          asChild
-                          variant="link"
-                          className="px-4 py-2 text-sm font-medium"
-                        >
-                          <Link
-                            href={
-                              menuItem.url || `/collections/${menuItem.handle}`
-                            }
-                          >
-                            {menuItem.title}
-                          </Link>
+                        <Button asChild variant="link" className="px-4 py-2 text-base font-medium">
+                          <Link href={menuItem.url || `/collections/${menuItem.handle}`}>{menuItem.title}</Link>
                         </Button>
                       )}
                     </li>
                   ))}
-              </ul>
-            )}
-          </nav>
-          {/* Actions: Search, Account, Cart */}
-          <div className="w-full flex items-center justify-end gap-2">
-            <form role="search" className="hidden lg:block">
-              <Input
-                inputSize="md"
-                placeholder="Search..."
-                className="max-w-xs"
-              />
-            </form>
-            <Button asChild variant="ghost">
-              <Link href="/account" aria-label="Account">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
-              </Link>
-            </Button>
-            <Button asChild variant="ghost">
-              <Link href="/cart" aria-label="Cart" className="relative">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6.5-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6"
-                  />
-                </svg>
-                <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs font-medium flex items-center justify-center">
-                  0
-                </span>
-              </Link>
-            </Button>
+                </ul>
+              )}
+            </nav>
           </div>
-        </div>
 
-        {/* Mega Menu Panels */}
-        {menuItems
-          .filter((item) => item.hasMegaMenu)
-          .map((menuItem) => (
+          {/* Mega Menu Panels */}
+          {menuItems.filter(item => item.hasMegaMenu).map(menuItem => (
             <div
               key={menuItem.handle}
-              className={`absolute top-full left-0 right-0 bg-background shadow-2xl border-t border-border transition-all duration-500 ease-out ${
+              ref={el => {
+                if (!menuRefs.current[menuItem.handle]) menuRefs.current[menuItem.handle] = { trigger: null, panel: null };
+                menuRefs.current[menuItem.handle].panel = el;
+              }}
+              className={`fixed bg-background shadow-2xl border-t border-border transition-all duration-300 ease-in-out ${
                 activeMenu === menuItem.handle
                   ? 'opacity-100 visible translate-y-0'
                   : 'opacity-0 invisible -translate-y-4'
               }`}
               onMouseEnter={() => handleMouseEnter(menuItem.handle)}
               onMouseLeave={handleMouseLeave}
-              style={{ zIndex: 40 }}
+              style={{ zIndex: 40, width: '80vw', maxWidth: '1200px' }}
+              role="menu"
             >
               {/* Full-width background with subtle gradient */}
               <div className="bg-gradient-to-b from-white via-gray-50/30 to-white">
@@ -407,7 +396,34 @@ export default function Header({
               </div>
             </div>
           ))}
-      </header>
-    </div>
+        </header>
+      </div>
+
+      {/* Search Overlay */}
+      {isSearchOpen && (
+        <div className="fixed inset-0 z-[100] bg-background/80 backdrop-blur-sm flex items-center justify-center">
+          <div className="relative w-full max-w-2xl p-4">
+            <Button
+              variant="ghost"
+              className="absolute top-4 right-4 text-foreground/70 hover:text-foreground"
+              onClick={() => setIsSearchOpen(false)}
+              aria-label="Close search"
+            >
+              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </Button>
+            <form role="search">
+              <Input
+                inputSize="lg"
+                placeholder="Search for products..."
+                className="w-full text-2xl"
+                autoFocus
+              />
+            </form>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
