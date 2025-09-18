@@ -29,6 +29,7 @@ export default function AnalyticsWrapper() {
       dataLayer?: unknown[];
       _tfa?: unknown[];
       clarity?: (...args: unknown[]) => void;
+      __labAnalytics?: Record<string, unknown>;
     };
 
     // Initialise dataLayer
@@ -81,6 +82,24 @@ export default function AnalyticsWrapper() {
       script.src = `https://cdn.taboola.com/libtrc/unipixel/${TABOOLA_ID}/tfa.js`;
       return script;
     });
+
+    import('@/lib/analytics')
+      .then((analytics) => {
+        win.__labAnalytics = {
+          trackViewItem: analytics.trackViewItem,
+          trackViewItemList: analytics.trackViewItemList,
+          trackViewCart: analytics.trackViewCart,
+          trackAddToCart: analytics.trackAddToCart,
+          trackRemoveFromCart: analytics.trackRemoveFromCart,
+          trackBeginCheckout: analytics.trackBeginCheckout,
+          trackPurchase: analytics.trackPurchase,
+          trackNewsletterSignup: analytics.trackNewsletterSignup,
+          trackDownload: analytics.trackDownload,
+        };
+      })
+      .catch((error) => {
+        console.error('Failed to initialize analytics helpers', error);
+      });
   }, []);
 
   return null;
