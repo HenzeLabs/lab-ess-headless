@@ -4,7 +4,7 @@ import { trackAddToCart } from '@/lib/analytics';
 import { useState, useTransition } from 'react';
 import { addCartLineAction } from '@/app/cart/actions';
 import { buttonStyles } from '@/lib/ui';
-import Image from 'next/image';
+
 
 type Variant = { id: string; title: string };
 
