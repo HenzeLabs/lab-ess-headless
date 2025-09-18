@@ -243,41 +243,43 @@ export default function CartPage() {
                   </ul>
                 </div>
 
-                <div className="bg-[hsl(var(--surface))] p-8 rounded-lg shadow-soft ring-1 ring-[hsl(var(--border))] md:sticky md:top-24 h-fit">
-                  <h2 className="text-2xl font-semibold text-[hsl(var(--ink))] mb-6">
-                    Order summary
-                  </h2>
-                  <div className="mt-8 space-y-6">
-                    <div className="flex items-center justify-between">
-                      <p className="text-base text-[hsl(var(--muted))]">
-                        Subtotal
-                      </p>
-                      <p className="text-base font-medium text-[hsl(var(--ink))]">
-                        {subtotalMoney
-                          ? `$${parseFloat(subtotalMoney.amount).toFixed(2)}`
-                          : '$0.00'}
-                      </p>
+                <div>
+                  <div className="bg-[hsl(var(--surface))] p-8 rounded-lg shadow-soft ring-1 ring-[hsl(var(--border))] lg:sticky lg:top-24 h-fit">
+                    <h2 className="text-2xl font-semibold text-[hsl(var(--ink))] mb-6">
+                      Order summary
+                    </h2>
+                    <div className="mt-8 space-y-6">
+                      <div className="flex items-center justify-between">
+                        <p className="text-base text-[hsl(var(--muted))]">
+                          Subtotal
+                        </p>
+                        <p className="text-base font-medium text-[hsl(var(--ink))]">
+                          {subtotalMoney
+                            ? `${parseFloat(subtotalMoney.amount).toFixed(2)}`
+                            : '$0.00'}
+                        </p>
+                      </div>
+                      <div className="flex items-center justify-between border-t border-[hsl(var(--muted))]/20 pt-6">
+                        <p className="text-lg font-medium text-[hsl(var(--ink))]">
+                          Order total
+                        </p>
+                        <p className="text-lg font-medium text-[hsl(var(--ink))]">
+                          {totalMoney
+                            ? `${parseFloat(totalMoney.amount).toFixed(2)}`
+                            : '$0.00'}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between border-t border-[hsl(var(--muted))]/20 pt-6">
-                      <p className="text-lg font-medium text-[hsl(var(--ink))]">
-                        Order total
-                      </p>
-                      <p className="text-lg font-medium text-[hsl(var(--ink))]">
-                        {totalMoney
-                          ? `$${parseFloat(totalMoney.amount).toFixed(2)}`
-                          : '$0.00'}
-                      </p>
+                    <div className="mt-10">
+                      <Button
+                        asChild
+                        className="w-full bg-accent hover:bg-accent-dark transition-all duration-300 ease-out-soft"
+                        aria-label="Proceed to checkout"
+                        data-cart-checkout
+                      >
+                        <a href={cart.checkoutUrl}>Checkout</a>
+                      </Button>
                     </div>
-                  </div>
-                  <div className="mt-10">
-                    <a
-                      href={cart.checkoutUrl}
-                      className="btn-primary w-full text-center transition-all duration-300 ease-out-soft"
-                      aria-label="Proceed to checkout"
-                      data-cart-checkout
-                    >
-                      Checkout
-                    </a>
                   </div>
                   <div className="mt-8">
                     <TrustSignals />
