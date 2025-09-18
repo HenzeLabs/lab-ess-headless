@@ -107,7 +107,7 @@ export default async function HeaderServer() {
       }>({
         query: getCartQuery,
         variables: { cartId },
-        cache: 'no-store',
+        
       });
       cart = res.data.cart;
     } catch (e) {
