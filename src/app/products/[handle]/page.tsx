@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
 // Remove dynamic import from server component
-import { buttonStyles } from '@/lib/ui';
+
 import type { Product } from '@/lib/types';
 import { getProductByHandleQuery } from '@/lib/queries';
 import { shopifyFetch } from '@/lib/shopify';
