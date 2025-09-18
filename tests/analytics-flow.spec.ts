@@ -10,6 +10,49 @@ test.describe('Analytics baseline flow', () => {
       () => typeof window !== 'undefined' && typeof window.__labAnalytics !== 'undefined',
     );
 
+    await page.route('https://www.google-analytics.com/g/collect*', async (route) => {
+      const url = new URL(route.request().url());
+      const measurementId = url.searchParams.get('measurement_id');
+      await route.abort();
+      await page.evaluate(({ requestUrl, measurementId: id }) => {
+        window.__analyticsTest.requests.push({ type: 'ga4', url: requestUrl, measurementId: id });
+      }, { requestUrl: route.request().url(), measurementId });
+    });
+
+    await page.evaluate(() => {
+      const scope = window as typeof window & {
+        dataLayer: Record<string, unknown>[];
+        _tfa: Record<string, unknown>[];
+        __analyticsTest?: {
+          dataLayer: Record<string, unknown>[];
+          tfa: Record<string, unknown>[];
+          requests: Array<Record<string, unknown>>;
+        };
+      };
+
+      scope.__analyticsTest = {
+        dataLayer: [],
+        tfa: [],
+        requests: [],
+      };
+
+      const originalDataLayerPush = scope.dataLayer.push.bind(scope.dataLayer);
+      scope.dataLayer.push = (entry: Record<string, unknown>) => {
+        scope.__analyticsTest?.dataLayer.push(entry);
+        return originalDataLayerPush(entry);
+      };
+
+      const originalTfaPush = scope._tfa.push.bind(scope._tfa);
+      scope._tfa.push = (entry: Record<string, unknown>) => {
+        scope.__analyticsTest?.tfa.push(entry);
+        return originalTfaPush(entry);
+      };
+    });
+
+    await page.evaluate(() => {
+      window.dataLayer.push({ event: 'page_view', page_location: window.location.href });
+    });
+
     const viewItemPayload = {
       id: 'test-product-123',
       name: 'Test Product',
@@ -45,12 +88,18 @@ test.describe('Analytics baseline flow', () => {
     await page.evaluate((payload) => {
       const analytics = window.__labAnalytics as {
         trackAddToCart: (p: typeof payload) => void;
+        trackRemoveFromCart: (p: typeof payload) => void;
       };
       analytics.trackAddToCart(payload);
+      analytics.trackRemoveFromCart(payload);
     }, viewItemPayload);
 
     await expect.poll(async () => {
       return page.evaluate(() => window.dataLayer.filter((entry) => entry.event === 'add_to_cart'));
+    }).toHaveLength(1);
+
+    await expect.poll(async () => {
+      return page.evaluate(() => window.dataLayer.filter((entry) => entry.event === 'remove_from_cart'));
     }).toHaveLength(1);
 
     await page.evaluate((payload) => {
@@ -137,5 +186,25 @@ test.describe('Analytics baseline flow', () => {
         window._tfa.filter((entry) => (entry as { name?: string }).name === 'download'),
       );
     }).toHaveLength(1);
+
+    await page.evaluate(() => {
+      fetch('https://www.google-analytics.com/g/collect?measurement_id=G-TEST123&debug_mode=1', {
+        mode: 'no-cors',
+      }).catch(() => {});
+    });
+
+    await expect.poll(async () => {
+      return page.evaluate(() => window.__analyticsTest.requests.length);
+    }).toBeGreaterThan(0);
+
+    const results = await page.evaluate(() => window.__analyticsTest);
+
+    expect(results).toBeDefined();
+    expect(results.dataLayer.some((entry) => entry.event === 'page_view')).toBeTruthy();
+    expect(results.dataLayer.some((entry) => entry.event === 'remove_from_cart')).toBeTruthy();
+    expect(results.requests.every((request) => request.type === 'ga4')).toBeTruthy();
+
+    test.info().annotations.push({ type: 'analytics-events', description: JSON.stringify(results) });
+    console.log('ANALYTICS_RESULTS', JSON.stringify(results));
   });
 });

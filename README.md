@@ -87,6 +87,16 @@ pnpm dev
 bun dev
 ```
 
+## Analytics Smoke Test
+
+Run the automated GA4/GTM/Taboola smoke test:
+
+```bash
+npm run test:analytics
+```
+
+The Playwright suite boots the dev server, simulates an ecommerce funnel, and prints an `ANALYTICS_RESULTS` JSON blob summarising captured `dataLayer` pushes, `_tfa` pixel events, and intercepted GA4 requests.
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
