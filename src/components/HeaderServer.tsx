@@ -116,7 +116,7 @@ export default async function HeaderServer() {
     }
   }
 
-  const cartItemCount = cart?.totalQuantity || 0;
+  const cartItemCount = cart?.lines.edges.reduce((acc, item) => acc + item.node.quantity, 0) || 0;
 
   // --- Start of data fetching logic moved from SiteHeader.tsx ---
   const { data: menuData } = await shopifyFetch<MainMenuData>({
