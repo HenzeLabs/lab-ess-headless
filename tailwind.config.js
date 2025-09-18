@@ -97,6 +97,9 @@ module.exports = {
       transitionDuration: {
         400: '400ms',
       },
+    backgroundImage: {
+        'gradient-brand': 'linear-gradient(to right, hsl(var(--brand)), hsl(var(--accent)))',
+      },
     },
   },
   plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography')],

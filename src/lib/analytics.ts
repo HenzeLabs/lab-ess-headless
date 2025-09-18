@@ -1,25 +1,11 @@
 'use client';
 
+import type { AnalyticsItemInput, AnalyticsOrderInput, LabAnalytics } from '@/lib/types';
+
 export const TABOOLA_PIXEL_ID = 1759164;
 const DEFAULT_CURRENCY = 'USD';
 
 type Numeric = number | string | null | undefined;
-
-export interface AnalyticsItemInput {
-  id: string;
-  name: string;
-  price?: Numeric;
-  currency?: string | null;
-  quantity?: number | null;
-  category?: string | null;
-}
-
-export interface AnalyticsOrderInput {
-  orderId: string;
-  value: Numeric;
-  currency?: string | null;
-  items: AnalyticsItemInput[];
-}
 
 function toNumber(value: Numeric): number | undefined {
   if (value === null || value === undefined) {
@@ -210,7 +196,7 @@ declare global {
   interface Window {
     dataLayer: Record<string, unknown>[];
     _tfa: Record<string, unknown>[];
-    __labAnalytics?: Record<string, unknown>;
+    __labAnalytics: LabAnalytics;
   }
 }
 

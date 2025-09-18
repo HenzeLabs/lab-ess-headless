@@ -1,4 +1,18 @@
 import { test, expect } from '@playwright/test';
+import type { AnalyticsItemInput, AnalyticsOrderInput, LabAnalytics } from '../src/lib/types';
+
+declare global {
+  interface Window {
+    __analyticsTest: {
+      dataLayer: Record<string, unknown>[];
+      tfa: Record<string, unknown>[];
+      requests: Array<Record<string, unknown>>;
+    };
+    dataLayer: Record<string, unknown>[];
+    _tfa: Record<string, unknown>[];
+    __labAnalytics: LabAnalytics;
+  }
+}
 
 test.describe('Analytics baseline flow', () => {
   test('tracks key ecommerce and engagement events', async ({ page }) => {
@@ -20,15 +34,7 @@ test.describe('Analytics baseline flow', () => {
     });
 
     await page.evaluate(() => {
-      const scope = window as typeof window & {
-        dataLayer: Record<string, unknown>[];
-        _tfa: Record<string, unknown>[];
-        __analyticsTest?: {
-          dataLayer: Record<string, unknown>[];
-          tfa: Record<string, unknown>[];
-          requests: Array<Record<string, unknown>>;
-        };
-      };
+      const scope = window;
 
       scope.__analyticsTest = {
         dataLayer: [],
@@ -53,7 +59,7 @@ test.describe('Analytics baseline flow', () => {
       window.dataLayer.push({ event: 'page_view', page_location: window.location.href });
     });
 
-    const viewItemPayload = {
+    const viewItemPayload: AnalyticsItemInput = {
       id: 'test-product-123',
       name: 'Test Product',
       price: 99.99,
@@ -62,128 +68,94 @@ test.describe('Analytics baseline flow', () => {
       category: 'Test Category',
     };
 
-    await page.evaluate((payload) => {
-      const analytics = window.__labAnalytics as {
-        trackViewItem: (p: typeof payload) => void;
-        trackAddToCart: (p: typeof payload) => void;
-        trackViewCart: (items: typeof payload[]) => void;
-        trackBeginCheckout: (items: typeof payload[]) => void;
-        trackPurchase: (order: {
-          orderId: string;
-          value: number;
-          currency: string;
-          items: typeof payload[];
-        }) => void;
-        trackNewsletterSignup: (email: string) => void;
-        trackDownload: (payload: { id: string; name: string; category?: string | null }) => void;
-      };
-
-      analytics.trackViewItem(payload);
+    await page.evaluate((payload: AnalyticsItemInput) => {
+      window.__labAnalytics.trackViewItem(payload);
     }, viewItemPayload);
 
     await expect.poll(async () => {
-      return page.evaluate(() => window.dataLayer.filter((entry) => entry.event === 'view_item'));
+      return page.evaluate(() => window.dataLayer.filter((entry: Record<string, unknown>) => entry.event === 'view_item'));
     }).toHaveLength(1);
 
-    await page.evaluate((payload) => {
-      const analytics = window.__labAnalytics as {
-        trackAddToCart: (p: typeof payload) => void;
-        trackRemoveFromCart: (p: typeof payload) => void;
-      };
-      analytics.trackAddToCart(payload);
-      analytics.trackRemoveFromCart(payload);
+    await page.evaluate((payload: AnalyticsItemInput) => {
+      window.__labAnalytics.trackAddToCart(payload);
+      window.__labAnalytics.trackRemoveFromCart(payload);
     }, viewItemPayload);
 
     await expect.poll(async () => {
-      return page.evaluate(() => window.dataLayer.filter((entry) => entry.event === 'add_to_cart'));
+      return page.evaluate(() => window.dataLayer.filter((entry: Record<string, unknown>) => entry.event === 'add_to_cart'));
     }).toHaveLength(1);
 
     await expect.poll(async () => {
-      return page.evaluate(() => window.dataLayer.filter((entry) => entry.event === 'remove_from_cart'));
+      return page.evaluate(() => window.dataLayer.filter((entry: Record<string, unknown>) => entry.event === 'remove_from_cart'));
     }).toHaveLength(1);
 
-    await page.evaluate((payload) => {
-      const analytics = window.__labAnalytics as {
-        trackViewCart: (items: typeof payload[]) => void;
-      };
-      analytics.trackViewCart([payload]);
+    await page.evaluate((payload: AnalyticsItemInput) => {
+      window.__labAnalytics.trackViewCart([payload]);
     }, viewItemPayload);
 
     await expect.poll(async () => {
-      return page.evaluate(() => window.dataLayer.filter((entry) => entry.event === 'view_cart'));
+      return page.evaluate(() => window.dataLayer.filter((entry: Record<string, unknown>) => entry.event === 'view_cart'));
     }).toHaveLength(1);
 
-    await page.evaluate((payload) => {
-      const analytics = window.__labAnalytics as {
-        trackBeginCheckout: (items: typeof payload[]) => void;
-      };
-      analytics.trackBeginCheckout([payload]);
+    await page.evaluate((payload: AnalyticsItemInput) => {
+      window.__labAnalytics.trackBeginCheckout([payload]);
     }, viewItemPayload);
 
     await expect.poll(async () => {
-      return page.evaluate(() => window.dataLayer.filter((entry) => entry.event === 'begin_checkout'));
+      return page.evaluate(() => window.dataLayer.filter((entry: Record<string, unknown>) => entry.event === 'begin_checkout'));
     }).toHaveLength(1);
 
-    const orderPayload = {
+    const orderPayload: AnalyticsOrderInput = {
       orderId: 'ORDER-123',
       value: 99.99,
       currency: 'USD',
       items: [viewItemPayload],
     };
 
-    await page.evaluate((payload) => {
-      const analytics = window.__labAnalytics as {
-        trackPurchase: (order: typeof payload) => void;
-      };
-      analytics.trackPurchase(payload);
+    await page.evaluate((payload: AnalyticsOrderInput) => {
+      window.__labAnalytics.trackPurchase(payload);
     }, orderPayload);
 
     await expect.poll(async () => {
-      return page.evaluate(() => window.dataLayer.filter((entry) => entry.event === 'purchase'));
+      return page.evaluate(() => window.dataLayer.filter((entry: Record<string, unknown>) => entry.event === 'purchase'));
     }).toHaveLength(1);
 
     await expect.poll(async () => {
       return page.evaluate(() =>
-        window._tfa.filter((entry) => (entry as { name?: string }).name === 'purchase'),
+        window._tfa.filter((entry: Record<string, unknown>) => (entry as { name?: string }).name === 'purchase'),
       );
     }).toHaveLength(1);
 
     const email = 'qa+analytics@labessentials.com';
-    await page.evaluate((value) => {
-      const analytics = window.__labAnalytics as {
-        trackNewsletterSignup: (email: string) => void;
-      };
-      analytics.trackNewsletterSignup(value);
+    await page.evaluate((value: string) => {
+      window.__labAnalytics.trackNewsletterSignup(value);
     }, email);
 
     await expect.poll(async () => {
       return page.evaluate(() =>
-        window.dataLayer.filter((entry) => entry.event === 'newsletter_signup'),
+        window.dataLayer.filter((entry: Record<string, unknown>) => entry.event === 'newsletter_signup'),
       );
     }).toHaveLength(1);
 
     await expect.poll(async () => {
       return page.evaluate(() =>
-        window._tfa.filter((entry) => (entry as { name?: string }).name === 'newsletter_signup'),
+        window._tfa.filter((entry: Record<string, unknown>) => (entry as { name?: string }).name === 'newsletter_signup'),
       );
     }).toHaveLength(1);
 
     const downloadPayload = { id: 'whitepaper-001', name: 'Lab Compliance Whitepaper', category: 'Content' };
 
-    await page.evaluate((payload) => {
-      const analytics = window.__labAnalytics as {
-        trackDownload: (payload: typeof downloadPayload) => void;
-      };
-      analytics.trackDownload(payload);
+    await page.evaluate((payload: { id: string; name: string; category?: string | null }) => {
+      window.__labAnalytics.trackDownload(payload);
     }, downloadPayload);
 
     await expect.poll(async () => {
-      return page.evaluate(() => window.dataLayer.filter((entry) => entry.event === 'download'));
+      return page.evaluate(() => window.dataLayer.filter((entry: Record<string, unknown>) => entry.event === 'download'));
     }).toHaveLength(1);
 
     await expect.poll(async () => {
       return page.evaluate(() =>
-        window._tfa.filter((entry) => (entry as { name?: string }).name === 'download'),
+        window._tfa.filter((entry: Record<string, unknown>) => (entry as { name?: string }).name === 'download'),
       );
     }).toHaveLength(1);
 
@@ -200,9 +172,9 @@ test.describe('Analytics baseline flow', () => {
     const results = await page.evaluate(() => window.__analyticsTest);
 
     expect(results).toBeDefined();
-    expect(results.dataLayer.some((entry) => entry.event === 'page_view')).toBeTruthy();
-    expect(results.dataLayer.some((entry) => entry.event === 'remove_from_cart')).toBeTruthy();
-    expect(results.requests.every((request) => request.type === 'ga4')).toBeTruthy();
+    expect(results.dataLayer.some((entry: Record<string, unknown>) => entry.event === 'page_view')).toBeTruthy();
+    expect(results.dataLayer.some((entry: Record<string, unknown>) => entry.event === 'remove_from_cart')).toBeTruthy();
+    expect(results.requests.every((request: Record<string, unknown>) => request.type === 'ga4')).toBeTruthy();
 
     test.info().annotations.push({ type: 'analytics-events', description: JSON.stringify(results) });
     console.log('ANALYTICS_RESULTS', JSON.stringify(results));

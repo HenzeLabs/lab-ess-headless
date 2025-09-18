@@ -5,24 +5,28 @@ import { cn } from '@/lib/cn';
 type CollectionImageProps = Omit<ImageProps, 'src' | 'alt'> & {
   src?: string | null;
   alt: string;
-  fallbackKey?: string | null;
+  fallbackKey?: string | null; // This prop will no longer be used but kept for type compatibility if needed elsewhere
 };
 
 export function CollectionImage({
   src,
   alt,
-  fallbackKey,
   width = 500,
   height = 500,
   className,
   ...rest
 }: CollectionImageProps) {
-  const fallbackSrc = getFallbackImage(alt, fallbackKey);
-  const imageSrc = src || fallbackSrc;
+  if (!src) {
+    return (
+      <div className={cn('flex items-center justify-center bg-gray-200 text-gray-500 rounded-md', className)} style={{ width, height }}>
+        No Image
+      </div>
+    );
+  }
 
   return (
     <Image
-      src={imageSrc}
+      src={src}
       alt={alt}
       width={width}
       height={height}
@@ -30,17 +34,4 @@ export function CollectionImage({
       {...rest}
     />
   );
-}
-
-function getFallbackImage(alt: string, fallbackKey?: string | null) {
-  const keywords = [fallbackKey, alt].filter(Boolean) as string[];
-
-  for (const candidate of keywords) {
-    const key = candidate.toLowerCase();
-    if (key.includes('microscope')) return '/images/default-microscope.jpg';
-    if (key.includes('centrifuge')) return '/images/default-centrifuge.jpg';
-    if (key.includes('camera')) return '/images/default-camera.jpg';
-  }
-
-  return '/images/default-collection.jpg';
 }

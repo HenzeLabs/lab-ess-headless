@@ -1,148 +1,199 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { shopifyFetch } from '@/lib/shopify';
 import { getCollectionByHandleQuery } from '@/lib/queries';
-import { buttonStyles } from '@/lib/ui';
+import { stripHtml } from '@/lib/seo';
+import { shopifyFetch } from '@/lib/shopify';
 import type { Product } from '@/lib/types';
+import { layout } from '@/lib/ui';
 
 interface FeaturedHeroProductProps {
   lifestyleImage?: string;
   learnMoreUrl?: string;
 }
 
-type FeaturedCollectionResponse = {
-  collection?: {
-    products?: {
-      edges: { node: Product }[];
+interface FeaturedCollectionResponse {
+  collection: {
+    handle: string;
+    title: string;
+    description?: string | null;
+    products: {
+      edges: {
+        node: Product;
+      }[];
     };
-  };
-};
+  } | null;
+}
 
-async function getFeaturedProduct() {
-  // Shopify's default handle for the Featured Products collection
+interface FeaturedProductData {
+  product: Product;
+  collectionTitle?: string;
+  collectionHandle?: string;
+  collectionDescription?: string | null;
+}
+
+const FEATURED_COLLECTION_HANDLE = 'featured-products';
+
+async function getFeaturedProduct(): Promise<FeaturedProductData | null> {
   const response = await shopifyFetch<FeaturedCollectionResponse>({
     query: getCollectionByHandleQuery,
-    variables: { handle: 'featured-products', first: 1 },
+    variables: {
+      handle: FEATURED_COLLECTION_HANDLE,
+      first: 1,
+    },
   });
-  const product = response.data?.collection?.products?.edges?.[0]?.node;
-  return product || null;
+
+  const featuredCollection = response.data.collection;
+  const product = featuredCollection?.products?.edges?.[0]?.node;
+
+  if (!product) {
+    return null;
+  }
+
+  return {
+    product,
+    collectionTitle: featuredCollection?.title ?? undefined,
+    collectionHandle: featuredCollection?.handle ?? undefined,
+    collectionDescription: featuredCollection?.description ?? null,
+  };
 }
 
 export default async function FeaturedHeroProduct({
-  lifestyleImage = '/images/lifestyle-placeholder.jpg',
+  lifestyleImage,
   learnMoreUrl,
 }: FeaturedHeroProductProps) {
-  const product = await getFeaturedProduct();
-  if (!product) return null;
+  const featured = await getFeaturedProduct();
 
-  const strippedDescription = product.descriptionHtml
-    ? product.descriptionHtml
-        .replace(/<[^>]+>/g, '')
-        .replace(/\s+/g, ' ')
-        .trim()
-    : '';
-  const blockedCopy =
-    'Equip your schools, clinical labs, and research teams with high-performance tools.';
-  const descriptionText =
-    strippedDescription && strippedDescription !== blockedCopy
-      ? strippedDescription
-      : null;
+  if (!featured) {
+    return null;
+  }
+
+  const { product, collectionTitle, collectionHandle, collectionDescription } = featured;
+
+  const plainDescription = stripHtml(product.descriptionHtml ?? '').trim();
+
+  const descriptionText = plainDescription
+    ? plainDescription.length > 220
+      ? `${plainDescription.slice(0, plainDescription.lastIndexOf(' ', 220))}…`
+      : plainDescription
+    : null;
 
   const isLifestyleVideo =
     typeof lifestyleImage === 'string' && lifestyleImage.endsWith('.mp4');
 
+  const primaryCtaHref = `/products/${product.handle}`;
+  const secondaryCtaHref = learnMoreUrl ?? (collectionHandle ? `/collections/${collectionHandle}` : undefined);
+
+  const badgeLabel = collectionTitle ?? 'Featured Product';
+  const supportingCopy = descriptionText ?? collectionDescription ?? undefined;
+
+  const priceAmount = product.priceRange?.minVariantPrice?.amount;
+  const priceCurrency = product.priceRange?.minVariantPrice?.currencyCode;
+
   return (
-    <section className="w-full py-16 md:py-24 fade-in-on-scroll">
-      <div className="mx-auto max-w-7xl px-4">
-        <div className="relative overflow-hidden rounded-[32px] border border-white/30 bg-white/90 shadow-[0_35px_80px_-40px_rgba(15,23,42,0.6)] backdrop-blur">
-          <div
-            className="absolute inset-0 bg-gradient-to-br from-white/80 via-white/60 to-white/40"
-            aria-hidden="true"
-          />
-          <div className="relative grid grid-cols-1 gap-10 items-center p-8 md:grid-cols-2 md:p-14 lg:p-16">
-            {/* Product Photo */}
-            <div className="group relative overflow-hidden rounded-3xl bg-white shadow-[0_25px_60px_-40px_rgba(15,23,42,0.55)] transition-all duration-500">
-              <Image
-                src={
-                  product.featuredImage?.url || '/images/default-product.jpg'
-                }
-                alt={product.featuredImage?.altText || product.title}
-                width={640}
-                height={640}
-                className="w-full h-auto object-contain bg-white transition-transform duration-500 ease-out group-hover:scale-[1.08] group-hover:rotate-1"
-                priority
-              />
-            </div>
-            {/* Lifestyle Image & Content */}
-            <div className="flex flex-col gap-10">
-              <div className="space-y-6">
-                <h1 className="text-4xl md:text-5xl font-extrabold text-heading">
-                  {product.title}
-                </h1>
-                {descriptionText && (
-                  <p className="text-lg leading-relaxed text-body/80">
-                    {descriptionText}
-                  </p>
-                )}
-              </div>
-              <div className="flex flex-col gap-4 sm:flex-row">
-                <Link
-                  href={`/products/${product.handle}`}
-                  className={`${buttonStyles.primary} rounded-full bg-[#4e2cfb] px-10 py-3 text-base font-semibold text-white shadow-[0_20px_45px_-20px_rgba(78,44,251,0.8)] transition-transform duration-200 hover:-translate-y-[3px] hover:bg-[#3f23d6] hover:shadow-[0_28px_55px_-18px_rgba(63,35,214,0.65)]`}
+    <section className="relative isolate overflow-hidden bg-[radial-gradient(circle_at_top_left,hsl(var(--brand)_/_0.12),transparent_60%),radial-gradient(circle_at_bottom_right,hsl(var(--accent)_/_0.1),transparent_55%)] px-4 py-20 sm:py-24">
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(160deg,rgba(9,12,40,0.85)0%,rgba(9,13,46,0.55)45%,rgba(9,12,40,0.82)100%)]" aria-hidden="true" />
+      <div className="absolute inset-0 -z-5 opacity-40">
+        <div className="absolute -left-12 top-10 h-40 w-40 rounded-full bg-white/20 blur-3xl" />
+        <div className="absolute bottom-8 right-0 h-56 w-56 rounded-full bg-[hsl(var(--accent))]/30 blur-3xl" />
+      </div>
+
+      <div className={`${layout.container} relative mx-auto max-w-[1200px]`}> 
+        <div className="relative grid items-center gap-12 overflow-hidden rounded-[32px] border border-white/15 bg-white/90 p-10 shadow-[0_45px_95px_-48px_rgba(6,11,40,0.9)] backdrop-blur-xl lg:grid-cols-[1.15fr_0.85fr] lg:p-14">
+          <div className="pointer-events-none absolute -top-16 left-1/2 h-44 w-44 -translate-x-1/2 rounded-full bg-white/18 blur-[90px]" aria-hidden="true" />
+          <div className="pointer-events-none absolute bottom-0 right-0 h-36 w-36 translate-x-12 translate-y-12 rounded-full bg-[hsl(var(--brand))]/20 blur-[70px]" aria-hidden="true" />
+
+          <div className="relative z-10 space-y-6 text-[hsl(var(--ink))]">
+            <span className="inline-flex items-center rounded-full bg-[hsl(var(--brand))]/15 px-4 py-1 text-sm font-semibold uppercase tracking-wide text-[hsl(var(--brand))]">
+              {badgeLabel}
+            </span>
+            <h2 className="text-balance text-4xl font-semibold leading-tight sm:text-5xl">
+              {product.title}
+            </h2>
+            {priceAmount ? (
+              <p className="text-lg font-semibold text-[hsl(var(--brand))]">
+                {priceAmount} {priceCurrency}
+              </p>
+            ) : null}
+            {supportingCopy ? (
+              <p className="max-w-xl text-base text-[hsl(var(--body))] sm:text-lg">
+                {supportingCopy}
+              </p>
+            ) : null}
+
+            <div className="flex flex-wrap gap-4 pt-4">
+              <Link
+                href={primaryCtaHref}
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,hsl(var(--brand))_0%,hsl(var(--brand-dark))_100%)] px-8 py-3 text-base font-semibold text-white shadow-[0_22px_50px_-24px_rgba(24,22,72,0.7)] transition hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,13,40,0.35)]"
+              >
+                Shop Now
+                <svg
+                  aria-hidden="true"
+                  className="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.8}
+                  viewBox="0 0 24 24"
                 >
-                  Shop Now
+                  <path d="M5 12h14" />
+                  <path d="M13 6l6 6-6 6" />
+                </svg>
+              </Link>
+              {secondaryCtaHref ? (
+                <Link
+                  href={secondaryCtaHref}
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-[hsl(var(--brand))]/30 bg-white/80 px-8 py-3 text-base font-semibold text-[hsl(var(--brand))] shadow-[0_18px_48px_-26px_rgba(12,15,60,0.45)] transition hover:-translate-y-0.5 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand))]/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                >
+                  Learn More
                 </Link>
-                {learnMoreUrl && (
-                  <Link
-                    href={learnMoreUrl}
-                    className={`${buttonStyles.ghost} rounded-full border border-[#4e2cfb33] bg-white/80 px-10 py-3 text-base font-semibold text-[#272748] shadow-[0_18px_40px_-25px_rgba(30,41,59,0.6)] transition-all duration-200 hover:-translate-y-[3px] hover:border-[#4e2cfb] hover:bg-[#f3f0ff] hover:text-[#2715a0]`}
-                  >
-                    Learn More
-                  </Link>
-                )}
-              </div>
-              <div className="relative mt-4 rounded-3xl border border-white/40 bg-white/95 shadow-[0_30px_70px_-40px_rgba(15,23,42,0.45)]">
+              ) : null}
+            </div>
+
+            {lifestyleImage ? (
+              <div className="relative mt-8 overflow-hidden rounded-3xl border border-white/60 bg-white shadow-[0_30px_75px_-48px_rgba(19,23,64,0.55)]">
                 {isLifestyleVideo ? (
                   <video
                     key={lifestyleImage}
-                    className="h-full w-full rounded-3xl object-contain"
+                    className="h-full w-full object-cover"
                     src={lifestyleImage}
                     playsInline
                     autoPlay
                     muted
                     loop
                     controls
+                    poster={product.featuredImage?.url}
                   />
                 ) : (
                   <Image
-                    src={lifestyleImage || '/images/lifestyle-placeholder.jpg'}
-                    alt="Lifestyle"
-                    width={640}
-                    height={640}
-                    className="w-full h-full rounded-3xl object-contain"
+                    src={lifestyleImage}
+                    alt={`${product.title} lifestyle`}
+                    width={720}
+                    height={520}
+                    className="h-full w-full object-cover"
                     priority={false}
                   />
                 )}
               </div>
+            ) : null}
+          </div>
+
+          <div className="relative z-10">
+            <div className="group relative overflow-hidden rounded-[28px] bg-white/95 shadow-[0_35px_85px_-45px_rgba(19,23,64,0.65)] transition duration-500">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(76,102,255,0.12),transparent_65%)]" aria-hidden="true" />
+              <Image
+                src={product.featuredImage?.url ?? '/images/default-product.jpg'}
+                alt={product.featuredImage?.altText ?? product.title}
+                width={640}
+                height={640}
+                className="relative z-10 w-full bg-white object-contain p-8 transition duration-500 ease-out group-hover:scale-[1.05] group-hover:rotate-[0.8deg]"
+                priority
+              />
             </div>
           </div>
         </div>
       </div>
-      {/* Fade-in on scroll: add class with IntersectionObserver in _app or layout */}
-      <style>{`
-        .fade-in-on-scroll {
-          opacity: 0;
-          transform: translateY(40px);
-          transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
-        }
-        .fade-in-on-scroll.visible {
-          opacity: 1;
-          transform: none;
-        }
-      `}</style>
     </section>
   );
 }
-
-// Note: Requires getFeaturedProductsQuery in @/lib/queries and brand tokens in globals.css.

@@ -1,5 +1,5 @@
 // Placeholder for Functional tests
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 test.describe('Functional Tests', () => {
   test('navigation should work', async ({ page }) => {

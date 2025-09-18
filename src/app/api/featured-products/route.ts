@@ -19,7 +19,7 @@ export async function GET(_request: NextRequest) {
     const collection = response.data.collection;
 
     if (!collection) {
-      console.warn('No collection data returned from Shopify');
+      
       return NextResponse.json({ products: [], success: false });
     }
 
@@ -31,7 +31,7 @@ export async function GET(_request: NextRequest) {
       products,
     });
   } catch (error) {
-    console.error('Error fetching featured products:', error);
+    
     return NextResponse.json(
       { error: String(error), products: [], debug: error },
       { status: 500 },

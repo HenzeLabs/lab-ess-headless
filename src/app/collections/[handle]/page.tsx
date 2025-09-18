@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import ProductCard from '@/components/ProductCard';
-import Footer from '@/components/Footer';
 import type { CollectionData, Product } from '@/lib/types';
 import { getCollectionByHandleQuery } from '@/lib/queries';
 import { shopifyFetch } from '@/lib/shopify';
@@ -58,7 +57,8 @@ export async function generateMetadata({
     ? searchParams.page[0]
     : searchParams?.page;
   const page = pageParam ? Number(pageParam) || 1 : 1;
-  const path = page > 1 ? `/collections/${handle}?page=${page}` : `/collections/${handle}`;
+  const path =
+    page > 1 ? `/collections/${handle}?page=${page}` : `/collections/${handle}`;
   const canonical = absoluteUrl(path);
 
   const hasFilters = Object.entries(searchParams || {}).some(
@@ -180,10 +180,20 @@ export default async function CollectionPage({
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(breadcrumbJsonLd)} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(collectionJsonLd)} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLd(breadcrumbJsonLd)}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLd(collectionJsonLd)}
+      />
       {productJsonLds.map((json, index) => (
-        <script key={index} type="application/ld+json" dangerouslySetInnerHTML={jsonLd(json)} />
+        <script
+          key={index}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={jsonLd(json)}
+        />
       ))}
       <CollectionViewTracker
         collectionName={collection.title || formatHandle(handle)}
@@ -200,36 +210,44 @@ export default async function CollectionPage({
           {collection.title || formatHandle(handle)}
         </h1>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col gap-8 lg:flex-row">
-            <div className="flex-1">
-              {products.length === 0 ? (
-                <div
-                  className="py-24 text-center text-lg text-body/70"
-                  role="status"
-                  aria-live="polite"
+          <div>
+            {/* Sections for the collection populate here under the title */}
+            {products.length === 0 ? (
+              <div
+                className="py-24 text-center text-lg text-body/70"
+                role="status"
+                aria-live="polite"
+              >
+                No products found in this collection.
+              </div>
+            ) : (
+              <>
+                <h2
+                  className="mb-8 text-2xl font-bold text-heading"
+                  id="products-heading"
                 >
-                  No products found in this collection.
+                  Products
+                </h2>
+                <div
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+                  aria-labelledby="products-heading"
+                >
+                  {products.map((product, idx) => (
+                    <div
+                      key={product.id}
+                      className="group relative animate-fade-in rounded-xl bg-white shadow-lg transition-transform duration-300 hover:-translate-y-1 hover:shadow-2xl"
+                      style={{ animationDelay: `${idx * 60}ms` }}
+                    >
+                      <ProductCard product={product} />
+                      <div className="absolute inset-0 rounded-xl ring-2 ring-transparent group-hover:ring-[hsl(var(--brand))] transition-all duration-300 pointer-events-none" />
+                    </div>
+                  ))}
                 </div>
-              ) : (
-                <>
-                  <h2 className="mb-8 text-2xl font-bold text-heading" id="products-heading">
-                    Products
-                  </h2>
-                  <div
-                    className="grid grid-cols-1 items-stretch gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-                    aria-labelledby="products-heading"
-                  >
-                    {products.map((product) => (
-                      <ProductCard key={product.id} product={product} />
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
+              </>
+            )}
           </div>
         </div>
       </main>
-      <Footer />
     </>
   );
 }

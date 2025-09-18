@@ -4,15 +4,10 @@ import Hero from '@/components/Hero';
 import CollectionSwitcherWrapper from '@/app/components/CollectionSwitcherWrapper';
 import CTASection from '@/components/CTASection';
 import AboutSection from '@/components/AboutSection';
-import DeliveryCalculator from '@/components/DeliveryCalculator';
-import DeliveryInfo from '@/components/DeliveryInfo';
 import EmailSignup from '@/components/EmailSignup';
 import FeaturedCollections from '@/components/FeaturedCollections';
 import FeaturedHeroProduct from '@/components/FeaturedHeroProduct';
-import FeaturedProducts from '@/components/FeaturedProducts';
 import RelatedProducts from '@/components/RelatedProducts';
-import TestimonialBlock from '@/components/TestimonialBlock';
-import TrustSignals from '@/components/TrustSignals';
 
 import { absoluteUrl, jsonLd } from '@/lib/seo';
 
@@ -84,7 +79,6 @@ export default async function HomePage() {
       >
         <Hero
           title="Modern Lab Equipment. Simplified. Delivered."
-          subtitle="Equip your schools, clinical labs, and research teams with high-performance tools, from essential consumables to precision instruments. We provide reliable solutions, backed by U.S.-based support and fast shipping, to help you maintain compliance and accelerate discovery."
           ctaText="Shop Microscopes"
           ctaHref="/collections/microscopes"
           ctaSecondaryText="Find Your Microscope"
@@ -93,15 +87,10 @@ export default async function HomePage() {
         <CollectionSwitcherWrapper />
         <CTASection />
         <AboutSection />
-        <DeliveryCalculator />
-        <DeliveryInfo />
+        <RelatedProducts />
         <EmailSignup />
         <FeaturedCollections />
         <FeaturedHeroProduct />
-        <FeaturedProducts />
-        <RelatedProducts />
-        <TestimonialBlock />
-        <TrustSignals />
       </main>
     </>
   );

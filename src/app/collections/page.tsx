@@ -1,15 +1,48 @@
 // TEMP: Placeholder implementations to restore buildability. Replace with real data logic.
+
 async function getMenuCollections() {
   return [];
 }
+import { shopifyFetch } from '@/lib/shopify';
+import { getAllCollectionsQuery } from '@/lib/queries/getAllCollectionsQuery';
+
+type ShopifyCollectionsResponse = {
+  collections: {
+    edges: Array<{
+      node: {
+        id: string;
+        handle: string;
+        title: string;
+        description: string;
+        image?: { url: string } | null;
+        products?: { edges: Array<{ node: { id: string } }> };
+      };
+    }>;
+  };
+};
+
 async function getShopifyCollections() {
-  return [];
+  // Fetch collections from Shopify Storefront API
+  const res = await shopifyFetch<ShopifyCollectionsResponse>({
+    query: getAllCollectionsQuery,
+    variables: { first: 20 },
+  });
+  const edges = res.data?.collections?.edges || [];
+  return edges.map(({ node }) => ({
+    id: node.id,
+    handle: node.handle,
+    title: node.title,
+    description: node.description,
+    productCount: node.products?.edges?.length || 0,
+    image: node.image?.url || null,
+    badge: undefined,
+  }));
 }
 export const dynamic = 'force-static';
 export const revalidate = 60;
 import Link from 'next/link';
 import Image from 'next/image';
-import Footer from '../../components/Footer';
+import FooterServer from '@/components/FooterServer';
 
 // ...existing imports...
 
@@ -161,14 +194,12 @@ export default async function CollectionsPage() {
                           </span>
                         </div>
                       )}
-
                       {/* Badge */}
                       {collection.badge && (
                         <div className="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-medium">
                           {collection.badge}
                         </div>
                       )}
-
                       {/* Product Count */}
                       <div className="absolute bottom-4 right-4 bg-card/90 text-muted-foreground px-3 py-1 rounded-full text-sm font-medium">
                         {collection.productCount} products
@@ -238,7 +269,7 @@ export default async function CollectionsPage() {
           </div>
         </section>
       </main>
-      <Footer />
+      <FooterServer />
     </>
   );
 }

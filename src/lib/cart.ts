@@ -17,7 +17,7 @@ export async function getCart() {
     });
     return cartResponse.data.cart ?? null;
   } catch (error) {
-    console.error('Failed to load cart from Shopify', error);
+    
     return null;
   }
 }

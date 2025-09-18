@@ -15,9 +15,7 @@ async function fetchWithRetry(
 
     if (res.status === 429 || res.status >= 500) {
       if (retries > 0) {
-        console.warn(
-          `Shopify API returned ${res.status}. Retrying in ${delay}ms...`,
-        );
+        
         await new Promise((resolve) => setTimeout(resolve, delay));
         return fetchWithRetry(endpoint, options, retries - 1, delay * 2);
       } else {
@@ -30,7 +28,7 @@ async function fetchWithRetry(
     return res;
   } catch (error) {
     if (retries > 0) {
-      console.warn(`Fetch failed. Retrying in ${delay}ms...`, error);
+      
       await new Promise((resolve) => setTimeout(resolve, delay));
       return fetchWithRetry(endpoint, options, retries - 1, delay * 2);
     } else {
@@ -56,8 +54,7 @@ export async function shopifyFetch<T>({
   timeout?: number;
 }): Promise<ShopifyFetchResponse<T>> {
   if (!SHOPIFY_STORE_DOMAIN || !SHOPIFY_STOREFRONT_API_TOKEN) {
-    console.error('SHOPIFY_STORE_DOMAIN:', SHOPIFY_STORE_DOMAIN);
-    console.error('SHOPIFY_STOREFRONT_API_TOKEN:', SHOPIFY_STOREFRONT_API_TOKEN);
+    
     throw new Error(
       'Missing Shopify environment variables. Make sure SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_API_TOKEN are set.',
     );
@@ -105,7 +102,7 @@ export async function shopifyFetch<T>({
       data,
     };
   } catch (err: unknown) {
-    console.error('❌ Shopify Fetch Failed:', err);
+    
     throw err instanceof Error
       ? err
       : new Error('An unknown error occurred while contacting Shopify.');
@@ -171,6 +168,23 @@ export const getProductsByIdQuery = /* GraphQL */ `
         featuredImage {
           url
           altText
+        }
+      }
+    }
+  }
+`;
+
+export const getCollectionFirstProductImageQuery = /* GraphQL */ `
+  query getCollectionFirstProductImage($handle: String!) {
+    collectionByHandle(handle: $handle) {
+      products(first: 1) {
+        edges {
+          node {
+            featuredImage {
+              url
+              altText
+            }
+          }
         }
       }
     }

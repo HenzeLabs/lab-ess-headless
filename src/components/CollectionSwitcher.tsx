@@ -79,7 +79,7 @@ const CollectionSwitcher: React.FC<CollectionSwitcherProps> = ({
         }
         requestAnimationFrame(updateScrollButtons);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        
         setProducts([]);
       } finally {
         setLoading(false);

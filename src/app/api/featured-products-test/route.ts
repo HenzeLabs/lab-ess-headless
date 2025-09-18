@@ -40,6 +40,6 @@ export async function GET() {
 
   const json = await res.json();
   // eslint-disable-next-line no-console
-  console.log('✅ PRODUCTS:', JSON.stringify(json, null, 2));
+  
   return NextResponse.json(json);
 }

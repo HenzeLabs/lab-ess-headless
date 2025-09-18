@@ -1,191 +1,144 @@
 'use client';
 
 import Link from 'next/link';
-import {
-  CameraIcon,
-  UsersIcon,
-  BriefcaseIcon,
-} from '@heroicons/react/24/outline';
+import React, { useMemo, useState } from 'react';
 
-import { Input } from './ui/input';
-import { Button } from './ui/button';
 import { layout } from '@/lib/ui';
 
-const footerLinks = {
-  shop: [
-    { name: 'Lab Glassware', href: '/collections/glassware' },
-    { name: 'Instruments', href: '/collections/instruments' },
-    { name: 'Consumables', href: '/collections/consumables' },
-    { name: 'Safety', href: '/collections/safety' },
-    { name: 'All Products', href: '/collections/all' },
-  ],
-  support: [
-    { name: 'Contact Us', href: '/support/contact' },
-    { name: 'FAQ', href: '/support/faq' },
-    { name: 'Shipping', href: '/support/shipping' },
-    { name: 'Returns', href: '/support/returns' },
-    { name: 'Warranty', href: '/support/warranty' },
-  ],
-  company: [
-    { name: 'About Lab Essentials', href: '/about' },
-    { name: 'Reviews', href: '/reviews' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Careers', href: '/careers' },
-    { name: 'Sustainability', href: '/sustainability' },
-    { name: 'Press', href: '/press' },
-  ],
-  connect: [
-    { name: 'Instagram', href: 'https://instagram.com/labessentials' },
-    { name: 'Facebook', href: 'https://facebook.com/labessentials' },
-    { name: 'LinkedIn', href: 'https://linkedin.com/company/labessentials' },
-  ],
-};
+export interface FooterLink {
+  title: string;
+  href: string;
+}
 
-const SocialIcon = ({ type }: { type: string }) => {
-  const icons: Record<string, React.ReactElement> = {
-    instagram: <CameraIcon className="h-5 w-5" aria-hidden="true" />,
-    facebook: <UsersIcon className="h-5 w-5" aria-hidden="true" />,
-    linkedin: <BriefcaseIcon className="h-5 w-5" aria-hidden="true" />,
+interface FooterProps {
+  shopLinks: FooterLink[];
+}
+
+type FormStatus = 'idle' | 'loading' | 'success' | 'error';
+
+export default function Footer({ shopLinks }: FooterProps) {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<FormStatus>('idle');
+  const [message, setMessage] = useState('');
+
+  const normalizedLinks = useMemo(
+    () =>
+      shopLinks
+        .filter((link) => link.title && link.href)
+        .map((link) => ({
+          title: link.title.trim(),
+          href: link.href,
+        })),
+    [shopLinks],
+  );
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!email || status === 'loading') {
+      return;
+    }
+
+    setStatus('loading');
+    setMessage('');
+
+    try {
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        setStatus('error');
+        setMessage(data?.error ?? 'We could not add you to the list. Please try again.');
+        return;
+      }
+
+      setStatus('success');
+      setMessage('Thanks! Check your inbox to confirm your subscription.');
+      setEmail('');
+    } catch (error) {
+      console.error('Footer newsletter signup failed', error);
+      setStatus('error');
+      setMessage('Something went wrong. Please try again.');
+    }
   };
 
-  return icons[type.toLowerCase()] ?? <span className="sr-only" />;
-};
-
-export default function Footer() {
   return (
-    <footer className="border-t border-[hsl(var(--border))] bg-surface text-body">
+    <footer className="border-t border-[hsl(var(--border))] bg-[hsl(var(--surface))] text-[hsl(var(--body))]">
       <div className={`${layout.container} py-12 md:py-16`}>
-        <div className="mb-12 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5">
-          {/* Shop Column */}
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)]">
           <div>
-            <h3 className="mb-4 text-base font-semibold text-heading">Shop</h3>
-            <ul className="space-y-2">
-              {footerLinks.shop.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-body/75 transition-colors hover:text-[hsl(var(--brand))]"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Support Column */}
-          <div>
-            <h3 className="mb-4 text-base font-semibold text-heading">Support</h3>
-            <ul className="space-y-2">
-              {footerLinks.support.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-body/75 transition-colors hover:text-[hsl(var(--brand))]"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Company Column */}
-          <div>
-            <h3 className="mb-4 text-base font-semibold text-heading">Company</h3>
-            <ul className="space-y-2">
-              {footerLinks.company.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-body/75 transition-colors hover:text-[hsl(var(--brand))]"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Newsletter Signup */}
-          <div className="lg:col-span-2">
-            <h3 className="mb-4 text-base font-semibold text-heading">
-              Join the Lab Essentials community
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-[hsl(var(--muted-foreground))]">
+              Shop
             </h3>
-            <p className="mb-4 text-sm text-body/75">
-              Get exclusive offers, lab tips, and be the first to know about new
-              products.
-            </p>
-            <form
-              className="flex flex-col sm:flex-row gap-2"
-              onSubmit={(e) => e.preventDefault()}
-            >
-              <Input
-                type="email"
-                required
-                placeholder="Enter your email"
-                inputSize="md"
-                className="flex-grow"
-              />
-              <Button type="submit" className="whitespace-nowrap">
-                Subscribe
-              </Button>
-            </form>
-
-            {/* Social Icons */}
-            <div className="mt-6 flex items-center space-x-4">
-              {['instagram', 'facebook', 'linkedin'].map((social) => (
-                <a
-                  key={social}
-                  href={
-                    footerLinks.connect.find(
-                      (l) => l.name.toLowerCase() === social,
-                    )?.href
-                  }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[hsl(var(--border))] text-body/70 transition hover:border-[hsl(var(--brand))] hover:text-[hsl(var(--brand))]"
-                  aria-label={`Follow us on ${social}`}
-                >
-                  <SocialIcon type={social} />
-                </a>
+            <ul className="mt-4 space-y-3">
+              {normalizedLinks.map((link) => (
+                <li key={`${link.title}-${link.href}`}>
+                  <Link
+                    href={link.href}
+                    className="text-sm font-medium text-[hsl(var(--ink))] transition hover:text-[hsl(var(--brand))]"
+                  >
+                    {link.title}
+                  </Link>
+                </li>
               ))}
+            </ul>
+          </div>
+
+          <div className="rounded-3xl border border-white/25 bg-white/90 p-8 shadow-[0_35px_85px_-48px_rgba(10,13,40,0.35)] backdrop-blur">
+            <h3 className="text-lg font-semibold text-[hsl(var(--ink))]">
+              Stay in the loop
+            </h3>
+            <p className="mt-2 text-sm text-[hsl(var(--body))]/80">
+              Get lab-ready launches, supply drops, and guides—straight to your inbox.
+            </p>
+            <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <label htmlFor="footer-email" className="sr-only">
+                Email address
+              </label>
+              <input
+                id="footer-email"
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="name@labessentials.com"
+                required
+                disabled={status === 'loading'}
+                className="w-full rounded-full border border-[hsl(var(--border))] bg-white px-5 py-3 text-sm text-[hsl(var(--ink))] shadow-sm transition focus:border-[hsl(var(--brand))] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand))]/40"
+              />
+              <button
+                type="submit"
+                disabled={status === 'loading'}
+                className="inline-flex items-center justify-center rounded-full bg-[linear-gradient(135deg,hsl(var(--brand))_0%,hsl(var(--brand-dark))_100%)] px-6 py-3 text-sm font-semibold text-white shadow-[0_18px_48px_-22px_rgba(12,15,60,0.55)] transition hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,13,40,0.35)] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {status === 'loading' ? 'Submitting…' : 'Subscribe'}
+              </button>
+            </form>
+            <div className="mt-2 min-h-[1.5rem] text-sm" aria-live="polite">
+              {message ? (
+                <p className={status === 'error' ? 'text-red-500' : 'text-[hsl(var(--brand))]'}>{message}</p>
+              ) : null}
+            </div>
+            <div className="mt-6 text-xs text-[hsl(var(--body))]/70">
+              We respect your inbox. Unsubscribe anytime.
             </div>
           </div>
         </div>
 
-        {/* Bottom Section */}
-        <div className="border-t border-[hsl(var(--border))] pt-8">
-          <div className="flex flex-col items-center justify-between gap-4 text-sm text-body/70 md:flex-row">
-            <div className="flex flex-col items-center gap-4 md:flex-row">
-              <p>
-                © {new Date().getFullYear()} Lab Essentials. All rights
-                reserved.
-              </p>
-              <span className="hidden md:inline">•</span>
-              <Link
-                href="/privacy"
-                className="transition-colors hover:text-[hsl(var(--brand))]"
-              >
+        <div className="mt-12 border-t border-[hsl(var(--border))] pt-6 text-sm text-[hsl(var(--body))]/70">
+          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+            <p>© {new Date().getFullYear()} Lab Essentials. All rights reserved.</p>
+            <div className="flex items-center gap-4">
+              <Link href="/privacy" className="transition hover:text-[hsl(var(--brand))]">
                 Privacy Policy
               </Link>
-              <span className="hidden md:inline">•</span>
-              <Link
-                href="/terms"
-                className="transition-colors hover:text-[hsl(var(--brand))]"
-              >
+              <span aria-hidden="true">•</span>
+              <Link href="/terms" className="transition hover:text-[hsl(var(--brand))]">
                 Terms of Service
               </Link>
-            </div>
-
-            {/* Certifications */}
-            <div className="flex items-center gap-4 text-xs">
-              <span className="rounded-full border border-[hsl(var(--border))] px-3 py-1 text-body/70">
-                B Corp Certified
-              </span>
-              <span className="rounded-full border border-[hsl(var(--border))] px-3 py-1 text-body/70">
-                1% for the Planet
-              </span>
             </div>
           </div>
         </div>

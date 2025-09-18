@@ -23,7 +23,7 @@ export default async function ProductGrid() {
 
     products = response.data.products?.edges.map((edge) => edge.node) ?? [];
   } catch (error) {
-    console.error('Failed to load homepage products', error);
+    
   }
 
   if (products.length === 0) {

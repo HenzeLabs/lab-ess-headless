@@ -2,7 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import SiteHeader from '@/components/layout/SiteHeader';
-import Footer from '@/components/Footer';
+import FooterServer from '@/components/FooterServer';
 import AnalyticsWrapper from '@/AnalyticsWrapper';
 
 const sans = Inter({
@@ -52,7 +52,7 @@ export default function RootLayout({
         <AnalyticsWrapper />
         <SiteHeader />
         {children}
-        <Footer />
+        <FooterServer />
       </body>
     </html>
   );

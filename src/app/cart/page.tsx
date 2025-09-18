@@ -125,15 +125,14 @@ export default function CartPage() {
 
                       return (
                         <li key={item.node.id} className="flex py-8">
-                          <div className="flex w-full items-start gap-4 rounded-lg border border-[hsl(var(--muted))]/30 bg-[hsl(var(--bg))] p-4 shadow-soft">
-                            <div className="h-28 w-28 flex-shrink-0 overflow-hidden rounded-md border border-[hsl(var(--muted))]/30 bg-[hsl(var(--bg))]">
+                          <div className="flex w-full items-start gap-4 rounded-lg border border-[hsl(var(--muted))]/30 bg-[hsl(var(--bg))] p-4 shadow-soft transition-shadow duration-200 hover:shadow-lg">
+                            <div className="relative h-28 w-28 flex-shrink-0 overflow-hidden rounded-md border border-[hsl(var(--muted))]/30 bg-[hsl(var(--bg))]">
                               {imageUrl ? (
                                 <Image
                                   src={imageUrl}
                                   alt={imageAlt}
-                                  width={112}
-                                  height={112}
-                                  className="h-full w-full object-cover object-center"
+                                  fill
+                                  className="object-contain w-full h-full"
                                 />
                               ) : (
                                 <div className="h-full w-full flex items-center justify-center bg-[hsl(var(--muted))]/10 text-[hsl(var(--muted))]">
@@ -144,16 +143,16 @@ export default function CartPage() {
 
                             <div className="ml-6 flex flex-1 flex-col">
                               <div>
-                                <div className="flex justify-between text-lg font-medium text-[hsl(var(--ink))]">
+                                <div className="flex justify-between text-lg font-semibold text-[hsl(var(--ink))]">
                                   <h3>
                                     <Link
                                       href={`/products/${item.node.merchandise.product.handle}`}
-                                      className="hover:text-[hsl(var(--brand))]"
+                                      className="hover:text-[hsl(var(--brand))] line-clamp-2"
                                     >
                                       {item.node.merchandise.product.title}
                                     </Link>
                                   </h3>
-                                  <p className="ml-4">
+                                  <p className="ml-4 text-lg font-bold">
                                     {item.node.merchandise.price.amount}{' '}
                                     {item.node.merchandise.price.currencyCode}
                                   </p>
@@ -212,8 +211,8 @@ export default function CartPage() {
                   </ul>
                 </div>
 
-                <div className="bg-[hsl(var(--bg))] p-10 rounded-lg shadow-soft ring-1 ring-[hsl(var(--muted))]/15">
-                  <h2 className="text-2xl font-semibold text-[hsl(var(--ink))]">
+                <div className="bg-[hsl(var(--surface))] p-8 rounded-lg shadow-soft ring-1 ring-[hsl(var(--border))]">
+                  <h2 className="text-2xl font-semibold text-[hsl(var(--ink))] mb-6">
                     Order summary
                   </h2>
                   <div className="mt-8 space-y-6">
@@ -248,7 +247,7 @@ export default function CartPage() {
                 </div>
               </div>
             ) : (
-              <div className="text-center bg-[hsl(var(--bg))] p-16 rounded-lg shadow-soft ring-1 ring-[hsl(var(--muted))]/15">
+              <div className="text-center bg-[hsl(var(--surface))] p-16 rounded-lg shadow-soft ring-1 ring-[hsl(var(--border))]">
                 <h2 className="text-2xl font-semibold text-[hsl(var(--ink))] mb-4">
                   Your cart is empty
                 </h2>

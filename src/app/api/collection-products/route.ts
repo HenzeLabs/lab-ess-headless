@@ -33,7 +33,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ products });
   } catch (error) {
-    console.error('Failed to load collection products', error);
+    
     return NextResponse.json(
       { error: 'Unable to load collection products.' },
       { status: 500 },

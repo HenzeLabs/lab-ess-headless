@@ -1,0 +1,162 @@
+{
+  "config": {
+    "configFile": "/Users/laurenadmin/Projects/lab-ess-headless/playwright.config.ts",
+    "rootDir": "/Users/laurenadmin/Projects/lab-ess-headless/tests",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "open": "never"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/laurenadmin/Projects/lab-ess-headless/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/Users/laurenadmin/Projects/lab-ess-headless/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.55.0",
+    "workers": 4,
+    "webServer": {
+      "command": "npm run dev",
+      "url": "http://localhost:3000",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "basic-shopify-flow.spec.ts",
+      "file": "basic-shopify-flow.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Basic Shopify Site Functions",
+          "file": "basic-shopify-flow.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should confirm basic site functions including login",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 15310,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  getByRole('link', { name: 'Proceed to Checkout' })\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: 'Proceed to Checkout' })\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  getByRole('link', { name: 'Proceed to Checkout' })\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: 'Proceed to Checkout' })\u001b[22m\n\n    at /Users/laurenadmin/Projects/lab-ess-headless/tests/basic-shopify-flow.spec.ts:20:34",
+                        "location": {
+                          "file": "/Users/laurenadmin/Projects/lab-ess-headless/tests/basic-shopify-flow.spec.ts",
+                          "column": 34,
+                          "line": 20
+                        },
+                        "snippet": "  18 |     await expect(page.locator('p').getByText('Your cart is empty')).not.toBeVisible();\n  19 |     const checkoutButton = page.getByRole('link', { name: 'Proceed to Checkout' });\n> 20 |     await expect(checkoutButton).toBeVisible({ timeout: 10000 });\n     |                                  ^\n  21 |\n  22 |     // 4. Checkout starts (redirect to Shopify checkout).\n  23 |     await checkoutButton.click();"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/laurenadmin/Projects/lab-ess-headless/tests/basic-shopify-flow.spec.ts",
+                            "column": 34,
+                            "line": 20
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  getByRole('link', { name: 'Proceed to Checkout' })\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: 'Proceed to Checkout' })\u001b[22m\n\n\n  18 |     await expect(page.locator('p').getByText('Your cart is empty')).not.toBeVisible();\n  19 |     const checkoutButton = page.getByRole('link', { name: 'Proceed to Checkout' });\n> 20 |     await expect(checkoutButton).toBeVisible({ timeout: 10000 });\n     |                                  ^\n  21 |\n  22 |     // 4. Checkout starts (redirect to Shopify checkout).\n  23 |     await checkoutButton.click();\n    at /Users/laurenadmin/Projects/lab-ess-headless/tests/basic-shopify-flow.spec.ts:20:34"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-18T17:20:18.096Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/laurenadmin/Projects/lab-ess-headless/test-results/basic-shopify-flow-Basic-S-db701-e-functions-including-login/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/laurenadmin/Projects/lab-ess-headless/tests/basic-shopify-flow.spec.ts",
+                        "column": 34,
+                        "line": 20
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "686908a144ba05703ac1-df8a35defedc3b8cd6fe",
+              "file": "basic-shopify-flow.spec.ts",
+              "line": 4,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-09-18T17:20:13.055Z",
+    "duration": 20723.142,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

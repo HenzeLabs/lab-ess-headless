@@ -30,5 +30,5 @@
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off"
   },
-  "ignorePatterns": [".next/", "node_modules/"]
+  "ignorePatterns": [".next/", "node_modules/", "lighthouse.config.js"]
 }

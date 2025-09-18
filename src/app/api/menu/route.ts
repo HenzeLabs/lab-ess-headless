@@ -43,7 +43,7 @@ export async function GET() {
     return NextResponse.json({ items: response.data.menu.items ?? [] });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
-    console.error(`[api/menu]`, msg);
+    
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

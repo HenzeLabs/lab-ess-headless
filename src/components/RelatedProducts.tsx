@@ -1,28 +1,74 @@
-import React from 'react';
-import ProductCard from './ProductCard';
+import ProductRail from '@/components/ProductRail';
+import { getCollectionByHandleQuery, getProductRecommendationsQuery } from '@/lib/queries';
+import { shopifyFetch } from '@/lib/shopify';
 import type { Product } from '@/lib/types';
+import { layout } from '@/lib/ui';
 
-// Accept products as a prop, fallback to empty array
 interface RelatedProductsProps {
-  products?: Product[];
+  productId?: string;
+  heading?: string;
+  fallbackCollectionHandle?: string;
 }
 
-export default function RelatedProducts({
-  products = [],
+interface ProductRecommendationsResponse {
+  productRecommendations: Product[];
+}
+
+interface CollectionResponse {
+  collection: {
+    handle: string;
+    products: {
+      edges: {
+        node: Product;
+      }[];
+    };
+  } | null;
+}
+
+const DEFAULT_FALLBACK_HANDLE = 'best-sellers';
+
+export default async function RelatedProducts({
+  productId,
+  heading = 'Shop Related Products',
+  fallbackCollectionHandle = DEFAULT_FALLBACK_HANDLE,
 }: RelatedProductsProps) {
-  if (!products.length) return null;
-  return (
-    <section className="py-16 bg-muted border-t">
-      <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-2xl font-bold text-primary mb-8 text-center">
-          You might also like
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+  try {
+    let products: Product[] = [];
+    let viewAllHref: string | undefined;
+
+    if (productId) {
+      const response = await shopifyFetch<ProductRecommendationsResponse>({
+        query: getProductRecommendationsQuery,
+        variables: { productId },
+      });
+      products = response.data.productRecommendations ?? [];
+    }
+
+    if (!products.length && fallbackCollectionHandle) {
+      const fallbackResponse = await shopifyFetch<CollectionResponse>({
+        query: getCollectionByHandleQuery,
+        variables: { handle: fallbackCollectionHandle, first: 12 },
+      });
+      const fallbackCollection = fallbackResponse.data.collection;
+      products = fallbackCollection?.products?.edges.map((edge) => edge.node) ?? [];
+      if (fallbackCollection?.handle) {
+        viewAllHref = `/collections/${fallbackCollection.handle}`;
+      }
+    }
+
+    if (!products.length) {
+      return null;
+    }
+
+    return (
+      <section className="bg-[hsl(var(--bg))] py-16 sm:py-20">
+        <div className={`${layout.container} space-y-6`}>
+          <ProductRail heading={heading} products={products} viewAllHref={viewAllHref} />
         </div>
-      </div>
-    </section>
-  );
+      </section>
+    );
+  } catch (error) {
+    
+    return null;
+  }
 }

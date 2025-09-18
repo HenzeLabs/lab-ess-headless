@@ -26,6 +26,7 @@ interface HeaderProps {
   logoUrl: string;
   shopName: string;
   logoAlt?: string;
+  cartItemCount: number;
 }
 
 function formatTitleCase(title: string) {
@@ -46,6 +47,7 @@ export default function Header({
   logoUrl,
   shopName,
   logoAlt,
+  cartItemCount,
 }: HeaderProps) {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -87,85 +89,92 @@ export default function Header({
         >
           <header className="relative bg-[hsl(var(--bg))]">
           <div className="max-w-[1440px] mx-auto px-4 lg:px-8">
-            <div className="grid grid-cols-[1fr_auto_1fr] items-center py-4 border-b border-border gap-6">
-              <div className="flex items-center justify-start gap-3" aria-hidden="true"></div>
-              <Link href="/" className="flex items-center justify-center gap-3">
-                <Image
-                  src={logoUrl}
-                  alt={logoAlt || shopName}
-                  width={240}
-                  height={80}
-                  className="h-[72px] w-auto object-contain drop-shadow-sm"
-                  priority
-                />
-              </Link>
+            <div className="grid grid-cols-3 items-center py-4">
+              {/* Left empty for spacing or future elements */}
+              <div></div>
+              {/* Logo */}
+              <div className="flex justify-center">
+                <Link href="/" className="flex items-center justify-center gap-3">
+                  <Image
+                    src={logoUrl}
+                    alt={logoAlt || shopName}
+                    width={240}
+                    height={80}
+                    className="h-[72px] w-auto object-contain drop-shadow-sm"
+                    priority
+                  />
+                </Link>
+              </div>
+              {/* Icons */}
               <div className="flex items-center justify-end gap-3">
                 <Button
                   variant="ghost"
                   onClick={() => setIsSearchOpen(true)}
                   aria-label="Open search"
-                  className="h-12 w-12 rounded-full hover:bg-[#4e2cfb] hover:text-white"
+                  className="h-14 w-14 rounded-full hover:bg-[#4e2cfb] hover:text-white"
                 >
-                  <Search className="h-7 w-7" />
+                  <Search className="h-8 w-8" />
                 </Button>
                 <Button
                   asChild
                   variant="ghost"
-                  className="h-12 w-12 rounded-full hover:bg-[#4e2cfb] hover:text-white"
+                  className="h-14 w-14 rounded-full hover:bg-[#4e2cfb] hover:text-white"
                 >
                   <Link href="/account" aria-label="Account">
-                    <User className="h-7 w-7" />
+                    <User className="h-8 w-8" />
                   </Link>
                 </Button>
                 <Button
                   asChild
                   variant="ghost"
-                  className="relative h-12 w-12 rounded-full hover:bg-[#4e2cfb] hover:text-white"
+                  className="relative h-14 w-14 rounded-full hover:bg-[#4e2cfb] hover:text-white"
                 >
                   <Link href="/cart" aria-label="Cart">
-                    <ShoppingCart className="h-7 w-7" />
-                    <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-medium">
-                      0
+                    <ShoppingCart className="h-9 w-9" />
+                    <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white text-xs font-medium z-10">
+                      {cartItemCount}
                     </span>
                   </Link>
                 </Button>
               </div>
             </div>
             {/* Main nav */}
-            <nav aria-label="Main" className="hidden lg:flex items-center justify-center py-2">
-              {menuItems.length === 0 ? (
-                <div className="text-red-600 font-bold py-2">No navigation items found.</div>
-              ) : (
-                <ul className="flex items-center space-x-2">
-                  {menuItems.filter(item => item.handle && item.title).map(menuItem => (
-                    <li
-                      key={menuItem.handle || menuItem.title}
-                      className="relative"
-                      onMouseEnter={menuItem.hasMegaMenu ? () => handleMouseEnter(menuItem.handle) : undefined}
-                      onMouseLeave={menuItem.hasMegaMenu ? handleMouseLeave : undefined}
-                    >
-                      {menuItem.hasMegaMenu ? (
-                        <Button
-                          variant="ghost"
-                          className="px-4 py-2 text-base font-medium flex items-center gap-1"
-                          aria-haspopup="true"
-                          aria-expanded={activeMenu === menuItem.handle}
-                        >
-                          {menuItem.title}
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 12 12">
-                            <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                        </Button>
-                      ) : (
-                        <Button asChild variant="link" className="px-4 py-2 text-base font-medium">
-                          <Link href={menuItem.url || `/collections/${menuItem.handle}`}>{menuItem.title}</Link>
-                        </Button>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </nav>
+            <div className="border-b border-border">
+              <nav aria-label="Main" className="hidden lg:flex items-center justify-center py-2">
+                {menuItems.length === 0 ? (
+                  <div className="text-red-600 font-bold py-2">No navigation items found.</div>
+                ) : (
+                  <ul className="flex items-center space-x-2">
+                    {menuItems.filter(item => item.handle && item.title).map(menuItem => (
+                      <li
+                        key={menuItem.handle || menuItem.title}
+                        className="relative"
+                        onMouseEnter={menuItem.hasMegaMenu ? () => handleMouseEnter(menuItem.handle) : undefined}
+                        onMouseLeave={menuItem.hasMegaMenu ? handleMouseLeave : undefined}
+                      >
+                        {menuItem.hasMegaMenu ? (
+                          <Button
+                            variant="ghost"
+                            className="px-4 py-2 text-base font-medium flex items-center gap-1"
+                            aria-haspopup="true"
+                            aria-expanded={activeMenu === menuItem.handle}
+                          >
+                            {menuItem.title}
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 12 12">
+                              <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          </Button>
+                        ) : (
+                          <Button asChild variant="link" className="px-4 py-2 text-base font-medium">
+                            <Link href={menuItem.url || `/collections/${menuItem.handle}`}>{menuItem.title}</Link>
+                          </Button>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </nav>
+            </div>
           </div>
 
           {/* Mega Menu Panels */}
@@ -233,9 +242,9 @@ export default function Header({
                         >
                           {/* Product/Collection Image */}
                           <div className="relative aspect-square bg-gradient-to-br from-muted to-background rounded-full mb-5 overflow-hidden shadow-xl transition-all duration-300 border-4 border-white">
-                            {subMenuItem.image?.url ? (
+                            {subMenuItem.image?.url || subMenuItem.fallbackImageUrl ? (
                               <Image
-                                src={subMenuItem.image.url}
+                                src={subMenuItem.image?.url || subMenuItem.fallbackImageUrl || ''}
                                 alt={subMenuItem.title}
                                 fill
                                 className="w-full h-full object-cover transition-transform duration-300 scale-110"
