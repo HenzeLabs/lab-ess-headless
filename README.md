@@ -67,6 +67,8 @@ pnpm dev
 - [ ] Add SEO best practices (canonical, robots, etc)
 - [ ] Test on mobile and desktop for responsiveness
 - [ ] Run `npm run lint` and `npm run typecheck`
+- [ ] Run all test suites (`npm run test:e2e` and `npm run lh`)
+
 - [ ] Add error boundaries for API failures
 
 ---
@@ -96,6 +98,47 @@ npm run test:analytics
 ```
 
 The Playwright suite boots the dev server, simulates an ecommerce funnel, and prints an `ANALYTICS_RESULTS` JSON blob summarising captured `dataLayer` pushes, `_tfa` pixel events, and intercepted GA4 requests.
+
+## Test Suites (Comprehensive)
+
+To run all Playwright tests locally:
+
+```bash
+npm run test:e2e
+```
+
+You can also run specific test suites:
+
+*   **SEO:** `npm run test:seo`
+*   **Accessibility:** `npm run test:a11y`
+*   **Performance:** `npm run test:perf` (Note: This primarily triggers Lighthouse CI. For full Lighthouse CI reports, run `npm run lh`)
+*   **Visual Regression:** `npm run test:visual`
+*   **Functional:** `npm run test:functional`
+
+### Lighthouse CI
+
+To run Lighthouse CI locally:
+
+```bash
+npm run lh
+```
+
+This will generate a report in the `.lighthouseci` directory.
+
+## CI/CD Integration
+
+The GitHub Actions workflow (`.github/workflows/ci.yml`) now includes comprehensive testing:
+
+*   **Linting & Typechecking:** `npm run lint` and `npm run typecheck` ensure code quality.
+*   **Test Suites:** All Playwright test suites (`npm run test:e2e`) are executed.
+*   **Lighthouse CI:** `npm run lh` runs performance, SEO, and accessibility audits.
+    *   **Thresholds:** Performance ≥85, SEO ≥90, Accessibility ≥90. Warnings are issued if these thresholds are not met.
+*   **Caching:** `node_modules` are cached to speed up CI runs.
+*   **Artifacts:**
+    *   **Playwright Report:** HTML report and test results are uploaded as `playwright-report`.
+    *   **Lighthouse CI Report:** Lighthouse CI reports are uploaded as `lhci-report`.
+
+These artifacts can be downloaded from the GitHub Actions run summary page.
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 

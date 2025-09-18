@@ -10,7 +10,13 @@
     "typecheck": "tsc --noEmit",
     "lh": "lhci autorun --config=./lighthouse.config.js",
     "clean:shopify": "tools/shopify-cleanup/bin/index.sh",
-    "test:analytics": "playwright test tests/analytics-flow.spec.ts"
+    "test:analytics": "playwright test tests/analytics-flow.spec.ts",
+    "test:seo": "playwright test tests/seo.spec.ts",
+    "test:a11y": "playwright test tests/accessibility.spec.ts",
+    "test:perf": "playwright test tests/performance.spec.ts",
+    "test:visual": "playwright test tests/visual-regression.spec.ts",
+    "test:functional": "playwright test tests/functional.spec.ts",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -24,6 +30,7 @@
     "tailwindcss": "^3.4.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
     "@next/bundle-analyzer": "^15.5.2",
     "@playwright/test": "^1.55.0",
     "@tailwindcss/typography": "^0.5.16",
