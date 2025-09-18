@@ -7,9 +7,7 @@ export async function GET() {
   const variantId = '42307406954555'; 
   const quantity = 1;
 
-  if (variantId === 'YOUR_SHOPIFY_VARIANT_ID') {
-    return NextResponse.json({ error: 'Please replace YOUR_SHOPIFY_VARIANT_ID with a real variant ID.' }, { status: 400 });
-  }
+  
 
   try {
     const cart = await addCartLineAction(variantId, quantity);
