@@ -2,10 +2,10 @@ import { getCart } from '@/lib/cart';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { removeCartLineAction } from './actions';
+import { removeCartLineAction, updateCartLineAction } from './actions';
+import { Button } from '@/components/ui/button';
 import CartAnalyticsTracker from '@/components/analytics/CartAnalyticsTracker';
-
-const PLACEHOLDER_IMG = '/placeholders/product1.jpg';
+import TrustSignals from '@/components/TrustSignals';
 
 export default async function CartPage() {
   const cart = await getCart();
@@ -33,9 +33,9 @@ export default async function CartPage() {
 
   return (
     <>
-      <main className="bg-[hsl(var(--bg))] text-[hsl(var(--ink))] py-24">
+      <main className="bg-[hsl(var(--bg))] text-[hsl(var(--ink))] py-section-lg">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-extrabold tracking-tight text-[hsl(var(--ink))] sm:text-5xl text-center mb-16">
+          <h1 className="text-center mb-16">
             Your Cart
           </h1>
 
@@ -48,59 +48,92 @@ export default async function CartPage() {
                   {cart.lines.edges.map((item) => {
                     const featuredImage =
                       item.node.merchandise.product.featuredImage;
-                    const imageUrl = featuredImage?.url || PLACEHOLDER_IMG;
+                    const imageUrl = featuredImage?.url;
                     const imageAlt =
                       featuredImage?.altText ||
                       item.node.merchandise.product.title;
 
                     return (
                       <li key={item.node.id} className="flex py-8">
-                        <div className="h-28 w-28 flex-shrink-0 overflow-hidden rounded-md border border-[hsl(var(--muted))]/30 bg-[hsl(var(--bg))]">
-                          <Image
-                            src={imageUrl}
-                            alt={imageAlt}
-                            width={112}
-                            height={112}
-                            className="h-full w-full object-cover object-center"
-                          />
-                        </div>
-
-                        <div className="ml-6 flex flex-1 flex-col">
-                          <div>
-                            <div className="flex justify-between text-lg font-medium text-[hsl(var(--ink))]">
-                              <h3>
-                                <Link
-                                  href={`/products/${item.node.merchandise.product.handle}`}
-                                className="hover:text-[hsl(var(--brand))]"
-                              >
-                                {item.node.merchandise.product.title}
-                              </Link>
-                            </h3>
-                            <p className="ml-4">
-                              {item.node.merchandise.price.amount}{' '}
-                              {item.node.merchandise.price.currencyCode}
-                            </p>
+                        <div className="flex w-full items-start gap-4 rounded-lg border border-[hsl(var(--muted))]/30 bg-[hsl(var(--bg))] p-4 shadow-soft">
+                          <div className="h-28 w-28 flex-shrink-0 overflow-hidden rounded-md border border-[hsl(var(--muted))]/30 bg-[hsl(var(--bg))]">
+                            {imageUrl ? (
+                              <Image
+                                src={imageUrl}
+                                alt={imageAlt}
+                                width={112}
+                                height={112}
+                                className="h-full w-full object-cover object-center"
+                              />
+                            ) : (
+                              <div className="h-full w-full flex items-center justify-center bg-[hsl(var(--muted))]/10 text-[hsl(var(--muted))]">
+                                No Image
+                              </div>
+                            )}
                           </div>
-                        </div>
-                          <div className="flex flex-1 items-end justify-between text-base">
-                            <p className="text-[hsl(var(--muted))]">
-                              Qty {item.node.quantity}
-                            </p>
 
-                            <form
-                              action={removeCartLineAction}
-                              className="flex"
-                              data-cart-remove={item.node.id}
-                            >
-                              <input type="hidden" name="lineId" value={item.node.id} />
-                              <button
-                                type="submit"
-                                className="font-medium text-[hsl(var(--brand))] hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand))] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--bg))]"
-                                aria-label={`Remove ${item.node.merchandise.product.title} from cart`}
-                              >
-                                Remove
-                              </button>
-                            </form>
+                          <div className="ml-6 flex flex-1 flex-col">
+                            <div>
+                              <div className="flex justify-between text-lg font-medium text-[hsl(var(--ink))]">
+                                <h3>
+                                  <Link
+                                    href={`/products/${item.node.merchandise.product.handle}`}
+                                    className="hover:text-[hsl(var(--brand))]"
+                                  >
+                                    {item.node.merchandise.product.title}
+                                  </Link>
+                                </h3>
+                                <p className="ml-4">
+                                  {item.node.merchandise.price.amount}{' '}
+                                  {item.node.merchandise.price.currencyCode}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex flex-1 items-end justify-between text-base">
+                              <div className="flex items-center gap-4">
+                                <form action={updateCartLineAction} className="flex items-center">
+                                  <input type="hidden" name="lineId" value={item.node.id} />
+                                  <Button
+                                    type="submit"
+                                    name="quantity"
+                                    value={Math.max(1, item.node.quantity - 1)}
+                                    variant="outline"
+                                    size="icon"
+                                    className="h-8 w-8 transition-all duration-300 ease-out-soft"
+                                    aria-label="Decrease quantity"
+                                    disabled={item.node.quantity <= 1}
+                                  >
+                                    -
+                                  </Button>
+                                  <span className="mx-2 w-8 text-center text-base font-medium">
+                                    {item.node.quantity}
+                                  </span>
+                                  <Button
+                                    type="submit"
+                                    name="quantity"
+                                    value={item.node.quantity + 1}
+                                    variant="outline"
+                                    size="icon"
+                                    className="h-8 w-8 transition-all duration-300 ease-out-soft"
+                                    aria-label="Increase quantity"
+                                  >
+                                    +
+                                  </Button>
+                                </form>
+
+                                <form action={removeCartLineAction}>
+                                  <input type="hidden" name="lineId" value={item.node.id} />
+                                  <Button
+                                    type="submit"
+                                    variant="link"
+                                    className="text-sm text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--brand))] transition-all duration-300 ease-out-soft"
+                                    aria-label={`Remove ${item.node.merchandise.product.title} from cart`}
+                                  >
+                                    Remove
+                                  </Button>
+                                </form>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </li>
@@ -109,7 +142,7 @@ export default async function CartPage() {
                 </ul>
               </div>
 
-              <div className="bg-[hsl(var(--bg))] p-10 rounded-lg shadow-sm ring-1 ring-[hsl(var(--muted))]/15">
+              <div className="bg-[hsl(var(--bg))] p-10 rounded-lg shadow-soft ring-1 ring-[hsl(var(--muted))]/15">
                 <h2 className="text-xl font-medium text-[hsl(var(--ink))]">
                   Order summary
                 </h2>
@@ -132,24 +165,27 @@ export default async function CartPage() {
                 <div className="mt-10">
                   <a
                     href={cart.checkoutUrl}
-                    className="btn-primary w-full text-center"
+                    className="btn-primary w-full text-center transition-all duration-300 ease-out-soft"
                     aria-label="Proceed to checkout"
                     data-cart-checkout
                   >
                     Checkout
                   </a>
                 </div>
+                <div className="mt-8">
+                  <TrustSignals />
+                </div>
               </div>
             </div>
           ) : (
-            <div className="text-center bg-[hsl(var(--bg))] p-16 rounded-lg shadow-sm ring-1 ring-[hsl(var(--muted))]/15">
+            <div className="text-center bg-[hsl(var(--bg))] p-16 rounded-lg shadow-soft ring-1 ring-[hsl(var(--muted))]/15">
               <h2 className="text-2xl font-medium text-[hsl(var(--ink))] mb-4">
                 Your cart is empty
               </h2>
               <p className="text-[hsl(var(--muted))] mb-8">
                 Add some products to get started.
               </p>
-              <Link href="/" className="btn-primary">
+              <Link href="/" className="btn-primary transition-all duration-300 ease-out-soft">
                 Continue Shopping
               </Link>
             </div>
