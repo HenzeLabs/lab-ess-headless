@@ -252,7 +252,7 @@ export default function CartPage() {
                 <h2 className="text-2xl font-semibold text-[hsl(var(--ink))] mb-4">
                   Your cart is empty
                 </h2>
-                <p className="text-[hsl(var(--muted))] mb-8">
+                <p className="text-[hsl(var(--muted))] mb-6">
                   Add some products to get started.
                 </p>
                 <Link href="/" className="btn-primary transition-all duration-300 ease-out-soft">
