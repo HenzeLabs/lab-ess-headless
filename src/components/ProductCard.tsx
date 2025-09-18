@@ -1,11 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/lib/types';
-import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
-
-const PLACEHOLDER_IMG = '/placeholders/product1.jpg';
 
 type ProductWithExtras = Product & {
   priceRange?: {
@@ -14,18 +11,7 @@ type ProductWithExtras = Product & {
       currencyCode: string;
     };
   };
-  badge?: string;
   description?: string;
-};
-
-const badgeVariantMap: Record<
-  string,
-  'default' | 'secondary' | 'accent' | 'destructive'
-> = {
-  'best seller': 'accent',
-  bestseller: 'accent',
-  'most luxurious': 'secondary',
-  new: 'destructive',
 };
 
 export default function ProductCard({
@@ -35,8 +21,7 @@ export default function ProductCard({
 }) {
   const imageSrc =
     product.featuredImage?.url ??
-    product.images?.edges?.[0]?.node?.url ??
-    PLACEHOLDER_IMG;
+    product.images?.edges?.[0]?.node?.url;
   const imageAlt =
     product.featuredImage?.altText ??
     product.title;
@@ -49,12 +34,7 @@ export default function ProductCard({
         currency: currencyCode,
       }).format(Number(price))
     : null;
-  const badgeVariant = product.badge
-    ? badgeVariantMap[product.badge.toLowerCase()] || 'default'
-    : undefined;
-  const descriptionText = product.descriptionHtml
-    ? product.descriptionHtml.replace(/<[^>]+>/g, '')
-    : undefined;
+  
 
   return (
     <Link
@@ -65,40 +45,26 @@ export default function ProductCard({
     >
       <Card className="flex flex-col p-0 overflow-hidden flex-1 transition-shadow duration-200 hover:shadow-lg focus-within:shadow-lg">
         <div className="relative aspect-square w-full bg-background rounded-t-lg transition-transform duration-500 motion-reduce:transition-none motion-reduce:transform-none motion-safe:group-hover:scale-105">
-          {product.badge && (
-            <Badge
-              variant={badgeVariant}
-              className="absolute top-3 left-3 z-10"
-            >
-              {product.badge}
-            </Badge>
+          {imageSrc ? (
+            <Image
+              src={imageSrc}
+              alt={imageAlt}
+              fill
+              className="object-contain w-full h-full"
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              priority={false}
+            />
+          ) : (
+            <div className="h-full w-full flex items-center justify-center bg-gray-200 text-gray-500">
+              No Image
+            </div>
           )}
-          <Image
-            src={imageSrc}
-            alt={imageAlt}
-            fill
-            className="object-contain w-full h-full"
-            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            priority={false}
-          />
         </div>
         <div className="p-5 flex flex-col flex-1">
           {/* Product Title */}
           <h3 className="text-lg font-semibold text-foreground mb-1 line-clamp-2">
             {product.title}
           </h3>
-          {/* Product Description */}
-          {descriptionText && (
-            <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-              {descriptionText}
-            </p>
-          )}
-          {/* Price */}
-          <div className="mb-4 mt-auto">
-            <p className="text-xl font-bold text-primary">
-              {formattedPrice ?? 'Contact for price'}
-            </p>
-          </div>
           {/* CTA Button */}
           <Button
             className="w-full mt-2"
@@ -107,6 +73,13 @@ export default function ProductCard({
           >
             Shop Now
           </Button>
+          
+          {/* Price */}
+          <div className="mb-4 mt-auto">
+            <p className="text-xl font-bold text-primary">
+              {formattedPrice ?? 'Contact for price'}
+            </p>
+          </div>
         </div>
       </Card>
     </Link>
