@@ -191,6 +191,19 @@ export function trackViewCheckout(items: AnalyticsItemInput[]) {
   trackBeginCheckout(items);
 }
 
+export function trackDownload(payload: { id: string; name: string; category?: string | null }) {
+  pushDataLayer('download', {
+    item_id: payload.id,
+    item_name: payload.name,
+    item_category: payload.category || undefined,
+  });
+  pushTaboola('download', {
+    item_id: payload.id,
+    item_name: payload.name,
+    item_category: payload.category || undefined,
+  });
+}
+
 export type { AnalyticsItemInput as AnalyticsItem };
 
 declare global {
@@ -211,5 +224,6 @@ if (typeof window !== 'undefined') {
     trackBeginCheckout,
     trackPurchase,
     trackNewsletterSignup,
+    trackDownload,
   };
 }

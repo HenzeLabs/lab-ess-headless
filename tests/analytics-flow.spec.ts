@@ -32,6 +32,7 @@ test.describe('Analytics baseline flow', () => {
           items: typeof payload[];
         }) => void;
         trackNewsletterSignup: (email: string) => void;
+        trackDownload: (payload: { id: string; name: string; category?: string | null }) => void;
       };
 
       analytics.trackViewItem(payload);
@@ -115,6 +116,25 @@ test.describe('Analytics baseline flow', () => {
     await expect.poll(async () => {
       return page.evaluate(() =>
         window._tfa.filter((entry) => (entry as { name?: string }).name === 'newsletter_signup'),
+      );
+    }).toHaveLength(1);
+
+    const downloadPayload = { id: 'whitepaper-001', name: 'Lab Compliance Whitepaper', category: 'Content' };
+
+    await page.evaluate((payload) => {
+      const analytics = window.__labAnalytics as {
+        trackDownload: (payload: typeof downloadPayload) => void;
+      };
+      analytics.trackDownload(payload);
+    }, downloadPayload);
+
+    await expect.poll(async () => {
+      return page.evaluate(() => window.dataLayer.filter((entry) => entry.event === 'download'));
+    }).toHaveLength(1);
+
+    await expect.poll(async () => {
+      return page.evaluate(() =>
+        window._tfa.filter((entry) => (entry as { name?: string }).name === 'download'),
       );
     }).toHaveLength(1);
   });
