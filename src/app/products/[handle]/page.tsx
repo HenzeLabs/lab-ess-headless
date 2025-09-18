@@ -90,7 +90,7 @@ export default async function ProductPage({
   }
 
   const images = product.images?.edges?.map((edge) => edge.node) ?? [];
-  const variants = product.variants?.edges?.map((edge) => edge.node) ?? [];
+  
   const productUrl = absoluteUrl(`/products/${product.handle}`);
   const description = stripHtml(product.descriptionHtml);
   const price = product.priceRange?.minVariantPrice?.amount ?? null;
