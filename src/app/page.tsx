@@ -3,6 +3,17 @@ import type { Metadata } from 'next';
 import Hero from '@/components/Hero';
 import CollectionSwitcherWrapper from '@/app/components/CollectionSwitcherWrapper';
 import CTASection from '@/components/CTASection';
+import AboutSection from '@/components/AboutSection';
+import DeliveryCalculator from '@/components/DeliveryCalculator';
+import DeliveryInfo from '@/components/DeliveryInfo';
+import EmailSignup from '@/components/EmailSignup';
+import FeaturedCollections from '@/components/FeaturedCollections';
+import FeaturedHeroProduct from '@/components/FeaturedHeroProduct';
+import FeaturedProducts from '@/components/FeaturedProducts';
+import RelatedProducts from '@/components/RelatedProducts';
+import TestimonialBlock from '@/components/TestimonialBlock';
+import TrustSignals from '@/components/TrustSignals';
+
 import { absoluteUrl, jsonLd } from '@/lib/seo';
 
 export const revalidate = 60;
@@ -81,6 +92,16 @@ export default async function HomePage() {
         />
         <CollectionSwitcherWrapper />
         <CTASection />
+        <AboutSection />
+        <DeliveryCalculator />
+        <DeliveryInfo />
+        <EmailSignup />
+        <FeaturedCollections />
+        <FeaturedHeroProduct />
+        <FeaturedProducts />
+        <RelatedProducts />
+        <TestimonialBlock />
+        <TrustSignals />
       </main>
     </>
   );
