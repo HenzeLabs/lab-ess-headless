@@ -197,5 +197,19 @@ declare global {
   interface Window {
     dataLayer: Record<string, unknown>[];
     _tfa: Record<string, unknown>[];
+    __labAnalytics?: Record<string, unknown>;
   }
+}
+
+if (typeof window !== 'undefined') {
+  window.__labAnalytics = {
+    trackViewItem,
+    trackViewItemList,
+    trackViewCart,
+    trackAddToCart,
+    trackRemoveFromCart,
+    trackBeginCheckout,
+    trackPurchase,
+    trackNewsletterSignup,
+  };
 }

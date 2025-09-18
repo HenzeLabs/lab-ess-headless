@@ -9,7 +9,8 @@
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
     "lh": "lhci autorun --config=./lighthouse.config.js",
-    "clean:shopify": "tools/shopify-cleanup/bin/index.sh"
+    "clean:shopify": "tools/shopify-cleanup/bin/index.sh",
+    "test:analytics": "playwright test tests/analytics-flow.spec.ts"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
