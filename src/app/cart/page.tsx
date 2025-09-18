@@ -3,11 +3,25 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { removeCartLineAction } from './actions';
+import CartAnalyticsTracker from '@/components/analytics/CartAnalyticsTracker';
 
 const PLACEHOLDER_IMG = '/placeholders/product1.jpg';
 
 export default async function CartPage() {
   const cart = await getCart();
+
+  const analyticsItems =
+    cart?.lines.edges.map((edge) => ({
+      lineId: edge.node.id,
+      currency: edge.node.merchandise.price.currencyCode,
+      item: {
+        id: edge.node.merchandise.product.handle,
+        name: edge.node.merchandise.product.title,
+        price: edge.node.merchandise.price.amount,
+        quantity: edge.node.quantity,
+        currency: edge.node.merchandise.price.currencyCode,
+      },
+    })) ?? [];
 
   const subtotal =
     cart?.lines.edges.reduce(
@@ -24,6 +38,8 @@ export default async function CartPage() {
           <h1 className="text-4xl font-extrabold tracking-tight text-[hsl(var(--ink))] sm:text-5xl text-center mb-16">
             Your Cart
           </h1>
+
+          {analyticsItems.length > 0 && <CartAnalyticsTracker items={analyticsItems} />}
 
           {cart && cart.lines.edges.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
@@ -71,7 +87,11 @@ export default async function CartPage() {
                               Qty {item.node.quantity}
                             </p>
 
-                            <form action={removeCartLineAction} className="flex">
+                            <form
+                              action={removeCartLineAction}
+                              className="flex"
+                              data-cart-remove={item.node.id}
+                            >
                               <input type="hidden" name="lineId" value={item.node.id} />
                               <button
                                 type="submit"
@@ -114,6 +134,7 @@ export default async function CartPage() {
                     href={cart.checkoutUrl}
                     className="btn-primary w-full text-center"
                     aria-label="Proceed to checkout"
+                    data-cart-checkout
                   >
                     Checkout
                   </a>

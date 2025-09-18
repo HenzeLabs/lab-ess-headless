@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { HeartIcon, EyeIcon } from '@heroicons/react/24/outline';
 
 import { buttonStyles, layout, textStyles } from '@/lib/ui';
+import { trackAddToCart } from '@/lib/analytics';
 
 interface Product {
   id: string;
@@ -211,6 +212,19 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
                     <button
                       type="button"
                       className={`${buttonStyles.primary} w-full rounded-xl py-3 transition-transform duration-300 hover:scale-[1.02] active:scale-95 group-hover:shadow-lift`}
+                      onClick={() => {
+                        const priceValue = Number.parseFloat(
+                          product.price.replace(/[^0-9.]/g, ''),
+                        );
+                        const currencyMatch = product.price.match(/([A-Z]{3})$/);
+                        trackAddToCart({
+                          id: product.id,
+                          name: product.title,
+                          price: Number.isFinite(priceValue) ? priceValue : undefined,
+                          quantity: 1,
+                          currency: currencyMatch ? currencyMatch[1] : undefined,
+                        });
+                      }}
                     >
                       Add to Cart
                     </button>

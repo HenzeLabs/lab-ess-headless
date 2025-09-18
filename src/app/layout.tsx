@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import SiteHeader from '@/components/layout/SiteHeader';
 import Footer from '@/components/Footer';
+import AnalyticsWrapper from '@/AnalyticsWrapper';
 
 const sans = Inter({
   subsets: ['latin'],
@@ -48,6 +49,7 @@ export default function RootLayout({
         {/* <script src="https://www.clarity.ms/tag/CLARITY_ID" strategy="lazyOnload"></script> */}
       </head>
       <body>
+        <AnalyticsWrapper />
         <SiteHeader />
         {children}
         <Footer />

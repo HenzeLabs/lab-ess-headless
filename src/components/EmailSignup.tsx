@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { layout, textStyles } from '@/lib/ui';
+import { trackNewsletterSignup } from '@/lib/analytics';
 
 interface EmailSignupProps {
   title?: string;
@@ -43,6 +44,7 @@ const EmailSignup: React.FC<EmailSignupProps> = ({
     e.preventDefault();
     if (email) {
       setIsSubmitted(true);
+      trackNewsletterSignup(email);
       setTimeout(() => {
         setIsSubmitted(false);
         setEmail('');

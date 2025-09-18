@@ -12,6 +12,7 @@ import type { Product } from '@/lib/types';
 import { getProductByHandleQuery } from '@/lib/queries';
 import { shopifyFetch } from '@/lib/shopify';
 import { absoluteUrl, jsonLd, stripHtml } from '@/lib/seo';
+import ProductViewTracker from '@/components/analytics/ProductViewTracker';
 
 export const revalidate = 60;
 
@@ -91,6 +92,15 @@ export default async function ProductPage({
   const variants = product.variants?.edges?.map((edge) => edge.node) ?? [];
   const productUrl = absoluteUrl(`/products/${product.handle}`);
   const description = stripHtml(product.descriptionHtml);
+  const price = product.priceRange?.minVariantPrice?.amount ?? null;
+  const currency = product.priceRange?.minVariantPrice?.currencyCode ?? 'USD';
+  const analyticsProduct = {
+    id: product.id,
+    name: product.title,
+    price,
+    currency,
+    category: product.tags?.[0] ?? null,
+  };
 
   const productJsonLd = {
     '@context': 'https://schema.org',
@@ -141,6 +151,7 @@ export default async function ProductPage({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(productJsonLd)} />
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(breadcrumbJsonLd)} />
+      <ProductViewTracker product={analyticsProduct} currency={currency} />
       <main id="main-content" role="main">
         <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
           <div className="grid items-start gap-24 md:grid-cols-2">

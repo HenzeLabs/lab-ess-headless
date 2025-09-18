@@ -7,6 +7,7 @@ import type { CollectionData, Product } from '@/lib/types';
 import { getCollectionByHandleQuery } from '@/lib/queries';
 import { shopifyFetch } from '@/lib/shopify';
 import { absoluteUrl, jsonLd, stripHtml } from '@/lib/seo';
+import CollectionViewTracker from '@/components/analytics/CollectionViewTracker';
 
 export const revalidate = 60;
 
@@ -111,6 +112,13 @@ export default async function CollectionPage({
 
   const products: Product[] =
     collection.products?.edges?.map((edge) => edge.node) ?? [];
+  const analyticsProducts = products.map((product) => ({
+    id: product.id,
+    name: product.title,
+    price: product.priceRange?.minVariantPrice?.amount ?? null,
+    currency: product.priceRange?.minVariantPrice?.currencyCode ?? 'USD',
+    category: collection.title || formatHandle(handle),
+  }));
 
   const pageParam = Array.isArray(searchParams?.page)
     ? searchParams.page[0]
@@ -177,6 +185,11 @@ export default async function CollectionPage({
       {productJsonLds.map((json, index) => (
         <script key={index} type="application/ld+json" dangerouslySetInnerHTML={jsonLd(json)} />
       ))}
+      <CollectionViewTracker
+        collectionName={collection.title || formatHandle(handle)}
+        products={analyticsProducts}
+        currency={analyticsProducts[0]?.currency}
+      />
       <main
         id="main-content"
         className="bg-background py-24"
