@@ -18,7 +18,9 @@ export async function addCartLineAction(
   const cartId = cookieStore.get('cartId')?.value;
   let cart: Cart | null = null;
 
-  const merchandiseId = variantId.startsWith('gid://shopify/ProductVariant/') ? variantId : `gid://shopify/ProductVariant/${variantId}`;
+  const merchandiseId = variantId.startsWith('gid://shopify/ProductVariant/')
+    ? variantId
+    : `gid://shopify/ProductVariant/${variantId}`;
 
   // If no cart, create one
   if (!cartId) {
@@ -53,41 +55,33 @@ export async function addCartLineAction(
   return cart;
 }
 
-export async function removeCartLineAction(formData: FormData) {
-  const lineId = formData.get('lineId');
-  if (typeof lineId !== 'string' || lineId.length === 0) {
-    return;
-  }
-
+export async function removeCartLine(lineId: string) {
   const cookieStore = await cookies();
   const cartId = cookieStore.get('cartId')?.value;
   if (!cartId) {
-    return;
+    return null;
   }
-
-  try {
-    const response = await shopifyFetch<{
-      cartLinesRemove: {
-        cart: { id: string } | null;
-        userErrors: { field?: string[] | null; message: string }[];
-      };
-    }>({
-      query: cartLinesRemoveMutation,
-      variables: {
-        cartId,
-        lineIds: [lineId],
-      },
-    });
-
-    const userErrors = response.data.cartLinesRemove.userErrors;
-    if (userErrors && userErrors.length > 0) {
-      throw new Error(userErrors.map((e) => e.message).join('\n'));
-    }
-
-    revalidatePath('/cart');
-  } catch (error) {
-    throw error;
+  const response = await shopifyFetch<{
+    cartLinesRemove: {
+      cart: Cart | null;
+      userErrors: { field?: string[] | null; message: string }[];
+    };
+  }>({
+    query: cartLinesRemoveMutation,
+    variables: { cartId, lineIds: [lineId] },
+  });
+  const userErrors = response.data.cartLinesRemove.userErrors;
+  if (userErrors && userErrors.length > 0) {
+    throw new Error(userErrors.map((e) => e.message).join('\n'));
   }
+  revalidatePath('/cart');
+  return response.data.cartLinesRemove.cart;
+}
+
+export async function removeCartLineAction(formData: FormData) {
+  const lineId = formData.get('lineId');
+  if (typeof lineId !== 'string' || lineId.length === 0) return;
+  await removeCartLine(lineId);
 }
 
 export async function deleteCartCookieAction() {
@@ -96,52 +90,35 @@ export async function deleteCartCookieAction() {
   revalidatePath('/'); // Revalidate to update UI that depends on cartId
 }
 
+export async function updateCartLine(lineId: string, quantity: number) {
+  const cookieStore = await cookies();
+  const cartId = cookieStore.get('cartId')?.value;
+  if (!cartId) return null;
+  const response = await shopifyFetch<{
+    cartLinesUpdate: {
+      cart: Cart | null;
+      userErrors: { field?: string[] | null; message: string }[];
+    };
+  }>({
+    query: cartLinesUpdateMutation,
+    variables: {
+      cartId,
+      lines: [{ id: lineId, quantity }],
+    },
+  });
+  const userErrors = response.data.cartLinesUpdate.userErrors;
+  if (userErrors && userErrors.length > 0) {
+    throw new Error(userErrors.map((e) => e.message).join('\n'));
+  }
+  revalidatePath('/cart');
+  return response.data.cartLinesUpdate.cart;
+}
+
 export async function updateCartLineAction(formData: FormData) {
   const lineId = formData.get('lineId');
   const quantity = formData.get('quantity');
-
-  if (typeof lineId !== 'string' || lineId.length === 0) {
-    return;
-  }
-  if (typeof quantity !== 'string' || quantity.length === 0) {
-    return;
-  }
-
+  if (typeof lineId !== 'string' || typeof quantity !== 'string') return;
   const parsedQuantity = parseInt(quantity, 10);
-  if (isNaN(parsedQuantity) || parsedQuantity < 0) {
-    return;
-  }
-
-  const cookieStore = await cookies();
-  const cartId = cookieStore.get('cartId')?.value;
-  if (!cartId) {
-    return;
-  }
-
-  try {
-    const response = await shopifyFetch<{
-      cartLinesUpdate: {
-        cart: { id: string } | null;
-        userErrors: { field?: string[] | null; message: string }[];
-      };
-    }>({
-      query: cartLinesUpdateMutation,
-      variables: {
-        cartId,
-        lines: [{
-          id: lineId,
-          quantity: parsedQuantity,
-        }],
-      },
-    });
-
-    const userErrors = response.data.cartLinesUpdate.userErrors;
-    if (userErrors && userErrors.length > 0) {
-      throw new Error(userErrors.map((e) => e.message).join('\n'));
-    }
-
-    revalidatePath('/cart');
-  } catch (error) {
-    throw error;
-  }
+  if (!Number.isFinite(parsedQuantity)) return;
+  await updateCartLine(lineId, parsedQuantity);
 }

@@ -4,11 +4,22 @@ export const cartCreateMutation = `
       cart {
         id
         checkoutUrl
+        totalQuantity
+        cost {
+          subtotalAmount { amount currencyCode }
+          totalAmount { amount currencyCode }
+          totalTaxAmount { amount currencyCode }
+        }
         lines(first: 100) {
           edges {
             node {
               id
               quantity
+              cost {
+                amountPerQuantity { amount currencyCode }
+                subtotalAmount { amount currencyCode }
+                totalAmount { amount currencyCode }
+              }
               merchandise {
                 ... on ProductVariant {
                   id
@@ -45,11 +56,22 @@ export const cartLinesAddMutation = `
       cart {
         id
         checkoutUrl
+        totalQuantity
+        cost {
+          subtotalAmount { amount currencyCode }
+          totalAmount { amount currencyCode }
+          totalTaxAmount { amount currencyCode }
+        }
         lines(first: 100) {
           edges {
             node {
               id
               quantity
+              cost {
+                amountPerQuantity { amount currencyCode }
+                subtotalAmount { amount currencyCode }
+                totalAmount { amount currencyCode }
+              }
               merchandise {
                 ... on ProductVariant {
                   id
@@ -208,11 +230,21 @@ export const getCartQuery = `
       id
       checkoutUrl
       totalQuantity
+      cost {
+        subtotalAmount { amount currencyCode }
+        totalAmount { amount currencyCode }
+        totalTaxAmount { amount currencyCode }
+      }
       lines(first: 100) {
         edges {
           node {
             id
             quantity
+            cost {
+              amountPerQuantity { amount currencyCode }
+              subtotalAmount { amount currencyCode }
+              totalAmount { amount currencyCode }
+            }
             merchandise {
               ... on ProductVariant {
                 id
@@ -298,6 +330,44 @@ export const cartLinesRemoveMutation = `
     cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
       cart {
         id
+        checkoutUrl
+        totalQuantity
+        cost {
+          subtotalAmount { amount currencyCode }
+          totalAmount { amount currencyCode }
+          totalTaxAmount { amount currencyCode }
+        }
+        lines(first: 100) {
+          edges {
+            node {
+              id
+              quantity
+              cost {
+                amountPerQuantity { amount currencyCode }
+                subtotalAmount { amount currencyCode }
+                totalAmount { amount currencyCode }
+              }
+              merchandise {
+                ... on ProductVariant {
+                  id
+                  title
+                  price {
+                    amount
+                    currencyCode
+                  }
+                  product {
+                    title
+                    handle
+                    featuredImage {
+                      url
+                      altText
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
       userErrors {
         field
@@ -313,11 +383,22 @@ export const cartLinesUpdateMutation = `
       cart {
         id
         checkoutUrl
+        totalQuantity
+        cost {
+          subtotalAmount { amount currencyCode }
+          totalAmount { amount currencyCode }
+          totalTaxAmount { amount currencyCode }
+        }
         lines(first: 100) {
           edges {
             node {
               id
               quantity
+              cost {
+                amountPerQuantity { amount currencyCode }
+                subtotalAmount { amount currencyCode }
+                totalAmount { amount currencyCode }
+              }
               merchandise {
                 ... on ProductVariant {
                   id

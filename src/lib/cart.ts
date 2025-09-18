@@ -1,23 +1,18 @@
-'use server';
+// client-safe helper for fetching cart
 
-import { cookies } from 'next/headers';
-import { shopifyFetch } from '@/lib/shopify';
-import { getCartQuery } from '@/lib/queries';
 import type { Cart } from '@/lib/types';
 
-export async function getCart() {
-  const cartId = (await cookies()).get('cartId')?.value;
-  if (!cartId) {
-    return null;
-  }
+export async function getCart(): Promise<Cart | null> {
   try {
-    const cartResponse = await shopifyFetch<{ cart: Cart | null }>({
-      query: getCartQuery,
-      variables: { cartId },
+    const res = await fetch('/api/cart', {
+      method: 'GET',
+      headers: { 'content-type': 'application/json' },
+      cache: 'no-store',
     });
-    return cartResponse.data.cart ?? null;
-  } catch (error) {
-    
+    if (!res.ok) return null;
+    const json = (await res.json()) as { cart: Cart | null };
+    return json.cart ?? null;
+  } catch {
     return null;
   }
 }

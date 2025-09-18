@@ -69,9 +69,19 @@ export type Product = {
   };
 };
 
+type MoneyV2 = {
+  amount: string;
+  currencyCode: string;
+};
+
 type CartLine = {
   id: string;
   quantity: number;
+  cost?: {
+    amountPerQuantity: MoneyV2;
+    subtotalAmount: MoneyV2;
+    totalAmount: MoneyV2;
+  };
   merchandise: {
     price: { amount: string; currencyCode: string };
     product: {
@@ -88,6 +98,12 @@ type CartLine = {
 export type Cart = {
   id: string;
   checkoutUrl: string;
+  totalQuantity?: number;
+  cost?: {
+    subtotalAmount: MoneyV2;
+    totalAmount: MoneyV2;
+    totalTaxAmount?: MoneyV2;
+  };
   lines: {
     edges: {
       node: CartLine;
@@ -125,5 +141,9 @@ export interface LabAnalytics {
   trackBeginCheckout: (items: AnalyticsItemInput[]) => void;
   trackPurchase: (order: AnalyticsOrderInput) => void;
   trackNewsletterSignup: (email: string) => void;
-  trackDownload: (payload: { id: string; name: string; category?: string | null }) => void;
+  trackDownload: (payload: {
+    id: string;
+    name: string;
+    category?: string | null;
+  }) => void;
 }

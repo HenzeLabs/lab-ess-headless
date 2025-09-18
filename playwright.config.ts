@@ -2,6 +2,9 @@
 
 import { defineConfig } from '@playwright/test';
 
+const BASE_PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
+const BASE_URL = `http://localhost:${BASE_PORT}`;
+
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
@@ -13,13 +16,14 @@ export default defineConfig({
     ['html', { open: 'never' }],
   ],
   webServer: {
-        command: 'npm run dev',
-    url: 'http://localhost:3000',
+    // Use explicit port flag; Next dev may ignore PORT env
+    command: `npm run dev -- -p ${BASE_PORT}`,
+    url: BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: BASE_URL,
     trace: 'on-first-retry',
   },
 });

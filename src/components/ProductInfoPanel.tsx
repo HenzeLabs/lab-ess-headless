@@ -1,10 +1,8 @@
 'use client';
-import React from 'react';
 import { trackAddToCart } from '@/lib/analytics';
-import { useState, useTransition } from 'react';
-import { addCartLineAction } from '@/app/cart/actions';
+import React, { useState, useTransition } from 'react';
+// using API route for cart mutations
 import { buttonStyles } from '@/lib/ui';
-
 
 type Variant = { id: string; title: string };
 
@@ -97,7 +95,16 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
           setFeedback(null);
           startTransition(async () => {
             try {
-              await addCartLineAction(selectedVariant, 1);
+              await fetch('/api/cart', {
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({
+                  variantId: selectedVariant,
+                  quantity: 1,
+                }),
+              });
+              // Signal other parts of the app (e.g., header) to refresh cart count
+              window.dispatchEvent(new CustomEvent('cart:updated'));
               setFeedback('Added to cart!');
               trackAddToCart({
                 id: product.id,

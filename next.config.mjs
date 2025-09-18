@@ -37,18 +37,20 @@ const nextConfig = {
           "script-src * 'unsafe-inline' 'unsafe-eval' data: blob:",
           'object-src *',
           'base-uri *',
-          'connect-src *',
+          'connect-src * https://cdn.shopify.com https://shopifycdn.net',
           'img-src * data: blob:',
-          "style-src 'self' 'unsafe-inline' data: blob:",
+          "style-src 'self' 'unsafe-inline' data: blob: https://fonts.googleapis.com",
+          "font-src 'self' data: https://fonts.gstatic.com",
           'frame-ancestors *',
         ].join('; ') + ';'
       : [
           "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
           "object-src 'none'",
           "base-uri 'self'",
-          "connect-src 'self' https://cdn.shopify.com",
+          "connect-src 'self' https://cdn.shopify.com https://shopifycdn.net",
           "img-src 'self' data: https://cdn.shopify.com https://shopifycdn.net https://images.pexels.com https://images.ctfassets.net https://images.unsplash.com",
-          "style-src 'self' 'unsafe-inline'",
+          "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+          "font-src 'self' https://fonts.gstatic.com",
           "frame-ancestors 'none'",
         ].join('; ') + ';';
     return [

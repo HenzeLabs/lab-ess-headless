@@ -12,8 +12,8 @@ export async function GET() {
   try {
     const cart = await addCartLineAction(variantId, quantity);
     return NextResponse.json({ cart });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error in test-cart API route:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'An unknown error occurred.' }, { status: 500 });
   }
 }

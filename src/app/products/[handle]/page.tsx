@@ -90,7 +90,7 @@ export default async function ProductPage({
   }
 
   const images = product.images?.edges?.map((edge) => edge.node) ?? [];
-  
+
   const productUrl = absoluteUrl(`/products/${product.handle}`);
   const description = stripHtml(product.descriptionHtml);
   const price = product.priceRange?.minVariantPrice?.amount ?? null;
@@ -207,7 +207,6 @@ export default async function ProductPage({
                 descriptionHtml: product.descriptionHtml,
               }}
             />
-            import ProductInfoPanelClient from './ProductInfoPanelClient';
           </div>
         </div>
       </main>

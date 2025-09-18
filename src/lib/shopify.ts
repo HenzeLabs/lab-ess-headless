@@ -1,7 +1,10 @@
 import { ShopifyFetchResponse } from '@/lib/types';
 
 const SHOPIFY_STORE_DOMAIN = process.env.SHOPIFY_STORE_DOMAIN;
-const SHOPIFY_STOREFRONT_API_TOKEN = process.env.SHOPIFY_STOREFRONT_API_TOKEN;
+// Prefer ACCESS_TOKEN name, fallback to legacy _API_TOKEN for compatibility
+const SHOPIFY_STOREFRONT_API_TOKEN =
+  process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN ||
+  process.env.SHOPIFY_STOREFRONT_API_TOKEN;
 const SHOPIFY_API_VERSION = process.env.SHOPIFY_API_VERSION || '2025-01';
 
 async function fetchWithRetry(
@@ -15,7 +18,6 @@ async function fetchWithRetry(
 
     if (res.status === 429 || res.status >= 500) {
       if (retries > 0) {
-        
         await new Promise((resolve) => setTimeout(resolve, delay));
         return fetchWithRetry(endpoint, options, retries - 1, delay * 2);
       } else {
@@ -28,7 +30,6 @@ async function fetchWithRetry(
     return res;
   } catch (error) {
     if (retries > 0) {
-      
       await new Promise((resolve) => setTimeout(resolve, delay));
       return fetchWithRetry(endpoint, options, retries - 1, delay * 2);
     } else {
@@ -54,9 +55,8 @@ export async function shopifyFetch<T>({
   timeout?: number;
 }): Promise<ShopifyFetchResponse<T>> {
   if (!SHOPIFY_STORE_DOMAIN || !SHOPIFY_STOREFRONT_API_TOKEN) {
-    
     throw new Error(
-      'Missing Shopify environment variables. Make sure SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_API_TOKEN are set.',
+      'Missing Shopify env vars. Set SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_ACCESS_TOKEN (or SHOPIFY_STOREFRONT_API_TOKEN).',
     );
   }
 
@@ -102,7 +102,6 @@ export async function shopifyFetch<T>({
       data,
     };
   } catch (err: unknown) {
-    
     throw err instanceof Error
       ? err
       : new Error('An unknown error occurred while contacting Shopify.');
