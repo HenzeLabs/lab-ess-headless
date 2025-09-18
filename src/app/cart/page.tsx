@@ -3,9 +3,8 @@
 import { getCart } from '@/lib/cart';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 
-import { removeCartLineAction, updateCartLineAction } from './actions';
 import { Button } from '@/components/ui/button';
 import CartAnalyticsTracker from '@/components/analytics/CartAnalyticsTracker';
 import TrustSignals from '@/components/TrustSignals';
@@ -15,8 +14,7 @@ export default function CartPage() {
   const [cart, setCart] = useState<Cart | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -32,26 +30,6 @@ export default function CartPage() {
     };
 
     fetchCart();
-
-    const reveal: IntersectionObserverCallback = (entries, observer) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-visible');
-        observer.unobserve(entry.target);
-      });
-    };
-
-    const sectionObserver = new IntersectionObserver(reveal, {
-      threshold: 0.2,
-    });
-
-    if (sectionRef.current) {
-      sectionObserver.observe(sectionRef.current);
-    }
-
-    return () => {
-      sectionObserver.disconnect();
-    };
   }, []);
 
   const analyticsItems =
@@ -67,13 +45,8 @@ export default function CartPage() {
       },
     })) ?? [];
 
-  const subtotal =
-    cart?.lines.edges.reduce(
-      (acc, item) =>
-        acc +
-        parseFloat(item.node.merchandise.price.amount) * item.node.quantity,
-      0,
-    ) || 0;
+  const subtotalMoney = cart?.cost?.subtotalAmount;
+  const totalMoney = cart?.cost?.totalAmount ?? subtotalMoney;
 
   if (loading) {
     return (
@@ -97,20 +70,65 @@ export default function CartPage() {
     );
   }
 
+  async function refreshCart() {
+    const newCart = await getCart();
+    setCart(newCart);
+  }
+
+  function handleQuantityChange(lineId: string, quantity: number) {
+    startTransition(async () => {
+      try {
+        const res = await fetch('/api/cart', {
+          method: 'PATCH',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ lineId, quantity }),
+        });
+        if (res.ok) {
+          const json = (await res.json()) as { cart: Cart | null };
+          setCart(json.cart);
+        } else {
+          await refreshCart();
+        }
+      } catch {
+        await refreshCart();
+      }
+    });
+  }
+
+  function handleRemove(lineId: string) {
+    startTransition(async () => {
+      try {
+        const res = await fetch('/api/cart', {
+          method: 'DELETE',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ lineId }),
+        });
+        if (res.ok) {
+          const json = (await res.json()) as { cart: Cart | null };
+          setCart(json.cart);
+        } else {
+          await refreshCart();
+        }
+      } catch {
+        await refreshCart();
+      }
+    });
+  }
+
   return (
     <>
-      <main className="bg-[hsl(var(--bg))] text-[hsl(var(--ink))] py-section-lg">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-center mb-16">
-            Your Cart
-          </h1>
+      <main
+        id="main-content"
+        className="bg-[hsl(var(--bg))] text-[hsl(var(--ink))] py-section-lg"
+      >
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h1 className="text-center mb-16">Your Cart</h1>
 
-          {analyticsItems.length > 0 && <CartAnalyticsTracker items={analyticsItems} />}
+          {analyticsItems.length > 0 && (
+            <CartAnalyticsTracker items={analyticsItems} />
+          )}
 
-          <div
-            ref={sectionRef}
-            className="opacity-0 transition-all duration-700 ease-out [&.is-visible]:translate-y-0 [&.is-visible]:opacity-100 [&:not(.is-visible)]:translate-y-8"
-          >
+          <div className="transition-all duration-700 ease-out opacity-100">
             {cart && cart.lines.edges.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
                 <div className="md:col-span-2">
@@ -124,7 +142,7 @@ export default function CartPage() {
                         item.node.merchandise.product.title;
 
                       return (
-                        <li key={item.node.id} className="flex py-8">
+                        <li key={item.node.id} className="flex py-8 animate-in fade-in slide-in-from-bottom-4">
                           <div className="flex w-full items-start gap-4 rounded-lg border border-[hsl(var(--muted))]/30 bg-[hsl(var(--bg))] p-4 shadow-soft transition-shadow duration-200 hover:shadow-lg">
                             <div className="relative h-28 w-28 flex-shrink-0 overflow-hidden rounded-md border border-[hsl(var(--muted))]/30 bg-[hsl(var(--bg))]">
                               {imageUrl ? (
@@ -132,6 +150,7 @@ export default function CartPage() {
                                   src={imageUrl}
                                   alt={imageAlt}
                                   fill
+                                  sizes="112px"
                                   className="object-contain w-full h-full"
                                 />
                               ) : (
@@ -153,24 +172,33 @@ export default function CartPage() {
                                     </Link>
                                   </h3>
                                   <p className="ml-4 text-lg font-bold">
-                                    {item.node.merchandise.price.amount}{' '}
-                                    {item.node.merchandise.price.currencyCode}
+                                    {item.node.cost?.amountPerQuantity
+                                      ?.amount ??
+                                      item.node.merchandise.price.amount}{' '}
+                                    {item.node.cost?.amountPerQuantity
+                                      ?.currencyCode ??
+                                      item.node.merchandise.price.currencyCode}
                                   </p>
                                 </div>
                               </div>
                               <div className="flex flex-1 items-end justify-between text-base">
                                 <div className="flex items-center gap-4">
-                                  <form action={updateCartLineAction} className="flex items-center">
-                                    <input type="hidden" name="lineId" value={item.node.id} />
+                                  <div className="flex items-center">
                                     <Button
-                                      type="submit"
-                                      name="quantity"
-                                      value={Math.max(1, item.node.quantity - 1)}
+                                      type="button"
+                                      onClick={() =>
+                                        handleQuantityChange(
+                                          item.node.id,
+                                          Math.max(1, item.node.quantity - 1),
+                                        )
+                                      }
                                       variant="outline"
                                       size="icon"
                                       className="h-8 w-8 transition-all duration-300 ease-out-soft"
                                       aria-label="Decrease quantity"
-                                      disabled={item.node.quantity <= 1}
+                                      disabled={
+                                        item.node.quantity <= 1 || isPending
+                                      }
                                     >
                                       -
                                     </Button>
@@ -178,29 +206,33 @@ export default function CartPage() {
                                       {item.node.quantity}
                                     </span>
                                     <Button
-                                      type="submit"
-                                      name="quantity"
-                                      value={item.node.quantity + 1}
+                                      type="button"
+                                      onClick={() =>
+                                        handleQuantityChange(
+                                          item.node.id,
+                                          item.node.quantity + 1,
+                                        )
+                                      }
                                       variant="outline"
                                       size="icon"
                                       className="h-8 w-8 transition-all duration-300 ease-out-soft"
                                       aria-label="Increase quantity"
+                                      disabled={isPending}
                                     >
                                       +
                                     </Button>
-                                  </form>
+                                  </div>
 
-                                  <form action={removeCartLineAction}>
-                                    <input type="hidden" name="lineId" value={item.node.id} />
-                                    <Button
-                                      type="submit"
-                                      variant="link"
-                                      className="text-sm text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--brand))] transition-all duration-300 ease-out-soft"
-                                      aria-label={`Remove ${item.node.merchandise.product.title} from cart`}
-                                    >
-                                      Remove
-                                    </Button>
-                                  </form>
+                                  <Button
+                                    type="button"
+                                    onClick={() => handleRemove(item.node.id)}
+                                    variant="link"
+                                    className="text-sm text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--brand))] transition-all duration-300 ease-out-soft"
+                                    aria-label={`Remove ${item.node.merchandise.product.title} from cart`}
+                                    disabled={isPending}
+                                  >
+                                    Remove
+                                  </Button>
                                 </div>
                               </div>
                             </div>
@@ -211,15 +243,19 @@ export default function CartPage() {
                   </ul>
                 </div>
 
-                <div className="bg-[hsl(var(--surface))] p-8 rounded-lg shadow-soft ring-1 ring-[hsl(var(--border))]">
+                <div className="bg-[hsl(var(--surface))] p-8 rounded-lg shadow-soft ring-1 ring-[hsl(var(--border))] md:sticky md:top-24 h-fit">
                   <h2 className="text-2xl font-semibold text-[hsl(var(--ink))] mb-6">
                     Order summary
                   </h2>
                   <div className="mt-8 space-y-6">
                     <div className="flex items-center justify-between">
-                      <p className="text-base text-[hsl(var(--muted))]">Subtotal</p>
+                      <p className="text-base text-[hsl(var(--muted))]">
+                        Subtotal
+                      </p>
                       <p className="text-base font-medium text-[hsl(var(--ink))]">
-                        ${subtotal.toFixed(2)}
+                        {subtotalMoney
+                          ? `$${parseFloat(subtotalMoney.amount).toFixed(2)}`
+                          : '$0.00'}
                       </p>
                     </div>
                     <div className="flex items-center justify-between border-t border-[hsl(var(--muted))]/20 pt-6">
@@ -227,7 +263,9 @@ export default function CartPage() {
                         Order total
                       </p>
                       <p className="text-lg font-medium text-[hsl(var(--ink))]">
-                        ${subtotal.toFixed(2)}
+                        {totalMoney
+                          ? `$${parseFloat(totalMoney.amount).toFixed(2)}`
+                          : '$0.00'}
                       </p>
                     </div>
                   </div>
@@ -254,7 +292,10 @@ export default function CartPage() {
                 <p className="text-[hsl(var(--muted))] mb-6">
                   Add some products to get started.
                 </p>
-                <Link href="/" className="btn-primary transition-all duration-300 ease-out-soft">
+                <Link
+                  href="/"
+                  className="btn-primary transition-all duration-300 ease-out-soft"
+                >
                   Continue Shopping
                 </Link>
               </div>
