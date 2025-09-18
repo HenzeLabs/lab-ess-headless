@@ -10,15 +10,14 @@ export async function getCart() {
   if (!cartId) {
     return null;
   }
-  const cartResponse = await shopifyFetch<{ cart: Cart }>({
-    query: getCartQuery,
-    variables: { cartId },
-  });
-  return cartResponse.success && cartResponse.data
-    ? cartResponse.data.cart
-    : null;
-  // ...existing code...
-
-  // TODO: Implement createCart mutation
-  return null;
+  try {
+    const cartResponse = await shopifyFetch<{ cart: Cart | null }>({
+      query: getCartQuery,
+      variables: { cartId },
+    });
+    return cartResponse.data.cart ?? null;
+  } catch (error) {
+    console.error('Failed to load cart from Shopify', error);
+    return null;
+  }
 }

@@ -66,24 +66,21 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Missing handle' }, { status: 400 });
   try {
     const response = await shopifyFetch<{
-      data: { productByHandle: ProductByHandle };
+      productByHandle: ProductByHandle | null;
     }>({ query: QUERY, variables: { handle } });
 
-    if (response.success && response.data?.data?.productByHandle) {
-      const p = response.data.data.productByHandle;
-      if (!p) return NextResponse.json({ error: 'Not found' }, { status: 404 });
-      return NextResponse.json({
-        product: {
-          ...p,
-          images:
-            p.images?.edges?.map((e: { node: ImageNode }) => e.node) || [],
-        },
-      });
-    } else if (response.success) {
+    const product = response.data.productByHandle;
+    if (!product) {
       return NextResponse.json({ error: 'Not found' }, { status: 404 });
-    } else {
-      return NextResponse.json({ error: 'Unknown error' }, { status: 500 });
     }
+
+    return NextResponse.json({
+      product: {
+        ...product,
+        images:
+          product.images?.edges?.map((e: { node: ImageNode }) => e.node) || [],
+      },
+    });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error(`[api/product-by-handle]`, msg);

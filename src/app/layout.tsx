@@ -1,8 +1,7 @@
 import './globals.css';
-import '../../styles/persona.css';
 import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
-import HeaderServer from '@/components/HeaderServer';
+import SiteHeader from '@/components/layout/SiteHeader';
 import Footer from '@/components/Footer';
 
 const sans = Inter({
@@ -49,7 +48,7 @@ export default function RootLayout({
         {/* <script src="https://www.clarity.ms/tag/CLARITY_ID" strategy="lazyOnload"></script> */}
       </head>
       <body>
-        <HeaderServer />
+        <SiteHeader />
         {children}
         <Footer />
       </body>

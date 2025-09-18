@@ -5,6 +5,8 @@ interface MenuItem {
   id: string;
   title: string;
   url: string;
+  handle?: string | null;
+  resourceId?: string | null;
   items?: MenuItem[];
 }
 
@@ -15,14 +17,17 @@ const QUERY = /* GraphQL */ `
         id
         title
         url
+        resourceId
         items {
           id
           title
           url
+          resourceId
           items {
             id
             title
             url
+            resourceId
           }
         }
       }
@@ -33,15 +38,9 @@ const QUERY = /* GraphQL */ `
 export async function GET() {
   try {
     const response = await shopifyFetch<{
-      data: { menu: { items: MenuItem[] } };
+      menu: { items: MenuItem[] };
     }>({ query: QUERY });
-    if (response.success && response.data?.data?.menu?.items) {
-      return NextResponse.json({ items: response.data.data.menu.items });
-    } else if (response.success) {
-      return NextResponse.json({ items: [] });
-    } else {
-      return NextResponse.json({ error: 'Unknown error' }, { status: 500 });
-    }
+    return NextResponse.json({ items: response.data.menu.items ?? [] });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error(`[api/menu]`, msg);

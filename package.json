@@ -12,9 +12,11 @@
     "clean:shopify": "tools/shopify-cleanup/bin/index.sh"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-slot": "^1.2.3",
     "class-variance-authority": "^0.7.1",
+    "lucide-react": "^0.544.0",
     "next": "^15.5.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
@@ -22,6 +24,7 @@
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^15.5.2",
+    "@playwright/test": "^1.55.0",
     "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^24.3.1",
     "@types/react": "^19",

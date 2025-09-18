@@ -1,10 +1,8 @@
 import type { Metadata } from 'next';
 
 import Hero from '@/components/Hero';
-import FeaturedCollections from '@/components/FeaturedCollections';
+import CollectionSwitcherWrapper from '@/app/components/CollectionSwitcherWrapper';
 import CTASection from '@/components/CTASection';
-import ProductGrid from '@/components/ProductGrid';
-import TestimonialBlock from '@/components/TestimonialBlock';
 import { absoluteUrl, jsonLd } from '@/lib/seo';
 
 export const revalidate = 60;
@@ -60,25 +58,29 @@ const websiteJsonLd = {
 export default async function HomePage() {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(organizationJsonLd)} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(websiteJsonLd)} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLd(organizationJsonLd)}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLd(websiteJsonLd)}
+      />
       <main
         id="main-content"
         className="bg-[hsl(var(--bg))] text-[hsl(var(--ink))]"
         role="main"
       >
-      <Hero
-        title="Modern Lab Equipment. Simplified. Delivered."
-        subtitle="Equip your schools, clinical labs, and research teams with high-performance tools, from essential consumables to precision instruments. We provide reliable solutions, backed by U.S.-based support and fast shipping, to help you maintain compliance and accelerate discovery."
-        ctaText="Shop Microscopes"
-        ctaHref="/collections/microscopes"
-        ctaSecondaryText="Find Your Microscope"
-        ctaSecondaryHref="/pages/microscope-selector-quiz"
-      />
-        <FeaturedCollections />
+        <Hero
+          title="Modern Lab Equipment. Simplified. Delivered."
+          subtitle="Equip your schools, clinical labs, and research teams with high-performance tools, from essential consumables to precision instruments. We provide reliable solutions, backed by U.S.-based support and fast shipping, to help you maintain compliance and accelerate discovery."
+          ctaText="Shop Microscopes"
+          ctaHref="/collections/microscopes"
+          ctaSecondaryText="Find Your Microscope"
+          ctaSecondaryHref="/pages/microscope-selector-quiz"
+        />
+        <CollectionSwitcherWrapper />
         <CTASection />
-        <ProductGrid />
-        <TestimonialBlock />
       </main>
     </>
   );

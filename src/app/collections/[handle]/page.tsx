@@ -1,111 +1,197 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-import type { Product } from '@/lib/types';
-import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
+import Footer from '@/components/Footer';
+import type { CollectionData, Product } from '@/lib/types';
+import { getCollectionByHandleQuery } from '@/lib/queries';
+import { shopifyFetch } from '@/lib/shopify';
+import { absoluteUrl, jsonLd, stripHtml } from '@/lib/seo';
 
 export const revalidate = 60;
+
+const formatHandle = (value: string) =>
+  value
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+
+async function getCollection(handle: string): Promise<CollectionData | null> {
+  if (!handle || !/^[a-zA-Z0-9-_]+$/.test(handle)) {
+    return null;
+  }
+
+  try {
+    const response = await shopifyFetch<{
+      collection: CollectionData | null;
+    }>({
+      query: getCollectionByHandleQuery,
+      variables: { handle, first: 16 },
+    });
+    return response.data.collection ?? null;
+  } catch (error) {
+    console.error(`Failed to load collection ${handle}`, error);
+    return null;
+  }
+}
+
+export async function generateMetadata({
+  params: paramsPromise,
+  searchParams: searchParamsPromise = Promise.resolve({}),
+}: {
+  params: Promise<{ handle: string }>;
+  searchParams?: Promise<Record<string, string | string[]>>;
+}): Promise<Metadata> {
+  const { handle } = await paramsPromise;
+  const searchParams = await searchParamsPromise;
+  const collection = await getCollection(handle);
+
+  if (!collection) {
+    return {
+      title: 'Collection Not Found | Lab Essentials',
+      robots: { index: false, follow: true },
+    };
+  }
+
+  const pageParam = Array.isArray(searchParams?.page)
+    ? searchParams.page[0]
+    : searchParams?.page;
+  const page = pageParam ? Number(pageParam) || 1 : 1;
+  const path = page > 1 ? `/collections/${handle}?page=${page}` : `/collections/${handle}`;
+  const canonical = absoluteUrl(path);
+
+  const hasFilters = Object.entries(searchParams || {}).some(
+    ([key, value]) =>
+      key !== 'page' &&
+      value !== undefined &&
+      value !== null &&
+      (Array.isArray(value) ? value.length > 0 : value !== ''),
+  );
+
+  const title = `${collection.title || formatHandle(handle)} | Lab Essentials`;
+  const description = collection.description
+    ? stripHtml(collection.description).slice(0, 160)
+    : 'Shop lab-ready equipment, instruments, and consumables curated by Lab Essentials.';
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical,
+    },
+    robots: hasFilters ? { index: false, follow: true } : undefined,
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
+    },
+  };
+}
 
 export default async function CollectionPage({
   params: paramsPromise,
   searchParams: searchParamsPromise = Promise.resolve({}),
 }: {
   params: Promise<{ handle: string }>;
-  searchParams?: Promise<{ [key: string]: string | string[] }>;
+  searchParams?: Promise<Record<string, string | string[]>>;
 }) {
-  // Next.js 15: params and searchParams are Promises
   const { handle } = await paramsPromise;
   const searchParams = await searchParamsPromise;
-  if (typeof handle !== 'string' || !/^[a-zA-Z0-9-_]+$/.test(handle))
+  const collection = await getCollection(handle);
+
+  if (!collection) {
     notFound();
+  }
 
-  // Placeholder fallback for now
-  const collection = { title: 'Collection', handle };
-  const products: Product[] = [];
+  const products: Product[] =
+    collection.products?.edges?.map((edge) => edge.node) ?? [];
 
-  const page =
-    Number(
-      searchParams?.page ||
-        (Array.isArray(searchParams?.page) ? searchParams?.page[0] : 1),
-    ) || 1;
-  const hasFilters = Object.keys(searchParams || {}).some(
-    (key) => key !== 'page' && searchParams?.[key],
-  );
-  const baseUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/collections/${handle}`;
-  const prevUrl = page > 2 ? `${baseUrl}?page=${page - 1}` : baseUrl;
-  const nextUrl = `${baseUrl}?page=${page + 1}`;
-  const breadcrumbs = [
-    { name: 'Home', url: '/' },
-    { name: 'Collections', url: '/collections' },
-    { name: collection.title, url: `/collections/${collection.handle}` },
-  ];
+  const pageParam = Array.isArray(searchParams?.page)
+    ? searchParams.page[0]
+    : searchParams?.page;
+  const page = pageParam ? Number(pageParam) || 1 : 1;
+  const basePath = `/collections/${handle}`;
+  const canonicalPath = page > 1 ? `${basePath}?page=${page}` : basePath;
+  const canonical = absoluteUrl(canonicalPath);
+
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
-    itemListElement: breadcrumbs.map((crumb, i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      name: crumb.name,
-      item: `${process.env.NEXT_PUBLIC_SITE_URL}${crumb.url}`,
-    })),
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: absoluteUrl('/'),
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Collections',
+        item: absoluteUrl('/collections'),
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: collection.title || formatHandle(handle),
+        item: canonical,
+      },
+    ],
   };
 
   const collectionJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: collection.title,
-    url: `${process.env.NEXT_PUBLIC_SITE_URL}/collections/${collection.handle}`,
+    name: collection.title || formatHandle(handle),
+    description: stripHtml(collection.description) || undefined,
+    url: canonical,
   };
 
   const productJsonLds = products.map((product) => ({
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.title,
-    url: `${process.env.NEXT_PUBLIC_SITE_URL}/products/${product.handle}`,
-    ...(product.featuredImage?.url && {
-      image: product.featuredImage.url,
-    }),
+    url: absoluteUrl(`/products/${product.handle}`),
+    image: product.featuredImage?.url,
+    offers: product.priceRange?.minVariantPrice?.amount
+      ? {
+          '@type': 'Offer',
+          priceCurrency:
+            product.priceRange?.minVariantPrice?.currencyCode ?? 'USD',
+          price: product.priceRange?.minVariantPrice?.amount,
+          availability: 'https://schema.org/InStock',
+        }
+      : undefined,
   }));
 
   return (
     <>
-      <head>
-        {page > 1 && <link rel="prev" href={prevUrl} />}
-        {products.length > 0 && <link rel="next" href={nextUrl} />}
-        <link rel="canonical" href={baseUrl} />
-        {hasFilters && <meta name="robots" content="noindex,follow" />}
-      </head>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
-      />
-      {productJsonLds.map((json, i) => (
-        <script
-          key={i}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(json) }}
-        />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(breadcrumbJsonLd)} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(collectionJsonLd)} />
+      {productJsonLds.map((json, index) => (
+        <script key={index} type="application/ld+json" dangerouslySetInnerHTML={jsonLd(json)} />
       ))}
-      {/* AxeA11yScriptClient removed */}
-      <main id="main-content" className="bg-background py-24" role="main">
-        <h1
-          className="text-3xl lg:text-4xl font-semibold tracking-tight text-foreground text-center mb-16"
-          tabIndex={-1}
-          aria-label={`Collection: ${collection.title}`}
-        >
-          {collection.title}
+      <main
+        id="main-content"
+        className="bg-background py-24"
+        role="main"
+        aria-label={`Collection: ${collection.title || formatHandle(handle)}`}
+      >
+        <h1 className="mb-16 text-center text-3xl font-semibold tracking-tight text-heading lg:text-4xl">
+          {collection.title || formatHandle(handle)}
         </h1>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* CollectionFilters removed */}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-8 lg:flex-row">
             <div className="flex-1">
               {products.length === 0 ? (
                 <div
-                  className="text-center py-24 text-muted-foreground text-lg"
+                  className="py-24 text-center text-lg text-body/70"
                   role="status"
                   aria-live="polite"
                 >
@@ -113,29 +199,16 @@ export default async function CollectionPage({
                 </div>
               ) : (
                 <>
-                  <h2
-                    className="text-2xl font-bold text-foreground mb-8"
-                    id="products-heading"
-                  >
+                  <h2 className="mb-8 text-2xl font-bold text-heading" id="products-heading">
                     Products
                   </h2>
                   <div
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 animate-fade-in items-stretch"
+                    className="grid grid-cols-1 items-stretch gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
                     aria-labelledby="products-heading"
                   >
-                    {products.map((product: Product) => (
+                    {products.map((product) => (
                       <ProductCard key={product.id} product={product} />
                     ))}
-                  </div>
-                  <div className="mt-12 text-center">
-                    <button
-                      className="bg-primary hover:bg-primary/80 text-white px-8 py-3 rounded-full font-medium transition-colors"
-                      aria-label="Load more products"
-                      tabIndex={0}
-                      type="button"
-                    >
-                      Load More Products
-                    </button>
                   </div>
                 </>
               )}

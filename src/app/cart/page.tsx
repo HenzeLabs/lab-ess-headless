@@ -2,6 +2,10 @@ import { getCart } from '@/lib/cart';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { removeCartLineAction } from './actions';
+
+const PLACEHOLDER_IMG = '/placeholders/product1.jpg';
+
 export default async function CartPage() {
   const cart = await getCart();
 
@@ -15,40 +19,46 @@ export default async function CartPage() {
 
   return (
     <>
-      <main className="bg-gray-50 py-24">
+      <main className="bg-[hsl(var(--bg))] text-[hsl(var(--ink))] py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl text-center mb-16">
+          <h1 className="text-4xl font-extrabold tracking-tight text-[hsl(var(--ink))] sm:text-5xl text-center mb-16">
             Your Cart
           </h1>
 
           {cart && cart.lines.edges.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
               <div className="md:col-span-2">
-                <ul className="divide-y divide-gray-200">
-                  {cart.lines.edges.map((item) => (
-                    <li key={item.node.id} className="flex py-8">
-                      <div className="h-28 w-28 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                        <Image
-                          src={item.node.merchandise.product.featuredImage.url}
-                          alt={
-                            item.node.merchandise.product.featuredImage
-                              .altText || 'Product image'
-                          }
-                          width={112}
-                          height={112}
-                          className="h-full w-full object-cover object-center"
-                        />
-                      </div>
+                <ul className="divide-y divide-[hsl(var(--muted))]/20">
+                  {cart.lines.edges.map((item) => {
+                    const featuredImage =
+                      item.node.merchandise.product.featuredImage;
+                    const imageUrl = featuredImage?.url || PLACEHOLDER_IMG;
+                    const imageAlt =
+                      featuredImage?.altText ||
+                      item.node.merchandise.product.title;
 
-                      <div className="ml-6 flex flex-1 flex-col">
-                        <div>
-                          <div className="flex justify-between text-lg font-medium text-gray-900">
-                            <h3>
-                              <a
-                                href={`/products/${item.node.merchandise.product.handle}`}
+                    return (
+                      <li key={item.node.id} className="flex py-8">
+                        <div className="h-28 w-28 flex-shrink-0 overflow-hidden rounded-md border border-[hsl(var(--muted))]/30 bg-[hsl(var(--bg))]">
+                          <Image
+                            src={imageUrl}
+                            alt={imageAlt}
+                            width={112}
+                            height={112}
+                            className="h-full w-full object-cover object-center"
+                          />
+                        </div>
+
+                        <div className="ml-6 flex flex-1 flex-col">
+                          <div>
+                            <div className="flex justify-between text-lg font-medium text-[hsl(var(--ink))]">
+                              <h3>
+                                <Link
+                                  href={`/products/${item.node.merchandise.product.handle}`}
+                                className="hover:text-[hsl(var(--brand))]"
                               >
                                 {item.node.merchandise.product.title}
-                              </a>
+                              </Link>
                             </h3>
                             <p className="ml-4">
                               {item.node.merchandise.price.amount}{' '}
@@ -56,42 +66,45 @@ export default async function CartPage() {
                             </p>
                           </div>
                         </div>
-                        <div className="flex flex-1 items-end justify-between text-base">
-                          <p className="text-gray-700">
-                            Qty {item.node.quantity}
-                          </p>
+                          <div className="flex flex-1 items-end justify-between text-base">
+                            <p className="text-[hsl(var(--muted))]">
+                              Qty {item.node.quantity}
+                            </p>
 
-                          <div className="flex">
-                            <button
-                              type="button"
-                              className="font-medium text-primary hover:text-opacity-80"
-                            >
-                              Remove
-                            </button>
+                            <form action={removeCartLineAction} className="flex">
+                              <input type="hidden" name="lineId" value={item.node.id} />
+                              <button
+                                type="submit"
+                                className="font-medium text-[hsl(var(--brand))] hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand))] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--bg))]"
+                                aria-label={`Remove ${item.node.merchandise.product.title} from cart`}
+                              >
+                                Remove
+                              </button>
+                            </form>
                           </div>
                         </div>
-                      </div>
-                    </li>
-                  ))}
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
 
-              <div className="bg-white p-10 rounded-lg shadow-md">
-                <h2 className="text-xl font-medium text-gray-900">
+              <div className="bg-[hsl(var(--bg))] p-10 rounded-lg shadow-sm ring-1 ring-[hsl(var(--muted))]/15">
+                <h2 className="text-xl font-medium text-[hsl(var(--ink))]">
                   Order summary
                 </h2>
                 <div className="mt-8 space-y-6">
                   <div className="flex items-center justify-between">
-                    <p className="text-base text-gray-700">Subtotal</p>
-                    <p className="text-base font-medium text-gray-900">
+                    <p className="text-base text-[hsl(var(--muted))]">Subtotal</p>
+                    <p className="text-base font-medium text-[hsl(var(--ink))]">
                       ${subtotal.toFixed(2)}
                     </p>
                   </div>
-                  <div className="flex items-center justify-between border-t border-gray-200 pt-6">
-                    <p className="text-lg font-medium text-gray-900">
+                  <div className="flex items-center justify-between border-t border-[hsl(var(--muted))]/20 pt-6">
+                    <p className="text-lg font-medium text-[hsl(var(--ink))]">
                       Order total
                     </p>
-                    <p className="text-lg font-medium text-gray-900">
+                    <p className="text-lg font-medium text-[hsl(var(--ink))]">
                       ${subtotal.toFixed(2)}
                     </p>
                   </div>
@@ -100,6 +113,7 @@ export default async function CartPage() {
                   <a
                     href={cart.checkoutUrl}
                     className="btn-primary w-full text-center"
+                    aria-label="Proceed to checkout"
                   >
                     Checkout
                   </a>
@@ -107,11 +121,11 @@ export default async function CartPage() {
               </div>
             </div>
           ) : (
-            <div className="text-center bg-white p-16 rounded-lg shadow-md">
-              <h2 className="text-2xl font-medium text-gray-900 mb-4">
+            <div className="text-center bg-[hsl(var(--bg))] p-16 rounded-lg shadow-sm ring-1 ring-[hsl(var(--muted))]/15">
+              <h2 className="text-2xl font-medium text-[hsl(var(--ink))] mb-4">
                 Your cart is empty
               </h2>
-              <p className="text-gray-700 mb-8">
+              <p className="text-[hsl(var(--muted))] mb-8">
                 Add some products to get started.
               </p>
               <Link href="/" className="btn-primary">

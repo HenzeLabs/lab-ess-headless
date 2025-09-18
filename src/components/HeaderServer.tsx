@@ -1,24 +1,11 @@
 import { getMainMenuQuery, fetchShopBrand, shopifyFetch } from '@/lib/shopify';
 import Header from '@/components/Header';
 import { MenuItem } from '@/lib/types';
+import { normalizeMenuItems } from '@/lib/menu';
 
 interface MainMenuData {
   menu: {
     items: MenuItem[];
-  };
-}
-
-interface ShopBrandData {
-  shop: {
-    name: string;
-    brand: {
-      logo: {
-        alt: string;
-        image: {
-          url: string;
-        };
-      };
-    };
   };
 }
 
@@ -27,9 +14,23 @@ export default async function HeaderServer() {
     query: getMainMenuQuery,
   });
 
-  const { data: shopData } = await fetchShopBrand<ShopBrandData>();
+  const { data: shopData } = await fetchShopBrand<{
+    shop: {
+      name: string;
+      brand: {
+        logo: {
+          image: {
+            url: string;
+            altText?: string;
+          } | null;
+        } | null;
+      } | null;
+    } | null;
+  }>();
 
   const menuItems = menuData?.menu?.items;
+
+  const normalizedMenu = menuItems ? normalizeMenuItems(menuItems) : [];
 
   if (!menuItems) {
     console.warn('Main menu is empty or failed to load.');
@@ -37,10 +38,10 @@ export default async function HeaderServer() {
 
   return (
     <Header
-      collections={menuItems ?? []}
-      logoUrl={shopData?.shop.brand?.logo?.image?.url || ''}
+      collections={normalizedMenu}
+      logoUrl={shopData?.shop?.brand?.logo?.image?.url || ''}
       shopName={shopData?.shop?.name || ''}
-      logoAlt={shopData?.shop.brand?.logo?.alt}
+      logoAlt={shopData?.shop?.brand?.logo?.image?.altText}
     />
   );
 }

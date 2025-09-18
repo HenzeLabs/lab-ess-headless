@@ -19,10 +19,10 @@ export async function fetchShopBrand(): Promise<{
       };
     };
   };
-  const res = await shopifyFetch<{ data: ShopifyBrandData }>({
+  const res = await shopifyFetch<ShopifyBrandData>({
     query: getShopBrandQuery,
   });
-  const brandData = res.data?.data;
+  const brandData = res.data;
   if (!brandData?.shop?.brand?.logo?.image?.url) return null;
   return {
     logoUrl: brandData.shop.brand.logo.image.url,

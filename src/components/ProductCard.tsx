@@ -33,9 +33,27 @@ export default function ProductCard({
 }: {
   product: ProductWithExtras;
 }) {
+  const imageSrc =
+    product.featuredImage?.url ??
+    product.images?.edges?.[0]?.node?.url ??
+    PLACEHOLDER_IMG;
+  const imageAlt =
+    product.featuredImage?.altText ??
+    product.title;
+
   const price = product.priceRange?.minVariantPrice?.amount;
+  const currencyCode = product.priceRange?.minVariantPrice?.currencyCode ?? 'USD';
+  const formattedPrice = price
+    ? new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: currencyCode,
+      }).format(Number(price))
+    : null;
   const badgeVariant = product.badge
     ? badgeVariantMap[product.badge.toLowerCase()] || 'default'
+    : undefined;
+  const descriptionText = product.descriptionHtml
+    ? product.descriptionHtml.replace(/<[^>]+>/g, '')
     : undefined;
 
   return (
@@ -56,12 +74,11 @@ export default function ProductCard({
             </Badge>
           )}
           <Image
-            src={PLACEHOLDER_IMG}
-            alt={product.title}
+            src={imageSrc}
+            alt={imageAlt}
             fill
             className="object-contain w-full h-full"
             sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            style={{ aspectRatio: '1/1' }}
             priority={false}
           />
         </div>
@@ -71,17 +88,15 @@ export default function ProductCard({
             {product.title}
           </h3>
           {/* Product Description */}
-          {product.description && (
+          {descriptionText && (
             <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-              {product.description}
+              {descriptionText}
             </p>
           )}
           {/* Price */}
           <div className="mb-4 mt-auto">
             <p className="text-xl font-bold text-primary">
-              {price
-                ? `From ${parseFloat(price).toFixed(0)}`
-                : 'Contact for price'}
+              {formattedPrice ?? 'Contact for price'}
             </p>
           </div>
           {/* CTA Button */}

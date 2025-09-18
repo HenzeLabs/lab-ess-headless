@@ -7,11 +7,14 @@ const withBundleAnalyzer = createBundleAnalyzer({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['cdn.shopify.com', 'shopify.com'],
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'cdn.shopify.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'shopifycdn.net',
       },
       {
         protocol: 'https',
@@ -20,6 +23,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'images.ctfassets.net',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
       },
     ],
   },
@@ -40,7 +47,7 @@ const nextConfig = {
           "object-src 'none'",
           "base-uri 'self'",
           "connect-src 'self' https://cdn.shopify.com",
-          "img-src 'self' data: https://cdn.shopify.com https://images.pexels.com https://images.ctfassets.net",
+          "img-src 'self' data: https://cdn.shopify.com https://shopifycdn.net https://images.pexels.com https://images.ctfassets.net https://images.unsplash.com",
           "style-src 'self' 'unsafe-inline'",
           "frame-ancestors 'none'",
         ].join('; ') + ';';

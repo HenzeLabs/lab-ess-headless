@@ -1,111 +1,93 @@
-import React from 'react';
+import {
+  ShieldCheckIcon,
+  ClockIcon,
+  TruckIcon,
+  SparklesIcon,
+} from '@heroicons/react/24/outline';
+
+import { buttonStyles, layout, textStyles } from '@/lib/ui';
 
 const signals = [
   {
-    Icon: (props: React.SVGProps<SVGSVGElement>) => (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={1.5}
-        stroke="currentColor"
-        {...props}
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"
-        />
-      </svg>
-    ),
-    title: '120-Night Trial',
-    description: "No-stress returns if you don't love it.",
+    icon: ShieldCheckIcon,
+    title: 'Certified & Calibrated',
+    description:
+      'ISO 9001 processes with calibration certificates available on request.',
   },
   {
-    Icon: (props: React.SVGProps<SVGSVGElement>) => (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={1.5}
-        stroke="currentColor"
-        {...props}
-      >
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
-        <circle
-          cx="12"
-          cy="12"
-          r="9"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          fill="none"
-        />
-      </svg>
-    ),
-    title: '5-Year Warranty',
-    description: 'We stand by our quality for the long haul.',
+    icon: ClockIcon,
+    title: '48-Hour Support SLA',
+    description: 'Lab onboarding specialists respond within two business days.',
   },
   {
-    Icon: (props: React.SVGProps<SVGSVGElement>) => (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={1.5}
-        stroke="currentColor"
-        {...props}
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.125-.504 1.125-1.125V14.25m-17.25 4.5h10.5a1.125 1.125 0 001.125-1.125V6.75a1.125 1.125 0 00-1.125-1.125H3.375A1.125 1.125 0 002.25 6.75v10.5a1.125 1.125 0 001.125 1.125z"
-        />
-      </svg>
-    ),
-    title: 'Fast & Free Delivery',
-    description: 'Shipped straight from our warehouse to your door.',
+    icon: TruckIcon,
+    title: 'Fast, Insured Shipping',
+    description: 'Cold-chain packaging and proactive tracking on every order.',
   },
   {
-    Icon: (props: React.SVGProps<SVGSVGElement>) => (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={1.5}
-        stroke="currentColor"
-        {...props}
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M12 17.25l6.16 3.24-1.18-6.88 5-4.87-6.91-1-3.09-6.26-3.09 6.26-6.91 1 5 4.87-1.18 6.88L12 17.25z"
-        />
-      </svg>
-    ),
-    title: 'Award-Winning Comfort',
-    description: 'Loved by customers and critics alike.',
+    icon: SparklesIcon,
+    title: '2-Year Equipment Warranty',
+    description: 'Coverage extends across parts, labor, and onsite servicing.',
   },
 ];
 
 export default function TrustSignals() {
   return (
-    <div className="bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-gray-200 rounded-lg overflow-hidden">
-          {signals.map((signal) => (
-            <div
-              key={signal.title}
-              className="bg-white p-6 text-center flex flex-col items-center"
-            >
-              <signal.Icon className="h-8 w-8 mb-3 text-primary" />
-              <h3 className="text-base font-bold text-gray-800">
-                {signal.title}
-              </h3>
-              <p className="text-sm text-gray-600 mt-1">{signal.description}</p>
+    <section className="bg-[hsl(var(--bg))]">
+      <div className={`${layout.container} ${layout.section}`}>
+        <div className="rounded-3xl border border-[hsl(var(--border))] bg-surface shadow-subtle">
+          <div className="flex flex-col gap-8 px-8 py-10 md:flex-row md:items-center md:justify-between md:gap-12">
+            <div className="max-w-xl space-y-4">
+              <span className="inline-flex items-center gap-2 rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--muted))] px-4 py-2 text-xs font-semibold uppercase tracking-wider text-heading/80">
+                Trusted Lab Partner
+              </span>
+              <div>
+                <h2 className={`${textStyles.heading} text-heading`}>Rock-solid guarantees on every order.</h2>
+                <p className="mt-3 text-base text-body/80">
+                  From compliance paperwork to white-glove installs, our team keeps
+                  your workflow running without surprises.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <a
+                  href="/support/warranty"
+                  className={`${buttonStyles.primary} px-5 py-2`}
+                >
+                  Explore warranty
+                </a>
+                <a
+                  href="/support/shipping"
+                  className={`${buttonStyles.outline} px-5 py-2`}
+                >
+                  Shipping details
+                </a>
+              </div>
             </div>
-          ))}
+
+            <div className="grid flex-1 grid-cols-1 gap-4 sm:grid-cols-2">
+              {signals.map((signal) => {
+                const Icon = signal.icon;
+                return (
+                  <div
+                    key={signal.title}
+                    className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--muted))] p-6 shadow-subtle transition hover:-translate-y-1 hover:shadow-card"
+                  >
+                    <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[hsl(var(--brand))]/12 text-[hsl(var(--brand))]">
+                      <Icon className="h-6 w-6" aria-hidden="true" />
+                    </div>
+                    <h3 className="text-base font-semibold text-heading">
+                      {signal.title}
+                    </h3>
+                    <p className="mt-2 text-sm text-body/75">
+                      {signal.description}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

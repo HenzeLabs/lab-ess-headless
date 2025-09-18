@@ -7,6 +7,7 @@ import { Input } from './ui/input';
 import { useState, useEffect } from 'react';
 import type { MenuItem } from '@/lib/types';
 import { Search, User, ShoppingCart, X } from 'lucide-react';
+import AnnouncementBar from '@/components/AnnouncementBar';
 
 function extractHandle(url: string | undefined): string {
   if (!url) return '';
@@ -25,6 +26,19 @@ interface HeaderProps {
   logoUrl: string;
   shopName: string;
   logoAlt?: string;
+}
+
+function formatTitleCase(title: string) {
+  const trimmed = title?.trim() ?? '';
+  if (!trimmed) return '';
+  const upper = trimmed.toUpperCase();
+  if (trimmed === upper) {
+    return trimmed
+      .toLowerCase()
+      .replace(/[_-]+/g, ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+  }
+  return trimmed;
 }
 
 export default function Header({
@@ -64,43 +78,55 @@ export default function Header({
 
   return (
     <>
-      <div
-        className={`sticky top-0 z-50 bg-background transition-shadow duration-200 ${
-          isScrolled ? 'shadow-md' : ''
-        }`}
-      >
-        <header className="relative bg-[hsl(var(--bg))]">
+      <div className="sticky top-0 z-50">
+        <AnnouncementBar />
+        <div
+          className={`bg-background transition-shadow duration-200 ${
+            isScrolled ? 'shadow-md' : ''
+          }`}
+        >
+          <header className="relative bg-[hsl(var(--bg))]">
           <div className="max-w-[1440px] mx-auto px-4 lg:px-8">
-            <div className="flex items-center justify-between py-4 border-b border-border">
-              {/* Left spacer */}
-              <div className="flex-1"></div>
-              {/* Logo centered */}
-              <div className="flex-1 flex justify-center">
-                <Link href="/" className="flex items-center">
-                  <Image
-                    src={logoUrl}
-                    alt={logoAlt || shopName}
-                    width={180}
-                    height={60}
-                    className="h-14 w-auto object-contain drop-shadow-sm"
-                    priority
-                  />
-                </Link>
-              </div>
-              {/* Actions: Search, Account, Cart */}
-              <div className="flex-1 flex items-center justify-end gap-2">
-                <Button variant="ghost" onClick={() => setIsSearchOpen(true)} aria-label="Open search">
-                  <Search className="h-6 w-6" />
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center py-4 border-b border-border gap-6">
+              <div className="flex items-center justify-start gap-3" aria-hidden="true"></div>
+              <Link href="/" className="flex items-center justify-center gap-3">
+                <Image
+                  src={logoUrl}
+                  alt={logoAlt || shopName}
+                  width={240}
+                  height={80}
+                  className="h-[72px] w-auto object-contain drop-shadow-sm"
+                  priority
+                />
+              </Link>
+              <div className="flex items-center justify-end gap-3">
+                <Button
+                  variant="ghost"
+                  onClick={() => setIsSearchOpen(true)}
+                  aria-label="Open search"
+                  className="h-12 w-12 rounded-full hover:bg-[#4e2cfb] hover:text-white"
+                >
+                  <Search className="h-7 w-7" />
                 </Button>
-                <Button asChild variant="ghost">
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="h-12 w-12 rounded-full hover:bg-[#4e2cfb] hover:text-white"
+                >
                   <Link href="/account" aria-label="Account">
-                    <User className="h-6 w-6" />
+                    <User className="h-7 w-7" />
                   </Link>
                 </Button>
-                <Button asChild variant="ghost">
-                  <Link href="/cart" aria-label="Cart" className="relative">
-                    <ShoppingCart className="h-6 w-6" />
-                    <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs font-medium flex items-center justify-center">0</span>
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="relative h-12 w-12 rounded-full hover:bg-[#4e2cfb] hover:text-white"
+                >
+                  <Link href="/cart" aria-label="Cart">
+                    <ShoppingCart className="h-7 w-7" />
+                    <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-medium">
+                      0
+                    </span>
                   </Link>
                 </Button>
               </div>
@@ -161,22 +187,17 @@ export default function Header({
               <div className="bg-gradient-to-b from-white via-gray-50/30 to-white">
                 <div className="max-w-[1440px] mx-auto px-8 py-16">
                   {/* Enhanced Header Section */}
-                  <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-12 text-center lg:text-left">
-                    <div className="mb-6 lg:mb-0">
-                      <h2 className="text-4xl lg:text-5xl font-bold text-primary mb-3 tracking-tight">
-                        {menuItem.title}
-                      </h2>
-                      <p className="text-lg text-muted-foreground max-w-md">
-                        {menuItem.description || `Discover our premium range of professional ${menuItem.title.toLowerCase()} for research and industry`}
-                      </p>
-                    </div>
+                  <div className="mb-12 text-center lg:text-left">
+                    <h2 className="text-4xl lg:text-5xl font-bold text-primary mb-4 tracking-tight">
+                      {formatTitleCase(menuItem.title)}
+                    </h2>
                     <Link
                       href={menuItem.url || `/collections/${menuItem.handle}`}
-                      className="inline-flex items-center bg-purple-600 hover:bg-purple-700 text-white px-10 py-4 rounded-full font-semibold text-sm uppercase tracking-wider transition-all duration-300 hover:shadow-lg hover:scale-105 hover:text-white"
+                      className="inline-flex items-center justify-center gap-2 rounded-full bg-purple-600 px-10 py-4 text-base font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-purple-700 hover:text-white"
                     >
-                      <span>SHOP ALL {menuItem.title.toUpperCase()}</span>
+                      <span>Shop All {formatTitleCase(menuItem.title)}</span>
                       <svg
-                        className="w-4 h-4 ml-2"
+                        className="w-4 h-4"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -234,13 +255,8 @@ export default function Header({
 
                           {/* Enhanced title styling */}
                           <h3 className="text-sm lg:text-base font-semibold text-foreground group-hover:text-primary transition-colors duration-300 leading-snug px-2">
-                            {subMenuItem.title}
+                            {formatTitleCase(subMenuItem.title)}
                           </h3>
-
-                          {/* Dynamic description based on item type */}
-                          <p className="text-xs text-muted-foreground mt-1 opacity-100 transition-opacity duration-300">
-                            View Item
-                          </p>
                         </Link>
                       ))}
                   </div>
@@ -356,7 +372,8 @@ export default function Header({
               </div>
             </div>
           ))}
-        </header>
+          </header>
+        </div>
       </div>
 
       {/* Search Overlay */}

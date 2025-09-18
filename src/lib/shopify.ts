@@ -56,6 +56,8 @@ export async function shopifyFetch<T>({
   timeout?: number;
 }): Promise<ShopifyFetchResponse<T>> {
   if (!SHOPIFY_STORE_DOMAIN || !SHOPIFY_STOREFRONT_API_TOKEN) {
+    console.error('SHOPIFY_STORE_DOMAIN:', SHOPIFY_STORE_DOMAIN);
+    console.error('SHOPIFY_STOREFRONT_API_TOKEN:', SHOPIFY_STOREFRONT_API_TOKEN);
     throw new Error(
       'Missing Shopify environment variables. Make sure SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_API_TOKEN are set.',
     );

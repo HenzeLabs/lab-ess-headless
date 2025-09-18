@@ -9,12 +9,14 @@ export default function StarRating({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <div className="flex text-yellow-400">
+      <div className="flex text-[hsl(var(--brand))]">
         {Array.from({ length: 5 }).map((_, i) => (
           <svg
             key={i}
             className={`h-5 w-5 ${
-              i < rating ? 'fill-yellow-400' : 'fill-gray-200'
+              i < rating
+                ? 'fill-[hsl(var(--brand))]'
+                : 'fill-[hsl(var(--muted))]'
             }`}
             viewBox="0 0 20 20"
             fill="currentColor"

@@ -62,32 +62,26 @@ const QUERY = /* GraphQL */ `
 export async function GET() {
   try {
     const response = await shopifyFetch<{
-      data: { products: { edges: { node: ProductNode }[] } };
+      products: { edges: { node: ProductNode }[] };
     }>({ query: QUERY, variables: { first: 5 } });
 
-    if (response.success && response.data?.data?.products?.edges) {
-      const items: ProductItem[] = response.data.data.products.edges.map(
-        (e: { node: ProductNode }) => {
-          const n = e.node;
-          return {
-            id: n.id,
-            title: n.title,
-            handle: n.handle,
-            featuredImage: n.featuredImage
-              ? { url: n.featuredImage.url, altText: n.featuredImage.altText }
-              : null,
-            priceRange: {
-              minVariantPrice: n.priceRange?.minVariantPrice,
-            },
-          };
+    const edges = response.data.products?.edges ?? [];
+    const items: ProductItem[] = edges.map((e: { node: ProductNode }) => {
+      const n = e.node;
+      return {
+        id: n.id,
+        title: n.title,
+        handle: n.handle,
+        featuredImage: n.featuredImage
+          ? { url: n.featuredImage.url, altText: n.featuredImage.altText }
+          : null,
+        priceRange: {
+          minVariantPrice: n.priceRange?.minVariantPrice,
         },
-      );
-      return NextResponse.json({ products: items });
-    } else if (response.success) {
-      return NextResponse.json({ products: [] });
-    } else {
-      return NextResponse.json({ error: 'Unknown error' }, { status: 500 });
-    }
+      };
+    });
+
+    return NextResponse.json({ products: items });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error(`[api/products]`, msg);
