@@ -270,12 +270,13 @@ export const getHomepageProductsQuery = `
 
 export const getCollectionsListQuery = `
   query getCollectionsList {
-    collections(first: 20) {
+    collections(first: 250) {
       edges {
         node {
           id
           title
           handle
+          updatedAt
           image {
             url
             altText
@@ -309,6 +310,19 @@ export const getCollectionProductsByHandleQuery = `
               }
             }
           }
+        }
+      }
+    }
+  }
+`;
+
+export const getAllProductsQuery = `
+  query getAllProducts {
+    products(first: 250) {
+      edges {
+        node {
+          handle
+          updatedAt
         }
       }
     }
