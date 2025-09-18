@@ -1,6 +1,6 @@
 'use client';
 import dynamic from 'next/dynamic';
-import type { Product } from '@/lib/types';
+
 
 const ProductInfoPanel = dynamic(
   () => import('@/components/ProductInfoPanel'),
