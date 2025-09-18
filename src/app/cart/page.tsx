@@ -281,10 +281,11 @@ export default function CartPage() {
                       </Button>
                     </div>
                   </div>
-                  <div className="mt-8">
-                    <TrustSignals />
-                  </div>
                 </div>
+              </div>
+              <div className="mt-8 lg:mt-12">
+                <TrustSignals />
+              </div>
               </div>
             ) : (
               <div className="text-center bg-[hsl(var(--surface))] p-16 rounded-lg shadow-soft ring-1 ring-[hsl(var(--border))]">
