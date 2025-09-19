@@ -1,5 +1,14 @@
-import { NextResponse } from "next/server";
-import { storefront } from "@/lib/shopify";
+import { NextResponse } from 'next/server';
+import { shopifyFetch } from '@/lib/shopify';
+
+interface MenuItem {
+  id: string;
+  title: string;
+  url: string;
+  handle?: string | null;
+  resourceId?: string | null;
+  items?: MenuItem[];
+}
 
 const QUERY = /* GraphQL */ `
   query Menu {
@@ -8,14 +17,17 @@ const QUERY = /* GraphQL */ `
         id
         title
         url
+        resourceId
         items {
           id
           title
           url
+          resourceId
           items {
             id
             title
             url
+            resourceId
           }
         }
       }
@@ -25,12 +37,13 @@ const QUERY = /* GraphQL */ `
 
 export async function GET() {
   try {
-    const data = await storefront<{ data: { menu: { items: any[] } } }>(QUERY);
-    return NextResponse.json({ items: data?.data?.menu?.items || [] });
-  } catch (err: any) {
-    return NextResponse.json(
-      { error: err.message ?? "Unknown error" },
-      { status: 500 }
-    );
+    const response = await shopifyFetch<{
+      menu: { items: MenuItem[] };
+    }>({ query: QUERY });
+    return NextResponse.json({ items: response.data.menu.items ?? [] });
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

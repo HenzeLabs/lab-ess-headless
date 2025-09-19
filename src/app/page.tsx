@@ -1,38 +1,97 @@
-import Hero from "@/components/Hero";
-import ProductCard from "@/components/ProductCard";
+import type { Metadata } from 'next';
 
-export default async function Home() {
-  const res = await fetch("http://localhost:3000/api/products", {
-    cache: "no-store",
-  }).catch(() => null);
-  const data =
-    res && res.ok
-      ? await res.json()
-      : { count: 0, products: [], error: "Fetch failed" };
+import Hero from '@/components/Hero';
+import CollectionSwitcherWrapper from '@/app/components/CollectionSwitcherWrapper';
+import CTASection from '@/components/CTASection';
+import AboutSection from '@/components/AboutSection';
+import EmailSignup from '@/components/EmailSignup';
+import FeaturedCollections from '@/components/FeaturedCollections';
+import FeaturedHeroProduct from '@/components/FeaturedHeroProduct';
+import RelatedProducts from '@/components/RelatedProducts';
 
+import { absoluteUrl, jsonLd } from '@/lib/seo';
+
+export const revalidate = 60;
+
+const homeTitle = 'Lab Essentials | Precision Lab Equipment & Supplies';
+const homeDescription =
+  'Lab Essentials delivers calibrated instruments, consumables, and support services that keep research teams compliant and efficient.';
+
+export const metadata: Metadata = {
+  title: homeTitle,
+  description: homeDescription,
+  alternates: {
+    canonical: absoluteUrl('/'),
+  },
+  openGraph: {
+    title: homeTitle,
+    description: homeDescription,
+    url: absoluteUrl('/'),
+    siteName: 'Lab Essentials',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: homeTitle,
+    description: homeDescription,
+  },
+};
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Lab Essentials',
+  url: absoluteUrl('/'),
+  logo: absoluteUrl('/logo.svg'),
+  sameAs: [
+    'https://www.linkedin.com/company/labessentials',
+    'https://www.facebook.com/labessentials',
+  ],
+};
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Lab Essentials',
+  url: absoluteUrl('/'),
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: `${absoluteUrl('/search')}?q={search_term_string}`,
+    'query-input': 'required name=search_term_string',
+  },
+};
+
+export default async function HomePage() {
   return (
     <>
-      <Hero />
-      <section className="mt-10 md:mt-12">
-        <h2 className="text-2xl md:text-3xl font-medium tracking-tight text-gray-900 mb-6">
-          Bestsellers
-        </h2>
-        {"error" in data && data.error ? (
-          <p className="text-red-700 text-sm">API error: {data.error}</p>
-        ) : null}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {data.products?.map((p: any) => (
-            <ProductCard
-              key={p.id}
-              id={p.id}
-              handle={p.handle}
-              title={p.title}
-              featuredImage={p.featuredImage}
-              price={p.priceRange?.minVariantPrice}
-            />
-          ))}
-        </div>
-      </section>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLd(organizationJsonLd)}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLd(websiteJsonLd)}
+      />
+      <main
+        id="main-content"
+        className="bg-[hsl(var(--bg))] text-[hsl(var(--ink))]"
+        role="main"
+      >
+        <Hero
+          title="Modern Lab Equipment. Simplified. Delivered."
+          ctaText="Shop Microscopes"
+          ctaHref="/collections/microscopes"
+          ctaSecondaryText="Find Your Microscope"
+          ctaSecondaryHref="/pages/microscope-selector-quiz"
+        />
+        <CollectionSwitcherWrapper />
+        <CTASection />
+        <AboutSection />
+        <RelatedProducts />
+        <EmailSignup />
+        <FeaturedCollections />
+        <FeaturedHeroProduct />
+      </main>
     </>
   );
 }

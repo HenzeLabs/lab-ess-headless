@@ -1,5 +1,38 @@
-import { NextResponse } from "next/server";
-import { storefront } from "@/lib/shopify";
+import { NextResponse } from 'next/server';
+import { shopifyFetch } from '@/lib/shopify';
+
+interface ProductNode {
+  id: string;
+  title: string;
+  handle: string;
+  availableForSale: boolean;
+  featuredImage: {
+    url: string;
+    altText?: string;
+  };
+  priceRange: {
+    minVariantPrice: {
+      amount: string;
+      currencyCode: string;
+    };
+  };
+}
+
+interface ProductItem {
+  id: string;
+  title: string;
+  handle: string;
+  featuredImage: {
+    url: string;
+    altText?: string;
+  } | null;
+  priceRange: {
+    minVariantPrice: {
+      amount: string;
+      currencyCode: string;
+    };
+  };
+}
 
 const QUERY = /* GraphQL */ `
   query Products($first: Int!) {
@@ -28,30 +61,30 @@ const QUERY = /* GraphQL */ `
 
 export async function GET() {
   try {
-    const data = await storefront<{ data: { products: { edges: any[] } } }>(
-      QUERY,
-      { first: 5 }
-    );
-    const items =
-      data?.data?.products?.edges?.map((e) => {
-        const n = e.node;
-        return {
-          id: n.id,
-          title: n.title,
-          handle: n.handle,
-          featuredImage: n.featuredImage
-            ? { url: n.featuredImage.url, altText: n.featuredImage.altText }
-            : null,
-          priceRange: {
-            minVariantPrice: n.priceRange?.minVariantPrice,
-          },
-        };
-      }) ?? [];
-    return NextResponse.json({ count: items.length, products: items });
-  } catch (err: any) {
-    return NextResponse.json(
-      { error: err.message ?? "Unknown error" },
-      { status: 500 }
-    );
+    const response = await shopifyFetch<{
+      products: { edges: { node: ProductNode }[] };
+    }>({ query: QUERY, variables: { first: 5 } });
+
+    const edges = response.data.products?.edges ?? [];
+    const items: ProductItem[] = edges.map((e: { node: ProductNode }) => {
+      const n = e.node;
+      return {
+        id: n.id,
+        title: n.title,
+        handle: n.handle,
+        featuredImage: n.featuredImage
+          ? { url: n.featuredImage.url, altText: n.featuredImage.altText }
+          : null,
+        priceRange: {
+          minVariantPrice: n.priceRange?.minVariantPrice,
+        },
+      };
+    });
+
+    return NextResponse.json({ products: items });
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

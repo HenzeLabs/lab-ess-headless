@@ -1,5 +1,33 @@
-import { NextResponse } from "next/server";
-import { storefront } from "@/lib/shopify";
+import { NextResponse } from 'next/server';
+import { shopifyFetch } from '@/lib/shopify';
+
+interface ImageNode {
+  id: string;
+  url: string;
+  altText?: string;
+}
+
+interface ProductByHandle {
+  id: string;
+  title: string;
+  handle: string;
+  descriptionHtml: string;
+  featuredImage: {
+    url: string;
+    altText?: string;
+  };
+  images: {
+    edges: {
+      node: ImageNode;
+    }[];
+  };
+  priceRange: {
+    minVariantPrice: {
+      amount: string;
+      currencyCode: string;
+    };
+  };
+}
 
 const QUERY = /* GraphQL */ `
   query ProductByHandle($handle: String!) {
@@ -33,25 +61,29 @@ const QUERY = /* GraphQL */ `
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const handle = searchParams.get("handle");
+  const handle = searchParams.get('handle');
   if (!handle)
-    return NextResponse.json({ error: "Missing handle" }, { status: 400 });
+    return NextResponse.json({ error: 'Missing handle' }, { status: 400 });
   try {
-    const data = await storefront<{ data: { productByHandle: any } }>(QUERY, {
-      handle,
-    });
-    const p = data?.data?.productByHandle;
-    if (!p) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    const response = await shopifyFetch<{
+      productByHandle: ProductByHandle | null;
+    }>({ query: QUERY, variables: { handle } });
+
+    const product = response.data.productByHandle;
+    if (!product) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    }
+
     return NextResponse.json({
       product: {
-        ...p,
-        images: p.images?.edges?.map((e: any) => e.node) || [],
+        ...product,
+        images:
+          product.images?.edges?.map((e: { node: ImageNode }) => e.node) || [],
       },
     });
-  } catch (err: any) {
-    return NextResponse.json(
-      { error: err.message ?? "Unknown error" },
-      { status: 500 }
-    );
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

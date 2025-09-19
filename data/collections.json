@@ -1,0 +1,14 @@
+[
+  {
+    "id": "c1",
+    "title": "Sample Collection",
+    "description": "A short description for this collection.",
+    "image": "/placeholders/collection1.jpg"
+  },
+  {
+    "id": "c2",
+    "title": "Another Collection",
+    "description": "Another collection description.",
+    "image": "/placeholders/collection2.jpg"
+  }
+]
