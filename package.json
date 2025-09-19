@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
+    "check:safe": "npm run typecheck && npm run lint && npm run build && playwright test tests/functional.spec.ts tests/accessibility.spec.ts",
     "analyze": "cross-env ANALYZE=true next build",
     "lh": "lhci autorun --config=./lighthouse.config.js",
     "clean:shopify": "tools/shopify-cleanup/bin/index.sh",

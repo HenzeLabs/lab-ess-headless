@@ -52,7 +52,9 @@ export default function Footer({ shopLinks }: FooterProps) {
       if (!response.ok) {
         const data = await response.json().catch(() => null);
         setStatus('error');
-        setMessage(data?.error ?? 'We could not add you to the list. Please try again.');
+        setMessage(
+          data?.error ?? 'We could not add you to the list. Please try again.',
+        );
         return;
       }
 
@@ -93,9 +95,13 @@ export default function Footer({ shopLinks }: FooterProps) {
               Stay in the loop
             </h3>
             <p className="mt-2 text-sm text-[hsl(var(--body))]/80">
-              Get lab-ready launches, supply drops, and guides—straight to your inbox.
+              Get lab-ready launches, supply drops, and guides—straight to your
+              inbox.
             </p>
-            <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <form
+              onSubmit={handleSubmit}
+              className="mt-6 flex flex-col gap-3 sm:flex-row"
+            >
               <label htmlFor="footer-email" className="sr-only">
                 Email address
               </label>
@@ -119,24 +125,40 @@ export default function Footer({ shopLinks }: FooterProps) {
             </form>
             <div className="mt-2 min-h-[1.5rem] text-sm" aria-live="polite">
               {message ? (
-                <p className={status === 'error' ? 'text-red-500' : 'text-[hsl(var(--brand))]'}>{message}</p>
+                <p
+                  className={
+                    status === 'error'
+                      ? 'text-red-500'
+                      : 'text-[hsl(var(--brand))]'
+                  }
+                >
+                  {message}
+                </p>
               ) : null}
             </div>
-            <div className="mt-6 text-xs text-[hsl(var(--body))]/70">
+            <div className="mt-6 text-xs text-[hsl(var(--muted-foreground))]">
               We respect your inbox. Unsubscribe anytime.
             </div>
           </div>
         </div>
 
-        <div className="mt-12 border-t border-[hsl(var(--border))] pt-6 text-sm text-[hsl(var(--body))]/70">
+        <div className="mt-12 border-t border-[hsl(var(--border))] pt-6 text-sm text-[hsl(var(--muted-foreground))]">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <p>© {new Date().getFullYear()} Lab Essentials. All rights reserved.</p>
+            <p>
+              © {new Date().getFullYear()} Lab Essentials. All rights reserved.
+            </p>
             <div className="flex items-center gap-4">
-              <Link href="/privacy" className="transition hover:text-[hsl(var(--brand))]">
+              <Link
+                href="/privacy"
+                className="transition hover:text-[hsl(var(--brand))]"
+              >
                 Privacy Policy
               </Link>
               <span aria-hidden="true">•</span>
-              <Link href="/terms" className="transition hover:text-[hsl(var(--brand))]">
+              <Link
+                href="/terms"
+                className="transition hover:text-[hsl(var(--brand))]"
+              >
                 Terms of Service
               </Link>
             </div>

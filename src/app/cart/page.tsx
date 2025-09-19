@@ -131,9 +131,9 @@ export default function CartPage() {
           <div className="transition-all duration-700 ease-out opacity-100">
             {cart && cart.lines.edges.length > 0 ? (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
-                  <div className="md:col-span-2">
-                    <ul className="divide-y divide-[hsl(var(--muted))]/20">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
+                  <div className="lg:col-span-2">
+                    <ul className="space-y-6">
                       {cart.lines.edges.map((item) => {
                         const featuredImage =
                           item.node.merchandise.product.featuredImage;
@@ -143,9 +143,12 @@ export default function CartPage() {
                           item.node.merchandise.product.title;
 
                         return (
-                          <li key={item.node.id} className="flex py-8 animate-in fade-in slide-in-from-bottom-4">
-                            <div className="flex w-full items-start gap-4 rounded-lg border border-[hsl(var(--muted))]/30 bg-[hsl(var(--bg))] p-4 shadow-soft transition-shadow duration-200 hover:shadow-lg">
-                              <div className="relative h-28 w-28 flex-shrink-0 overflow-hidden rounded-md border border-[hsl(var(--muted))]/30 bg-[hsl(var(--bg))]">
+                          <li
+                            key={item.node.id}
+                            className="flex animate-in fade-in slide-in-from-bottom-4"
+                          >
+                            <div className="flex w-full items-start gap-4 rounded-lg border border-[hsl(var(--border))]/60 bg-[hsl(var(--bg))] p-5 md:p-6">
+                              <div className="relative h-28 w-28 flex-shrink-0 overflow-hidden rounded-lg border border-[hsl(var(--border))]/60 bg-[hsl(var(--bg))]">
                                 {imageUrl ? (
                                   <Image
                                     src={imageUrl}
@@ -163,8 +166,8 @@ export default function CartPage() {
 
                               <div className="ml-6 flex flex-1 flex-col">
                                 <div>
-                                  <div className="flex justify-between text-lg font-semibold text-[hsl(var(--ink))]">
-                                    <h3>
+                                  <div className="flex items-start justify-between gap-4">
+                                    <h3 className="flex-1 min-w-0 text-lg md:text-xl font-semibold text-[hsl(var(--ink))]">
                                       <Link
                                         href={`/products/${item.node.merchandise.product.handle}`}
                                         className="hover:text-[hsl(var(--brand))] line-clamp-2"
@@ -172,17 +175,27 @@ export default function CartPage() {
                                         {item.node.merchandise.product.title}
                                       </Link>
                                     </h3>
-                                    <p className="ml-4 text-lg font-bold">
-                                      {item.node.cost?.amountPerQuantity
-                                        ?.amount ??
-                                        item.node.merchandise.price.amount}{' '}
-                                      {item.node.cost?.amountPerQuantity
-                                        ?.currencyCode ??
-                                        item.node.merchandise.price.currencyCode}
+                                    <p className="shrink-0 text-base md:text-lg font-medium text-[hsl(var(--ink))] whitespace-nowrap text-right">
+                                      {(() => {
+                                        const amt =
+                                          item.node.cost?.amountPerQuantity
+                                            ?.amount ??
+                                          item.node.merchandise.price.amount;
+                                        const cur =
+                                          item.node.cost?.amountPerQuantity
+                                            ?.currencyCode ??
+                                          item.node.merchandise.price
+                                            .currencyCode;
+                                        const val =
+                                          typeof amt === 'number'
+                                            ? amt
+                                            : parseFloat(String(amt));
+                                        return `${val.toFixed(2)} ${cur}`;
+                                      })()}
                                     </p>
                                   </div>
                                 </div>
-                                <div className="flex flex-1 items-end justify-between text-base">
+                                <div className="mt-4 flex flex-1 items-end justify-between text-base">
                                   <div className="flex items-center gap-4">
                                     <div className="flex items-center">
                                       <Button
@@ -228,7 +241,7 @@ export default function CartPage() {
                                       type="button"
                                       onClick={() => handleRemove(item.node.id)}
                                       variant="link"
-                                      className="text-sm text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--brand))] transition-all duration-300 ease-out-soft"
+                                      className="text-sm text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--brand))] transition-colors duration-200"
                                       aria-label={`Remove ${item.node.merchandise.product.title} from cart`}
                                       disabled={isPending}
                                     >
@@ -245,28 +258,32 @@ export default function CartPage() {
                   </div>
 
                   <div>
-                    <div className="bg-[hsl(var(--surface))] p-8 rounded-lg shadow-soft ring-1 ring-[hsl(var(--border))] lg:sticky lg:top-24 h-fit">
+                    <div className="bg-[hsl(var(--surface))] p-8 rounded-lg border border-[hsl(var(--border))]/60 lg:sticky lg:top-24 h-fit">
                       <h2 className="text-2xl font-semibold text-[hsl(var(--ink))] mb-6">
                         Order summary
                       </h2>
                       <div className="mt-8 space-y-6">
                         <div className="flex items-center justify-between">
-                          <p className="text-base text-[hsl(var(--muted))]">
+                          <p className="text-base text-[hsl(var(--muted-foreground))]">
                             Subtotal
                           </p>
                           <p className="text-base font-medium text-[hsl(var(--ink))]">
                             {subtotalMoney
-                              ? `${parseFloat(subtotalMoney.amount).toFixed(2)}`
+                              ? `${parseFloat(subtotalMoney.amount).toFixed(
+                                  2,
+                                )} ${subtotalMoney.currencyCode}`
                               : '$0.00'}
                           </p>
                         </div>
                         <div className="flex items-center justify-between border-t border-[hsl(var(--muted))]/20 pt-6">
-                          <p className="text-lg font-medium text-[hsl(var(--ink))]">
+                          <p className="text-lg md:text-xl font-semibold text-[hsl(var(--ink))]">
                             Order total
                           </p>
-                          <p className="text-lg font-medium text-[hsl(var(--ink))]">
+                          <p className="text-lg md:text-xl font-semibold text-[hsl(var(--ink))]">
                             {totalMoney
-                              ? `${parseFloat(totalMoney.amount).toFixed(2)}`
+                              ? `${parseFloat(totalMoney.amount).toFixed(2)} ${
+                                  totalMoney.currencyCode
+                                }`
                               : '$0.00'}
                           </p>
                         </div>
@@ -274,7 +291,7 @@ export default function CartPage() {
                       <div className="mt-10">
                         <Button
                           asChild
-                          className="w-full bg-accent hover:bg-accent-dark transition-all duration-300 ease-out-soft"
+                          className="w-full bg-accent text-[hsl(var(--bg))] hover:bg-accent-dark transition-colors duration-200"
                           aria-label="Proceed to checkout"
                           data-cart-checkout
                         >
@@ -289,11 +306,11 @@ export default function CartPage() {
                 </div>
               </>
             ) : (
-              <div className="text-center bg-[hsl(var(--surface))] p-16 rounded-lg shadow-soft ring-1 ring-[hsl(var(--border))]">
+              <div className="text-center bg-[hsl(var(--surface))] p-16 rounded-lg border border-[hsl(var(--border))]/60">
                 <h2 className="text-2xl font-semibold text-[hsl(var(--ink))] mb-4">
                   Your cart is empty
                 </h2>
-                <p className="text-[hsl(var(--muted))] mb-6">
+                <p className="text-[hsl(var(--muted-foreground))] mb-6">
                   Add some products to get started.
                 </p>
                 <Link
