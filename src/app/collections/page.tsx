@@ -1,8 +1,9 @@
-// TEMP: Placeholder implementations to restore buildability. Replace with real data logic.
-
+import Link from 'next/link';
+import Image from 'next/image';
 import { shopifyFetch } from '@/lib/shopify';
 import { getAllCollectionsQuery } from '@/lib/queries/getAllCollectionsQuery';
 import { textStyles } from '@/lib/ui';
+import FooterServer from '@/components/FooterServer';
 
 type ShopifyCollectionsResponse = {
   collections: {
@@ -20,15 +21,12 @@ type ShopifyCollectionsResponse = {
 };
 
 async function getShopifyCollections() {
-  console.log('Fetching collections from Shopify...');
-  // Fetch collections from Shopify Storefront API
   const res = await shopifyFetch<ShopifyCollectionsResponse>({
     query: getAllCollectionsQuery,
     variables: { first: 250 },
   });
-  console.log('Shopify response received successfully');
+
   const edges = res.data?.collections?.edges || [];
-  console.log('Found', edges.length, 'collections');
   const collections = edges.map(({ node }) => ({
     id: node.id,
     handle: node.handle,
@@ -38,19 +36,12 @@ async function getShopifyCollections() {
     image: node.image?.url || null,
     badge: undefined,
   }));
-  console.log(
-    'Mapped collections:',
-    collections.map((c) => c.title),
-  );
+
   return collections;
 }
+
 export const dynamic = 'force-dynamic';
 export const revalidate = 60;
-import Link from 'next/link';
-import Image from 'next/image';
-import FooterServer from '@/components/FooterServer';
-
-// ...existing imports...
 
 export default async function CollectionsPage() {
   const shopifyCollections = await getShopifyCollections();
@@ -150,16 +141,6 @@ export default async function CollectionsPage() {
   return (
     <>
       <main className="bg-background">
-        {/* Temporary Debug Section */}
-        <section className="py-8 bg-red-100">
-          <div className="container mx-auto px-4">
-            <h2 className="text-2xl font-bold text-red-800">Debug Info</h2>
-            <pre className="bg-white p-4 rounded-lg mt-4 text-sm overflow-auto">
-              {JSON.stringify(shopifyCollections, null, 2)}
-            </pre>
-          </div>
-        </section>
-
         {/* Hero Section */}
         <section className="relative bg-gradient-to-b from-background to-white py-16 lg:py-24">
           <div className="container mx-auto text-center">
