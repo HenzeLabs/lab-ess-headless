@@ -60,6 +60,7 @@ async function getShopifyCollections() {
 export const dynamic = 'force-dynamic';
 export const revalidate = 60;
 
+// Force deployment refresh
 export default async function CollectionsPage() {
   const shopifyCollections = await getShopifyCollections();
 
