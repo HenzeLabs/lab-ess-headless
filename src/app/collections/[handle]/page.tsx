@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-import ProductCard from '@/components/ProductCard';
+import CollectionProducts from '@/components/CollectionProducts';
 import type { CollectionData, Product } from '@/lib/types';
 import { getCollectionByHandleQuery } from '@/lib/queries';
 import { shopifyFetch } from '@/lib/shopify';
 import { absoluteUrl, jsonLd, stripHtml } from '@/lib/seo';
+import { textStyles } from '@/lib/ui';
 import CollectionViewTracker from '@/components/analytics/CollectionViewTracker';
 
 export const revalidate = 60;
@@ -202,50 +203,23 @@ export default async function CollectionPage({
       />
       <main
         id="main-content"
-        className="bg-background py-24"
+        className="bg-background py-12 lg:py-24"
         role="main"
         aria-label={`Collection: ${collection.title || formatHandle(handle)}`}
       >
-        <h1 className="mb-16 text-center text-3xl font-semibold tracking-tight text-heading lg:text-4xl">
-          {collection.title || formatHandle(handle)}
-        </h1>
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div>
-            {/* Sections for the collection populate here under the title */}
-            {products.length === 0 ? (
-              <div
-                className="py-24 text-center text-lg text-body/70"
-                role="status"
-                aria-live="polite"
-              >
-                No products found in this collection.
-              </div>
-            ) : (
-              <>
-                <h2
-                  className="mb-8 text-2xl font-bold text-heading"
-                  id="products-heading"
-                >
-                  Products
-                </h2>
-                <div
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
-                  aria-labelledby="products-heading"
-                >
-                  {products.map((product, idx) => (
-                    <div
-                      key={product.id}
-                      className="group relative animate-fade-in rounded-xl bg-white shadow-lg transition-transform duration-300 hover:-translate-y-1 hover:shadow-2xl"
-                      style={{ animationDelay: `${idx * 60}ms` }}
-                    >
-                      <ProductCard product={product} />
-                      <div className="absolute inset-0 rounded-xl ring-2 ring-transparent group-hover:ring-[hsl(var(--brand))] transition-all duration-300 pointer-events-none" />
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
+        <div className="max-w-[1440px] mx-auto px-4 lg:px-8">
+          <div className="flex justify-between items-center mb-6">
+            <h1 className={`${textStyles.h2} text-foreground`}>
+              {collection.title || formatHandle(handle)}
+            </h1>
           </div>
+        </div>
+
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <CollectionProducts
+            products={products}
+            collectionTitle={collection.title || formatHandle(handle)}
+          />
         </div>
       </main>
     </>

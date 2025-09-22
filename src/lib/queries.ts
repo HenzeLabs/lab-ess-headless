@@ -298,6 +298,23 @@ export const getCollectionByHandleQuery = `
                 currencyCode
               }
             }
+            metafields(identifiers: [
+              { namespace: "custom", key: "specifications" },
+              { namespace: "custom", key: "technical_details" },
+              { namespace: "custom", key: "features" },
+              { namespace: "custom", key: "brand" },
+              { namespace: "custom", key: "model_number" },
+              { namespace: "custom", key: "weight" },
+              { namespace: "custom", key: "dimensions" },
+              { namespace: "custom", key: "warranty" },
+              { namespace: "custom", key: "certification" },
+              { namespace: "custom", key: "availability_status" }
+            ]) {
+              namespace
+              key
+              value
+              type
+            }
           }
         }
       }
@@ -547,6 +564,47 @@ export const getAllProductsQuery = `
         node {
           handle
           updatedAt
+        }
+      }
+    }
+  }
+`;
+
+export const getCollectionWithProductsQuery = `
+  query getCollectionWithProducts($handle: String!, $productsFirst: Int = 20) {
+    collection(handle: $handle) {
+      id
+      title
+      description
+      image {
+        url
+        altText
+      }
+      products(first: $productsFirst) {
+        edges {
+          node {
+            id
+            handle
+            title
+            description
+            featuredImage {
+              url
+              altText
+            }
+            variants(first: 1) {
+              edges {
+                node {
+                  id
+                  title
+                  availableForSale
+                  price {
+                    amount
+                    currencyCode
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }

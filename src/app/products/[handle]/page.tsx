@@ -160,41 +160,69 @@ export default async function ProductPage({
         dangerouslySetInnerHTML={jsonLd(breadcrumbJsonLd)}
       />
       <ProductViewTracker product={analyticsProduct} currency={currency} />
-      <main id="main-content" role="main">
-        <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-          <div className="grid items-start gap-24 md:grid-cols-2">
+      <main
+        id="main-content"
+        className="bg-background py-12 lg:py-24"
+        role="main"
+      >
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid items-start gap-12 md:gap-24 md:grid-cols-2">
             <div className="flex flex-col gap-6">
-              <div className="aspect-square w-full overflow-hidden rounded-lg bg-background">
+              <div className="aspect-square w-full overflow-hidden rounded-2xl bg-background border border-border/50">
                 <div className="relative h-full w-full">
-                  <Image
-                    src={
-                      product.featuredImage?.url ?? '/images/default-camera.jpg'
-                    }
-                    alt={product.featuredImage?.altText ?? product.title}
-                    width={600}
-                    height={600}
-                    className="object-cover"
-                  />
+                  {product.featuredImage?.url ? (
+                    <Image
+                      src={product.featuredImage.url}
+                      alt={product.featuredImage?.altText ?? product.title}
+                      width={600}
+                      height={600}
+                      className="h-full w-full object-contain p-6"
+                      priority
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-muted/20">
+                      <div className="text-center space-y-4">
+                        <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto">
+                          <svg
+                            className="w-8 h-8 text-muted-foreground"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </div>
+                        <p className="text-muted-foreground text-sm">
+                          No image available
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
-              <div className="grid grid-cols-4 gap-6">
-                {images.slice(0, 4).map((image, index) => (
-                  <div
-                    key={index}
-                    className="aspect-square overflow-hidden rounded-lg bg-background"
-                  >
-                    <div className="relative h-full w-full">
-                      <Image
-                        src={image.url}
-                        alt={image.altText || product.title}
-                        width={150}
-                        height={150}
-                        className="object-cover"
-                      />
+              {images.length > 1 && (
+                <div className="grid grid-cols-4 gap-4">
+                  {images.slice(1, 5).map((image, index) => (
+                    <div
+                      key={index}
+                      className="aspect-square overflow-hidden rounded-xl bg-background border border-border/30"
+                    >
+                      <div className="relative h-full w-full">
+                        <Image
+                          src={image.url}
+                          alt={image.altText || product.title}
+                          width={150}
+                          height={150}
+                          className="h-full w-full object-contain p-2"
+                        />
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
             {/* Use client wrapper for ProductInfoPanel */}
             <ProductInfoPanelClient

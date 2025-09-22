@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { textStyles } from '@/lib/ui';
 
 export default async function NotFound() {
   return (
@@ -7,11 +8,14 @@ export default async function NotFound() {
       className="flex items-center justify-center min-h-screen bg-background"
     >
       <div className="text-center">
-        <h1 className="text-6xl font-bold text-foreground">404</h1>
-        <p className="text-2xl font-light text-muted-foreground mb-4">
+        <h1 className={`${textStyles.h1} text-6xl`}>404</h1>
+        <p
+          className={`${textStyles.bodyLarge} mb-4`}
+          data-test-id="error-message"
+        >
           Page Not Found
         </p>
-        <p className="text-muted-foreground mb-8">
+        <p className={`${textStyles.body} mb-8`}>
           Sorry, the page you are looking for does not exist.
         </p>
         <Link

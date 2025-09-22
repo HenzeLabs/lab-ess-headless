@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { CollectionData, Product } from '@/lib/types';
+import { textStyles, buttonStyles } from '@/lib/ui';
 
 const PRODUCT_FETCH_LIMIT = 12;
 
@@ -22,6 +23,26 @@ const CollectionSwitcher: React.FC<CollectionSwitcherProps> = ({
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const sectionRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-in');
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const updateScrollButtons = useCallback(() => {
     const container = scrollContainerRef.current;
@@ -36,19 +57,16 @@ const CollectionSwitcher: React.FC<CollectionSwitcherProps> = ({
     setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 8);
   }, []);
 
-  const handleArrowClick = useCallback(
-    (direction: 'left' | 'right') => {
-      const container = scrollContainerRef.current;
-      if (!container) return;
+  const handleArrowClick = useCallback((direction: 'left' | 'right') => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
 
-      const scrollAmount = container.clientWidth * 0.8;
-      container.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
-      });
-    },
-    [],
-  );
+    const scrollAmount = container.clientWidth * 0.8;
+    container.scrollBy({
+      left: direction === 'left' ? -scrollAmount : scrollAmount,
+      behavior: 'smooth',
+    });
+  }, []);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -79,7 +97,6 @@ const CollectionSwitcher: React.FC<CollectionSwitcherProps> = ({
         }
         requestAnimationFrame(updateScrollButtons);
       } catch (error) {
-        
         setProducts([]);
       } finally {
         setLoading(false);
@@ -99,18 +116,23 @@ const CollectionSwitcher: React.FC<CollectionSwitcherProps> = ({
 
     updateScrollButtons();
 
-    container.addEventListener('scroll', updateScrollButtons, { passive: true });
+    container.addEventListener('scroll', updateScrollButtons, {
+      passive: true,
+    });
     return () => {
       container.removeEventListener('scroll', updateScrollButtons);
     };
   }, [products.length, updateScrollButtons]);
 
   return (
-    <section className="w-full py-12 lg:py-24 bg-background">
+    <section
+      ref={sectionRef}
+      className="w-full py-12 lg:py-24 bg-background opacity-0 translate-y-8 transition-all duration-700 ease-out [&.animate-in]:opacity-100 [&.animate-in]:translate-y-0"
+    >
       <div className="max-w-[1440px] mx-auto px-4 lg:px-8">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl font-bold tracking-tight text-foreground">
-            Shop by Collection
+          <h2 className={`${textStyles.h2} text-foreground`}>
+            Featured Collections
           </h2>
         </div>
 
@@ -122,11 +144,11 @@ const CollectionSwitcher: React.FC<CollectionSwitcherProps> = ({
                 type="button"
                 key={collection.handle}
                 onClick={() => setActiveCollectionHandle(collection.handle)}
-                className={`relative min-h-[48px] whitespace-nowrap rounded-full border px-6 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#4e2cfb] sm:text-base
+                className={`relative min-h-[48px] whitespace-nowrap rounded-full border px-6 py-3 text-sm font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#4e2cfb] sm:text-base transform hover:scale-105
                   ${
                     isActive
-                      ? 'border-transparent bg-[#4e2cfb] text-white shadow-[0_12px_30px_-14px_rgba(72,45,226,0.9)]'
-                      : 'border-border/60 bg-white/85 text-[#4a4a67] hover:border-[#4e2cfb]/40 hover:bg-white hover:text-[#1f1f3a] hover:shadow-md'
+                      ? 'border-transparent bg-[#4e2cfb] text-white shadow-[0_12px_30px_-14px_rgba(72,45,226,0.9)] scale-105'
+                      : 'border-border/60 bg-white/85 text-[#4a4a67] hover:border-[#4e2cfb]/40 hover:bg-white hover:text-[#1f1f3a] hover:shadow-lg'
                   }`}
               >
                 <span className="relative z-10 flex items-center gap-2">
@@ -208,7 +230,7 @@ const CollectionSwitcher: React.FC<CollectionSwitcherProps> = ({
                 products.map((product) => (
                   <div
                     key={product.id}
-                    className="group flex min-w-[260px] max-w-[280px] flex-shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-border/50 bg-card shadow-sm transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg"
+                    className="group flex min-w-[260px] max-w-[280px] flex-shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-border/50 bg-card shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-[#4e2cfb]/10"
                   >
                     <Link
                       href={`/products/${product.handle}`}
@@ -230,28 +252,30 @@ const CollectionSwitcher: React.FC<CollectionSwitcherProps> = ({
                         )}
                       </div>
                     </Link>
-                    <div className="flex h-full flex-col gap-3 p-5">
-                      <div>
-                        <h3 className="text-lg font-semibold leading-tight text-foreground">
+                    <div className="flex flex-1 flex-col gap-3 p-5">
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-[hsl(var(--ink))] line-clamp-2 min-h-[3.5rem]">
                           {product.title}
                         </h3>
                       </div>
-                      <p className="text-sm font-medium uppercase tracking-wide text-[#3a365f]">
+                      <p className="text-sm font-medium uppercase tracking-wide text-[hsl(var(--ink))]">
                         {product.priceRange.minVariantPrice.amount}{' '}
                         {product.priceRange.minVariantPrice.currencyCode}
                       </p>
                       <Link
                         href={`/products/${product.handle}`}
-                        className="mt-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#4e2cfb] px-5 py-3 text-sm font-semibold text-white shadow-[0_12px_32px_-14px_rgba(72,45,226,0.9)] transition hover:-translate-y-0.5 hover:bg-[#3f23d6] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#4e2cfb]"
+                        className={`${buttonStyles.primary} w-full text-white mt-auto shadow-[0_8px_20px_-8px_rgba(78,44,251,0.6)] hover:shadow-[0_12px_28px_-8px_rgba(78,44,251,0.8)] hover:scale-105 transition-all duration-300`}
                       >
-                        Buy Now
+                        View product
                         <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                          className="h-4 w-4"
                           fill="none"
                           stroke="currentColor"
-                          strokeWidth="2"
-                          className="h-4 w-4"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.8}
+                          viewBox="0 0 24 24"
                         >
                           <path d="M5 12h14" />
                           <path d="M13 6l6 6-6 6" />

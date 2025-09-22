@@ -10,14 +10,30 @@ export default function DeliveryCalculator() {
           Check Delivery
         </h3>
         <form className="flex flex-col items-center justify-center gap-2 sm:flex-row">
-          <input
-            type="text"
-            placeholder="Enter your postcode"
-            className="w-full rounded-lg border border-[hsl(var(--muted))]/40 px-4 py-2 text-[hsl(var(--ink))] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand))] sm:w-48"
-          />
-          <button type="submit" className={buttonStyles.primary}>
-            Check
-          </button>
+          <div className="w-full sm:w-48">
+            <label
+              htmlFor="postcode"
+              className="block text-sm font-medium text-[hsl(var(--ink))] mb-1"
+            >
+              Postcode
+            </label>
+            <input
+              id="postcode"
+              type="text"
+              placeholder="Enter your postcode"
+              className="w-full rounded-md px-3 py-2 border border-gray-300 focus:ring-2 focus:ring-[hsl(var(--brand))] focus:border-[hsl(var(--brand))] bg-white text-[hsl(var(--ink))] placeholder:text-gray-500"
+              data-test-id="delivery-postcode"
+            />
+          </div>
+          <div className="flex items-end">
+            <button
+              type="submit"
+              className={buttonStyles.primary}
+              data-test-id="delivery-submit-button"
+            >
+              Check
+            </button>
+          </div>
         </form>
         <div className="mt-2 text-sm text-[hsl(var(--muted))]">
           Fast &amp; free delivery

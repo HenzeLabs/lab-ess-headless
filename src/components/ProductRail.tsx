@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { buttonStyles, textStyles } from '@/lib/ui';
 
 import type { Product } from '@/lib/types';
 
@@ -14,7 +15,11 @@ interface ProductRailProps {
 
 const SCROLL_BUFFER = 8;
 
-const ProductRail: React.FC<ProductRailProps> = ({ heading, products, viewAllHref }) => {
+const ProductRail: React.FC<ProductRailProps> = ({
+  heading,
+  products,
+  viewAllHref,
+}) => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -69,9 +74,7 @@ const ProductRail: React.FC<ProductRailProps> = ({ heading, products, viewAllHre
       {heading || viewAllHref ? (
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           {heading ? (
-            <h2 className="text-3xl font-semibold tracking-tight text-[hsl(var(--ink))] sm:text-4xl">
-              {heading}
-            </h2>
+            <h2 className={`${textStyles.h2} text-foreground`}>{heading}</h2>
           ) : null}
           {viewAllHref ? (
             <Link
@@ -102,7 +105,7 @@ const ProductRail: React.FC<ProductRailProps> = ({ heading, products, viewAllHre
           type="button"
           onClick={() => handleArrow('left')}
           disabled={!canScrollLeft}
-          className="absolute left-[-1.25rem] top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[hsl(var(--brand))] text-white shadow-[0_18px_38px_-18px_rgba(48,46,120,0.6)] transition hover:-translate-x-1 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-35 md:flex"
+          className="absolute left-[-1.5rem] top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[#4e2cfb] text-white shadow-[0_12px_30px_-14px_rgba(72,45,226,0.7)] transition hover:-translate-x-1 hover:bg-[#3f23d6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:bg-muted disabled:text-muted-foreground md:flex"
         >
           <span className="sr-only">Scroll left</span>
           <svg
@@ -122,7 +125,7 @@ const ProductRail: React.FC<ProductRailProps> = ({ heading, products, viewAllHre
           type="button"
           onClick={() => handleArrow('right')}
           disabled={!canScrollRight}
-          className="absolute right-[-1.25rem] top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[hsl(var(--brand))] text-white shadow-[0_18px_38px_-18px_rgba(48,46,120,0.6)] transition hover:translate-x-1 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-35 md:flex"
+          className="absolute right-[-1.5rem] top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[#4e2cfb] text-white shadow-[0_12px_30px_-14px_rgba(72,45,226,0.7)] transition hover:translate-x-1 hover:bg-[#3f23d6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:bg-muted disabled:text-muted-foreground md:flex"
         >
           <span className="sr-only">Scroll right</span>
           <svg
@@ -146,10 +149,14 @@ const ProductRail: React.FC<ProductRailProps> = ({ heading, products, viewAllHre
           {products.map((product) => (
             <article
               key={product.id}
-              className="group flex min-w-[240px] max-w-[280px] flex-shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--surface))] shadow-[0_18px_38px_-30px_rgba(19,22,45,0.45)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_25px_55px_-25px_rgba(19,22,45,0.55)]"
+              className="group flex min-w-[260px] max-w-[280px] flex-shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-border/50 bg-card shadow-sm transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg"
             >
-              <Link href={`/products/${product.handle}`} className="block" tabIndex={-1}>
-                <div className="flex h-60 w-full items-center justify-center bg-[hsl(var(--bg))] p-6">
+              <Link
+                href={`/products/${product.handle}`}
+                className="block"
+                tabIndex={-1}
+              >
+                <div className="flex h-60 w-full items-center justify-center rounded-t-2xl bg-background p-6">
                   {product.featuredImage?.url ? (
                     <Image
                       src={product.featuredImage.url}
@@ -167,21 +174,23 @@ const ProductRail: React.FC<ProductRailProps> = ({ heading, products, viewAllHre
               </Link>
 
               <div className="flex flex-1 flex-col gap-3 p-5">
-                <h3 className="text-lg font-semibold text-[hsl(var(--ink))]">
-                  <Link
-                    href={`/products/${product.handle}`}
-                    className="transition hover:text-[hsl(var(--brand))]"
-                  >
-                    {product.title}
-                  </Link>
-                </h3>
-                <p className="text-sm font-medium uppercase tracking-wide text-[hsl(var(--brand))]">
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-[hsl(var(--ink))] line-clamp-2 min-h-[3.5rem]">
+                    <Link
+                      href={`/products/${product.handle}`}
+                      className="transition hover:text-[hsl(var(--brand))]"
+                    >
+                      {product.title}
+                    </Link>
+                  </h3>
+                </div>
+                <p className="text-sm font-medium uppercase tracking-wide text-[hsl(var(--ink))]">
                   {product.priceRange.minVariantPrice.amount}{' '}
                   {product.priceRange.minVariantPrice.currencyCode}
                 </p>
                 <Link
                   href={`/products/${product.handle}`}
-                  className="mt-auto inline-flex items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,hsl(var(--brand))_0%,hsl(var(--brand-dark))_100%)] px-5 py-3 text-sm font-semibold text-white shadow-[0_16px_38px_-20px_rgba(30,36,78,0.75)] transition hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(12,15,60,0.45)]"
+                  className={`${buttonStyles.primary} w-full text-white mt-auto`}
                 >
                   View product
                   <svg

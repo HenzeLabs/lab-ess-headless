@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useTransition } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { HeartIcon, EyeIcon } from '@heroicons/react/24/outline';
@@ -38,11 +38,12 @@ const ProductSkeleton = () => (
 );
 
 const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
-  title = "Featured Products",
-  products = []
+  title = 'Featured Products',
+  products = [],
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const productRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -50,12 +51,16 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
         entries.forEach((entry, index) => {
           if (entry.isIntersecting) {
             setTimeout(() => {
-              entry.target.classList.add('animate-in', 'fade-in', 'slide-in-from-bottom-5');
+              entry.target.classList.add(
+                'animate-in',
+                'fade-in',
+                'slide-in-from-bottom-5',
+              );
             }, index * 100);
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     productRefs.current.forEach((ref) => {
@@ -68,42 +73,31 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
   return (
     <section ref={containerRef} className="bg-[hsl(var(--bg))]">
       <div className={`${layout.container} ${layout.section}`}>
-        <h2 className={`${textStyles.heading} mb-12 text-center`}>
-          {title}
-        </h2>
-        
+        <h2 className={`${textStyles.heading} mb-12 text-center`}>{title}</h2>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {products.length === 0 ? (
-            Array.from({ length: 8 }).map((_, index) => (
-              <ProductSkeleton key={`skeleton-${index}`} />
-            ))
-          ) : (
-            products.map((product, index) => (
-              <div
-                key={product.id}
-                ref={(el) => { productRefs.current[index] = el; }}
-                className="opacity-0 duration-700"
-              >
-                {index === 0 ? (
-                  <div className="group relative overflow-hidden rounded-2xl border border-[hsl(var(--muted))]/20 bg-[hsl(var(--bg))] shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl col-span-full lg:col-span-2 row-span-2 grid grid-cols-1 lg:grid-cols-2">
-                    {/* Product Image */}
-                    <Link href={`/products/${product.handle}`} className="relative aspect-square lg:aspect-auto overflow-hidden bg-gradient-to-br from-[hsl(var(--muted))]/20 to-[hsl(var(--muted))]/10">
-                      <Image
-                        src={product.image}
-                        alt={product.title}
-                        width={600}
-                        height={600}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                      />
-                      {/* Overlay on hover */}
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-                    </Link>
-                    {/* Lifestyle Image */}
-                    {product.lifestyleImage && (
-                      <Link href={`/products/${product.handle}`} className="relative aspect-square lg:aspect-auto overflow-hidden bg-gradient-to-br from-[hsl(var(--muted))]/20 to-[hsl(var(--muted))]/10 hidden lg:block">
+          {products.length === 0
+            ? Array.from({ length: 8 }).map((_, index) => (
+                <ProductSkeleton key={`skeleton-${index}`} />
+              ))
+            : products.map((product, index) => (
+                <div
+                  key={product.id}
+                  ref={(el) => {
+                    productRefs.current[index] = el;
+                  }}
+                  className="opacity-0 duration-700"
+                >
+                  {index === 0 ? (
+                    <div className="group relative overflow-hidden rounded-2xl border border-[hsl(var(--muted))]/20 bg-[hsl(var(--bg))] shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl col-span-full lg:col-span-2 row-span-2 grid grid-cols-1 lg:grid-cols-2">
+                      {/* Product Image */}
+                      <Link
+                        href={`/products/${product.handle}`}
+                        className="relative aspect-square lg:aspect-auto overflow-hidden bg-gradient-to-br from-[hsl(var(--muted))]/20 to-[hsl(var(--muted))]/10"
+                      >
                         <Image
-                          src={product.lifestyleImage}
-                          alt={`${product.title} lifestyle`}
+                          src={product.image}
+                          alt={product.title}
                           width={600}
                           height={600}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
@@ -111,145 +105,250 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
                         {/* Overlay on hover */}
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                       </Link>
-                    )}
-                    <div className="p-6 lg:col-span-2">
-                      {/* Title */}
-                      <Link href={`/products/${product.handle}`}>
-                        <h3 className="text-2xl font-semibold text-[hsl(var(--ink))] mb-2 line-clamp-2 transition-colors group-hover:text-[hsl(var(--brand))]">
-                          {product.title}
-                        </h3>
-                      </Link>
-                      {/* Price */}
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-2">
-                          <span className="text-2xl font-bold text-[hsl(var(--ink))]">
-                            {product.price}
-                          </span>
+                      {/* Lifestyle Image */}
+                      {product.lifestyleImage && (
+                        <Link
+                          href={`/products/${product.handle}`}
+                          className="relative aspect-square lg:aspect-auto overflow-hidden bg-gradient-to-br from-[hsl(var(--muted))]/20 to-[hsl(var(--muted))]/10 hidden lg:block"
+                        >
+                          <Image
+                            src={product.lifestyleImage}
+                            alt={`${product.title} lifestyle`}
+                            width={600}
+                            height={600}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                          />
+                          {/* Overlay on hover */}
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                        </Link>
+                      )}
+                      <div className="p-6 lg:col-span-2">
+                        {/* Title */}
+                        <Link href={`/products/${product.handle}`}>
+                          <h3 className="text-2xl font-semibold text-[hsl(var(--ink))] mb-2 line-clamp-2 transition-colors group-hover:text-[hsl(var(--brand))]">
+                            {product.title}
+                          </h3>
+                        </Link>
+                        {/* Price */}
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-2">
+                            <span className="text-2xl font-bold text-[hsl(var(--ink))]">
+                              {product.price}
+                            </span>
+                            {product.compareAtPrice && (
+                              <span className="text-base text-[hsl(var(--muted))] line-through">
+                                {product.compareAtPrice}
+                              </span>
+                            )}
+                          </div>
                           {product.compareAtPrice && (
-                            <span className="text-base text-[hsl(var(--muted))] line-through">
-                              {product.compareAtPrice}
+                            <span className="rounded-full bg-[hsl(var(--brand))]/10 px-2 py-1 text-sm font-medium text-[hsl(var(--brand))]">
+                              Save{' '}
+                              {Math.round(
+                                ((parseFloat(
+                                  product.compareAtPrice.replace(
+                                    /[^0-9.]/g,
+                                    '',
+                                  ),
+                                ) -
+                                  parseFloat(
+                                    product.price.replace(/[^0-9.]/g, ''),
+                                  )) /
+                                  parseFloat(
+                                    product.compareAtPrice.replace(
+                                      /[^0-9.]/g,
+                                      '',
+                                    ),
+                                  )) *
+                                  100,
+                              )}
+                              %
                             </span>
                           )}
                         </div>
-                        {product.compareAtPrice && (
-                          <span className="rounded-full bg-[hsl(var(--brand))]/10 px-2 py-1 text-sm font-medium text-[hsl(var(--brand))]">
-                            Save {Math.round(((parseFloat(product.compareAtPrice.replace(/[^0-9.]/g, '')) - parseFloat(product.price.replace(/[^0-9.]/g, ''))) / parseFloat(product.compareAtPrice.replace(/[^0-9.]/g, ''))) * 100)}%
-                          </span>
-                        )}
-                      </div>
-                      {/* Add to Cart Button */}
-                      <button
-                        type="button"
-                        className={`${buttonStyles.primary} w-full rounded-xl py-3 transition-transform duration-300 hover:scale-[1.02] active:scale-95 group-hover:shadow-lift`}
-                        onClick={() => {
-                          const priceValue = Number.parseFloat(
-                            product.price.replace(/[^0-9.]/g, ''),
-                          );
-                          const currencyMatch = product.price.match(/([A-Z]{3})$/);
-                          trackAddToCart({
-                            id: product.id,
-                            name: product.title,
-                            price: Number.isFinite(priceValue) ? priceValue : undefined,
-                            quantity: 1,
-                            currency: currencyMatch ? currencyMatch[1] : undefined,
-                          });
-                        }}
-                      >
-                        Add to Cart
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="group relative overflow-hidden rounded-2xl border border-[hsl(var(--muted))]/20 bg-[hsl(var(--bg))] shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
-                    {/* Quick Actions */}
-                    <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="flex flex-col gap-2">
+                        {/* Add to Cart Button */}
                         <button
                           type="button"
-                          className="rounded-full border border-[hsl(var(--border))] bg-surface/90 p-2 text-heading shadow-subtle transition hover:bg-surface"
-                          aria-label="Add to favorites"
+                          className={`${buttonStyles.primary} w-full rounded-xl py-3 transition-transform duration-300 hover:scale-[1.02] active:scale-95 group-hover:shadow-lift`}
+                          onClick={() => {
+                            const priceValue = Number.parseFloat(
+                              product.price.replace(/[^0-9.]/g, ''),
+                            );
+                            const currencyMatch =
+                              product.price.match(/([A-Z]{3})$/);
+                            startTransition(async () => {
+                              try {
+                                await fetch('/api/cart', {
+                                  method: 'POST',
+                                  headers: {
+                                    'content-type': 'application/json',
+                                  },
+                                  body: JSON.stringify({
+                                    variantId: product.id, // Assuming product.id is the variantId for simplicity here
+                                    quantity: 1,
+                                  }),
+                                });
+                                window.dispatchEvent(
+                                  new CustomEvent('cart:updated'),
+                                );
+                                trackAddToCart({
+                                  id: product.id,
+                                  name: product.title,
+                                  price: Number.isFinite(priceValue)
+                                    ? priceValue
+                                    : undefined,
+                                  quantity: 1,
+                                  currency: currencyMatch
+                                    ? currencyMatch[1]
+                                    : undefined,
+                                });
+                              } catch (e) {
+                                console.error('Error adding to cart:', e);
+                              }
+                            });
+                          }}
+                          disabled={isPending}
+                          data-test-id="add-to-cart-button"
                         >
-                          <HeartIcon className="h-4 w-4" aria-hidden="true" />
-                        </button>
-                        <button
-                          type="button"
-                          className="rounded-full border border-[hsl(var(--border))] bg-surface/90 p-2 text-heading shadow-subtle transition hover:bg-surface"
-                          aria-label="Quick view"
-                        >
-                          <EyeIcon className="h-4 w-4" aria-hidden="true" />
+                          {isPending ? 'Adding...' : 'Add to Cart'}
                         </button>
                       </div>
                     </div>
-                    
-                    {/* Product Image */}
-                    <Link href={`/products/${product.handle}`}>
-                      <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-[hsl(var(--muted))]/20 to-[hsl(var(--muted))]/10">
-                        <Image
-                          src={product.image}
-                          alt={product.title}
-                          width={400}
-                          height={400}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                        />
-                        
-                        {/* Overlay on hover */}
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-                      </div>
-                    </Link>
-                    
-                    <div className="p-6">
-                      {/* Title */}
-                      <Link href={`/products/${product.handle}`}>
-                        <h3 className="text-lg font-semibold text-[hsl(var(--ink))] mb-2 line-clamp-2 transition-colors group-hover:text-[hsl(var(--brand))]">
-                          {product.title}
-                        </h3>
-                      </Link>
-                      
-                      {/* Price */}
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-2">
-                          <span className="text-xl font-bold text-[hsl(var(--ink))]">
-                            {product.price}
-                          </span>
-                          {product.compareAtPrice && (
-                            <span className="text-sm text-[hsl(var(--muted))] line-through">
-                              {product.compareAtPrice}
-                            </span>
-                          )}
+                  ) : (
+                    <div className="group relative overflow-hidden rounded-2xl border border-[hsl(var(--muted))]/20 bg-[hsl(var(--bg))] shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+                      {/* Quick Actions */}
+                      <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="flex flex-col gap-2">
+                          <button
+                            type="button"
+                            className="rounded-full border border-[hsl(var(--border))] bg-surface/90 p-2 text-heading shadow-subtle transition hover:bg-surface"
+                            aria-label="Add to favorites"
+                          >
+                            <HeartIcon className="h-4 w-4" aria-hidden="true" />
+                          </button>
+                          <button
+                            type="button"
+                            className="rounded-full border border-[hsl(var(--border))] bg-surface/90 p-2 text-heading shadow-subtle transition hover:bg-surface"
+                            aria-label="Quick view"
+                          >
+                            <EyeIcon className="h-4 w-4" aria-hidden="true" />
+                          </button>
                         </div>
-                        {product.compareAtPrice && (
-                          <span className="rounded-full bg-[hsl(var(--brand))]/10 px-2 py-1 text-sm font-medium text-[hsl(var(--brand))]">
-                            Save {Math.round(((parseFloat(product.compareAtPrice.replace(/[^0-9.]/g, '')) - parseFloat(product.price.replace(/[^0-9.]/g, ''))) / parseFloat(product.compareAtPrice.replace(/[^0-9.]/g, ''))) * 100)}%
-                          </span>
-                        )}
                       </div>
 
-                      {/* Add to Cart Button */}
-                      <button
-                        type="button"
-                        className={`${buttonStyles.primary} w-full rounded-xl py-3 transition-transform duration-300 hover:scale-[1.02] active:scale-95 group-hover:shadow-lift`}
-                        onClick={() => {
-                          const priceValue = Number.parseFloat(
-                            product.price.replace(/[^0-9.]/g, ''),
-                          );
-                          const currencyMatch = product.price.match(/([A-Z]{3})$/);
-                          trackAddToCart({
-                            id: product.id,
-                            name: product.title,
-                            price: Number.isFinite(priceValue) ? priceValue : undefined,
-                            quantity: 1,
-                            currency: currencyMatch ? currencyMatch[1] : undefined,
-                          });
-                        }}
-                      >
-                        Add to Cart
-                      </button>
+                      {/* Product Image */}
+                      <Link href={`/products/${product.handle}`}>
+                        <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-[hsl(var(--muted))]/20 to-[hsl(var(--muted))]/10">
+                          <Image
+                            src={product.image}
+                            alt={product.title}
+                            width={400}
+                            height={400}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                          />
+
+                          {/* Overlay on hover */}
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                        </div>
+                      </Link>
+
+                      <div className="p-6">
+                        {/* Title */}
+                        <Link href={`/products/${product.handle}`}>
+                          <h3 className="text-lg font-semibold text-[hsl(var(--ink))] mb-2 line-clamp-2 transition-colors group-hover:text-[hsl(var(--brand))]">
+                            {product.title}
+                          </h3>
+                        </Link>
+
+                        {/* Price */}
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xl font-bold text-[hsl(var(--ink))]">
+                              {product.price}
+                            </span>
+                            {product.compareAtPrice && (
+                              <span className="text-sm text-[hsl(var(--muted))] line-through">
+                                {product.compareAtPrice}
+                              </span>
+                            )}
+                          </div>
+                          {product.compareAtPrice && (
+                            <span className="rounded-full bg-[hsl(var(--brand))]/10 px-2 py-1 text-sm font-medium text-[hsl(var(--brand))]">
+                              Save{' '}
+                              {Math.round(
+                                ((parseFloat(
+                                  product.compareAtPrice.replace(
+                                    /[^0-9.]/g,
+                                    '',
+                                  ),
+                                ) -
+                                  parseFloat(
+                                    product.price.replace(/[^0-9.]/g, ''),
+                                  )) /
+                                  parseFloat(
+                                    product.compareAtPrice.replace(
+                                      /[^0-9.]/g,
+                                      '',
+                                    ),
+                                  )) *
+                                  100,
+                              )}
+                              %
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Add to Cart Button */}
+                        <button
+                          type="button"
+                          className={`${buttonStyles.primary} w-full rounded-xl py-3 transition-transform duration-300 hover:scale-[1.02] active:scale-95 group-hover:shadow-lift`}
+                          onClick={() => {
+                            const priceValue = Number.parseFloat(
+                              product.price.replace(/[^0-9.]/g, ''),
+                            );
+                            const currencyMatch =
+                              product.price.match(/([A-Z]{3})$/);
+                            startTransition(async () => {
+                              try {
+                                await fetch('/api/cart', {
+                                  method: 'POST',
+                                  headers: {
+                                    'content-type': 'application/json',
+                                  },
+                                  body: JSON.stringify({
+                                    variantId: product.id, // Assuming product.id is the variantId for simplicity here
+                                    quantity: 1,
+                                  }),
+                                });
+                                window.dispatchEvent(
+                                  new CustomEvent('cart:updated'),
+                                );
+                                trackAddToCart({
+                                  id: product.id,
+                                  name: product.title,
+                                  price: Number.isFinite(priceValue)
+                                    ? priceValue
+                                    : undefined,
+                                  quantity: 1,
+                                  currency: currencyMatch
+                                    ? currencyMatch[1]
+                                    : undefined,
+                                });
+                              } catch (e) {
+                                console.error('Error adding to cart:', e);
+                              }
+                            });
+                          }}
+                          disabled={isPending}
+                          data-test-id="add-to-cart-button"
+                        >
+                          {isPending ? 'Adding...' : 'Add to Cart'}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            ))
-          )}
+                  )}
+                </div>
+              ))}
         </div>
       </div>
     </section>

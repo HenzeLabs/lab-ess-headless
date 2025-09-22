@@ -1,6 +1,9 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { buttonStyles, textStyles, layout } from '@/lib/ui';
 
 interface HeroProps {
   title: string;
@@ -25,20 +28,42 @@ const Hero: React.FC<HeroProps> = ({
   videoUrl = '/hero.mp4',
   poster = '',
 }) => {
+  const heroRef = useRef<HTMLDivElement>(null);
   const hasMedia = Boolean(videoUrl || imageUrl);
 
-  const headingClass = hasMedia ? 'text-white' : 'text-[hsl(var(--ink))]';
-
   const ctaPrimaryClass = hasMedia
-    ? 'bg-white text-[hsl(var(--ink))] shadow-xl transition hover:-translate-y-0.5 hover:bg-white/95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/90 focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(30,8,64,0.6)] transform'
-    : 'bg-[linear-gradient(135deg,hsl(var(--brand))_0%,hsl(var(--accent))_100%)] text-white shadow-lg transition hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand))]/40 transform';
+    ? `${buttonStyles.primary} text-white shadow-[0_15px_35px_-10px_rgba(255,255,255,0.4)] hover:shadow-[0_20px_45px_-10px_rgba(255,255,255,0.6)] hover:scale-105 transition-all duration-300`
+    : `${buttonStyles.primary} hover:scale-105 transition-all duration-300`;
 
   const ctaSecondaryClass = hasMedia
-    ? 'border border-white/70 bg-white/10 text-white shadow-lg backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(30,8,64,0.5)] transform'
-    : 'border border-[hsl(var(--brand))]/35 bg-transparent text-[hsl(var(--brand))] shadow-sm transition hover:-translate-y-0.5 hover:bg-[rgba(255,126,71,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand))]/40 transform';
+    ? `${buttonStyles.ghost} border-white/70 text-white hover:bg-white/20 hover:scale-105 transition-all duration-300`
+    : `${buttonStyles.ghost} hover:scale-105 transition-all duration-300`;
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-in');
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
+
+    if (heroRef.current) {
+      observer.observe(heroRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <section className="relative isolate flex flex-col items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top_left,rgba(88,45,159,0.14),transparent_55%),radial-gradient(circle_at_bottom_right,rgba(255,148,74,0.16),transparent_60%)] min-h-[70vh] text-center">
+    <section
+      className={`relative isolate flex flex-col items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top_left,rgba(88,45,159,0.14),transparent_55%),radial-gradient(circle_at_bottom_right,rgba(255,148,74,0.16),transparent_60%)] ${layout.section} text-center`}
+      style={{ minHeight: '70vh' }}
+      data-test-id="hero-section"
+    >
       {videoUrl ? (
         <video
           className="absolute inset-0 -z-20 h-full w-full min-h-full object-cover"
@@ -68,27 +93,30 @@ const Hero: React.FC<HeroProps> = ({
           aria-hidden="true"
         />
       )}
-      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center justify-center gap-8 px-6 md:gap-10">
+      <div
+        ref={heroRef}
+        className={`relative z-10 ${layout.container} flex flex-col items-center justify-center gap-8 md:gap-10 opacity-0 translate-y-8 transition-all duration-1000 ease-out [&.animate-in]:opacity-100 [&.animate-in]:translate-y-0`}
+      >
         <h1
-          className={`text-balance max-w-3xl text-5xl font-black tracking-tight drop-shadow-2xl md:text-7xl ${headingClass}`}
+          className={`text-balance max-w-3xl ${textStyles.h1} drop-shadow-2xl ${
+            hasMedia ? 'text-white' : ''
+          }`}
         >
           {title}
         </h1>
         {(ctaText && ctaHref) || (ctaSecondaryText && ctaSecondaryHref) ? (
-          <div className="mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
+          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
             {ctaText && ctaHref && (
               <Link
                 href={ctaHref}
-                className={`inline-block rounded-full px-10 py-4 text-lg font-semibold ${ctaPrimaryClass}`}
+                className={`${ctaPrimaryClass}`}
+                data-test-id="hero-cta"
               >
                 {ctaText}
               </Link>
             )}
             {ctaSecondaryText && ctaSecondaryHref && (
-              <Link
-                href={ctaSecondaryHref}
-                className={`inline-block rounded-full px-10 py-4 text-lg font-semibold ${ctaSecondaryClass}`}
-              >
+              <Link href={ctaSecondaryHref} className={`${ctaSecondaryClass}`}>
                 {ctaSecondaryText}
               </Link>
             )}

@@ -5,7 +5,7 @@ import { getCollectionByHandleQuery } from '@/lib/queries';
 import { stripHtml } from '@/lib/seo';
 import { shopifyFetch } from '@/lib/shopify';
 import type { Product } from '@/lib/types';
-import { layout } from '@/lib/ui';
+import { layout, buttonStyles } from '@/lib/ui';
 
 interface FeaturedHeroProductProps {
   lifestyleImage?: string;
@@ -68,7 +68,8 @@ export default async function FeaturedHeroProduct({
     return null;
   }
 
-  const { product, collectionTitle, collectionHandle, collectionDescription } = featured;
+  const { product, collectionTitle, collectionHandle, collectionDescription } =
+    featured;
 
   const plainDescription = stripHtml(product.descriptionHtml ?? '').trim();
 
@@ -82,7 +83,9 @@ export default async function FeaturedHeroProduct({
     typeof lifestyleImage === 'string' && lifestyleImage.endsWith('.mp4');
 
   const primaryCtaHref = `/products/${product.handle}`;
-  const secondaryCtaHref = learnMoreUrl ?? (collectionHandle ? `/collections/${collectionHandle}` : undefined);
+  const secondaryCtaHref =
+    learnMoreUrl ??
+    (collectionHandle ? `/collections/${collectionHandle}` : undefined);
 
   const badgeLabel = collectionTitle ?? 'Featured Product';
   const supportingCopy = descriptionText ?? collectionDescription ?? undefined;
@@ -92,16 +95,25 @@ export default async function FeaturedHeroProduct({
 
   return (
     <section className="relative isolate overflow-hidden bg-[radial-gradient(circle_at_top_left,hsl(var(--brand)_/_0.12),transparent_60%),radial-gradient(circle_at_bottom_right,hsl(var(--accent)_/_0.1),transparent_55%)] px-4 py-20 sm:py-24">
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(160deg,rgba(9,12,40,0.85)0%,rgba(9,13,46,0.55)45%,rgba(9,12,40,0.82)100%)]" aria-hidden="true" />
+      <div
+        className="absolute inset-0 -z-10 bg-[linear-gradient(160deg,rgba(9,12,40,0.85)0%,rgba(9,13,46,0.55)45%,rgba(9,12,40,0.82)100%)]"
+        aria-hidden="true"
+      />
       <div className="absolute inset-0 -z-5 opacity-40">
         <div className="absolute -left-12 top-10 h-40 w-40 rounded-full bg-white/20 blur-3xl" />
         <div className="absolute bottom-8 right-0 h-56 w-56 rounded-full bg-[hsl(var(--accent))]/30 blur-3xl" />
       </div>
 
-      <div className={`${layout.container} relative mx-auto max-w-[1200px]`}> 
+      <div className={`${layout.container} relative mx-auto max-w-[1200px]`}>
         <div className="relative grid items-center gap-12 overflow-hidden rounded-[32px] border border-white/15 bg-white/90 p-10 shadow-[0_45px_95px_-48px_rgba(6,11,40,0.9)] backdrop-blur-xl lg:grid-cols-[1.15fr_0.85fr] lg:p-14">
-          <div className="pointer-events-none absolute -top-16 left-1/2 h-44 w-44 -translate-x-1/2 rounded-full bg-white/18 blur-[90px]" aria-hidden="true" />
-          <div className="pointer-events-none absolute bottom-0 right-0 h-36 w-36 translate-x-12 translate-y-12 rounded-full bg-[hsl(var(--brand))]/20 blur-[70px]" aria-hidden="true" />
+          <div
+            className="pointer-events-none absolute -top-16 left-1/2 h-44 w-44 -translate-x-1/2 rounded-full bg-white/18 blur-[90px]"
+            aria-hidden="true"
+          />
+          <div
+            className="pointer-events-none absolute bottom-0 right-0 h-36 w-36 translate-x-12 translate-y-12 rounded-full bg-[hsl(var(--brand))]/20 blur-[70px]"
+            aria-hidden="true"
+          />
 
           <div className="relative z-10 space-y-6 text-[hsl(var(--ink))]">
             <span className="inline-flex items-center rounded-full bg-[hsl(var(--brand))]/15 px-4 py-1 text-sm font-semibold uppercase tracking-wide text-[hsl(var(--brand))]">
@@ -124,7 +136,7 @@ export default async function FeaturedHeroProduct({
             <div className="flex flex-wrap gap-4 pt-4">
               <Link
                 href={primaryCtaHref}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,hsl(var(--brand))_0%,hsl(var(--brand-dark))_100%)] px-8 py-3 text-base font-semibold text-white shadow-[0_22px_50px_-24px_rgba(24,22,72,0.7)] transition hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,13,40,0.35)]"
+                className={`${buttonStyles.primary} px-8 py-3 text-base hover:scale-105 transition-all duration-300 shadow-[0_8px_25px_-8px_rgba(78,44,251,0.6)]`}
               >
                 Shop Now
                 <svg
@@ -144,7 +156,7 @@ export default async function FeaturedHeroProduct({
               {secondaryCtaHref ? (
                 <Link
                   href={secondaryCtaHref}
-                  className="inline-flex items-center justify-center gap-2 rounded-full border border-[hsl(var(--brand))]/30 bg-white/80 px-8 py-3 text-base font-semibold text-[hsl(var(--brand))] shadow-[0_18px_48px_-26px_rgba(12,15,60,0.45)] transition hover:-translate-y-0.5 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand))]/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  className={`${buttonStyles.ghost} px-8 py-3 text-base hover:scale-105 transition-all duration-300 shadow-[0_8px_25px_-8px_rgba(255,255,255,0.2)]`}
                 >
                   Learn More
                 </Link>
@@ -181,9 +193,14 @@ export default async function FeaturedHeroProduct({
 
           <div className="relative z-10">
             <div className="group relative overflow-hidden rounded-[28px] bg-white/95 shadow-[0_35px_85px_-45px_rgba(19,23,64,0.65)] transition duration-500">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(76,102,255,0.12),transparent_65%)]" aria-hidden="true" />
+              <div
+                className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(76,102,255,0.12),transparent_65%)]"
+                aria-hidden="true"
+              />
               <Image
-                src={product.featuredImage?.url ?? '/images/default-product.jpg'}
+                src={
+                  product.featuredImage?.url ?? '/images/default-product.jpg'
+                }
                 alt={product.featuredImage?.altText ?? product.title}
                 width={640}
                 height={640}

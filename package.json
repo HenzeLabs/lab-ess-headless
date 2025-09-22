@@ -17,14 +17,17 @@
     "test:a11y": "playwright test tests/accessibility.spec.ts",
     "test:perf": "playwright test tests/performance.spec.ts",
     "test:visual": "playwright test tests/visual-regression.spec.ts",
-    "test:functional": "playwright test tests/functional.spec.ts",
-    "test:e2e": "playwright test"
+    "test:core": "playwright test tests/homepage.spec.ts tests/products.spec.ts tests/cart.spec.ts tests/checkout.spec.ts tests/account.spec.ts tests/shopify-core-flow.spec.ts",
+    "test:all": "playwright test",
+    "test:ci": "npm run test:core",
+    "fetch-product-handle": "node fetch-product-handle.mjs"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-slot": "^1.2.3",
     "class-variance-authority": "^0.7.1",
+    "dotenv": "^17.2.2",
     "lucide-react": "^0.544.0",
     "next": "^15.5.2",
     "react": "19.1.0",

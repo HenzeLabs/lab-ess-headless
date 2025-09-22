@@ -18,7 +18,13 @@ export function CollectionImage({
 }: CollectionImageProps) {
   if (!src) {
     return (
-      <div className={cn('flex items-center justify-center bg-gray-200 text-gray-500 rounded-md', className)} style={{ width, height }}>
+      <div
+        className={cn(
+          'flex items-center justify-center bg-gray-200 text-gray-500 rounded-xl',
+          className,
+        )}
+        style={{ width, height }}
+      >
         No Image
       </div>
     );
@@ -30,7 +36,7 @@ export function CollectionImage({
       alt={alt}
       width={width}
       height={height}
-      className={cn('object-cover rounded-md', className)}
+      className={cn('object-cover rounded-xl', className)}
       {...rest}
     />
   );

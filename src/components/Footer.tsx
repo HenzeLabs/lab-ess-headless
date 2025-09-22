@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import React, { useMemo, useState } from 'react';
 
-import { layout } from '@/lib/ui';
+import { layout, buttonStyles } from '@/lib/ui';
 
 export interface FooterLink {
   title: string;
@@ -69,7 +69,10 @@ export default function Footer({ shopLinks }: FooterProps) {
   };
 
   return (
-    <footer className="border-t border-[hsl(var(--border))] bg-[hsl(var(--surface))] text-[hsl(var(--body))]">
+    <footer
+      className="border-t border-[hsl(var(--border))] bg-[hsl(var(--surface))] text-[hsl(var(--body))]"
+      data-test-id="footer"
+    >
       <div className={`${layout.container} py-12 md:py-16`}>
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)]">
           <div>
@@ -107,6 +110,7 @@ export default function Footer({ shopLinks }: FooterProps) {
               </label>
               <input
                 id="footer-email"
+                name="newsletter-email"
                 type="email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
@@ -114,11 +118,12 @@ export default function Footer({ shopLinks }: FooterProps) {
                 required
                 disabled={status === 'loading'}
                 className="w-full rounded-full border border-[hsl(var(--border))] bg-white px-5 py-3 text-sm text-[hsl(var(--ink))] shadow-sm transition focus:border-[hsl(var(--brand))] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand))]/40"
+                data-test-id="newsletter-email-input"
               />
               <button
                 type="submit"
                 disabled={status === 'loading'}
-                className="inline-flex items-center justify-center rounded-full bg-[linear-gradient(135deg,hsl(var(--brand))_0%,hsl(var(--brand-dark))_100%)] px-6 py-3 text-sm font-semibold text-white shadow-[0_18px_48px_-22px_rgba(12,15,60,0.55)] transition hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,13,40,0.35)] disabled:cursor-not-allowed disabled:opacity-60"
+                className={`${buttonStyles.primary} px-6 py-3 text-sm`}
               >
                 {status === 'loading' ? 'Submitting…' : 'Subscribe'}
               </button>

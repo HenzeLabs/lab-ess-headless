@@ -1,39 +1,65 @@
+'use client';
+
 import Link from 'next/link';
+import { useEffect, useRef } from 'react';
+import { buttonStyles, layout } from '@/lib/ui';
 
 export default function CTASection() {
+  const ctaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-in');
+          }
+        });
+      },
+      { threshold: 0.2 },
+    );
+
+    if (ctaRef.current) {
+      observer.observe(ctaRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="relative isolate overflow-hidden bg-gradient-to-br from-[hsl(var(--brand))] via-[#4457ff] to-[hsl(var(--accent))] px-4 py-16 text-white sm:px-6 sm:py-20 lg:px-8">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.2),transparent_55%)]" aria-hidden="true" />
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-10 rounded-3xl border border-white/20 bg-white/10 p-10 text-center shadow-[0_24px_60px_-30px_rgba(8,9,57,0.65)] backdrop-blur-xl md:flex-row md:items-center md:justify-between md:text-left">
+    <section
+      className={`relative isolate overflow-hidden bg-gradient-to-br from-[hsl(var(--brand))] via-[#4457ff] to-[hsl(var(--accent))] ${layout.section} text-white`}
+    >
+      <div
+        className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.2),transparent_55%)]"
+        aria-hidden="true"
+      />
+      <div
+        ref={ctaRef}
+        className={`${layout.container} flex flex-col items-center gap-10 rounded-3xl border border-white/20 bg-white/10 p-10 text-center shadow-[0_24px_60px_-30px_rgba(8,9,57,0.65)] backdrop-blur-xl md:flex-row md:items-center md:justify-between md:text-left opacity-0 translate-y-8 transition-all duration-700 ease-out [&.animate-in]:opacity-100 [&.animate-in]:translate-y-0`}
+      >
         <div className="max-w-2xl">
-          <Link
-            href="https://labessentials.com/blogs/news/the-amscope-tax-why-cheap-microscopes-cost-more"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className="text-balance text-3xl font-semibold leading-tight text-white sm:text-4xl">
-              The AmScope Tax – Why Cheap Microscopes Cost More
-            </h2>
-          </Link>
-          <p className="mt-3 text-base text-white/80 sm:text-lg">
-            Learn how to spot the hidden costs in bargain lab equipment and choose microscopes built to last.
+          <h2 className="text-balance text-white">
+            Ready to Upgrade Your Lab Equipment?
+          </h2>
+          <p className="mt-3 text-white/80">
+            Join over 1,200 labs that trust Lab Essentials for precision
+            instruments, reliable performance, and expert U.S.-based support.
           </p>
         </div>
 
         <div className="flex w-full flex-col items-center gap-4 md:w-auto md:flex-row">
           <Link
-            href="https://labessentials.com/blogs/news/the-amscope-tax-why-cheap-microscopes-cost-more"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex w-full items-center justify-center rounded-full border border-transparent bg-[linear-gradient(135deg,hsl(var(--brand))_0%,hsl(var(--brand-dark))_100%)] px-8 py-3 text-base font-semibold text-white shadow-[0_20px_45px_-20px_rgba(8,9,57,0.6)] transition hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(12,15,60,0.45)] md:w-auto"
+            href="/collections"
+            className={`${buttonStyles.primary} text-white shadow-[0_15px_35px_-10px_rgba(255,255,255,0.4)] hover:shadow-[0_20px_45px_-10px_rgba(255,255,255,0.6)] hover:scale-105 transition-all duration-300`}
           >
-            Read the Guide
+            Shop Lab Equipment
           </Link>
           <Link
-            href="/collections/microscopes"
-            className="inline-flex w-full items-center justify-center rounded-full border border-white/50 bg-transparent px-8 py-3 text-base font-semibold text-white shadow-[0_18px_38px_-20px_rgba(8,9,57,0.4)] transition hover:-translate-y-0.5 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(12,15,60,0.35)] md:w-auto"
+            href="/about"
+            className={`${buttonStyles.ghost} border-white/70 text-white hover:bg-white/20 hover:scale-105 transition-all duration-300`}
           >
-            Shop Reliable Microscopes
+            Learn More
           </Link>
         </div>
       </div>

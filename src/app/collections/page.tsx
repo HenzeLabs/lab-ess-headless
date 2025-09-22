@@ -1,10 +1,8 @@
 // TEMP: Placeholder implementations to restore buildability. Replace with real data logic.
 
-async function getMenuCollections() {
-  return [];
-}
 import { shopifyFetch } from '@/lib/shopify';
 import { getAllCollectionsQuery } from '@/lib/queries/getAllCollectionsQuery';
+import { textStyles } from '@/lib/ui';
 
 type ShopifyCollectionsResponse = {
   collections: {
@@ -22,13 +20,16 @@ type ShopifyCollectionsResponse = {
 };
 
 async function getShopifyCollections() {
+  console.log('Fetching collections from Shopify...');
   // Fetch collections from Shopify Storefront API
   const res = await shopifyFetch<ShopifyCollectionsResponse>({
     query: getAllCollectionsQuery,
-    variables: { first: 20 },
+    variables: { first: 250 },
   });
+  console.log('Shopify response received successfully');
   const edges = res.data?.collections?.edges || [];
-  return edges.map(({ node }) => ({
+  console.log('Found', edges.length, 'collections');
+  const collections = edges.map(({ node }) => ({
     id: node.id,
     handle: node.handle,
     title: node.title,
@@ -37,8 +38,13 @@ async function getShopifyCollections() {
     image: node.image?.url || null,
     badge: undefined,
   }));
+  console.log(
+    'Mapped collections:',
+    collections.map((c) => c.title),
+  );
+  return collections;
 }
-export const dynamic = 'force-static';
+export const dynamic = 'force-dynamic';
 export const revalidate = 60;
 import Link from 'next/link';
 import Image from 'next/image';
@@ -47,10 +53,7 @@ import FooterServer from '@/components/FooterServer';
 // ...existing imports...
 
 export default async function CollectionsPage() {
-  const [, shopifyCollections] = await Promise.all([
-    getMenuCollections(),
-    getShopifyCollections(),
-  ]);
+  const shopifyCollections = await getShopifyCollections();
 
   // Use Shopify collections if available, otherwise fall back to menu collections
   type DisplayCollection = {
@@ -147,6 +150,16 @@ export default async function CollectionsPage() {
   return (
     <>
       <main className="bg-background">
+        {/* Temporary Debug Section */}
+        <section className="py-8 bg-red-100">
+          <div className="container mx-auto px-4">
+            <h2 className="text-2xl font-bold text-red-800">Debug Info</h2>
+            <pre className="bg-white p-4 rounded-lg mt-4 text-sm overflow-auto">
+              {JSON.stringify(shopifyCollections, null, 2)}
+            </pre>
+          </div>
+        </section>
+
         {/* Hero Section */}
         <section className="relative bg-gradient-to-b from-background to-white py-16 lg:py-24">
           <div className="container mx-auto text-center">
@@ -169,74 +182,85 @@ export default async function CollectionsPage() {
         {/* Collections Grid */}
         <section className="py-16">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {collectionsToDisplay.map(
-                (collection: DisplayCollection, index: number) => (
-                  <Link
-                    key={collection.id}
-                    href={`/collections/${collection.handle}`}
-                    className="group block bg-card text-card-foreground rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in"
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                  >
-                    {/* Collection Image */}
-                    <div className="relative h-64 bg-muted overflow-hidden">
-                      {collection.image ? (
-                        <Image
-                          src={collection.image}
-                          alt={collection.title}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                      ) : (
-                        <div className="flex items-center justify-center h-full bg-gradient-to-br from-primary to-accent">
-                          <span className="text-white text-2xl font-bold">
-                            {collection.title.charAt(0)}
-                          </span>
-                        </div>
-                      )}
-                      {/* Badge */}
-                      {collection.badge && (
-                        <div className="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-medium">
-                          {collection.badge}
-                        </div>
-                      )}
-                      {/* Product Count */}
-                      <div className="absolute bottom-4 right-4 bg-card/90 text-muted-foreground px-3 py-1 rounded-full text-sm font-medium">
-                        {collection.productCount} products
-                      </div>
-                    </div>
-
-                    {/* Collection Info */}
-                    <div className="p-6">
-                      <h3 className="text-xl font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
-                        {collection.title}
-                      </h3>
-                      <p className="text-muted-foreground text-sm mb-4">
-                        {collection.description ||
-                          'Used by leading labs, clinics, and universities'}
-                      </p>
-                      {/* CTA */}
-                      <span className="inline-flex items-center gap-1 text-primary font-medium group-hover:underline">
-                        Shop Collection
-                        <svg
-                          className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
+            {collectionsToDisplay.length === 0 ? (
+              <div
+                className="py-24 text-center text-lg text-muted-foreground"
+                data-test-id="empty-collection-message"
+              >
+                No products found in this collection.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {collectionsToDisplay.map(
+                  (collection: DisplayCollection, index: number) => (
+                    <Link
+                      key={collection.id}
+                      href={`/collections/${collection.handle}`}
+                      className="group block bg-card text-card-foreground rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in"
+                      style={{ animationDelay: `${index * 0.1}s` }}
+                    >
+                      {/* Collection Image */}
+                      <div className="relative h-64 bg-muted overflow-hidden">
+                        {collection.image ? (
+                          <Image
+                            src={collection.image}
+                            alt={collection.title}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
                           />
-                        </svg>
-                      </span>
-                    </div>
-                  </Link>
-                ),
-              )}
-            </div>
+                        ) : (
+                          <div className="flex items-center justify-center h-full bg-gradient-to-br from-primary to-accent">
+                            <span className="text-white text-2xl font-bold">
+                              {collection.title.charAt(0)}
+                            </span>
+                          </div>
+                        )}
+                        {/* Badge */}
+                        {collection.badge && (
+                          <div className="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-medium">
+                            {collection.badge}
+                          </div>
+                        )}
+                        {/* Product Count */}
+                        <div className="absolute bottom-4 right-4 bg-card/90 text-muted-foreground px-3 py-1 rounded-full text-sm font-medium">
+                          {collection.productCount} products
+                        </div>
+                      </div>
+
+                      {/* Collection Info */}
+                      <div className="p-6">
+                        <h3
+                          className={`${textStyles.h3} text-foreground mb-2 group-hover:text-primary transition-colors`}
+                        >
+                          {collection.title}
+                        </h3>
+                        <p className={`${textStyles.bodySmall} mb-4`}>
+                          {collection.description ||
+                            'Used by leading labs, clinics, and universities'}
+                        </p>
+                        {/* CTA */}
+                        <span className="inline-flex items-center gap-1 text-primary font-medium group-hover:underline">
+                          Shop Collection
+                          <svg
+                            className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </Link>
+                  ),
+                )}
+              </div>
+            )}
           </div>
         </section>
 
@@ -256,7 +280,7 @@ export default async function CollectionsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {benefits.map((benefit, index) => (
                 <div key={index} className="text-center">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-primary text-white rounded-full mb-4">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-[hsl(var(--brand))] text-white rounded-full mb-4">
                     {benefit.icon}
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">

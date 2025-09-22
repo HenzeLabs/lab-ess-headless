@@ -64,9 +64,20 @@ export type Product = {
       node: {
         id: string;
         title: string;
+        price: {
+          amount: string;
+          currencyCode: string;
+        };
+        availableForSale?: boolean;
       };
     }[];
   };
+  metafields?: {
+    namespace: string;
+    key: string;
+    value: string;
+    type: string;
+  }[];
 };
 
 type MoneyV2 = {
@@ -114,6 +125,27 @@ export type Cart = {
 export type ShopifyFetchResponse<T> = {
   success: true;
   data: T;
+};
+
+export type ShopifyCollections = {
+  collections: {
+    edges: {
+      node: {
+        handle: string;
+        title: string;
+      };
+    }[];
+  };
+};
+
+export type ShopifyCollection = {
+  collections: {
+    edges: {
+      node: {
+        handle: string;
+      };
+    }[];
+  };
 };
 
 export interface AnalyticsItemInput {

@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import type { MenuItem } from '@/lib/types';
 import { Search, User, ShoppingCart, X } from 'lucide-react';
 import AnnouncementBar from '@/components/AnnouncementBar';
+import { buttonStyles } from '@/lib/ui';
 
 function extractHandle(url: string | undefined): string {
   if (!url) return '';
@@ -107,7 +108,10 @@ export default function Header({
             isScrolled ? 'shadow-md' : ''
           }`}
         >
-          <header className="relative bg-[hsl(var(--bg))]">
+          <header
+            className="relative bg-[hsl(var(--bg))]"
+            data-test-id="header"
+          >
             <div className="max-w-[1440px] mx-auto px-4 lg:px-8">
               <div className="grid grid-cols-3 items-center py-4">
                 {/* Left empty for spacing or future elements */}
@@ -117,6 +121,7 @@ export default function Header({
                   <Link
                     href="/"
                     className="flex items-center justify-center gap-3"
+                    data-test-id="nav-root"
                   >
                     <Image
                       src={logoUrl}
@@ -152,9 +157,16 @@ export default function Header({
                     variant="ghost"
                     className="relative h-14 w-14 rounded-full hover:bg-[#4e2cfb] hover:text-white"
                   >
-                    <Link href="/cart" aria-label="Cart">
+                    <Link
+                      href="/cart"
+                      aria-label="Cart"
+                      data-test-id="nav-cart"
+                    >
                       <ShoppingCart className="h-9 w-9" />
-                      <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white text-xs font-medium z-10">
+                      <span
+                        className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white text-xs font-medium z-10"
+                        data-test-id="cart-count"
+                      >
                         {liveCartCount}
                       </span>
                     </Link>
@@ -166,6 +178,7 @@ export default function Header({
                 <nav
                   aria-label="Main"
                   className="hidden lg:flex items-center justify-center py-2"
+                  data-test-id="main-navigation"
                 >
                   {menuItems.length === 0 ? (
                     <div className="text-red-600 font-bold py-2">
@@ -265,7 +278,7 @@ export default function Header({
                           href={
                             menuItem.url || `/collections/${menuItem.handle}`
                           }
-                          className="inline-flex items-center justify-center gap-2 rounded-full bg-purple-600 px-10 py-4 text-base font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-purple-700 hover:text-white"
+                          className={`${buttonStyles.primary} px-10 py-4 text-base`}
                         >
                           <span>
                             Shop All {formatTitleCase(menuItem.title)}

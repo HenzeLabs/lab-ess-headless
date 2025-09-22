@@ -1,8 +1,10 @@
 import ProductRail from '@/components/ProductRail';
-import { getCollectionByHandleQuery, getProductRecommendationsQuery } from '@/lib/queries';
+import {
+  getCollectionByHandleQuery,
+  getProductRecommendationsQuery,
+} from '@/lib/queries';
 import { shopifyFetch } from '@/lib/shopify';
 import type { Product } from '@/lib/types';
-import { layout } from '@/lib/ui';
 
 interface RelatedProductsProps {
   productId?: string;
@@ -25,11 +27,11 @@ interface CollectionResponse {
   } | null;
 }
 
-const DEFAULT_FALLBACK_HANDLE = 'best-sellers';
+const DEFAULT_FALLBACK_HANDLE = 'featured-products';
 
 export default async function RelatedProducts({
   productId,
-  heading = 'Shop Related Products',
+  heading = 'Featured Lab Equipment',
   fallbackCollectionHandle = DEFAULT_FALLBACK_HANDLE,
 }: RelatedProductsProps) {
   try {
@@ -50,25 +52,37 @@ export default async function RelatedProducts({
         variables: { handle: fallbackCollectionHandle, first: 12 },
       });
       const fallbackCollection = fallbackResponse.data.collection;
-      products = fallbackCollection?.products?.edges.map((edge) => edge.node) ?? [];
+      products =
+        fallbackCollection?.products?.edges.map((edge) => edge.node) ?? [];
       if (fallbackCollection?.handle) {
         viewAllHref = `/collections/${fallbackCollection.handle}`;
       }
     }
 
     if (!products.length) {
-      return null;
+      console.log('RelatedProducts: No products found');
+      return (
+        <section className="w-full py-12 lg:py-24 bg-background">
+          <div className="max-w-[1440px] mx-auto px-4 lg:px-8 text-center">
+            <h2 className="text-2xl font-bold">{heading}</h2>
+            <p>No products found in the featured-products collection.</p>
+          </div>
+        </section>
+      );
     }
 
     return (
-      <section className="bg-[hsl(var(--bg))] py-16 sm:py-20">
-        <div className={`${layout.container} space-y-6`}>
-          <ProductRail heading={heading} products={products} viewAllHref={viewAllHref} />
+      <section className="w-full py-12 lg:py-24 bg-background">
+        <div className="max-w-[1440px] mx-auto px-4 lg:px-8">
+          <ProductRail
+            heading={heading}
+            products={products}
+            viewAllHref={viewAllHref}
+          />
         </div>
       </section>
     );
   } catch (error) {
-    
     return null;
   }
 }

@@ -43,10 +43,7 @@ const organizationJsonLd = {
   name: 'Lab Essentials',
   url: absoluteUrl('/'),
   logo: absoluteUrl('/logo.svg'),
-  sameAs: [
-    'https://www.linkedin.com/company/labessentials',
-    'https://www.facebook.com/labessentials',
-  ],
+  sameAs: ['https://www.facebook.com/labessentials'],
 };
 
 const websiteJsonLd = {
@@ -76,21 +73,25 @@ export default async function HomePage() {
         id="main-content"
         className="bg-[hsl(var(--bg))] text-[hsl(var(--ink))]"
         role="main"
+        data-test-id="homepage-main-content"
       >
         <Hero
-          title="Modern Lab Equipment. Simplified. Delivered."
+          title="Precision Lab Equipment That Just Works"
           ctaText="Shop Microscopes"
           ctaHref="/collections/microscopes"
           ctaSecondaryText="Find Your Microscope"
           ctaSecondaryHref="/pages/microscope-selector-quiz"
         />
+        <AboutSection
+          title="Why Labs Choose Lab Essentials"
+          subtitle="Trusted performance, expert support, built for daily use"
+        />
         <CollectionSwitcherWrapper />
         <CTASection />
-        <AboutSection />
+        <FeaturedHeroProduct />
+        <FeaturedCollections />
         <RelatedProducts />
         <EmailSignup />
-        <FeaturedCollections />
-        <FeaturedHeroProduct />
       </main>
     </>
   );

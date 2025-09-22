@@ -1,6 +1,6 @@
 // Copyright (c) 2025 Lab Essentials. MIT License.
 
-import { defineConfig } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 
 const BASE_PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
 const BASE_URL = `http://localhost:${BASE_PORT}`;
@@ -26,4 +26,26 @@ export default defineConfig({
     baseURL: BASE_URL,
     trace: 'on-first-retry',
   },
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
+    },
+    {
+      name: 'Mobile Chrome',
+      use: { ...devices['Pixel 5'] },
+    },
+    {
+      name: 'Mobile Safari',
+      use: { ...devices['iPhone 12'] },
+    },
+  ],
 });

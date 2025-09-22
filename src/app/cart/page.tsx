@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import CartAnalyticsTracker from '@/components/analytics/CartAnalyticsTracker';
 import TrustSignals from '@/components/TrustSignals';
 import type { Cart } from '@/lib/types';
+import { textStyles } from '@/lib/ui';
 
 export default function CartPage() {
   const [cart, setCart] = useState<Cart | null>(null);
@@ -52,7 +53,7 @@ export default function CartPage() {
     return (
       <main className="bg-[hsl(var(--bg))] text-[hsl(var(--ink))] py-section-lg">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-center mb-16">Your Cart</h1>
+          <h1 className={`${textStyles.h1} mb-16`}>Your Cart</h1>
           <p>Loading cart...</p>
         </div>
       </main>
@@ -63,8 +64,10 @@ export default function CartPage() {
     return (
       <main className="bg-[hsl(var(--bg))] text-[hsl(var(--ink))] py-section-lg">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-center mb-16">Your Cart</h1>
-          <p className="text-red-500">{error}</p>
+          <h1 className={`${textStyles.h1} mb-16`}>Your Cart</h1>
+          <p className="text-red-500" data-test-id="api-error-message">
+            {error}
+          </p>
         </div>
       </main>
     );
@@ -86,6 +89,8 @@ export default function CartPage() {
         if (res.ok) {
           const json = (await res.json()) as { cart: Cart | null };
           setCart(json.cart);
+          // Signal other parts of the app (e.g., header) to refresh cart count
+          window.dispatchEvent(new CustomEvent('cart:updated'));
         } else {
           await refreshCart();
         }
@@ -106,6 +111,8 @@ export default function CartPage() {
         if (res.ok) {
           const json = (await res.json()) as { cart: Cart | null };
           setCart(json.cart);
+          // Signal other parts of the app (e.g., header) to refresh cart count
+          window.dispatchEvent(new CustomEvent('cart:updated'));
         } else {
           await refreshCart();
         }
@@ -122,7 +129,7 @@ export default function CartPage() {
         className="bg-[hsl(var(--bg))] text-[hsl(var(--ink))] py-section-lg"
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-center mb-16">Your Cart</h1>
+          <h1 className={`${textStyles.h1} mb-16`}>Your Cart</h1>
 
           {analyticsItems.length > 0 && (
             <CartAnalyticsTracker items={analyticsItems} />
@@ -146,6 +153,7 @@ export default function CartPage() {
                           <li
                             key={item.node.id}
                             className="flex animate-in fade-in slide-in-from-bottom-4"
+                            data-test-id="cart-item"
                           >
                             <div className="flex w-full items-start gap-4 rounded-lg border border-[hsl(var(--border))]/60 bg-[hsl(var(--bg))] p-5 md:p-6">
                               <div className="relative h-28 w-28 flex-shrink-0 overflow-hidden rounded-lg border border-[hsl(var(--border))]/60 bg-[hsl(var(--bg))]">
@@ -167,7 +175,10 @@ export default function CartPage() {
                               <div className="ml-6 flex flex-1 flex-col">
                                 <div>
                                   <div className="flex items-start justify-between gap-4">
-                                    <h3 className="flex-1 min-w-0 text-lg md:text-xl font-semibold text-[hsl(var(--ink))]">
+                                    <h3
+                                      className={`${textStyles.h4} flex-1 min-w-0 text-lg md:text-xl`}
+                                      data-test-id="cart-item-name"
+                                    >
                                       <Link
                                         href={`/products/${item.node.merchandise.product.handle}`}
                                         className="hover:text-[hsl(var(--brand))] line-clamp-2"
@@ -175,7 +186,10 @@ export default function CartPage() {
                                         {item.node.merchandise.product.title}
                                       </Link>
                                     </h3>
-                                    <p className="shrink-0 text-base md:text-lg font-medium text-[hsl(var(--ink))] whitespace-nowrap text-right">
+                                    <p
+                                      className="shrink-0 text-base md:text-lg font-medium text-[hsl(var(--ink))] whitespace-nowrap text-right"
+                                      data-test-id="cart-item-price"
+                                    >
                                       {(() => {
                                         const amt =
                                           item.node.cost?.amountPerQuantity
@@ -213,10 +227,14 @@ export default function CartPage() {
                                         disabled={
                                           item.node.quantity <= 1 || isPending
                                         }
+                                        data-test-id={`cart-item-decrease-quantity-${item.node.id}`}
                                       >
                                         -
                                       </Button>
-                                      <span className="mx-2 w-8 text-center text-base font-medium">
+                                      <span
+                                        className="mx-2 w-8 text-center text-base font-medium"
+                                        data-test-id="cart-item-quantity"
+                                      >
                                         {item.node.quantity}
                                       </span>
                                       <Button
@@ -232,6 +250,7 @@ export default function CartPage() {
                                         className="h-8 w-8 transition-all duration-300 ease-out-soft"
                                         aria-label="Increase quantity"
                                         disabled={isPending}
+                                        data-test-id={`cart-item-increase-quantity-${item.node.id}`}
                                       >
                                         +
                                       </Button>
@@ -244,6 +263,7 @@ export default function CartPage() {
                                       className="text-sm text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--brand))] transition-colors duration-200"
                                       aria-label={`Remove ${item.node.merchandise.product.title} from cart`}
                                       disabled={isPending}
+                                      data-test-id="cart-item-remove"
                                     >
                                       Remove
                                     </Button>
@@ -259,15 +279,16 @@ export default function CartPage() {
 
                   <div>
                     <div className="bg-[hsl(var(--surface))] p-8 rounded-lg border border-[hsl(var(--border))]/60 lg:sticky lg:top-24 h-fit">
-                      <h2 className="text-2xl font-semibold text-[hsl(var(--ink))] mb-6">
-                        Order summary
-                      </h2>
+                      <h2 className={`${textStyles.h2} mb-6`}>Order summary</h2>
                       <div className="mt-8 space-y-6">
                         <div className="flex items-center justify-between">
                           <p className="text-base text-[hsl(var(--muted-foreground))]">
                             Subtotal
                           </p>
-                          <p className="text-base font-medium text-[hsl(var(--ink))]">
+                          <p
+                            className="text-base font-medium text-[hsl(var(--ink))]"
+                            data-test-id="cart-subtotal"
+                          >
                             {subtotalMoney
                               ? `${parseFloat(subtotalMoney.amount).toFixed(
                                   2,
@@ -279,7 +300,10 @@ export default function CartPage() {
                           <p className="text-lg md:text-xl font-semibold text-[hsl(var(--ink))]">
                             Order total
                           </p>
-                          <p className="text-lg md:text-xl font-semibold text-[hsl(var(--ink))]">
+                          <p
+                            className="text-lg md:text-xl font-semibold text-[hsl(var(--ink))]"
+                            data-test-id="cart-total"
+                          >
                             {totalMoney
                               ? `${parseFloat(totalMoney.amount).toFixed(2)} ${
                                   totalMoney.currencyCode
@@ -295,7 +319,12 @@ export default function CartPage() {
                           aria-label="Proceed to checkout"
                           data-cart-checkout
                         >
-                          <a href={cart.checkoutUrl}>Checkout</a>
+                          <a
+                            href={cart.checkoutUrl}
+                            data-test-id="checkout-button"
+                          >
+                            Checkout
+                          </a>
                         </Button>
                       </div>
                     </div>
@@ -307,18 +336,21 @@ export default function CartPage() {
               </>
             ) : (
               <div className="text-center bg-[hsl(var(--surface))] p-16 rounded-lg border border-[hsl(var(--border))]/60">
-                <h2 className="text-2xl font-semibold text-[hsl(var(--ink))] mb-4">
+                <h2
+                  className={`${textStyles.h2} mb-4`}
+                  data-test-id="cart-empty-message"
+                >
                   Your cart is empty
                 </h2>
                 <p className="text-[hsl(var(--muted-foreground))] mb-6">
                   Add some products to get started.
                 </p>
-                <Link
-                  href="/"
-                  className="btn-primary transition-all duration-300 ease-out-soft"
+                <Button
+                  asChild
+                  className="transition-all duration-300 ease-out-soft"
                 >
-                  Continue Shopping
-                </Link>
+                  <Link href="/">Continue Shopping</Link>
+                </Button>
               </div>
             )}
           </div>
