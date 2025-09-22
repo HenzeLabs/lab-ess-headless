@@ -15,6 +15,10 @@ export const getAllCollectionsQuery = /* GraphQL */ `
             edges {
               node {
                 id
+                featuredImage {
+                  url
+                  altText
+                }
               }
             }
           }

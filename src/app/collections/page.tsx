@@ -2,8 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { shopifyFetch } from '@/lib/shopify';
 import { getAllCollectionsQuery } from '@/lib/queries/getAllCollectionsQuery';
-import { textStyles } from '@/lib/ui';
-import FooterServer from '@/components/FooterServer';
+import { textStyles, layout, buttonStyles } from '@/lib/ui';
 
 type ShopifyCollectionsResponse = {
   collections: {
@@ -13,8 +12,18 @@ type ShopifyCollectionsResponse = {
         handle: string;
         title: string;
         description: string;
-        image?: { url: string } | null;
-        products?: { edges: Array<{ node: { id: string } }> };
+        image?: { url: string; altText?: string } | null;
+        products?: {
+          edges: Array<{
+            node: {
+              id: string;
+              featuredImage?: {
+                url: string;
+                altText?: string;
+              } | null;
+            };
+          }>;
+        };
       };
     }>;
   };
@@ -27,15 +36,23 @@ async function getShopifyCollections() {
   });
 
   const edges = res.data?.collections?.edges || [];
-  const collections = edges.map(({ node }) => ({
-    id: node.id,
-    handle: node.handle,
-    title: node.title,
-    description: node.description,
-    productCount: node.products?.edges?.length || 0,
-    image: node.image?.url || null,
-    badge: undefined,
-  }));
+  const collections = edges.map(({ node }) => {
+    // Use collection image if available, otherwise use first product's featured image
+    const collectionImage = node.image?.url;
+    const firstProductImage =
+      node.products?.edges?.[0]?.node?.featuredImage?.url;
+    const imageToUse = collectionImage || firstProductImage || null;
+
+    return {
+      id: node.id,
+      handle: node.handle,
+      title: node.title,
+      description: node.description,
+      productCount: node.products?.edges?.length || 0,
+      image: imageToUse,
+      badge: undefined,
+    };
+  });
 
   return collections;
 }
@@ -140,32 +157,36 @@ export default async function CollectionsPage() {
 
   return (
     <>
-      <main className="bg-background">
+      <main className="bg-[hsl(var(--bg))]">
         {/* Hero Section */}
-        <section className="relative bg-gradient-to-b from-background to-white py-16 lg:py-24">
-          <div className="container mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary mb-6">
-              Shop by Category
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-              Discover our complete range of premium lab equipment and supplies
-              for modern science and healthcare.
-            </p>
-            <div className="flex flex-wrap justify-center gap-8 text-sm text-muted-foreground">
-              <span>8+ Collections</span>
-              <span>100+ Products</span>
-              <span>Free Shipping</span>
-              <span>60-Day Trial</span>
+        <section
+          className={`relative bg-gradient-to-b from-[hsl(var(--bg))] to-white ${layout.section}`}
+        >
+          <div className={layout.container}>
+            <div className="text-center">
+              <h1 className={textStyles.h1}>Shop by Category</h1>
+              <p
+                className={`${textStyles.bodyLarge} text-[hsl(var(--muted-foreground))] max-w-3xl mx-auto mb-8`}
+              >
+                Discover our complete range of premium lab equipment and
+                supplies for modern science and healthcare.
+              </p>
+              <div className="flex flex-wrap justify-center gap-8 text-sm text-[hsl(var(--muted-foreground))]">
+                <span>8+ Collections</span>
+                <span>100+ Products</span>
+                <span>Free Shipping</span>
+                <span>60-Day Trial</span>
+              </div>
             </div>
           </div>
         </section>
 
         {/* Collections Grid */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
+        <section className={layout.section}>
+          <div className={layout.container}>
             {collectionsToDisplay.length === 0 ? (
               <div
-                className="py-24 text-center text-lg text-muted-foreground"
+                className="py-24 text-center text-lg text-[hsl(var(--muted-foreground))]"
                 data-test-id="empty-collection-message"
               >
                 No products found in this collection.
@@ -177,33 +198,41 @@ export default async function CollectionsPage() {
                     <Link
                       key={collection.id}
                       href={`/collections/${collection.handle}`}
-                      className="group block bg-card text-card-foreground rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in"
-                      style={{ animationDelay: `${index * 0.1}s` }}
+                      className="group block bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))] rounded-2xl overflow-hidden border border-[hsl(var(--border))] shadow-[0_28px_60px_-36px_rgba(15,23,42,0.15)] hover:shadow-[0_35px_85px_-48px_rgba(10,13,40,0.35)] transition-all duration-700 ease-out hover:-translate-y-1"
+                      style={{
+                        animationDelay: `${index * 80}ms`,
+                        transitionDelay: `${index * 80}ms`,
+                      }}
                     >
                       {/* Collection Image */}
-                      <div className="relative h-64 bg-muted overflow-hidden">
+                      <div className="relative h-64 bg-[hsl(var(--muted))] overflow-hidden">
                         {collection.image ? (
                           <Image
                             src={collection.image}
                             alt={collection.title}
                             fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                            className="object-cover group-hover:scale-105 transition-transform duration-700"
                           />
                         ) : (
-                          <div className="flex items-center justify-center h-full bg-gradient-to-br from-primary to-accent">
-                            <span className="text-white text-2xl font-bold">
-                              {collection.title.charAt(0)}
+                          <div className="flex flex-col items-center justify-center h-full bg-gradient-to-br from-[hsl(var(--brand))]/90 to-[hsl(var(--accent))]/90 text-white">
+                            <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mb-3">
+                              <span className="text-2xl font-bold">
+                                {collection.title.charAt(0).toUpperCase()}
+                              </span>
+                            </div>
+                            <span className="text-sm font-medium opacity-90 text-center px-4">
+                              {collection.title}
                             </span>
                           </div>
                         )}
                         {/* Badge */}
                         {collection.badge && (
-                          <div className="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-medium">
+                          <div className="absolute top-4 left-4 bg-[hsl(var(--brand))] text-white px-3 py-1 rounded-full text-sm font-medium">
                             {collection.badge}
                           </div>
                         )}
                         {/* Product Count */}
-                        <div className="absolute bottom-4 right-4 bg-card/90 text-muted-foreground px-3 py-1 rounded-full text-sm font-medium">
+                        <div className="absolute bottom-4 right-4 bg-[hsl(var(--card))]/90 text-[hsl(var(--muted-foreground))] px-3 py-1 rounded-full text-sm font-medium">
                           {collection.productCount} products
                         </div>
                       </div>
@@ -211,19 +240,15 @@ export default async function CollectionsPage() {
                       {/* Collection Info */}
                       <div className="p-6">
                         <h3
-                          className={`${textStyles.h3} text-foreground mb-2 group-hover:text-primary transition-colors`}
+                          className={`${textStyles.h3} text-[hsl(var(--ink))] mb-4 group-hover:text-[hsl(var(--brand))] transition-colors`}
                         >
                           {collection.title}
                         </h3>
-                        <p className={`${textStyles.bodySmall} mb-4`}>
-                          {collection.description ||
-                            'Used by leading labs, clinics, and universities'}
-                        </p>
                         {/* CTA */}
-                        <span className="inline-flex items-center gap-1 text-primary font-medium group-hover:underline">
+                        <span className={`${buttonStyles.link} gap-1`}>
                           Shop Collection
                           <svg
-                            className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"
+                            className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-200"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -246,13 +271,15 @@ export default async function CollectionsPage() {
         </section>
 
         {/* Featured Benefits */}
-        <section className="bg-gray-50 py-16">
-          <div className="container mx-auto px-4">
+        <section className={`bg-[hsl(var(--surface-muted))] ${layout.section}`}>
+          <div className={layout.container}>
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              <h2 className={`${textStyles.h2} text-[hsl(var(--ink))] mb-4`}>
                 Why Choose Us
               </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
+              <p
+                className={`${textStyles.body} text-[hsl(var(--body))] max-w-2xl mx-auto`}
+              >
                 We are committed to providing you with the best lab equipment
                 and service experience.
               </p>
@@ -264,17 +291,22 @@ export default async function CollectionsPage() {
                   <div className="inline-flex items-center justify-center w-16 h-16 bg-[hsl(var(--brand))] text-white rounded-full mb-4">
                     {benefit.icon}
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  <h3
+                    className={`${textStyles.h5} text-[hsl(var(--ink))] mb-2`}
+                  >
                     {benefit.title}
                   </h3>
-                  <p className="text-gray-600 text-sm">{benefit.description}</p>
+                  <p
+                    className={`${textStyles.bodySmall} text-[hsl(var(--body))]`}
+                  >
+                    {benefit.description}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
         </section>
       </main>
-      <FooterServer />
     </>
   );
 }
