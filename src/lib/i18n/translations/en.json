@@ -1,0 +1,129 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit"
+  },
+  "navigation": {
+    "home": "Home",
+    "products": "Products",
+    "collections": "Collections",
+    "about": "About",
+    "contact": "Contact",
+    "account": "Account",
+    "cart": "Cart",
+    "search": "Search"
+  },
+  "ecommerce": {
+    "addToCart": "Add to Cart",
+    "removeFromCart": "Remove from Cart",
+    "viewCart": "View Cart",
+    "checkout": "Checkout",
+    "quantity": "Quantity",
+    "price": "Price",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "tax": "Tax",
+    "discount": "Discount",
+    "outOfStock": "Out of Stock",
+    "inStock": "In Stock",
+    "lowStock": "Low Stock",
+    "freeShipping": "Free Shipping"
+  },
+  "product": {
+    "description": "Description",
+    "specifications": "Specifications",
+    "reviews": "Reviews",
+    "relatedProducts": "Related Products",
+    "features": "Features",
+    "compatibility": "Compatibility",
+    "warranty": "Warranty",
+    "downloads": "Downloads"
+  },
+  "auth": {
+    "login": "Log In",
+    "logout": "Log Out",
+    "register": "Register",
+    "forgotPassword": "Forgot Password?",
+    "resetPassword": "Reset Password",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "createAccount": "Create Account",
+    "signInToAccount": "Sign in to your account",
+    "dontHaveAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?"
+  },
+  "forms": {
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email address",
+    "passwordTooShort": "Password must be at least 8 characters",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "pleaseSelectOption": "Please select an option",
+    "invalidFormat": "Invalid format"
+  },
+  "pages": {
+    "homepage": {
+      "title": "Lab Essentials | Precision Lab Equipment & Supplies",
+      "description": "Lab Essentials delivers calibrated instruments, consumables, and support services that keep research teams compliant and efficient.",
+      "heroTitle": "Precision Lab Equipment That Just Works",
+      "heroSubtitle": "High-performance, affordable, and reliable tools for every lab",
+      "heroDescription": "Lab Essentials makes running a lab straightforward. We supply durable, accurate equipment that schools, clinical labs, and research facilities depend on."
+    },
+    "about": {
+      "title": "About Lab Essentials",
+      "description": "Learn about our mission to provide precision lab equipment and support to research facilities worldwide.",
+      "ourMission": "Our Mission",
+      "ourValues": "Our Values",
+      "ourTeam": "Our Team"
+    },
+    "contact": {
+      "title": "Contact Us",
+      "description": "Get in touch with our team for support, questions, or feedback.",
+      "getInTouch": "Get in Touch",
+      "address": "Address",
+      "phone": "Phone",
+      "email": "Email",
+      "hours": "Business Hours"
+    }
+  },
+  "newsletter": {
+    "title": "Stay Updated",
+    "description": "Get the latest updates on new products and lab equipment insights.",
+    "placeholder": "Enter your email",
+    "subscribe": "Subscribe",
+    "success": "Thank you for subscribing!",
+    "error": "Failed to subscribe. Please try again.",
+    "alreadySubscribed": "You're already subscribed!"
+  },
+  "errors": {
+    "pageNotFound": "Page Not Found",
+    "somethingWentWrong": "Something went wrong",
+    "tryAgain": "Try Again",
+    "goHome": "Go Home",
+    "refreshPage": "Refresh Page",
+    "componentFailedToLoad": "{{component}} failed to load",
+    "pageError": "Page Error",
+    "errorLoadingPage": "There was an error loading this {{context}}. Please try refreshing."
+  },
+  "accessibility": {
+    "skipToContent": "Skip to content",
+    "closeMenu": "Close menu",
+    "openMenu": "Open menu",
+    "searchProducts": "Search products",
+    "languageSelector": "Language selector",
+    "currencySelector": "Currency selector"
+  }
+}

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Taboola Analytics Test</title>
+  </head>
+  <body>
+    <h1>Taboola Analytics Test</h1>
+    <p>Testing Taboola pixel events...</p>
+
+    <script>
+      // Initialize Taboola
+      window._tfa = window._tfa || [];
+
+      // Load Taboola script
+      (function (e, f, u, i) {
+        e.async = 1;
+        e.src = 'https://cdn.taboola.com/libtrc/unipixel/1759164/tfa.js';
+        f.parentNode.insertBefore(e, f);
+      })(
+        document.createElement('script'),
+        document.getElementsByTagName('script')[0],
+      );
+
+      function testTaboolaEvents() {
+        console.log('🔍 Testing Taboola events...');
+
+        // Test page view
+        window._tfa.push({
+          notify: 'event',
+          name: 'page_view',
+          id: 1759164,
+        });
+        console.log('✅ Sent Taboola page_view event');
+
+        // Test view_item
+        window._tfa.push({
+          notify: 'event',
+          name: 'view_item',
+          id: 1759164,
+          item_id: 'TEST_MICROSCOPE',
+          item_name: 'Test Microscope',
+          price: 299.99,
+          currency: 'USD',
+        });
+        console.log('✅ Sent Taboola view_item event');
+
+        // Test add_to_cart
+        window._tfa.push({
+          notify: 'event',
+          name: 'add_to_cart',
+          id: 1759164,
+          item_id: 'TEST_MICROSCOPE',
+          quantity: 1,
+          price: 299.99,
+          currency: 'USD',
+        });
+        console.log('✅ Sent Taboola add_to_cart event');
+
+        // Test purchase
+        window._tfa.push({
+          notify: 'event',
+          name: 'purchase',
+          id: 1759164,
+          order_id: 'ORDER_' + Date.now(),
+          revenue: 299.99,
+          currency: 'USD',
+        });
+        console.log('✅ Sent Taboola purchase event');
+
+        console.log('📊 Current Taboola queue:', window._tfa);
+      }
+
+      // Run tests after script loads
+      setTimeout(testTaboolaEvents, 3000);
+    </script>
+
+    <button onclick="testTaboolaEvents()">Run Taboola Tests</button>
+
+    <div>
+      <h3>Expected Results:</h3>
+      <ul>
+        <li>✅ Sent Taboola page_view event</li>
+        <li>✅ Sent Taboola view_item event</li>
+        <li>✅ Sent Taboola add_to_cart event</li>
+        <li>✅ Sent Taboola purchase event</li>
+        <li>📊 Current Taboola queue: [array of events]</li>
+      </ul>
+    </div>
+  </body>
+</html>

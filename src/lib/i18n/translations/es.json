@@ -1,0 +1,129 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "retry": "Reintentar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "submit": "Enviar"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "products": "Productos",
+    "collections": "Colecciones",
+    "about": "Acerca de",
+    "contact": "Contacto",
+    "account": "Cuenta",
+    "cart": "Carrito",
+    "search": "Buscar"
+  },
+  "ecommerce": {
+    "addToCart": "Añadir al Carrito",
+    "removeFromCart": "Eliminar del Carrito",
+    "viewCart": "Ver Carrito",
+    "checkout": "Finalizar Compra",
+    "quantity": "Cantidad",
+    "price": "Precio",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "shipping": "Envío",
+    "tax": "Impuestos",
+    "discount": "Descuento",
+    "outOfStock": "Agotado",
+    "inStock": "En Stock",
+    "lowStock": "Stock Bajo",
+    "freeShipping": "Envío Gratuito"
+  },
+  "product": {
+    "description": "Descripción",
+    "specifications": "Especificaciones",
+    "reviews": "Reseñas",
+    "relatedProducts": "Productos Relacionados",
+    "features": "Características",
+    "compatibility": "Compatibilidad",
+    "warranty": "Garantía",
+    "downloads": "Descargas"
+  },
+  "auth": {
+    "login": "Iniciar Sesión",
+    "logout": "Cerrar Sesión",
+    "register": "Registrarse",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "resetPassword": "Restablecer Contraseña",
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar Contraseña",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "createAccount": "Crear Cuenta",
+    "signInToAccount": "Inicia sesión en tu cuenta",
+    "dontHaveAccount": "¿No tienes una cuenta?",
+    "alreadyHaveAccount": "¿Ya tienes una cuenta?"
+  },
+  "forms": {
+    "required": "Este campo es obligatorio",
+    "invalidEmail": "Por favor ingresa un correo electrónico válido",
+    "passwordTooShort": "La contraseña debe tener al menos 8 caracteres",
+    "passwordsDoNotMatch": "Las contraseñas no coinciden",
+    "pleaseSelectOption": "Por favor selecciona una opción",
+    "invalidFormat": "Formato inválido"
+  },
+  "pages": {
+    "homepage": {
+      "title": "Lab Essentials | Equipos de Laboratorio de Precisión",
+      "description": "Lab Essentials ofrece instrumentos calibrados, consumibles y servicios de soporte que mantienen a los equipos de investigación eficientes y conformes.",
+      "heroTitle": "Equipos de Laboratorio de Precisión que Simplemente Funcionan",
+      "heroSubtitle": "Herramientas de alto rendimiento, asequibles y confiables para cada laboratorio",
+      "heroDescription": "Lab Essentials hace que dirigir un laboratorio sea sencillo. Suministramos equipos duraderos y precisos en los que confían escuelas, laboratorios clínicos e instalaciones de investigación."
+    },
+    "about": {
+      "title": "Acerca de Lab Essentials",
+      "description": "Conoce nuestra misión de proporcionar equipos de laboratorio de precisión y soporte a instalaciones de investigación en todo el mundo.",
+      "ourMission": "Nuestra Misión",
+      "ourValues": "Nuestros Valores",
+      "ourTeam": "Nuestro Equipo"
+    },
+    "contact": {
+      "title": "Contáctanos",
+      "description": "Ponte en contacto con nuestro equipo para soporte, preguntas o comentarios.",
+      "getInTouch": "Ponte en Contacto",
+      "address": "Dirección",
+      "phone": "Teléfono",
+      "email": "Correo Electrónico",
+      "hours": "Horario de Atención"
+    }
+  },
+  "newsletter": {
+    "title": "Mantente Actualizado",
+    "description": "Recibe las últimas actualizaciones sobre nuevos productos e información sobre equipos de laboratorio.",
+    "placeholder": "Ingresa tu correo electrónico",
+    "subscribe": "Suscribirse",
+    "success": "¡Gracias por suscribirte!",
+    "error": "Error al suscribirse. Por favor intenta de nuevo.",
+    "alreadySubscribed": "¡Ya estás suscrito!"
+  },
+  "errors": {
+    "pageNotFound": "Página No Encontrada",
+    "somethingWentWrong": "Algo salió mal",
+    "tryAgain": "Intentar de Nuevo",
+    "goHome": "Ir al Inicio",
+    "refreshPage": "Actualizar Página",
+    "componentFailedToLoad": "{{component}} falló al cargar",
+    "pageError": "Error de Página",
+    "errorLoadingPage": "Hubo un error al cargar esta {{context}}. Por favor intenta actualizar."
+  },
+  "accessibility": {
+    "skipToContent": "Saltar al contenido",
+    "closeMenu": "Cerrar menú",
+    "openMenu": "Abrir menú",
+    "searchProducts": "Buscar productos",
+    "languageSelector": "Selector de idioma",
+    "currencySelector": "Selector de moneda"
+  }
+}

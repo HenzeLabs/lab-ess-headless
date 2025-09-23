@@ -178,4 +178,10 @@ export interface LabAnalytics {
     name: string;
     category?: string | null;
   }) => void;
+  trackError?: (payload: {
+    errorId: string;
+    errorType: string;
+    errorLevel: string;
+    errorContext?: string;
+  }) => void;
 }

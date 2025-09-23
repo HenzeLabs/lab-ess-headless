@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GTM Analytics Test</title>
+  </head>
+  <body>
+    <h1>Lab Essentials Analytics Test</h1>
+    <p>Testing GTM dataLayer events...</p>
+
+    <!-- GTM Script -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        'gtm.start': new Date().getTime(),
+        event: 'gtm.js',
+      });
+
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', 'GTM-WNG6Z9ZD');
+
+      // Test events
+      function testEvents() {
+        console.log('🔍 Testing GTM events...');
+
+        // Test page view
+        window.dataLayer.push({
+          event: 'page_view',
+          page_title: 'Test Page',
+          page_location: window.location.href,
+        });
+        console.log('✅ Sent page_view event');
+
+        // Test view_item
+        window.dataLayer.push({
+          event: 'view_item',
+          ecommerce: {
+            currency: 'USD',
+            value: 299.99,
+            items: [
+              {
+                item_id: 'TEST_MICROSCOPE',
+                item_name: 'Test Microscope',
+                category: 'lab-equipment',
+                quantity: 1,
+                price: 299.99,
+              },
+            ],
+          },
+        });
+        console.log('✅ Sent view_item event');
+
+        // Test add_to_cart
+        window.dataLayer.push({
+          event: 'add_to_cart',
+          ecommerce: {
+            currency: 'USD',
+            value: 299.99,
+            items: [
+              {
+                item_id: 'TEST_MICROSCOPE',
+                item_name: 'Test Microscope',
+                category: 'lab-equipment',
+                quantity: 1,
+                price: 299.99,
+              },
+            ],
+          },
+        });
+        console.log('✅ Sent add_to_cart event');
+
+        // Log current dataLayer state
+        console.log('📊 Current dataLayer:', window.dataLayer);
+      }
+
+      // Run tests after GTM loads
+      setTimeout(testEvents, 2000);
+    </script>
+
+    <!-- GTM NoScript -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-WNG6Z9ZD"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+
+    <button onclick="testEvents()">Run GTM Tests</button>
+
+    <script>
+      // Monitor dataLayer pushes
+      const originalPush = window.dataLayer.push;
+      window.dataLayer.push = function () {
+        console.log('📤 DataLayer Push:', arguments[0]);
+        return originalPush.apply(window.dataLayer, arguments);
+      };
+    </script>
+  </body>
+</html>

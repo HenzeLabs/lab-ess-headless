@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 const GTM_ID = 'GTM-WNG6Z9ZD';
 const CLARITY_ID = 'm5xby3pax0';
 const TABOOLA_ID = 1759164;
+const META_PIXEL_ID = '940971967399612';
 
 function loadScriptOnce(id: string, build: () => HTMLScriptElement | null) {
   if (typeof document === 'undefined') return;
@@ -29,6 +30,14 @@ export default function AnalyticsWrapper() {
       dataLayer?: unknown[];
       _tfa?: unknown[];
       clarity?: (...args: unknown[]) => void;
+      fbq?: {
+        (...args: unknown[]): void;
+        callMethod?: (...args: unknown[]) => void;
+        queue?: unknown[];
+        push?: unknown;
+        loaded?: boolean;
+        version?: string;
+      };
       __labAnalytics?: Record<string, unknown>;
     };
 
@@ -58,7 +67,7 @@ export default function AnalyticsWrapper() {
       document.body.insertBefore(noscript, document.body.firstChild);
     }
 
-    // Microsoft Clarity snippet
+    // Microsoft Clarity snippet with enhanced tracking
     loadScriptOnce('clarity-script', () => {
       const script = document.createElement('script');
       script.type = 'text/javascript';
@@ -72,6 +81,31 @@ export default function AnalyticsWrapper() {
       return script;
     });
 
+    // Enhanced Clarity tracking with custom events
+    setTimeout(() => {
+      if (win.clarity) {
+        // Track user segments for lab equipment site
+        win.clarity('set', 'page_type', 'ecommerce');
+        win.clarity(
+          'set',
+          'site_section',
+          window.location.pathname.split('/')[1] || 'home',
+        );
+
+        // Track device type for lab equipment buyers
+        const isMobile = window.innerWidth <= 768;
+        const isTablet = window.innerWidth > 768 && window.innerWidth <= 1024;
+        win.clarity(
+          'set',
+          'device_category',
+          isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop',
+        );
+
+        // Track user behavior patterns
+        win.clarity('set', 'user_type', 'anonymous');
+      }
+    }, 1000);
+
     // Taboola base pixel
     win._tfa = win._tfa || [];
     win._tfa.push({ notify: 'event', name: 'page_view', id: TABOOLA_ID });
@@ -80,6 +114,31 @@ export default function AnalyticsWrapper() {
       const script = document.createElement('script');
       script.async = true;
       script.src = `https://cdn.taboola.com/libtrc/unipixel/${TABOOLA_ID}/tfa.js`;
+      return script;
+    });
+
+    // Meta Pixel base pixel
+    win.fbq =
+      win.fbq ||
+      function (...args) {
+        const fbqInstance = win.fbq as any;
+        fbqInstance.callMethod
+          ? fbqInstance.callMethod.apply(win.fbq, args)
+          : fbqInstance.queue.push(args);
+      };
+    const fbqInstance = win.fbq as any;
+    fbqInstance.push = win.fbq;
+    fbqInstance.loaded = true;
+    fbqInstance.version = '2.0';
+    fbqInstance.queue = [];
+
+    win.fbq('init', META_PIXEL_ID);
+    win.fbq('track', 'PageView');
+
+    loadScriptOnce('meta-pixel-script', () => {
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = 'https://connect.facebook.net/en_US/fbevents.js';
       return script;
     });
 

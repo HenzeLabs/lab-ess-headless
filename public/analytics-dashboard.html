@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Analytics Dashboard - Lab Essentials</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: #f8f9fa;
+        line-height: 1.6;
+      }
+      .dashboard-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+      .platform-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-left: 5px solid;
+      }
+      .platform-card.ga4 {
+        border-left-color: #4285f4;
+      }
+      .platform-card.clarity {
+        border-left-color: #00a4ef;
+      }
+      .platform-card.meta {
+        border-left-color: #1877f2;
+      }
+      .platform-card.taboola {
+        border-left-color: #1c4fd6;
+      }
+      .platform-card.gtm {
+        border-left-color: #ff9800;
+      }
+
+      .platform-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .platform-icon {
+        font-size: 24px;
+        margin-right: 10px;
+      }
+      .platform-title {
+        font-size: 20px;
+        font-weight: bold;
+        margin: 0;
+      }
+      .platform-url {
+        font-size: 12px;
+        color: #666;
+        margin-top: 5px;
+      }
+
+      .quick-actions {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+      }
+      .action-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+      }
+      .action-item {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 3px solid #28a745;
+      }
+      .action-item.warning {
+        border-left-color: #ffc107;
+        background: #fff3cd;
+      }
+      .action-item.danger {
+        border-left-color: #dc3545;
+        background: #f8d7da;
+      }
+
+      .metrics-overview {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+      }
+      .metric-card {
+        text-align: center;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+      }
+      .metric-value {
+        font-size: 28px;
+        font-weight: bold;
+        color: #2c3e50;
+      }
+      .metric-label {
+        font-size: 14px;
+        color: #666;
+        margin-top: 5px;
+      }
+
+      .checklist {
+        list-style: none;
+        padding: 0;
+      }
+      .checklist li {
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+      }
+      .checklist li:before {
+        content: '□';
+        margin-right: 10px;
+        font-size: 16px;
+        color: #666;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        margin: 5px;
+        font-size: 14px;
+      }
+      .btn:hover {
+        background: #0056b3;
+      }
+
+      .status-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+      .status-indicator.active {
+        background: #28a745;
+      }
+      .status-indicator.warning {
+        background: #ffc107;
+      }
+      .status-indicator.error {
+        background: #dc3545;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-header">
+      <h1>🚀 Lab Essentials Analytics Dashboard</h1>
+      <p>Your complete analytics overview and action center</p>
+      <div style="margin-top: 15px">
+        <span class="status-indicator active"></span> All systems operational
+        <span style="margin-left: 20px"
+          >Last updated: <span id="lastUpdated"></span
+        ></span>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="platform-card ga4">
+        <div class="platform-header">
+          <span class="platform-icon">📊</span>
+          <div>
+            <h3 class="platform-title">Google Analytics 4</h3>
+            <div class="platform-url">analytics.google.com</div>
+          </div>
+        </div>
+        <p>
+          <strong>What to check:</strong> Revenue, traffic sources, user
+          behavior, mobile vs desktop performance
+        </p>
+        <p><strong>Your ID:</strong> G-7NR2JG1EDP</p>
+        <div style="margin-top: 15px">
+          <a
+            href="https://analytics.google.com/analytics/web/#/p123456789/reports/reportinghub"
+            class="btn"
+            target="_blank"
+            >Open GA4</a
+          >
+          <a
+            href="https://analytics.google.com/analytics/web/#/p123456789/reports/realtime"
+            class="btn"
+            target="_blank"
+            >Real-Time</a
+          >
+        </div>
+        <ul class="checklist">
+          <li>Daily revenue check</li>
+          <li>Traffic acquisition sources</li>
+          <li>Mobile conversion rates</li>
+          <li>Product performance</li>
+        </ul>
+      </div>
+
+      <div class="platform-card clarity">
+        <div class="platform-header">
+          <span class="platform-icon">🎨</span>
+          <div>
+            <h3 class="platform-title">Microsoft Clarity</h3>
+            <div class="platform-url">clarity.microsoft.com</div>
+          </div>
+        </div>
+        <p>
+          <strong>What to check:</strong> User session recordings, heat maps,
+          rage clicks, scroll patterns
+        </p>
+        <p><strong>Your ID:</strong> m5xby3pax0</p>
+        <div style="margin-top: 15px">
+          <a
+            href="https://clarity.microsoft.com/projects/view/m5xby3pax0"
+            class="btn"
+            target="_blank"
+            >Open Clarity</a
+          >
+          <a
+            href="http://localhost:3002/clarity-insights-test.html"
+            class="btn"
+            target="_blank"
+            >Test Page</a
+          >
+        </div>
+        <ul class="checklist">
+          <li>Watch 3 session recordings weekly</li>
+          <li>Check heat maps for product pages</li>
+          <li>Identify UX pain points</li>
+          <li>Monitor mobile experience</li>
+        </ul>
+      </div>
+
+      <div class="platform-card meta">
+        <div class="platform-header">
+          <span class="platform-icon">📘</span>
+          <div>
+            <h3 class="platform-title">Meta Pixel</h3>
+            <div class="platform-url">business.facebook.com</div>
+          </div>
+        </div>
+        <p>
+          <strong>What to check:</strong> Ad performance, pixel events, audience
+          insights, ROAS
+        </p>
+        <p><strong>Your ID:</strong> 940971967399612</p>
+        <div style="margin-top: 15px">
+          <a
+            href="https://business.facebook.com/events_manager2/list"
+            class="btn"
+            target="_blank"
+            >Events Manager</a
+          >
+          <a
+            href="https://www.facebook.com/adsmanager"
+            class="btn"
+            target="_blank"
+            >Ads Manager</a
+          >
+        </div>
+        <ul class="checklist">
+          <li>Verify pixel events firing</li>
+          <li>Check ad ROAS (target >3:1)</li>
+          <li>Review audience performance</li>
+          <li>Optimize underperforming ads</li>
+        </ul>
+      </div>
+
+      <div class="platform-card taboola">
+        <div class="platform-header">
+          <span class="platform-icon">🎪</span>
+          <div>
+            <h3 class="platform-title">Taboola</h3>
+            <div class="platform-url">backstage.taboola.com</div>
+          </div>
+        </div>
+        <p>
+          <strong>What to check:</strong> Content performance, click-through
+          rates, discovery traffic
+        </p>
+        <p><strong>Your ID:</strong> 1759164</p>
+        <div style="margin-top: 15px">
+          <a href="https://backstage.taboola.com" class="btn" target="_blank"
+            >Backstage</a
+          >
+          <a
+            href="http://localhost:3002/taboola-test.html"
+            class="btn"
+            target="_blank"
+            >Test Page</a
+          >
+        </div>
+        <ul class="checklist">
+          <li>Review content performance</li>
+          <li>Check discovery traffic quality</li>
+          <li>Optimize headlines and images</li>
+          <li>Monitor cost per click</li>
+        </ul>
+      </div>
+
+      <div class="platform-card gtm">
+        <div class="platform-header">
+          <span class="platform-icon">🏷️</span>
+          <div>
+            <h3 class="platform-title">Google Tag Manager</h3>
+            <div class="platform-url">tagmanager.google.com</div>
+          </div>
+        </div>
+        <p>
+          <strong>What to check:</strong> Tag firing, debug mode, event
+          tracking, data layer
+        </p>
+        <p><strong>Your ID:</strong> GTM-WNG6Z9ZD</p>
+        <div style="margin-top: 15px">
+          <a href="https://tagmanager.google.com" class="btn" target="_blank"
+            >GTM Console</a
+          >
+          <a
+            href="http://localhost:3002/gtm-test.html"
+            class="btn"
+            target="_blank"
+            >Test Page</a
+          >
+        </div>
+        <ul class="checklist">
+          <li>Verify tags are firing</li>
+          <li>Check for tracking errors</li>
+          <li>Test in preview mode</li>
+          <li>Monitor data layer events</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <h2>🚨 Weekly Action Items</h2>
+      <div class="action-grid">
+        <div class="action-item">
+          <h4>Monday Morning Check</h4>
+          <p>Review weekend sales, traffic, and any tracking issues</p>
+        </div>
+        <div class="action-item warning">
+          <h4>Mid-Week Optimization</h4>
+          <p>Watch Clarity recordings, optimize underperforming ads</p>
+        </div>
+        <div class="action-item">
+          <h4>Friday Analysis</h4>
+          <p>Weekly performance review and next week planning</p>
+        </div>
+        <div class="action-item danger">
+          <h4>Red Flag Alerts</h4>
+          <p>Conversion rate <2%, mobile issues, tracking errors</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="metrics-overview">
+      <h2>📈 Key Metrics to Monitor</h2>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-value">2.5%</div>
+          <div class="metric-label">Target Conversion Rate</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">$800</div>
+          <div class="metric-label">Target Average Order Value</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">75%</div>
+          <div class="metric-label">Max Cart Abandonment</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">3:1</div>
+          <div class="metric-label">Target ROAS</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">1.8%</div>
+          <div class="metric-label">Target Mobile Conversion</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">3sec</div>
+          <div class="metric-label">Max Page Load Time</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Update last updated time
+      document.getElementById('lastUpdated').textContent =
+        new Date().toLocaleString();
+
+      // Simulate real-time status updates
+      setInterval(() => {
+        const indicators = document.querySelectorAll('.status-indicator');
+        indicators.forEach((indicator) => {
+          // Randomly show different statuses for demo
+          const statuses = ['active', 'warning', 'error'];
+          const weights = [0.8, 0.15, 0.05]; // 80% active, 15% warning, 5% error
+
+          let random = Math.random();
+          let status = 'active';
+
+          if (random < weights[2]) status = 'error';
+          else if (random < weights[1] + weights[2]) status = 'warning';
+
+          indicator.className = `status-indicator ${status}`;
+        });
+      }, 10000);
+
+      console.log('🚀 Analytics Dashboard Loaded');
+      console.log(
+        '📊 Platforms configured: GA4, Clarity, Meta Pixel, Taboola, GTM',
+      );
+      console.log('🎯 Use this dashboard as your weekly analytics routine');
+    </script>
+  </body>
+</html>

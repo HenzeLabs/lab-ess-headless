@@ -4,6 +4,7 @@ import { Inter, JetBrains_Mono } from 'next/font/google';
 import SiteHeader from '@/components/layout/SiteHeader';
 import FooterServer from '@/components/FooterServer';
 import AnalyticsWrapper from '@/AnalyticsWrapper';
+import { ErrorBoundary } from '@/components/error-boundaries/ErrorBoundary';
 
 const sans = Inter({
   subsets: ['latin'],
@@ -49,10 +50,16 @@ export default function RootLayout({
         {/* <script src="https://www.clarity.ms/tag/CLARITY_ID" strategy="lazyOnload"></script> */}
       </head>
       <body>
-        <AnalyticsWrapper />
-        <SiteHeader />
-        {children}
-        <FooterServer />
+        <ErrorBoundary level="app" context="application">
+          <AnalyticsWrapper />
+          <ErrorBoundary level="component" context="header">
+            <SiteHeader />
+          </ErrorBoundary>
+          {children}
+          <ErrorBoundary level="component" context="footer">
+            <FooterServer />
+          </ErrorBoundary>
+        </ErrorBoundary>
       </body>
     </html>
   );

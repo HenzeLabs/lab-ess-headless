@@ -1,6 +1,10 @@
 'use client';
 
-import type { AnalyticsItemInput, AnalyticsOrderInput, LabAnalytics } from '@/lib/types';
+import type {
+  AnalyticsItemInput,
+  AnalyticsOrderInput,
+  LabAnalytics,
+} from '@/lib/types';
 
 export const TABOOLA_PIXEL_ID = 1759164;
 const DEFAULT_CURRENCY = 'USD';
@@ -33,7 +37,9 @@ function pushDataLayer(event: string, ecommerce?: Record<string, unknown>) {
   if (typeof window === 'undefined') {
     return;
   }
-  const win = window as typeof window & { dataLayer?: Record<string, unknown>[] };
+  const win = window as typeof window & {
+    dataLayer?: Record<string, unknown>[];
+  };
   win.dataLayer = win.dataLayer || [];
   win.dataLayer.push({ ecommerce: null });
   const payload: Record<string, unknown> = { event };
@@ -52,6 +58,28 @@ function pushTaboola(name: string, payload: Record<string, unknown> = {}) {
   win._tfa.push({ notify: 'event', name, id: TABOOLA_PIXEL_ID, ...payload });
 }
 
+function pushMeta(event: string, payload: Record<string, unknown> = {}) {
+  if (typeof window === 'undefined') {
+    return;
+  }
+  const win = window as typeof window & { fbq?: (...args: unknown[]) => void };
+  if (win.fbq) {
+    win.fbq('track', event, payload);
+  }
+}
+
+function pushClarity(event: string, payload: Record<string, unknown> = {}) {
+  if (typeof window === 'undefined') {
+    return;
+  }
+  const win = window as typeof window & {
+    clarity?: (...args: unknown[]) => void;
+  };
+  if (win.clarity) {
+    win.clarity('event', event, payload);
+  }
+}
+
 export function trackViewItem(product: AnalyticsItemInput) {
   const items = [mapItem(product)];
   const currency = normaliseCurrency(product.currency);
@@ -59,6 +87,20 @@ export function trackViewItem(product: AnalyticsItemInput) {
   pushTaboola('view_item', {
     item_id: product.id,
     item_name: product.name,
+    price: toNumber(product.price),
+    currency,
+  });
+  pushMeta('ViewContent', {
+    content_type: 'product',
+    content_ids: [product.id],
+    content_name: product.name,
+    value: toNumber(product.price),
+    currency,
+  });
+  pushClarity('product_view', {
+    product_id: product.id,
+    product_name: product.name,
+    category: product.category || 'lab-equipment',
     price: toNumber(product.price),
     currency,
   });
@@ -78,6 +120,11 @@ export function trackViewItemList(
   pushTaboola('view_item_list', {
     list_name: listName,
     item_ids: products.map((item) => item.id),
+  });
+  pushClarity('collection_view', {
+    collection_name: listName,
+    product_count: products.length,
+    categories: [...new Set(products.map((p) => p.category).filter(Boolean))],
   });
 }
 
@@ -109,6 +156,21 @@ export function trackAddToCart(item: AnalyticsItemInput) {
     quantity: item.quantity ?? 1,
     price: toNumber(item.price),
     currency,
+  });
+  pushMeta('AddToCart', {
+    content_type: 'product',
+    content_ids: [item.id],
+    content_name: item.name,
+    value: (toNumber(item.price) || 0) * (item.quantity ?? 1),
+    currency,
+  });
+  pushClarity('add_to_cart', {
+    product_id: item.id,
+    product_name: item.name,
+    category: item.category || 'lab-equipment',
+    price: toNumber(item.price),
+    quantity: item.quantity ?? 1,
+    cart_value: (toNumber(item.price) || 0) * (item.quantity ?? 1),
   });
 }
 
@@ -160,6 +222,22 @@ export function trackPurchase(order: AnalyticsOrderInput) {
     revenue: value,
     currency,
   });
+  pushMeta('Purchase', {
+    content_type: 'product',
+    content_ids: order.items.map((item) => item.id),
+    value,
+    currency,
+  });
+  pushClarity('purchase_complete', {
+    order_id: order.orderId,
+    order_value: value,
+    currency,
+    item_count: order.items.length,
+    categories: [
+      ...new Set(order.items.map((item) => item.category).filter(Boolean)),
+    ],
+    product_types: order.items.map((item) => item.name),
+  });
 }
 
 export function trackNewsletterSignup(email?: string) {
@@ -177,7 +255,11 @@ export function trackViewCheckout(items: AnalyticsItemInput[]) {
   trackBeginCheckout(items);
 }
 
-export function trackDownload(payload: { id: string; name: string; category?: string | null }) {
+export function trackDownload(payload: {
+  id: string;
+  name: string;
+  category?: string | null;
+}) {
   pushDataLayer('download', {
     item_id: payload.id,
     item_name: payload.name,
