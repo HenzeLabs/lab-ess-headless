@@ -8,16 +8,23 @@ import {
   CustomEventDefinition,
 } from './types';
 
-// Extend window for global analytics objects
+// Extend window interface for GTM dataLayer
 declare global {
   interface Window {
     dataLayer: Record<string, unknown>[];
-    gtag: (...args: unknown[]) => void;
-    analytics: AdvancedAnalytics;
+    gtag?: (...args: unknown[]) => void;
   }
 }
 
-interface GA4Item {
+// Extend window for global analytics objects
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+    analytics?: AdvancedAnalytics;
+  }
+}
+
+export interface GA4Item {
   item_id: string;
   item_name: string;
   item_category: string;
@@ -41,7 +48,6 @@ export class AdvancedAnalytics {
   private currentSessionId: string | null = null;
   private userId: string | null = null;
   private gtmEnabled = false;
-  private ga4MeasurementId: string | null = null;
 
   constructor() {
     this.loadFromStorage();
@@ -131,6 +137,133 @@ export class AdvancedAnalytics {
     }
   }
 
+  // Legacy-compatible methods for backward compatibility
+  trackViewItem(product: {
+    id: string;
+    name: string;
+    price: number;
+    category?: string;
+    quantity?: number;
+  }): void {
+    this.trackProductView({
+      productId: product.id,
+      productName: product.name,
+      price: product.price,
+      currency: 'USD',
+      category: product.category || 'unknown',
+      quantity: product.quantity || 1,
+    });
+  }
+
+  trackViewItemList(
+    listName: string,
+    products: Array<{
+      id: string;
+      name: string;
+      price: number;
+      category?: string;
+    }>,
+  ): void {
+    this.track('view_item_list', {
+      item_list_name: listName,
+      items: products.map((p) => ({
+        item_id: p.id,
+        item_name: p.name,
+        price: p.price,
+        item_category: p.category || 'unknown',
+      })),
+    });
+  }
+
+  trackViewCart(
+    items: Array<{
+      id: string;
+      name: string;
+      price: number;
+      quantity: number;
+      category?: string;
+    }>,
+  ): void {
+    const totalValue = items.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0,
+    );
+    this.track('view_cart', {
+      currency: 'USD',
+      value: totalValue,
+      items: items.map((item) => ({
+        item_id: item.id,
+        item_name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        item_category: item.category || 'unknown',
+      })),
+    });
+  }
+
+  trackRemoveFromCart(item: {
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+    category?: string;
+  }): void {
+    this.track('remove_from_cart', {
+      currency: 'USD',
+      value: item.price * item.quantity,
+      items: [
+        {
+          item_id: item.id,
+          item_name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          item_category: item.category || 'unknown',
+        },
+      ],
+    });
+  }
+
+  trackBeginCheckout(
+    items: Array<{
+      id: string;
+      name: string;
+      price: number;
+      quantity: number;
+      category?: string;
+    }>,
+  ): void {
+    const totalValue = items.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0,
+    );
+    this.track('begin_checkout', {
+      currency: 'USD',
+      value: totalValue,
+      items: items.map((item) => ({
+        item_id: item.id,
+        item_name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        item_category: item.category || 'unknown',
+      })),
+    });
+  }
+
+  trackNewsletterSignup(email?: string): void {
+    this.track('newsletter_signup', {
+      email: email || 'anonymous',
+      source: 'website',
+    });
+  }
+
+  trackDownload(payload: { name: string; url: string; type?: string }): void {
+    this.track('file_download', {
+      file_name: payload.name,
+      file_url: payload.url,
+      file_type: payload.type || 'unknown',
+    });
+  }
+
   // User Identification
   identify(userId: string, traits?: Record<string, unknown>): void {
     this.userId = userId;
@@ -210,11 +343,12 @@ export class AdvancedAnalytics {
 
   // External Service Integration
   initializeGA4(measurementId: string): void {
-    this.ga4MeasurementId = measurementId;
+    console.log(`GA4 initialized with measurement ID: ${measurementId}`);
   }
 
-  initializeGTM(_containerId: string): void {
+  initializeGTM(containerId: string): void {
     this.gtmEnabled = true;
+    console.log(`GTM initialized with container ID: ${containerId}`);
   }
 
   private sendToGA4(event: AnalyticsEvent): void {

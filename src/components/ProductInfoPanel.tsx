@@ -1,6 +1,35 @@
 'use client';
 import { trackAddToCart } from '@/lib/analytics';
-import React, { useState, useTransition } from 'react';
+import React, { useState, useTransition, lazy, Suspense } from 'react';
+import ConversionBoosters from './ConversionBoosters';
+import TechnicalSpecs from './TechnicalSpecs';
+import ReviewsAndTrust from './ReviewsAndTrust';
+import ShippingInformation from './ShippingInformation';
+
+// Lazy load heavy advanced components to improve initial load time
+const PersonalizationEngine = lazy(() => import('./PersonalizationEngine'));
+const SmartInventoryManagement = lazy(
+  () => import('./SmartInventoryManagement'),
+);
+const AdvancedAnalyticsDashboard = lazy(
+  () => import('./AdvancedAnalyticsDashboard'),
+);
+const AdvancedCheckoutOptimization = lazy(() =>
+  import('./AdvancedCheckoutOptimization').then((module) => ({
+    default: module.AdvancedCheckoutOptimization,
+  })),
+);
+const IntelligentSearchAndDiscovery = lazy(() =>
+  import('./IntelligentSearchAndDiscovery').then((module) => ({
+    default: module.IntelligentSearchAndDiscovery,
+  })),
+);
+const SmartPricingEngine = lazy(() =>
+  import('./SmartPricingEngine').then((module) => ({
+    default: module.SmartPricingEngine,
+  })),
+);
+
 // using API route for cart mutations
 import { buttonStyles, textStyles } from '@/lib/ui';
 
@@ -45,6 +74,27 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
     selectedVariantData?.price?.currencyCode ??
     product.priceRange?.minVariantPrice?.currencyCode ??
     'USD';
+
+  // Determine product type for technical specs
+  const getProductType = (
+    title: string,
+    tags?: string[],
+  ): 'microscope' | 'centrifuge' | 'camera' | 'incubator' | 'general' => {
+    const titleLower = title.toLowerCase();
+    const allTags = tags?.join(' ').toLowerCase() || '';
+
+    if (titleLower.includes('microscope') || allTags.includes('microscope'))
+      return 'microscope';
+    if (titleLower.includes('centrifuge') || allTags.includes('centrifuge'))
+      return 'centrifuge';
+    if (titleLower.includes('camera') || allTags.includes('camera'))
+      return 'camera';
+    if (titleLower.includes('incubator') || allTags.includes('incubator'))
+      return 'incubator';
+    return 'general';
+  };
+
+  const productType = getProductType(product.title, product.tags);
 
   return (
     <div className="sticky top-8 flex flex-col space-y-6">
@@ -158,6 +208,10 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
             setIsError(false);
             startTransition(async () => {
               try {
+                // Add timeout protection to prevent hanging requests
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
                 await fetch('/api/cart', {
                   method: 'POST',
                   headers: { 'content-type': 'application/json' },
@@ -165,7 +219,10 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
                     variantId: selectedVariant,
                     quantity: 1,
                   }),
+                  signal: controller.signal,
                 });
+
+                clearTimeout(timeoutId);
                 // Signal other parts of the app (e.g., header) to refresh cart count
                 window.dispatchEvent(new CustomEvent('cart:updated'));
                 trackAddToCart({
@@ -179,7 +236,11 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
                 setFeedback('Added to cart successfully!');
                 setIsError(false);
               } catch (e) {
-                setFeedback('Error adding to cart');
+                if (e instanceof Error && e.name === 'AbortError') {
+                  setFeedback('Request timed out. Please try again.');
+                } else {
+                  setFeedback('Error adding to cart');
+                }
                 setIsError(true);
               }
             });
@@ -233,6 +294,71 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
           Afterpay
         </div>
       </div>
+
+      {/* Conversion Boosters */}
+      <ConversionBoosters productId={product.id} inStock={true} />
+
+      {/* Technical Specifications */}
+      <TechnicalSpecs productType={productType} />
+
+      {/* Reviews and Trust Signals */}
+      <ReviewsAndTrust />
+
+      {/* Shipping Information */}
+      <ShippingInformation
+        productWeight={15}
+        productValue={currentPrice ? Number(currentPrice) : 500}
+        isDangerous={product.tags?.includes('hazmat') || false}
+        requiresSpecialHandling={
+          product.tags?.includes('fragile') || productType === 'microscope'
+        }
+      />
+
+      {/* Smart Inventory Management */}
+      <Suspense
+        fallback={
+          <div className="animate-pulse bg-gray-200 h-32 rounded-lg"></div>
+        }
+      >
+        <SmartInventoryManagement
+          productId={product.id}
+          productTitle={product.title}
+          currentPrice={currentPrice ? Number(currentPrice) : 500}
+        />
+      </Suspense>
+
+      {/* AI Personalization Engine */}
+      <Suspense
+        fallback={
+          <div className="animate-pulse bg-gray-200 h-32 rounded-lg"></div>
+        }
+      >
+        <PersonalizationEngine currentProductId={product.id} />
+      </Suspense>
+
+      {/* Advanced Analytics Dashboard */}
+      <Suspense
+        fallback={
+          <div className="animate-pulse bg-gray-200 h-32 rounded-lg"></div>
+        }
+      >
+        <AdvancedAnalyticsDashboard />
+      </Suspense>
+
+      {/* Advanced Checkout Optimization */}
+      <Suspense
+        fallback={
+          <div className="animate-pulse bg-gray-200 h-32 rounded-lg"></div>
+        }
+      >
+        <AdvancedCheckoutOptimization />
+      </Suspense>
+
+      {/* Intelligent Search & Discovery */}
+      <IntelligentSearchAndDiscovery />
+
+      {/* Smart Pricing Engine */}
+      <SmartPricingEngine />
     </div>
   );
 }

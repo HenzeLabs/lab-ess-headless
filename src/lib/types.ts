@@ -1,4 +1,4 @@
-export type CollectionData = {
+export type Collection = {
   id: string;
   title: string;
   handle: string;
@@ -6,6 +6,8 @@ export type CollectionData = {
   image?: { url: string; altText?: string } | null;
   products?: { edges: { node: Product }[] };
 };
+
+export type CollectionData = Collection;
 
 export type CollectionDetail = {
   id: string;
@@ -42,6 +44,7 @@ export type Product = {
   id: string;
   title: string;
   handle: string;
+  description?: string;
   descriptionHtml?: string;
   tags?: string[];
   featuredImage?: { url: string; altText?: string };

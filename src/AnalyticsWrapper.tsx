@@ -118,15 +118,24 @@ export default function AnalyticsWrapper() {
     });
 
     // Meta Pixel base pixel
+    interface FacebookPixel {
+      (...args: unknown[]): void;
+      callMethod?: (...args: unknown[]) => void;
+      queue: unknown[];
+      push: unknown;
+      loaded: boolean;
+      version: string;
+    }
+
     win.fbq =
       win.fbq ||
       function (...args) {
-        const fbqInstance = win.fbq as any;
+        const fbqInstance = win.fbq as FacebookPixel;
         fbqInstance.callMethod
           ? fbqInstance.callMethod.apply(win.fbq, args)
           : fbqInstance.queue.push(args);
       };
-    const fbqInstance = win.fbq as any;
+    const fbqInstance = win.fbq as FacebookPixel;
     fbqInstance.push = win.fbq;
     fbqInstance.loaded = true;
     fbqInstance.version = '2.0';

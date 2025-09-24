@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { textStyles } from '@/lib/ui';
+import { AnalyticsTracker } from '@/lib/analytics-tracking-enhanced';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -16,23 +17,45 @@ export default function LoginPage() {
     setError(null);
     setIsLoading(true);
 
-    // TODO: Implement actual login logic with Shopify Customer Account API
-    // For now, simulate a login attempt
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Call the login API endpoint
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-      if (email === 'test@example.com' && password === 'password') {
-        // Successful login (for simulation)
+      const result = await response.json();
+
+      if (result.success) {
         console.log('Login successful');
-        // Redirect to account page or dashboard
+
+        // Track successful login analytics
+        const customerId = 'customer_123'; // This would come from the API response in real implementation
+        AnalyticsTracker.trackCustomerLogin(customerId, 'email');
+
+        // Redirect to account page
         window.location.href = '/account';
       } else {
-        setError('Invalid email or password.');
+        // Track failed login analytics
+        AnalyticsTracker.trackLoginFailed('invalid_credentials', 1);
+
+        // Display specific error messages if available
+        const errorMessage =
+          result.errors && result.errors.length > 0
+            ? result.errors
+                .map((error: { message: string }) => error.message)
+                .join(', ')
+            : 'Login failed. Please check your credentials.';
+        setError(errorMessage);
       }
     } catch (err) {
+      // Track failed login due to error
+      AnalyticsTracker.trackLoginFailed('system_error', 1);
       setError('An unexpected error occurred.');
-      console.error(err);
+      console.error('Login error:', err);
     } finally {
       setIsLoading(false);
     }

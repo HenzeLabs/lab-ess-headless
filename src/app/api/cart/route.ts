@@ -25,9 +25,12 @@ export async function GET() {
       query: getCartQuery,
       variables: { cartId },
     });
+    console.log('GET /api/cart - Shopify Cart Data:', JSON.stringify(data.cart, null, 2));
+    console.log('GET /api/cart - checkoutUrl:', data.cart?.checkoutUrl);
     return NextResponse.json({ cart: data.cart ?? null });
   } catch (e) {
-    return NextResponse.json({ cart: null }, { status: 200 });
+    console.error('GET /api/cart - Error fetching cart:', e);
+    return NextResponse.json({ error: 'Shopify API failure' }, { status: 500 });
   }
 }
 
@@ -54,8 +57,20 @@ export async function POST(req: Request) {
       },
     });
     cart = data.cartCreate.cart;
-    if (cart?.id)
-      cookieStore.set('cartId', cart.id, { path: '/', httpOnly: false });
+    if (cart?.id) {
+      const response = NextResponse.json({ cart });
+      response.cookies.set('cartId', cart.id, {
+        path: '/',
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 60 * 60 * 24 * 30, // 30 days
+      });
+      console.log('POST /api/cart - New Cart Created:', JSON.stringify(cart, null, 2));
+      console.log('POST /api/cart - checkoutUrl (new cart):', cart?.checkoutUrl);
+      return response;
+    }
+    console.log('POST /api/cart - Cart creation failed');
   } else {
     const { data } = await shopifyFetch<{
       cartLinesAdd: { cart: Cart | null; userErrors: { message: string }[] };
@@ -67,6 +82,8 @@ export async function POST(req: Request) {
       },
     });
     cart = data.cartLinesAdd.cart;
+    console.log('POST /api/cart - Item Added to Existing Cart:', JSON.stringify(cart, null, 2));
+    console.log('POST /api/cart - checkoutUrl (existing cart):', cart?.checkoutUrl);
   }
   return NextResponse.json({ cart });
 }
@@ -97,7 +114,12 @@ export async function PATCH(req: Request) {
       });
       const created = data.cartCreate.cart ?? null;
       if (created?.id) {
-        cookieStore.set('cartId', created.id, { path: '/', httpOnly: false });
+        cookieStore.set('cartId', created.id, {
+          path: '/',
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+        });
       }
       return NextResponse.json({ cart: created });
     }
@@ -135,7 +157,12 @@ export async function DELETE(req: Request) {
       });
       const created = data.cartCreate.cart ?? null;
       if (created?.id) {
-        cookieStore.set('cartId', created.id, { path: '/', httpOnly: false });
+        cookieStore.set('cartId', created.id, {
+          path: '/',
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+        });
       }
       return NextResponse.json({ cart: created });
     }

@@ -1,23 +1,102 @@
 [
   {
-    "id": "1",
-    "name": "Sample Product Name",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    "image": "/placeholders/product1.jpg",
-    "price": "$49.99"
+    "id": "gid://shopify/Product/7183021867067",
+    "handle": "centrifuges",
+    "name": "Centrifuges",
+    "title": "Centrifuges",
+    "description": "High-quality laboratory centrifuges for various applications",
+    "image": "https://cdn.shopify.com/s/files/1/0556/7516/2027/files/centrifuge-main.jpg",
+    "price": "Starting at $689.98",
+    "available": true
   },
   {
-    "id": "2",
-    "name": "Another Product",
-    "description": "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "image": "/placeholders/product2.jpg",
-    "price": "$59.99"
+    "id": "gid://shopify/Product/7183021867068",
+    "handle": "megavid-wifi-microscope-camera",
+    "name": "MegaVID WiFi 12MP Camera",
+    "title": "MegaVID WiFi 12MP Camera",
+    "description": "Professional WiFi-enabled 12MP microscope camera for high-resolution imaging",
+    "image": "https://cdn.shopify.com/s/files/1/0556/7516/2027/files/megavid-camera.jpg",
+    "price": "$821.50",
+    "available": true
   },
   {
-    "id": "3",
-    "name": "Third Product",
-    "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco.",
-    "image": "/placeholders/product3.jpg",
-    "price": "$39.99"
+    "id": "gid://shopify/Product/7183021867069",
+    "handle": "ready-warm-tissue-bath",
+    "name": "Ready Warm Tissue Flotation Bath",
+    "title": "Ready Warm Tissue Flotation Bath",
+    "description": "Smooth sectioning solution for histology slides with precise temperature control",
+    "image": "https://cdn.shopify.com/s/files/1/0556/7516/2027/files/tissue-bath.jpg",
+    "price": "$714.29",
+    "available": true
+  },
+  {
+    "id": "gid://shopify/Product/7183021867070",
+    "handle": "portable-rechargeable-revelation-lll",
+    "name": "The Revelation III Portable Microscope",
+    "title": "The Revelation III Portable USB-Powered Microscope",
+    "description": "Portable, rechargeable USB-powered microscope for field and lab work",
+    "image": "https://cdn.shopify.com/s/files/1/0556/7516/2027/files/revelation-microscope.jpg",
+    "price": "$807.30",
+    "available": true
+  },
+  {
+    "id": "gid://shopify/Product/7183021867071",
+    "handle": "biovid-4k-8mp-ultra-hd-microscope-camera",
+    "name": "BioVID 4K 8MP Camera",
+    "title": "BioVID 4K 8MP Ultra HD Microscope Camera",
+    "description": "Ultra HD 4K microscope camera with 8MP resolution for professional imaging",
+    "image": "https://cdn.shopify.com/s/files/1/0556/7516/2027/files/biovid-camera.jpg",
+    "price": "$1,102.56",
+    "available": true
+  },
+  {
+    "id": "gid://shopify/Product/7183021867072",
+    "handle": "mx5-swing-out-centrifuge",
+    "name": "MX5 Centrifuge",
+    "title": "MX5 Centrifuge",
+    "description": "Professional swing-out centrifuge with variable speed control",
+    "image": "https://cdn.shopify.com/s/files/1/0556/7516/2027/files/mx5-centrifuge.jpg",
+    "price": "$1,693.83",
+    "available": true
+  },
+  {
+    "id": "gid://shopify/Product/7183021867073",
+    "handle": "mxu-centrifuge",
+    "name": "MXU Centrifuge",
+    "title": "MXU Centrifuge",
+    "description": "Compact and efficient centrifuge for routine laboratory applications",
+    "image": "https://cdn.shopify.com/s/files/1/0556/7516/2027/files/mxu-centrifuge.jpg",
+    "price": "$689.98",
+    "available": true
+  },
+  {
+    "id": "gid://shopify/Product/7183021867074",
+    "handle": "mx12-pcv-centrifuge",
+    "name": "MX12 Micro-Combo Centrifuge",
+    "title": "MX12 Micro-Combo Centrifuge",
+    "description": "Versatile micro-combo centrifuge for PCV and other applications",
+    "image": "https://cdn.shopify.com/s/files/1/0556/7516/2027/files/mx12-centrifuge.jpg",
+    "price": "$811.52",
+    "available": true
+  },
+  {
+    "id": "gid://shopify/Product/7183021867075",
+    "handle": "cytoprep",
+    "name": "CytoPrep Fix & Dry Station",
+    "title": "CytoPrep Fix & Dry Station",
+    "description": "All-in-one slide preparation solution for cytology laboratories",
+    "image": "https://cdn.shopify.com/s/files/1/0556/7516/2027/files/cytoprep-station.jpg",
+    "price": "$275.28",
+    "available": true
+  },
+  {
+    "id": "gid://shopify/Product/7183021867076",
+    "handle": "e8-combination-centrifuge-test-tube-microhematocrit",
+    "name": "E8 Combination Centrifuge",
+    "title": "E8 Combination Centrifuge",
+    "description": "Combination centrifuge for test tubes and microhematocrit applications",
+    "image": "https://cdn.shopify.com/s/files/1/0556/7516/2027/files/e8-centrifuge.jpg",
+    "price": "$699.99",
+    "available": true
   }
 ]

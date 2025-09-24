@@ -3,11 +3,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from './ui/button';
-import { Input } from './ui/input';
 import { useState, useEffect } from 'react';
 import type { MenuItem } from '@/lib/types';
-import { Search, User, ShoppingCart, X } from 'lucide-react';
+import { Search, User, ShoppingCart, Menu, X } from 'lucide-react';
 import AnnouncementBar from '@/components/AnnouncementBar';
+import SearchModal from '@/components/SearchModal';
 import { buttonStyles } from '@/lib/ui';
 
 function extractHandle(url: string | undefined): string {
@@ -53,6 +53,7 @@ export default function Header({
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [liveCartCount, setLiveCartCount] = useState<number>(cartItemCount);
 
   const menuItems = collections.map((item) => ({
@@ -71,6 +72,7 @@ export default function Header({
       if (e.key === 'Escape') {
         setActiveMenu(null);
         setIsSearchOpen(false);
+        setIsMobileMenuOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -99,13 +101,27 @@ export default function Header({
   const handleMouseEnter = (handle: string) => setActiveMenu(handle);
   const handleMouseLeave = () => setActiveMenu(null);
 
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
+
   return (
     <>
       <div className="sticky top-0 z-50">
         <AnnouncementBar />
         <div
-          className={`bg-background transition-shadow duration-200 ${
-            isScrolled ? 'shadow-md' : ''
+          className={`bg-white/80 backdrop-blur-xl transition-all duration-300 ${
+            isScrolled ? 'shadow-lg shadow-purple-500/10' : 'shadow-sm'
           }`}
         >
           <header
@@ -114,8 +130,19 @@ export default function Header({
           >
             <div className="max-w-[1440px] mx-auto px-4 lg:px-8">
               <div className="grid grid-cols-3 items-center py-4">
-                {/* Left empty for spacing or future elements */}
-                <div></div>
+                {/* Mobile Menu Button */}
+                <div className="flex justify-start">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="lg:hidden h-12 w-12 p-0 rounded-full hover:bg-accent transition-colors duration-200"
+                    onClick={() => setIsMobileMenuOpen(true)}
+                    aria-label="Open mobile menu"
+                    data-test-id="mobile-menu-button"
+                  >
+                    <Menu className="h-6 w-6" />
+                  </Button>
+                </div>
                 {/* Logo */}
                 <div className="flex justify-center">
                   <Link
@@ -160,7 +187,7 @@ export default function Header({
                     <Link
                       href="/cart"
                       aria-label="Cart"
-                      data-test-id="nav-cart"
+                      data-test-id="cart-button"
                     >
                       <ShoppingCart className="h-9 w-9" />
                       <span
@@ -468,28 +495,116 @@ export default function Header({
         </div>
       </div>
 
-      {/* Search Overlay */}
-      {isSearchOpen && (
-        <div className="fixed inset-0 z-[100] bg-background/80 backdrop-blur-sm flex items-center justify-center">
-          <div className="relative w-full max-w-2xl p-4">
-            <Button
-              variant="ghost"
-              className="absolute top-4 right-4 text-foreground/70 hover:text-foreground"
-              onClick={() => setIsSearchOpen(false)}
-              aria-label="Close search"
-            >
-              <X className="h-8 w-8" />
-            </Button>
-            <form role="search">
-              <Input
-                inputSize="lg"
-                placeholder="Search for products..."
-                className="w-full text-2xl"
-              />
-            </form>
+      {/* Mobile Navigation Overlay */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          {/* Backdrop */}
+          <button
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
+            onClick={() => setIsMobileMenuOpen(false)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                setIsMobileMenuOpen(false);
+              }
+            }}
+            aria-label="Close mobile menu"
+          />
+          {/* Menu Panel */}
+          <div className="relative flex h-full w-full max-w-sm flex-col bg-background shadow-2xl transform transition-transform duration-300 ease-out">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-border/60 bg-surface">
+              <div className="flex items-center gap-3">
+                <Image
+                  src={logoUrl}
+                  alt={logoAlt || shopName}
+                  width={120}
+                  height={40}
+                  className="h-8 w-auto object-contain"
+                />
+                <h2 className="text-lg font-semibold text-foreground">Menu</h2>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 hover:bg-accent"
+                onClick={() => setIsMobileMenuOpen(false)}
+                aria-label="Close mobile menu"
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+
+            {/* Navigation Links */}
+            <nav className="flex-1 overflow-y-auto p-4">
+              <ul className="space-y-1">
+                {menuItems
+                  .filter((item) => item.handle && item.title)
+                  .map((menuItem) => (
+                    <li key={menuItem.handle || menuItem.title}>
+                      <Link
+                        href={menuItem.url || `#${menuItem.handle}`}
+                        className="group block rounded-xl px-4 py-3 text-base font-medium text-foreground transition-all duration-200 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <span className="flex items-center justify-between">
+                          {formatTitleCase(menuItem.title)}
+                          <svg
+                            className="h-4 w-4 text-muted-foreground transition-transform duration-200 group-hover:translate-x-1"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+              </ul>
+            </nav>
+
+            {/* Footer Actions */}
+            <div className="border-t border-border/60 p-4 bg-surface/50">
+              <div className="flex flex-col space-y-2">
+                <Link
+                  href="/account"
+                  className="flex items-center gap-3 rounded-xl px-4 py-3 text-base font-medium text-foreground transition-all duration-200 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <User className="h-5 w-5 text-muted-foreground" />
+                  <span>Account</span>
+                </Link>
+                <Link
+                  href="/cart"
+                  className="flex items-center gap-3 rounded-xl px-4 py-3 text-base font-medium text-foreground transition-all duration-200 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <div className="relative">
+                    <ShoppingCart className="h-5 w-5 text-muted-foreground" />
+                    {liveCartCount > 0 && (
+                      <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                        {liveCartCount > 9 ? '9+' : liveCartCount}
+                      </span>
+                    )}
+                  </div>
+                  <span>Cart {liveCartCount > 0 && `(${liveCartCount})`}</span>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       )}
+
+      {/* Search Modal */}
+      <SearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
     </>
   );
 }

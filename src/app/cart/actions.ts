@@ -32,7 +32,12 @@ export async function addCartLineAction(
     });
     cart = createRes.data.cartCreate.cart;
     if (cart?.id) {
-      cookieStore.set('cartId', cart.id, { path: '/', httpOnly: false });
+      cookieStore.set('cartId', cart.id, {
+        path: '/',
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+      });
       revalidatePath('/');
     } else {
       console.error('Failed to create cart or cart ID is missing.');

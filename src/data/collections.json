@@ -1,3 +1,54 @@
 {
-  "items": []
+  "collections": [
+    {
+      "id": "gid://shopify/Collection/299085430843",
+      "title": "Microscopes",
+      "handle": "microscopes",
+      "description": "",
+      "image": {
+        "url": "https://cdn.shopify.com/s/files/1/0338/9141/8171/files/inverted-infinity-microscopelabessentials-inc-835933.jpg?v=1715182613",
+        "altText": "Inverted Infinity Microscope - LabEssentials, Inc."
+      }
+    },
+    {
+      "id": "gid://shopify/Collection/299085463611",
+      "title": "Centrifuges",
+      "handle": "centrifuges",
+      "description": "",
+      "image": {
+        "url": "https://cdn.shopify.com/s/files/1/0338/9141/8171/files/E8-Centrifuge_-8-Place-Angled-LWScientific-37106354.jpg?v=1752513690",
+        "altText": "E8 Centrifuge: 8-Place Angled - LW Scientific"
+      }
+    },
+    {
+      "id": "gid://shopify/Collection/299085496379",
+      "title": "Microscope Cameras",
+      "handle": "microscope-cameras",
+      "description": "",
+      "image": {
+        "url": "https://cdn.shopify.com/s/files/1/0338/9141/8171/files/BioVID-1080_-Camera-and-13_-Monitor-LWScientific-37143924.jpg?v=1752514027",
+        "altText": "BioVID 1080+ Camera and 13\" Monitor - LW Scientific"
+      }
+    },
+    {
+      "id": "gid://shopify/Collection/299085594683",
+      "title": "Best Sellers",
+      "handle": "best-sellers",
+      "description": "",
+      "image": {
+        "url": "https://cdn.shopify.com/s/files/1/0338/9141/8171/files/BioVID-4K-8MP-Ultra-HD-Microscope-Camera-LWScientific-37214236.jpg?v=1752514162",
+        "altText": "BioVID 4K 8MP Ultra HD Microscope Camera - LW Scientific"
+      }
+    },
+    {
+      "id": "gid://shopify/Collection/299953946683",
+      "title": "Featured Products",
+      "handle": "featured-products",
+      "description": "Our Featured Products collection highlights the best of Lab Essentials—top-selling instruments chosen for their performance, reliability, and value.",
+      "image": {
+        "url": "https://cdn.shopify.com/s/files/1/0338/9141/8171/files/student-prolabessentials-inc-184868.jpg?v=1715182714",
+        "altText": "Student Pro - LabEssentials, Inc."
+      }
+    }
+  ]
 }

@@ -1,63 +1,297 @@
-name: CI
+name: CI Pipeline
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
+
+env:
+  NODE_VERSION: 20
+  CACHE_VERSION: v1
 
 jobs:
-  build:
+  # Quality checks job - fast feedback
+  quality-checks:
+    name: Code Quality & Type Safety
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 20.x
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Typecheck
+      - name: Type checking
         run: npm run typecheck
 
-      - name: Lint
+      - name: Linting
         run: npm run lint
 
-      - name: Cache npm dependencies
-        uses: actions/cache@v3
+      - name: Cache build files
+        uses: actions/cache@v4
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            .next/cache
+            ~/.npm
+          key: ${{ runner.os }}-nextjs-${{ env.CACHE_VERSION }}-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.ts', '**/*.tsx') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-nextjs-${{ env.CACHE_VERSION }}-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-nextjs-${{ env.CACHE_VERSION }}-
 
-      - name: Build
+  # Build job - ensures app builds successfully
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    needs: quality-checks
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Restore build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .next/cache
+            ~/.npm
+          key: ${{ runner.os }}-nextjs-${{ env.CACHE_VERSION }}-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.ts', '**/*.tsx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ env.CACHE_VERSION }}-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-nextjs-${{ env.CACHE_VERSION }}-
+
+      - name: Build application
         run: npm run build
+        env:
+          SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN }}
+          SHOPIFY_STOREFRONT_ACCESS_TOKEN: ${{ secrets.SHOPIFY_STOREFRONT_ACCESS_TOKEN }}
+          SHOPIFY_API_VERSION: 2025-01
+          NEXT_PUBLIC_SITE_URL: https://lab-essentials.vercel.app
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-files
+          path: |
+            .next/
+            public/
+          retention-days: 1
+
+  # Playwright E2E tests
+  playwright-tests:
+    name: E2E Tests (Playwright)
+    runs-on: ubuntu-latest
+    needs: build
+    strategy:
+      matrix:
+        browser: [chromium, firefox]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps ${{ matrix.browser }}
 
       - name: Run Playwright tests
-        run: npm run test:e2e
+        run: npm run test:core -- --project=${{ matrix.browser }}
         env:
-          CI: true
+          SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN }}
+          SHOPIFY_STOREFRONT_ACCESS_TOKEN: ${{ secrets.SHOPIFY_STOREFRONT_ACCESS_TOKEN }}
+          SHOPIFY_API_VERSION: 2025-01
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+          BASE_URL: http://localhost:3000
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-${{ matrix.browser }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  # Lighthouse performance audits
+  lighthouse-audit:
+    name: Performance Audit (Lighthouse)
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+
+      - name: Create Lighthouse config
+        run: |
+          cat > lighthouse.config.js << 'EOF'
+          module.exports = {
+            ci: {
+              collect: {
+                url: [
+                  'http://localhost:3000',
+                  'http://localhost:3000/collections',
+                  'http://localhost:3000/products/test-product',
+                  'http://localhost:3000/cart'
+                ],
+                startServerCommand: 'npm start',
+                startServerReadyPattern: 'ready on',
+                startServerReadyTimeout: 30000,
+                numberOfRuns: 3
+              },
+              assert: {
+                assertions: {
+                  'categories:performance': ['error', { minScore: 0.8 }],
+                  'categories:accessibility': ['error', { minScore: 0.9 }],
+                  'categories:best-practices': ['error', { minScore: 0.8 }],
+                  'categories:seo': ['error', { minScore: 0.9 }],
+                  'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
+                  'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }]
+                }
+              },
+              upload: {
+                target: 'filesystem',
+                outputDir: './lighthouse-reports'
+              }
+            }
+          };
+          EOF
 
       - name: Run Lighthouse CI
         run: npm run lh
         env:
-          CI: true
+          SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN }}
+          SHOPIFY_STOREFRONT_ACCESS_TOKEN: ${{ secrets.SHOPIFY_STOREFRONT_ACCESS_TOKEN }}
+          SHOPIFY_API_VERSION: 2025-01
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
 
-      - name: Upload Playwright Test Results
-        uses: actions/upload-artifact@v3
+      - name: Upload Lighthouse reports
+        uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-report
-          path: playwright-report/
+          name: lighthouse-reports
+          path: |
+            .lighthouseci/
+            lighthouse-reports/
+          retention-days: 7
 
-      - name: Upload Lighthouse CI Report
-        uses: actions/upload-artifact@v3
-        if: always()
+  # Security and dependency checks
+  security-audit:
+    name: Security & Dependency Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          name: lhci-report
-          path: ./.lighthouseci/
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run security audit
+        run: npm audit --audit-level=moderate
+
+      - name: Check for vulnerabilities
+        run: |
+          if npm audit --audit-level=high --dry-run; then
+            echo "No high-severity vulnerabilities found"
+          else
+            echo "High-severity vulnerabilities detected!"
+            npm audit --audit-level=high
+            exit 1
+          fi
+
+  # Deployment readiness check
+  deployment-check:
+    name: Deployment Readiness
+    runs-on: ubuntu-latest
+    needs:
+      [
+        quality-checks,
+        build,
+        playwright-tests,
+        lighthouse-audit,
+        security-audit,
+      ]
+    if: always()
+    steps:
+      - name: Check all job results
+        run: |
+          echo "Quality Checks: ${{ needs.quality-checks.result }}"
+          echo "Build: ${{ needs.build.result }}"
+          echo "Playwright Tests: ${{ needs.playwright-tests.result }}"
+          echo "Lighthouse Audit: ${{ needs.lighthouse-audit.result }}"
+          echo "Security Audit: ${{ needs.security-audit.result }}"
+
+          if [[ "${{ needs.quality-checks.result }}" == "success" && 
+                "${{ needs.build.result }}" == "success" && 
+                "${{ needs.playwright-tests.result }}" == "success" && 
+                "${{ needs.lighthouse-audit.result }}" == "success" && 
+                "${{ needs.security-audit.result }}" == "success" ]]; then
+            echo "✅ All checks passed - Ready for deployment!"
+          else
+            echo "❌ Some checks failed - Not ready for deployment"
+            exit 1
+          fi
+
+      - name: Create deployment summary
+        run: |
+          echo "## 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Quality Gates" >> $GITHUB_STEP_SUMMARY
+          echo "- **Code Quality**: ${{ needs.quality-checks.result == 'success' && '✅ Passed' || '❌ Failed' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build**: ${{ needs.build.result == 'success' && '✅ Passed' || '❌ Failed' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **E2E Tests**: ${{ needs.playwright-tests.result == 'success' && '✅ Passed' || '❌ Failed' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Performance**: ${{ needs.lighthouse-audit.result == 'success' && '✅ Passed' || '❌ Failed' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Security**: ${{ needs.security-audit.result == 'success' && '✅ Passed' || '❌ Failed' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Test Coverage" >> $GITHUB_STEP_SUMMARY
+          echo "- Homepage performance (LCP < 2.5s)" >> $GITHUB_STEP_SUMMARY
+          echo "- User journey flows (browse, cart, checkout)" >> $GITHUB_STEP_SUMMARY
+          echo "- Cross-browser compatibility" >> $GITHUB_STEP_SUMMARY
+          echo "- Core Web Vitals compliance" >> $GITHUB_STEP_SUMMARY
+          echo "- Security vulnerability scanning" >> $GITHUB_STEP_SUMMARY

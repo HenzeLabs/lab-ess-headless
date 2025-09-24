@@ -5,10 +5,10 @@ import path from 'path';
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { locale: string } },
+  { params }: { params: Promise<{ locale: string }> },
 ) {
   try {
-    const locale = params.locale;
+    const { locale } = await params;
 
     // Validate locale
     if (!isValidLocale(locale)) {

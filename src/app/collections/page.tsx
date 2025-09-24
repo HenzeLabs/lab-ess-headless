@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { shopifyFetch } from '@/lib/shopify';
-import { getAllCollectionsQuery } from '@/lib/queries/getAllCollectionsQuery';
+import { getAllCollectionsQuery } from '@/lib/queries';
 import { textStyles, layout, buttonStyles } from '@/lib/ui';
 
 type ShopifyCollectionsResponse = {
