@@ -1,17 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { shopifyFetch } from '@/lib/shopify';
 import { z } from 'zod';
-import { generateTokens, setRefreshTokenCookie, clearAuthCookies } from '@/lib/auth/jwt';
+import {
+  generateTokens,
+  setRefreshTokenCookie,
+  clearAuthCookies,
+} from '@/lib/auth/jwt';
 
 // Input validation schema
 const resetSchema = z.object({
   resetUrl: z.string().url('Invalid reset URL'),
-  password: z.string()
+  password: z
+    .string()
     .min(8, 'Password must be at least 8 characters')
     .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
     .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
     .regex(/[0-9]/, 'Password must contain at least one number')
-    .regex(/[^A-Za-z0-9]/, 'Password must contain at least one special character'),
+    .regex(
+      /[^A-Za-z0-9]/,
+      'Password must contain at least one special character',
+    ),
 });
 
 // GraphQL mutation for password reset
@@ -44,7 +52,9 @@ const CUSTOMER_RESET = `
 /**
  * Extract customer ID and reset token from Shopify reset URL
  */
-function parseResetUrl(resetUrl: string): { customerId: string; resetToken: string } | null {
+function parseResetUrl(
+  resetUrl: string,
+): { customerId: string; resetToken: string } | null {
   try {
     const url = new URL(resetUrl);
     const pathParts = url.pathname.split('/');
@@ -102,7 +112,10 @@ export async function POST(request: NextRequest) {
     const { customerId, resetToken } = resetParams;
 
     // Reset password via Shopify
-    const response = await shopifyFetch<any>({
+    const response = await shopifyFetch<{
+      customerReset?: { customer?: { id: string } };
+      customerUserErrors?: Array<{ message: string }>;
+    }>({
       query: CUSTOMER_RESET,
       variables: {
         id: customerId,
@@ -113,11 +126,13 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    const { customer, customerAccessToken, customerUserErrors } = response.data.customerReset;
+    const { customer, customerAccessToken, customerUserErrors } =
+      response.data.customerReset;
 
     // Handle errors
     if (customerUserErrors && customerUserErrors.length > 0) {
-      const errorMessage = customerUserErrors[0]?.message || 'Invalid or expired reset link';
+      const errorMessage =
+        customerUserErrors[0]?.message || 'Invalid or expired reset link';
       return NextResponse.json(
         {
           error: errorMessage,
@@ -184,7 +199,10 @@ export async function POST(request: NextRequest) {
     successResponse.headers.set('X-Content-Type-Options', 'nosniff');
     successResponse.headers.set('X-Frame-Options', 'DENY');
     successResponse.headers.set('X-XSS-Protection', '1; mode=block');
-    successResponse.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+    successResponse.headers.set(
+      'Referrer-Policy',
+      'strict-origin-when-cross-origin',
+    );
 
     return successResponse;
   } catch (error) {
@@ -193,7 +211,8 @@ export async function POST(request: NextRequest) {
     // Don't leak internal error details
     return NextResponse.json(
       {
-        error: 'Failed to reset password. Please try again or request a new reset link.',
+        error:
+          'Failed to reset password. Please try again or request a new reset link.',
       },
       { status: 500 },
     );

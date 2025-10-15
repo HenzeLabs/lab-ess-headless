@@ -17,7 +17,7 @@ declare global {
   }
 }
 
-interface GA4Item {
+export interface GA4Item {
   item_id: string;
   item_name: string;
   item_category: string;

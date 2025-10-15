@@ -228,7 +228,7 @@ class CacheManager {
   }
 
   // Get cache statistics
-  async getStats(): Promise<Record<string, any>> {
+  async getStats(): Promise<Record<string, unknown>> {
     if (!this.connected || !this.client) {
       return {};
     }
@@ -293,11 +293,12 @@ export async function withCache<T>(
 }
 
 // Cache decorator for async functions
-export function cached<T extends any[], R>(
+export function cached<T extends unknown[], R>(
   keyGenerator: (...args: T) => string,
   ttl?: number,
 ) {
   return function (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     target: any,
     propertyName: string,
     descriptor: PropertyDescriptor,

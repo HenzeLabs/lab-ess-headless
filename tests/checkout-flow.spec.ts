@@ -182,7 +182,9 @@ test.describe('Checkout Flow', () => {
         await checkoutButton.click();
 
         // Should display error message
-        await expect(page.locator('text=Failed to create checkout')).toBeVisible({ timeout: 5000 });
+        await expect(
+          page.locator('text=Failed to create checkout'),
+        ).toBeVisible({ timeout: 5000 });
       }
     });
 
@@ -198,16 +200,18 @@ test.describe('Checkout Flow', () => {
       ]);
 
       // Track analytics events
-      const analyticsEvents: any[] = [];
-      await page.exposeFunction('trackAnalytics', (event: any) => {
-        analyticsEvents.push(event);
-      });
+      const analyticsEvents: Array<Record<string, unknown>> = [];
+      await page.exposeFunction(
+        'trackAnalytics',
+        (event: Record<string, unknown>) => {
+          analyticsEvents.push(event);
+        },
+      );
 
       await page.addInitScript(() => {
-        window.gtag = function() {
-          const args = Array.from(arguments);
+        window.gtag = function (...args: unknown[]) {
           if (args[0] === 'event' && args[1] === 'begin_checkout') {
-            window.trackAnalytics(args[2]);
+            window.trackAnalytics(args[2] as Record<string, unknown>);
           }
         };
       });
@@ -328,12 +332,16 @@ test.describe('Checkout Flow', () => {
   });
 
   test.describe('End-to-End Checkout', () => {
-    test('should complete checkout flow from product to checkout', async ({ page }) => {
+    test('should complete checkout flow from product to checkout', async ({
+      page,
+    }) => {
       // Navigate to a product page
       await page.goto('/products');
 
       // Add product to cart (if product exists)
-      const addToCartButton = page.locator('button:has-text("Add to Cart")').first();
+      const addToCartButton = page
+        .locator('button:has-text("Add to Cart")')
+        .first();
       const addButtonCount = await addToCartButton.count();
 
       if (addButtonCount > 0) {

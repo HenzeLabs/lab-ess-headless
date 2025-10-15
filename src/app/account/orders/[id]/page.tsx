@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface OrderDetail {
   id: string;
@@ -116,12 +117,6 @@ export default function OrderDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (orderId) {
-      fetchOrderDetail();
-    }
-  }, [orderId]);
-
   const fetchOrderDetail = async () => {
     setLoading(true);
     setError(null);
@@ -137,7 +132,7 @@ export default function OrderDetailPage() {
 
       const response = await fetch(`/api/orders/${orderId}`, {
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
 
@@ -155,7 +150,7 @@ export default function OrderDetailPage() {
           // Retry the request
           const retryResponse = await fetch(`/api/orders/${orderId}`, {
             headers: {
-              'Authorization': `Bearer ${newAccessToken}`,
+              Authorization: `Bearer ${newAccessToken}`,
             },
           });
 
@@ -186,6 +181,13 @@ export default function OrderDetailPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (orderId) {
+      fetchOrderDetail();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orderId]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -238,7 +240,10 @@ export default function OrderDetailPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="bg-red-50 p-6 rounded-lg">
           <p className="text-red-600">{error}</p>
-          <Link href="/account/orders" className="mt-4 text-blue-600 hover:underline inline-block">
+          <Link
+            href="/account/orders"
+            className="mt-4 text-blue-600 hover:underline inline-block"
+          >
             ← Back to Orders
           </Link>
         </div>
@@ -250,7 +255,10 @@ export default function OrderDetailPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <p>Order not found</p>
-        <Link href="/account/orders" className="mt-4 text-blue-600 hover:underline inline-block">
+        <Link
+          href="/account/orders"
+          className="mt-4 text-blue-600 hover:underline inline-block"
+        >
           ← Back to Orders
         </Link>
       </div>
@@ -261,20 +269,29 @@ export default function OrderDetailPage() {
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-6">
-        <Link href="/account/orders" className="text-blue-600 hover:underline mb-4 inline-block">
+        <Link
+          href="/account/orders"
+          className="text-blue-600 hover:underline mb-4 inline-block"
+        >
           ← Back to Orders
         </Link>
         <div className="flex justify-between items-start">
           <div>
             <h1 className="text-3xl font-bold mb-2">Order {order.name}</h1>
-            <p className="text-gray-600">Placed on {formatDate(order.processedAt)}</p>
+            <p className="text-gray-600">
+              Placed on {formatDate(order.processedAt)}
+            </p>
           </div>
           <div className="text-right">
             <div className="space-x-2">
-              <span className={`inline-block px-3 py-1 text-sm font-medium rounded-full ${getStatusBadgeColor(order.financialStatus)}`}>
+              <span
+                className={`inline-block px-3 py-1 text-sm font-medium rounded-full ${getStatusBadgeColor(order.financialStatus)}`}
+              >
                 Payment: {order.financialStatus}
               </span>
-              <span className={`inline-block px-3 py-1 text-sm font-medium rounded-full ${getStatusBadgeColor(order.fulfillmentStatus)}`}>
+              <span
+                className={`inline-block px-3 py-1 text-sm font-medium rounded-full ${getStatusBadgeColor(order.fulfillmentStatus)}`}
+              >
                 Fulfillment: {order.fulfillmentStatus}
               </span>
             </div>
@@ -292,11 +309,16 @@ export default function OrderDetailPage() {
             <div className="p-6">
               <div className="space-y-4">
                 {order.lineItems.edges.map((item, index) => (
-                  <div key={index} className="flex items-start space-x-4 pb-4 border-b last:border-b-0 last:pb-0">
+                  <div
+                    key={index}
+                    className="flex items-start space-x-4 pb-4 border-b last:border-b-0 last:pb-0"
+                  >
                     {item.node.variant.image && (
-                      <img
+                      <Image
                         src={item.node.variant.image.url}
                         alt={item.node.variant.image.altText || item.node.title}
+                        width={80}
+                        height={80}
                         className="w-20 h-20 object-cover rounded"
                       />
                     )}
@@ -308,16 +330,27 @@ export default function OrderDetailPage() {
                         {item.node.title}
                       </Link>
                       {item.node.variant.title !== 'Default Title' && (
-                        <p className="text-sm text-gray-600">{item.node.variant.title}</p>
+                        <p className="text-sm text-gray-600">
+                          {item.node.variant.title}
+                        </p>
                       )}
-                      <p className="text-sm text-gray-600">Quantity: {item.node.quantity}</p>
+                      <p className="text-sm text-gray-600">
+                        Quantity: {item.node.quantity}
+                      </p>
                       <div className="mt-1">
                         <span className="font-medium">
-                          {formatPrice(item.node.discountedTotalPrice.amount, item.node.discountedTotalPrice.currencyCode)}
+                          {formatPrice(
+                            item.node.discountedTotalPrice.amount,
+                            item.node.discountedTotalPrice.currencyCode,
+                          )}
                         </span>
-                        {item.node.originalTotalPrice.amount !== item.node.discountedTotalPrice.amount && (
+                        {item.node.originalTotalPrice.amount !==
+                          item.node.discountedTotalPrice.amount && (
                           <span className="ml-2 text-sm text-gray-500 line-through">
-                            {formatPrice(item.node.originalTotalPrice.amount, item.node.originalTotalPrice.currencyCode)}
+                            {formatPrice(
+                              item.node.originalTotalPrice.amount,
+                              item.node.originalTotalPrice.currencyCode,
+                            )}
                           </span>
                         )}
                       </div>
@@ -342,21 +375,29 @@ export default function OrderDetailPage() {
                         Carrier: {fulfillment.trackingCompany}
                       </p>
                     )}
-                    {fulfillment.trackingInfo && fulfillment.trackingInfo.map((tracking, trackingIndex) => (
-                      <div key={trackingIndex} className="flex items-center space-x-2">
-                        <span className="text-sm">Tracking #: {tracking.number}</span>
-                        {tracking.url && (
-                          <a
-                            href={tracking.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:underline text-sm"
+                    {fulfillment.trackingInfo &&
+                      fulfillment.trackingInfo.map(
+                        (tracking, trackingIndex) => (
+                          <div
+                            key={trackingIndex}
+                            className="flex items-center space-x-2"
                           >
-                            Track Package →
-                          </a>
-                        )}
-                      </div>
-                    ))}
+                            <span className="text-sm">
+                              Tracking #: {tracking.number}
+                            </span>
+                            {tracking.url && (
+                              <a
+                                href={tracking.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:underline text-sm"
+                              >
+                                Track Package →
+                              </a>
+                            )}
+                          </div>
+                        ),
+                      )}
                   </div>
                 ))}
               </div>
@@ -375,26 +416,52 @@ export default function OrderDetailPage() {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal</span>
-                  <span>{formatPrice(order.subtotalPrice.amount, order.subtotalPrice.currencyCode)}</span>
+                  <span>
+                    {formatPrice(
+                      order.subtotalPrice.amount,
+                      order.subtotalPrice.currencyCode,
+                    )}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Shipping</span>
-                  <span>{formatPrice(order.totalShippingPrice.amount, order.totalShippingPrice.currencyCode)}</span>
+                  <span>
+                    {formatPrice(
+                      order.totalShippingPrice.amount,
+                      order.totalShippingPrice.currencyCode,
+                    )}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Tax</span>
-                  <span>{formatPrice(order.totalTax.amount, order.totalTax.currencyCode)}</span>
+                  <span>
+                    {formatPrice(
+                      order.totalTax.amount,
+                      order.totalTax.currencyCode,
+                    )}
+                  </span>
                 </div>
                 {parseFloat(order.totalRefunded.amount) > 0 && (
                   <div className="flex justify-between text-red-600">
                     <span>Refunded</span>
-                    <span>-{formatPrice(order.totalRefunded.amount, order.totalRefunded.currencyCode)}</span>
+                    <span>
+                      -
+                      {formatPrice(
+                        order.totalRefunded.amount,
+                        order.totalRefunded.currencyCode,
+                      )}
+                    </span>
                   </div>
                 )}
                 <div className="border-t pt-2 mt-2">
                   <div className="flex justify-between font-semibold text-lg">
                     <span>Total</span>
-                    <span>{formatPrice(order.currentTotalPrice.amount, order.currentTotalPrice.currencyCode)}</span>
+                    <span>
+                      {formatPrice(
+                        order.currentTotalPrice.amount,
+                        order.currentTotalPrice.currencyCode,
+                      )}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -409,18 +476,26 @@ export default function OrderDetailPage() {
               </div>
               <div className="p-6">
                 <p className="font-medium">
-                  {order.shippingAddress.firstName} {order.shippingAddress.lastName}
+                  {order.shippingAddress.firstName}{' '}
+                  {order.shippingAddress.lastName}
                 </p>
                 <p className="text-sm text-gray-600">
                   {order.shippingAddress.address1}
-                  {order.shippingAddress.address2 && <>, {order.shippingAddress.address2}</>}
+                  {order.shippingAddress.address2 && (
+                    <>, {order.shippingAddress.address2}</>
+                  )}
                 </p>
                 <p className="text-sm text-gray-600">
-                  {order.shippingAddress.city}, {order.shippingAddress.province} {order.shippingAddress.zip}
+                  {order.shippingAddress.city}, {order.shippingAddress.province}{' '}
+                  {order.shippingAddress.zip}
                 </p>
-                <p className="text-sm text-gray-600">{order.shippingAddress.country}</p>
+                <p className="text-sm text-gray-600">
+                  {order.shippingAddress.country}
+                </p>
                 {order.shippingAddress.phone && (
-                  <p className="text-sm text-gray-600 mt-2">Phone: {order.shippingAddress.phone}</p>
+                  <p className="text-sm text-gray-600 mt-2">
+                    Phone: {order.shippingAddress.phone}
+                  </p>
                 )}
               </div>
             </div>
@@ -434,18 +509,26 @@ export default function OrderDetailPage() {
               </div>
               <div className="p-6">
                 <p className="font-medium">
-                  {order.billingAddress.firstName} {order.billingAddress.lastName}
+                  {order.billingAddress.firstName}{' '}
+                  {order.billingAddress.lastName}
                 </p>
                 <p className="text-sm text-gray-600">
                   {order.billingAddress.address1}
-                  {order.billingAddress.address2 && <>, {order.billingAddress.address2}</>}
+                  {order.billingAddress.address2 && (
+                    <>, {order.billingAddress.address2}</>
+                  )}
                 </p>
                 <p className="text-sm text-gray-600">
-                  {order.billingAddress.city}, {order.billingAddress.province} {order.billingAddress.zip}
+                  {order.billingAddress.city}, {order.billingAddress.province}{' '}
+                  {order.billingAddress.zip}
                 </p>
-                <p className="text-sm text-gray-600">{order.billingAddress.country}</p>
+                <p className="text-sm text-gray-600">
+                  {order.billingAddress.country}
+                </p>
                 {order.billingAddress.phone && (
-                  <p className="text-sm text-gray-600 mt-2">Phone: {order.billingAddress.phone}</p>
+                  <p className="text-sm text-gray-600 mt-2">
+                    Phone: {order.billingAddress.phone}
+                  </p>
                 )}
               </div>
             </div>

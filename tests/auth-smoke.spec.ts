@@ -1,9 +1,8 @@
-import { test, expect } from '@playwright/test';
-import { 
+import { test } from '@playwright/test';
+import {
   generateTestUser,
   setupAuthenticationTest,
-  waitForPageLoad,
-  dismissCookieConsent
+  dismissCookieConsent,
 } from './utils/helpers';
 
 test.describe('Authentication Smoke Test', () => {
@@ -25,37 +24,46 @@ test.describe('Authentication Smoke Test', () => {
 
     // Force dismiss any remaining overlays before submission
     await dismissCookieConsent(page);
-    
+
     // Use force click to bypass any remaining overlay issues
-    await page.click('button[type="submit"], button:has-text("Register")', { force: true });
+    await page.click('button[type="submit"], button:has-text("Register")', {
+      force: true,
+    });
 
     // Wait for registration to process and check multiple success indicators
     try {
       // Wait for either success message or navigation
       await Promise.race([
-        page.waitForSelector('text=Registration Successful, text=Successfully registered, text=Account created', { timeout: 10000 }),
+        page.waitForSelector(
+          'text=Registration Successful, text=Successfully registered, text=Account created',
+          { timeout: 10000 },
+        ),
         page.waitForURL('/account', { timeout: 10000 }),
-        page.waitForURL('/account/login', { timeout: 10000 }) // Sometimes redirects to login first
+        page.waitForURL('/account/login', { timeout: 10000 }), // Sometimes redirects to login first
       ]);
-      
+
       console.log('✅ Registration completed successfully');
     } catch (error) {
       // Check current URL to see where we ended up
       console.log('Current URL after registration attempt:', page.url());
-      
+
       // If we're on the account page, registration was successful
       if (page.url().includes('/account')) {
         console.log('✅ Registration successful - redirected to account page');
         return;
       }
-      
+
       // If there's an error message, log it
-      const errorMessage = await page.locator('[role="alert"], .error, .text-red').first().textContent().catch(() => null);
+      const errorMessage = await page
+        .locator('[role="alert"], .error, .text-red')
+        .first()
+        .textContent()
+        .catch(() => null);
       if (errorMessage) {
         console.log('❌ Registration error:', errorMessage);
         throw new Error(`Registration failed: ${errorMessage}`);
       }
-      
+
       throw error;
     }
   });

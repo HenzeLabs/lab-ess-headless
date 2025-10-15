@@ -42,11 +42,9 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [pageInfo, setPageInfo] = useState<OrdersResponse['pageInfo'] | null>(null);
-
-  useEffect(() => {
-    fetchOrders();
-  }, []);
+  const [pageInfo, setPageInfo] = useState<OrdersResponse['pageInfo'] | null>(
+    null,
+  );
 
   const fetchOrders = async (cursor?: string, direction?: 'next' | 'prev') => {
     setLoading(true);
@@ -75,7 +73,7 @@ export default function OrdersPage() {
 
       const response = await fetch(`/api/orders?${params.toString()}`, {
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
 
@@ -91,11 +89,14 @@ export default function OrdersPage() {
           localStorage.setItem('accessToken', newAccessToken);
 
           // Retry the request
-          const retryResponse = await fetch(`/api/orders?${params.toString()}`, {
-            headers: {
-              'Authorization': `Bearer ${newAccessToken}`,
+          const retryResponse = await fetch(
+            `/api/orders?${params.toString()}`,
+            {
+              headers: {
+                Authorization: `Bearer ${newAccessToken}`,
+              },
             },
-          });
+          );
 
           if (retryResponse.ok) {
             const data: OrdersResponse = await retryResponse.json();
@@ -122,6 +123,11 @@ export default function OrdersPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchOrders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -204,7 +210,10 @@ export default function OrdersPage() {
         <>
           <div className="space-y-4">
             {orders.map((order) => (
-              <div key={order.id} className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+              <div
+                key={order.id}
+                className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow"
+              >
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <h2 className="text-xl font-semibold mb-1">
@@ -216,13 +225,20 @@ export default function OrdersPage() {
                   </div>
                   <div className="text-right">
                     <p className="text-xl font-bold">
-                      {formatPrice(order.currentTotalPrice.amount, order.currentTotalPrice.currencyCode)}
+                      {formatPrice(
+                        order.currentTotalPrice.amount,
+                        order.currentTotalPrice.currencyCode,
+                      )}
                     </p>
                     <div className="mt-2 space-x-2">
-                      <span className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${getStatusBadgeColor(order.financialStatus)}`}>
+                      <span
+                        className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${getStatusBadgeColor(order.financialStatus)}`}
+                      >
                         {order.financialStatus}
                       </span>
-                      <span className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${getStatusBadgeColor(order.fulfillmentStatus)}`}>
+                      <span
+                        className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${getStatusBadgeColor(order.fulfillmentStatus)}`}
+                      >
                         {order.fulfillmentStatus}
                       </span>
                     </div>
@@ -231,14 +247,17 @@ export default function OrdersPage() {
 
                 <div className="border-t pt-4">
                   <p className="text-sm text-gray-600 mb-2">
-                    {order.lineItems.edges.length} item{order.lineItems.edges.length !== 1 ? 's' : ''}
+                    {order.lineItems.edges.length} item
+                    {order.lineItems.edges.length !== 1 ? 's' : ''}
                   </p>
                   <div className="flex justify-between items-center">
                     <div className="text-sm text-gray-700">
                       {order.lineItems.edges.slice(0, 2).map((item, index) => (
                         <span key={index}>
                           {item.node.title} ({item.node.quantity})
-                          {index < Math.min(1, order.lineItems.edges.length - 1) && ', '}
+                          {index <
+                            Math.min(1, order.lineItems.edges.length - 1) &&
+                            ', '}
                         </span>
                       ))}
                       {order.lineItems.edges.length > 2 && ' ...'}
