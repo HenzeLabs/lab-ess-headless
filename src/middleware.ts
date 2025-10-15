@@ -4,10 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 //   securityHeaders,
 //   validateCSRF,
 // } from './src/lib/security/middleware';
-import {
-  verifyAccessToken,
-  getAccessTokenFromHeader,
-} from './src/lib/auth/jwt';
+import { verifyAccessToken, getAccessTokenFromHeader } from '@/lib/auth/jwt';
 
 export async function middleware(request: NextRequest) {
   // Apply security middleware
