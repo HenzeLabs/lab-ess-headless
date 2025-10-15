@@ -52,7 +52,9 @@ async function test(name: string, fn: () => Promise<boolean>) {
 // Test 1: Products API returns real data
 async function testProductsAPI() {
   const response = await fetch(`${BASE_URL}/api/products`);
-  const data = await response.json();
+  const data = (await response.json()) as {
+    products?: Array<{ handle: string; title: string }>;
+  };
 
   return (
     response.ok &&
@@ -66,7 +68,7 @@ async function testProductsAPI() {
 // Test 2: Collections API works
 async function testCollectionsAPI() {
   const response = await fetch(`${BASE_URL}/api/collections`);
-  const data = await response.json();
+  const data = (await response.json()) as { collections?: unknown[] };
 
   return response.ok && data.collections && Array.isArray(data.collections);
 }
@@ -91,7 +93,7 @@ async function testCheckoutAPI() {
   const response = await fetch(`${BASE_URL}/api/checkout`, {
     method: 'GET',
   });
-  const data = await response.json();
+  const data = (await response.json()) as { hasCart?: boolean };
 
   return response.ok && data.hasCart !== undefined;
 }
@@ -99,7 +101,9 @@ async function testCheckoutAPI() {
 // Test 5: Featured products returns real products
 async function testFeaturedProducts() {
   const response = await fetch(`${BASE_URL}/api/featured-products`);
-  const data = await response.json();
+  const data = (await response.json()) as {
+    products?: Array<{ handle: string }>;
+  };
 
   return (
     response.ok &&
@@ -112,7 +116,10 @@ async function testFeaturedProducts() {
 // Test 6: Search API works
 async function testSearchAPI() {
   const response = await fetch(`${BASE_URL}/api/search?q=centrifuge`);
-  const data = await response.json();
+  const data = (await response.json()) as {
+    products?: unknown[];
+    results?: unknown[];
+  };
 
   return (
     response.ok &&
@@ -126,7 +133,9 @@ async function testProductByHandle() {
   const response = await fetch(
     `${BASE_URL}/api/product-by-handle?handle=centrifuges`,
   );
-  const data = await response.json();
+  const data = (await response.json()) as {
+    product?: { handle: string; title: string };
+  };
 
   return (
     response.ok &&
@@ -139,7 +148,7 @@ async function testProductByHandle() {
 // Test 8: Health check passes
 async function testHealthCheck() {
   const response = await fetch(`${BASE_URL}/api/health-check`);
-  const data = await response.json();
+  const data = (await response.json()) as { status?: string };
 
   return response.ok && data.status === 'healthy';
 }

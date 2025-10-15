@@ -27,10 +27,8 @@ interface ProductEdge {
 }
 
 interface ProductsResponse {
-  data?: {
-    products?: {
-      edges: ProductEdge[];
-    };
+  products?: {
+    edges: ProductEdge[];
   };
 }
 

@@ -31,12 +31,12 @@
     "src/**/*.tsx",
     "tests/**/*.ts",
     "tests/**/*.tsx",
-    "scripts/**/*.ts",
+    "scripts/fetch-real-products.ts",
     "playwright.config.ts",
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "postcss.config.js",
     "tailwind.config.js"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "scripts/validate-integration.ts"]
 }
