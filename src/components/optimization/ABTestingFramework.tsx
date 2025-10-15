@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { analytics } from '@/lib/analytics';
+// Analytics imported via window.__labAnalytics global
+// import { analytics } from '@/lib/analytics';
 
 // A/B Testing Configuration
 export interface ABTestVariant {

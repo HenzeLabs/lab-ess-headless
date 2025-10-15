@@ -1,6 +1,7 @@
 // Enhanced Product Discovery and Conversion Optimization Components
-export { default as SmartProductDiscovery } from './SmartProductDiscovery';
-export { ProductRecommendations } from './ProductRecommendations';
+// SmartProductDiscovery and ProductRecommendations removed during cleanup
+// export { default as SmartProductDiscovery } from './SmartProductDiscovery';
+// export { ProductRecommendations } from './ProductRecommendations';
 export {
   ABTest,
   useABTest,

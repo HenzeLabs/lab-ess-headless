@@ -110,15 +110,24 @@ export default function AnalyticsWrapper() {
     });
 
     // Meta Pixel base pixel
+    type FbqInstance = {
+      (...args: unknown[]): void;
+      callMethod?: (...a: unknown[]) => void;
+      queue: unknown[];
+      push?: unknown;
+      loaded?: boolean;
+      version?: string;
+    };
+
     win.fbq =
       win.fbq ||
-      function (...args) {
-        const fbqInstance = win.fbq as any;
-        fbqInstance.callMethod
-          ? fbqInstance.callMethod.apply(win.fbq, args)
-          : fbqInstance.queue.push(args);
+      function (...args: unknown[]) {
+        const fbqInstance = win.fbq as FbqInstance;
+        fbqInstance?.callMethod
+          ? fbqInstance.callMethod(...args)
+          : fbqInstance?.queue.push(args);
       };
-    const fbqInstance = win.fbq as any;
+    const fbqInstance = win.fbq as FbqInstance;
     fbqInstance.push = win.fbq;
     fbqInstance.loaded = true;
     fbqInstance.version = '2.0';
