@@ -41,7 +41,6 @@ export class AdvancedAnalytics {
   private currentSessionId: string | null = null;
   private userId: string | null = null;
   private gtmEnabled = false;
-  private ga4MeasurementId: string | null = null;
 
   constructor() {
     this.loadFromStorage();
@@ -209,8 +208,8 @@ export class AdvancedAnalytics {
   }
 
   // External Service Integration
-  initializeGA4(measurementId: string): void {
-    this.ga4MeasurementId = measurementId;
+  initializeGA4(_measurementId: string): void {
+    // GA4 initialized via AnalyticsWrapper
   }
 
   initializeGTM(_containerId: string): void {

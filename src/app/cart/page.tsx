@@ -26,8 +26,7 @@ export default function CartPage() {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        // Use shorter timeout for faster test feedback
-        const cartData = await getCart(5000);
+        const cartData = await getCart();
         setCart(cartData);
       } catch (err) {
         console.error('Cart loading error:', err);
@@ -94,7 +93,7 @@ export default function CartPage() {
 
   async function refreshCart() {
     try {
-      const newCart = await getCart(6000);
+      const newCart = await getCart();
       setCart(newCart);
     } catch (error) {
       console.warn('Cart refresh failed:', error);

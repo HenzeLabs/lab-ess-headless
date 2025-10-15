@@ -83,11 +83,13 @@ export function useABTest(testId: string): {
         localStorage.setItem(`ab_test_${testId}`, JSON.stringify(assignment));
 
         // Track assignment event
-        analytics.track('ab_test_assigned', {
-          test_id: testId,
-          variant_id: assignedVariant.id,
-          variant_name: assignedVariant.name,
-        });
+        if (typeof window !== 'undefined' && window.analytics) {
+          window.analytics.track('ab_test_assigned', {
+            test_id: testId,
+            variant_id: assignedVariant.id,
+            variant_name: assignedVariant.name,
+          });
+        }
 
         setVariant(assignedVariant);
       } catch (error) {
@@ -140,15 +142,17 @@ class ABTestManager {
 
     const parsedAssignment = JSON.parse(assignment);
 
-    analytics.track('ab_test_conversion', {
-      test_id: testId,
-      variant_id: parsedAssignment.variant.id,
-      variant_name: parsedAssignment.variant.name,
-      conversion_event: conversionEvent,
-      conversion_value: value,
-      time_to_conversion:
-        Date.now() - new Date(parsedAssignment.assignedAt).getTime(),
-    });
+    if (typeof window !== 'undefined' && window.analytics) {
+      window.analytics.track('ab_test_conversion', {
+        test_id: testId,
+        variant_id: parsedAssignment.variant.id,
+        variant_name: parsedAssignment.variant.name,
+        conversion_event: conversionEvent,
+        conversion_value: value,
+        time_to_conversion:
+          Date.now() - new Date(parsedAssignment.assignedAt).getTime(),
+      });
+    }
   }
 }
 

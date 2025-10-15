@@ -299,8 +299,8 @@ export function cached<T extends unknown[], R>(
 ) {
   return function (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    target: any,
-    propertyName: string,
+    _target: any,
+    _propertyName: string,
     descriptor: PropertyDescriptor,
   ) {
     const method = descriptor.value;
