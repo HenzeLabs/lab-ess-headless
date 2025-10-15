@@ -1,4 +1,38 @@
 import { shopifyFetch } from '../src/lib/shopify';
+import { promises as fs } from 'fs';
+
+interface ShopifyProduct {
+  id: string;
+  title: string;
+  handle: string;
+  description: string;
+  availableForSale: boolean;
+  variants: {
+    edges: Array<{
+      node: {
+        id: string;
+        title: string;
+        availableForSale: boolean;
+        price: {
+          amount: string;
+          currencyCode: string;
+        };
+      };
+    }>;
+  };
+}
+
+interface ProductEdge {
+  node: ShopifyProduct;
+}
+
+interface ProductsResponse {
+  data?: {
+    products?: {
+      edges: ProductEdge[];
+    };
+  };
+}
 
 const GET_PRODUCTS = `
   query GetProducts {
@@ -41,7 +75,7 @@ async function fetchRealProducts() {
   try {
     console.log('🔍 Fetching real products from Shopify...\n');
 
-    const response = await shopifyFetch<any>({
+    const response = await shopifyFetch<ProductsResponse>({
       query: GET_PRODUCTS,
     });
 
@@ -55,7 +89,7 @@ async function fetchRealProducts() {
 
     console.log(`✅ Found ${products.length} products:\n`);
 
-    products.forEach((edge: any, index: number) => {
+    products.forEach((edge: ProductEdge, index: number) => {
       const product = edge.node;
       const variant = product.variants.edges[0]?.node;
 
@@ -63,14 +97,18 @@ async function fetchRealProducts() {
       console.log(`   Handle: ${product.handle}`);
       console.log(`   Available: ${product.availableForSale ? 'Yes' : 'No'}`);
       if (variant) {
-        console.log(`   Price: ${variant.price.currencyCode} ${variant.price.amount}`);
+        console.log(
+          `   Price: ${variant.price.currencyCode} ${variant.price.amount}`,
+        );
         console.log(`   Variant ID: ${variant.id}`);
       }
       console.log('');
     });
 
     // Save the first available product handle for tests
-    const firstAvailable = products.find((p: any) => p.node.availableForSale);
+    const firstAvailable = products.find(
+      (p: ProductEdge) => p.node.availableForSale,
+    );
     if (firstAvailable) {
       console.log('📝 First available product for testing:');
       console.log(`   Handle: "${firstAvailable.node.handle}"`);
@@ -80,21 +118,21 @@ async function fetchRealProducts() {
       const testConfig = {
         testProductHandle: firstAvailable.node.handle,
         testVariantId: firstAvailable.node.variants.edges[0]?.node.id,
-        products: products.map((p: any) => ({
+        products: products.map((p: ProductEdge) => ({
           handle: p.node.handle,
           title: p.node.title,
           available: p.node.availableForSale,
         })),
       };
 
-      const fs = require('fs').promises;
       await fs.writeFile(
         'tests/fixtures/test-products.json',
-        JSON.stringify(testConfig, null, 2)
+        JSON.stringify(testConfig, null, 2),
       );
-      console.log('✅ Saved test product configuration to tests/fixtures/test-products.json');
+      console.log(
+        '✅ Saved test product configuration to tests/fixtures/test-products.json',
+      );
     }
-
   } catch (error) {
     console.error('❌ Error fetching products:', error);
   }

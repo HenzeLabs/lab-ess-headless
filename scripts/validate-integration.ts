@@ -9,8 +9,20 @@ import fetch from 'node-fetch';
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 
+interface TestResult {
+  name: string;
+  status: 'passed' | 'failed' | 'error';
+  error?: string;
+}
+
+interface Results {
+  passed: number;
+  failed: number;
+  tests: TestResult[];
+}
+
 // Test results tracker
-const results: any = {
+const results: Results = {
   passed: 0,
   failed: 0,
   tests: [],
@@ -29,10 +41,11 @@ async function test(name: string, fn: () => Promise<boolean>) {
       results.failed++;
       results.tests.push({ name, status: 'failed' });
     }
-  } catch (error: any) {
-    console.log(`❌ ERROR: ${name} - ${error.message}`);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.log(`❌ ERROR: ${name} - ${message}`);
     results.failed++;
-    results.tests.push({ name, status: 'error', error: error.message });
+    results.tests.push({ name, status: 'error', error: message });
   }
 }
 
@@ -101,12 +114,18 @@ async function testSearchAPI() {
   const response = await fetch(`${BASE_URL}/api/search?q=centrifuge`);
   const data = await response.json();
 
-  return response.ok && (data.products || data.results) && (Array.isArray(data.products) || Array.isArray(data.results));
+  return (
+    response.ok &&
+    (data.products || data.results) &&
+    (Array.isArray(data.products) || Array.isArray(data.results))
+  );
 }
 
 // Test 7: Product by handle returns real data
 async function testProductByHandle() {
-  const response = await fetch(`${BASE_URL}/api/product-by-handle?handle=centrifuges`);
+  const response = await fetch(
+    `${BASE_URL}/api/product-by-handle?handle=centrifuges`,
+  );
   const data = await response.json();
 
   return (
@@ -129,7 +148,7 @@ async function testHealthCheck() {
 async function runTests() {
   console.log('🚀 Starting Shopify Integration Validation\n');
   console.log(`Testing against: ${BASE_URL}`);
-  console.log('=' .repeat(50));
+  console.log('='.repeat(50));
 
   await test('Products API returns real Shopify data', testProductsAPI);
   await test('Collections API is functional', testCollectionsAPI);
@@ -144,10 +163,14 @@ async function runTests() {
   console.log('\n📊 RESULTS:');
   console.log(`✅ Passed: ${results.passed}`);
   console.log(`❌ Failed: ${results.failed}`);
-  console.log(`📈 Success Rate: ${Math.round((results.passed / (results.passed + results.failed)) * 100)}%`);
+  console.log(
+    `📈 Success Rate: ${Math.round((results.passed / (results.passed + results.failed)) * 100)}%`,
+  );
 
   if (results.failed === 0) {
-    console.log('\n🎉 ALL TESTS PASSED! Shopify integration is working correctly.');
+    console.log(
+      '\n🎉 ALL TESTS PASSED! Shopify integration is working correctly.',
+    );
   } else {
     console.log('\n⚠️  Some tests failed. Please review the issues above.');
   }
