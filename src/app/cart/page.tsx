@@ -11,6 +11,12 @@ import TrustSignals from '@/components/TrustSignals';
 import type { Cart } from '@/lib/types';
 import { textStyles } from '@/lib/ui';
 
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
 export default function CartPage() {
   const [cart, setCart] = useState<Cart | null>(null);
   const [loading, setLoading] = useState(true);
@@ -20,11 +26,14 @@ export default function CartPage() {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const cartData = await getCart();
+        // Use shorter timeout for faster test feedback
+        const cartData = await getCart(5000);
         setCart(cartData);
       } catch (err) {
+        console.error('Cart loading error:', err);
         setError('Failed to load cart.');
-        console.error(err);
+        // Set null for graceful degradation
+        setCart(null);
       } finally {
         setLoading(false);
       }
@@ -60,32 +69,103 @@ export default function CartPage() {
     );
   }
 
-  if (error) {
+  if (error && !cart) {
     return (
       <main className="bg-[hsl(var(--bg))] text-[hsl(var(--ink))] py-section-lg">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className={`${textStyles.h1} mb-16`}>Your Cart</h1>
-          <p className="text-red-500" data-test-id="api-error-message">
-            {error}
-          </p>
+          <div
+            className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg inline-block"
+            role="alert"
+            data-test-id="api-error-message"
+          >
+            <p className="font-medium">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-3 underline hover:text-red-800 transition-colors"
+            >
+              Retry
+            </button>
+          </div>
         </div>
       </main>
     );
   }
 
   async function refreshCart() {
-    const newCart = await getCart();
-    setCart(newCart);
+    try {
+      const newCart = await getCart(6000);
+      setCart(newCart);
+    } catch (error) {
+      console.warn('Cart refresh failed:', error);
+      // Don't update state on refresh failure to avoid clearing existing cart
+    }
+  }
+
+  async function handleCheckout() {
+    startTransition(async () => {
+      try {
+        // Fire analytics event
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('event', 'begin_checkout', {
+            currency: cart?.cost?.totalAmount?.currencyCode || 'USD',
+            value: parseFloat(cart?.cost?.totalAmount?.amount || '0'),
+            items: analyticsItems.map((item) => item.item),
+          });
+        }
+
+        // Get secure checkout URL from API
+        const response = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            cartId: cart?.id,
+            returnUrl: `${window.location.origin}/thank-you`,
+          }),
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Failed to create checkout');
+        }
+
+        const { checkoutUrl, totalQuantity, totalAmount } =
+          await response.json();
+
+        // Log checkout redirect
+        console.log('Redirecting to checkout:', {
+          totalQuantity,
+          totalAmount: totalAmount.amount,
+          currency: totalAmount.currencyCode,
+        });
+
+        // Redirect to Shopify checkout
+        window.location.href = checkoutUrl;
+      } catch (error) {
+        console.error('Checkout error:', error);
+        setError(
+          error instanceof Error
+            ? error.message
+            : 'Failed to process checkout. Please try again.',
+        );
+      }
+    });
   }
 
   function handleQuantityChange(lineId: string, quantity: number) {
     startTransition(async () => {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
+
       try {
         const res = await fetch('/api/cart', {
           method: 'PATCH',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({ lineId, quantity }),
+          signal: controller.signal,
         });
+        clearTimeout(timeoutId);
+
         if (res.ok) {
           const json = (await res.json()) as { cart: Cart | null };
           setCart(json.cart);
@@ -94,7 +174,9 @@ export default function CartPage() {
         } else {
           await refreshCart();
         }
-      } catch {
+      } catch (error) {
+        clearTimeout(timeoutId);
+        console.warn('Cart quantity update failed:', error);
         await refreshCart();
       }
     });
@@ -102,12 +184,18 @@ export default function CartPage() {
 
   function handleRemove(lineId: string) {
     startTransition(async () => {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
+
       try {
         const res = await fetch('/api/cart', {
           method: 'DELETE',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({ lineId }),
+          signal: controller.signal,
         });
+        clearTimeout(timeoutId);
+
         if (res.ok) {
           const json = (await res.json()) as { cart: Cart | null };
           setCart(json.cart);
@@ -116,7 +204,9 @@ export default function CartPage() {
         } else {
           await refreshCart();
         }
-      } catch {
+      } catch (error) {
+        clearTimeout(timeoutId);
+        console.warn('Cart item removal failed:', error);
         await refreshCart();
       }
     });
@@ -130,6 +220,25 @@ export default function CartPage() {
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className={`${textStyles.h1} mb-16`}>Your Cart</h1>
+
+          {error && cart && (
+            <div
+              className="mb-8 bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg flex items-start justify-between"
+              role="alert"
+              data-test-id="checkout-error"
+            >
+              <div className="flex-1">
+                <p className="font-medium">{error}</p>
+              </div>
+              <button
+                onClick={() => setError(null)}
+                className="ml-4 text-red-500 hover:text-red-700 font-bold"
+                aria-label="Dismiss error"
+              >
+                ×
+              </button>
+            </div>
+          )}
 
           {analyticsItems.length > 0 && (
             <CartAnalyticsTracker items={analyticsItems} />
@@ -314,17 +423,43 @@ export default function CartPage() {
                       </div>
                       <div className="mt-10">
                         <Button
-                          asChild
+                          onClick={handleCheckout}
+                          disabled={isPending}
                           className="w-full bg-accent text-[hsl(var(--bg))] hover:bg-accent-dark transition-colors duration-200"
                           aria-label="Proceed to checkout"
                           data-cart-checkout
+                          data-test-id="checkout-button"
                         >
-                          <a
-                            href={cart.checkoutUrl}
-                            data-test-id="checkout-button"
-                          >
-                            Checkout
-                          </a>
+                          {isPending ? (
+                            <span
+                              className="flex items-center justify-center"
+                              data-test-id="checkout-loading"
+                            >
+                              <svg
+                                className="animate-spin -ml-1 mr-3 h-5 w-5"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                />
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                />
+                              </svg>
+                              Processing...
+                            </span>
+                          ) : (
+                            'Checkout'
+                          )}
                         </Button>
                       </div>
                     </div>
@@ -338,7 +473,7 @@ export default function CartPage() {
               <div className="text-center bg-[hsl(var(--surface))] p-16 rounded-lg border border-[hsl(var(--border))]/60">
                 <h2
                   className={`${textStyles.h2} mb-4`}
-                  data-test-id="cart-empty-message"
+                  data-test-id="empty-cart"
                 >
                   Your cart is empty
                 </h2>
