@@ -45,11 +45,28 @@ export default function RootLayout({
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
-        {/* GA/Clarity example: */}
-        {/* <script src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID" strategy="afterInteractive"></script> */}
-        {/* <script src="https://www.clarity.ms/tag/CLARITY_ID" strategy="lazyOnload"></script> */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+            `,
+          }}
+        />
+        <script
+          async
+          src="https://www.googletagmanager.com/gtm.js?id=GTM-WNG6Z9ZD"
+        />
       </head>
       <body>
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-WNG6Z9ZD"
+            height="0"
+            width="0"
+            style={{ display: 'none', visibility: 'hidden' }}
+          ></iframe>
+        </noscript>
         <ErrorBoundary level="app" context="application">
           <AnalyticsWrapper />
           <ErrorBoundary level="component" context="header">
