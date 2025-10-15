@@ -172,4 +172,45 @@ curl -X POST \
 
 ---
 
-Questions? See `DEPLOYMENT.md`, `TROUBLESHOOTING.md`, and the Playwright reports in `playwright-report/`.
+## Documentation Index
+
+**Quick Start Documentation (Root):**
+- [README.md](README.md) - This file, project overview
+- [QUICK_START.md](QUICK_START.md) - Quick setup guide
+- [DEPLOYMENT.md](DEPLOYMENT.md) - Deployment instructions
+- [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Common issues and solutions
+
+**Implementation Guides ([docs/guides/](docs/guides/)):**
+- [ENHANCEMENTS.md](docs/guides/ENHANCEMENTS.md) - Feature enhancements guide
+- [DEVELOPER_HANDOFF.md](docs/guides/DEVELOPER_HANDOFF.md) - Developer onboarding
+- [ADMIN_INTEGRATION_GUIDE.md](docs/guides/ADMIN_INTEGRATION_GUIDE.md) - Admin dashboard integration
+- [SECURITY_ARCHITECTURE.md](docs/guides/SECURITY_ARCHITECTURE.md) - Security implementation
+- [JWT_AUTH_IMPLEMENTATION.md](docs/guides/JWT_AUTH_IMPLEMENTATION.md) - JWT authentication
+- [SHOPIFY_METAFIELDS_GUIDE.md](docs/guides/SHOPIFY_METAFIELDS_GUIDE.md) - Shopify metafields setup
+- [TECHNICAL_SPECS_REFACTOR_SUMMARY.md](docs/guides/TECHNICAL_SPECS_REFACTOR_SUMMARY.md) - Technical specifications
+
+**Analytics Documentation ([docs/guides/](docs/guides/)):**
+- [ANALYTICS_INSIGHTS_GUIDE.md](docs/guides/ANALYTICS_INSIGHTS_GUIDE.md) - Analytics insights & actions
+- [ANALYTICS_INTEGRATION_GUIDE.md](docs/guides/ANALYTICS_INTEGRATION_GUIDE.md) - Analytics implementation
+- [ANALYTICS_TESTING_GUIDE.md](docs/guides/ANALYTICS_TESTING_GUIDE.md) - Analytics testing
+- [SEARCH_TESTING_GUIDE.md](docs/guides/SEARCH_TESTING_GUIDE.md) - Search functionality testing
+
+**Environment & Components ([docs/](docs/)):**
+- [ENVIRONMENT_SETUP.md](docs/ENVIRONMENT_SETUP.md) - Environment configuration
+- [COMPONENT_USAGE_EXAMPLES.md](docs/COMPONENT_USAGE_EXAMPLES.md) - Component examples
+
+**Audit Reports ([docs/audit/](docs/audit/)):**
+- [PRODUCTION_100_PERCENT_READY.md](docs/audit/PRODUCTION_100_PERCENT_READY.md) - Production readiness status
+- [ENTERPRISE_AUDIT_REPORT.md](docs/audit/ENTERPRISE_AUDIT_REPORT.md) - Enterprise audit results
+- [UI_AUDIT_REPORT.md](docs/audit/UI_AUDIT_REPORT.md) - UI/UX audit findings
+
+**Templates ([docs/templates/](docs/templates/)):**
+- [COMPREHENSIVE_AUDIT_PROMPT.md](docs/templates/COMPREHENSIVE_AUDIT_PROMPT.md) - Audit template
+- [UI_AUDIT_PROMPT.md](docs/templates/UI_AUDIT_PROMPT.md) - UI audit template
+
+**Historical Documentation ([docs/archive/](docs/archive/)):**
+- Migration guides, refactoring history, and resolved issues
+
+---
+
+Questions? See [DEPLOYMENT.md](DEPLOYMENT.md), [TROUBLESHOOTING.md](TROUBLESHOOTING.md), and the Playwright reports in `playwright-report/`.

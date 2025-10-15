@@ -2,20 +2,25 @@
 module.exports = {
   ci: {
     collect: {
-      url: ['http://localhost:3000/'], // Collect data from the homepage
-      startServerCommand: 'npm run dev',
-      startServerReadyRegex: 'ready on',
-      numberOfRuns: 3, // Run Lighthouse multiple times for more stable results
+      url: [
+        'https://store.labessentials.com/', // Homepage
+        'https://store.labessentials.com/products/precision-microscope', // Example Product page
+        'https://store.labessentials.com/collections/microscopes', // Example Collection page
+      ],
+      numberOfRuns: 3,
+      settings: {
+        // Will be overridden per run for desktop/mobile
+      },
     },
     assert: {
       assertions: {
         'categories.performance': ['warn', { minScore: 0.85 }],
-        'categories.seo': ['warn', { minScore: 0.90 }],
-        'categories.accessibility': ['warn', { minScore: 0.90 }],
+        'categories.seo': ['warn', { minScore: 0.9 }],
+        'categories.accessibility': ['warn', { minScore: 0.9 }],
       },
     },
     upload: {
-      target: 'temporary-public-storage', // Upload to temporary public storage for CI
+      target: 'temporary-public-storage',
     },
   },
 };

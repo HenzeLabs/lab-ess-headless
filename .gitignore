@@ -40,3 +40,34 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Credentials (security)
+ga4-service-account.json
+*-service-account.json
+
+# Test artifacts and reports
+test-results.json
+lighthouse-*.json
+lighthouse-*.html
+audit-report.json
+*.lighthouse.json
+*.lighthouse.html
+playwright-report/
+test-results/
+
+# Temporary debug/test files
+analytics-test-suite.js
+check-real-analytics.js
+debug-*.js
+test-*.js
+test-*.sh
+cookies.txt
+*-debug.png
+*-debug.jpg
+
+# Old migration scripts
+migrate-*.sh
+
+# Lighthouse CI artifacts (these are directories, not log files!)
+static-audit-details.log/
+unused-empty-todo-parse.log/

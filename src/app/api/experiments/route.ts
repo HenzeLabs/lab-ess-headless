@@ -6,6 +6,7 @@ import {
   EXPERIMENT_CONFIGS,
   FEATURE_FLAGS,
 } from '@/lib/experiments/types';
+import { requireAdmin } from '@/lib/api/auth';
 
 export async function GET(request: NextRequest) {
   try {
@@ -53,6 +54,10 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  // Require admin authentication for all mutations
+  const authError = await requireAdmin(request);
+  if (authError) return authError;
+
   try {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get('action');
@@ -156,6 +161,10 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  // Require admin authentication for all deletions
+  const authError = await requireAdmin(request);
+  if (authError) return authError;
+
   try {
     const { searchParams } = new URL(request.url);
     const type = searchParams.get('type');

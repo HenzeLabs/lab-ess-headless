@@ -3,7 +3,8 @@
 import { useEffect } from 'react';
 
 const GTM_ID = 'GTM-WNG6Z9ZD';
-const CLARITY_ID = 'm5xby3pax0';
+const GA4_MEASUREMENT_ID = 'G-QCSHJ4TDMY';
+// Clarity Project ID: m5xby3pax0 (configured in GTM)
 const TABOOLA_ID = 1759164;
 const META_PIXEL_ID = '940971967399612';
 
@@ -28,6 +29,7 @@ export default function AnalyticsWrapper() {
 
     const win = window as typeof window & {
       dataLayer?: unknown[];
+      gtag?: (...args: unknown[]) => void;
       _tfa?: unknown[];
       clarity?: (...args: unknown[]) => void;
       fbq?: {
@@ -67,44 +69,34 @@ export default function AnalyticsWrapper() {
       document.body.insertBefore(noscript, document.body.firstChild);
     }
 
-    // Microsoft Clarity snippet with enhanced tracking
-    loadScriptOnce('clarity-script', () => {
+    // Google Analytics 4 - Direct tracking (in addition to GTM)
+    // Initialize gtag function
+    win.gtag =
+      win.gtag ||
+      function (...args) {
+        win.dataLayer = win.dataLayer || [];
+        win.dataLayer.push(args);
+      };
+
+    // Load GA4 script
+    loadScriptOnce('ga4-script', () => {
       const script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.innerHTML = `
-        (function(c,l,a,r,i,t,y){
-          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-          y=l.getElementsByTagName(r)[0];y.parentNode?.insertBefore(t,y);
-        })(window, document, 'clarity', 'script', '${CLARITY_ID}');
-      `;
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`;
       return script;
     });
 
-    // Enhanced Clarity tracking with custom events
-    setTimeout(() => {
-      if (win.clarity) {
-        // Track user segments for lab equipment site
-        win.clarity('set', 'page_type', 'ecommerce');
-        win.clarity(
-          'set',
-          'site_section',
-          window.location.pathname.split('/')[1] || 'home',
-        );
+    // Configure GA4
+    if (win.gtag) {
+      win.gtag('js', new Date());
+      win.gtag('config', GA4_MEASUREMENT_ID, {
+        send_page_view: true,
+        cookie_flags: 'SameSite=None;Secure',
+      });
+    }
 
-        // Track device type for lab equipment buyers
-        const isMobile = window.innerWidth <= 768;
-        const isTablet = window.innerWidth > 768 && window.innerWidth <= 1024;
-        win.clarity(
-          'set',
-          'device_category',
-          isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop',
-        );
-
-        // Track user behavior patterns
-        win.clarity('set', 'user_type', 'anonymous');
-      }
-    }, 1000);
+    // Microsoft Clarity is configured in GTM (GTM-WNG6Z9ZD)
+    // No direct Clarity script needed to avoid conflicts
 
     // Taboola base pixel
     win._tfa = win._tfa || [];

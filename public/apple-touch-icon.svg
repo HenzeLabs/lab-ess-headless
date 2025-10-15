@@ -1,0 +1,5 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="180" height="180" rx="32" fill="#000000"/>
+  <rect x="30" y="30" width="120" height="120" rx="16" fill="#ffffff"/>
+  <text x="90" y="102" font-family="system-ui, sans-serif" font-size="22" font-weight="bold" text-anchor="middle" fill="#000000">LE</text>
+</svg>

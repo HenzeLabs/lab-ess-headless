@@ -1,0 +1,56 @@
+{
+  "testProductHandle": "centrifuges",
+  "testVariantId": "gid://shopify/ProductVariant/42338583380027",
+  "products": [
+    {
+      "handle": "centrifuges",
+      "title": "Centrifuges",
+      "available": true
+    },
+    {
+      "handle": "megavid-wifi-microscope-camera",
+      "title": "MegaVID WiFi 12MP Camera",
+      "available": true
+    },
+    {
+      "handle": "ready-warm-tissue-bath",
+      "title": "Ready Warm Tissue Flotation Bath – Smooth Sectioning for Histology Slides",
+      "available": true
+    },
+    {
+      "handle": "portable-rechargeable-revelation-lll",
+      "title": "The Revelation III Portable USB-Powered Microscope",
+      "available": true
+    },
+    {
+      "handle": "biovid-4k-8mp-ultra-hd-microscope-camera",
+      "title": "BioVID 4K 8MP Ultra HD Microscope Camera",
+      "available": true
+    },
+    {
+      "handle": "mx5-swing-out-centrifuge",
+      "title": "MX5 Centrifuge",
+      "available": true
+    },
+    {
+      "handle": "mxu-centrifuge",
+      "title": "MXU Centrifuge",
+      "available": true
+    },
+    {
+      "handle": "mx12-pcv-centrifuge",
+      "title": "MX12 Micro-Combo Centrifuge",
+      "available": true
+    },
+    {
+      "handle": "cytoprep",
+      "title": "CytoPrep Fix & Dry Station – All-in-One Slide Prep Solution",
+      "available": true
+    },
+    {
+      "handle": "e8-combination-centrifuge-test-tube-microhematocrit",
+      "title": "E8 Combination Centrifuge",
+      "available": true
+    }
+  ]
+}

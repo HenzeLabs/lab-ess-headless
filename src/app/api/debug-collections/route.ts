@@ -22,6 +22,14 @@ const QUERY = /* GraphQL */ `
 `;
 
 export async function GET() {
+  // Prevent usage in production
+  if (process.env.NODE_ENV === 'production') {
+    return NextResponse.json(
+      { error: 'Not available in production' },
+      { status: 403 },
+    );
+  }
+
   try {
     const response = await shopifyFetch({
       query: QUERY,
@@ -29,6 +37,11 @@ export async function GET() {
     });
     return NextResponse.json(response);
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    // Don't expose error details in responses
+    console.error('Debug collections error:', err);
+    return NextResponse.json(
+      { error: 'Failed to fetch collections' },
+      { status: 500 },
+    );
   }
 }
