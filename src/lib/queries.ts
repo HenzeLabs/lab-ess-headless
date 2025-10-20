@@ -342,6 +342,21 @@ export const getProductRecommendationsQuery = `
   }
 `;
 
+export const getPageByHandleQuery = `
+  query getPageByHandle($handle: String!) {
+    pageByHandle(handle: $handle) {
+      id
+      title
+      handle
+      body
+      seo {
+        title
+        description
+      }
+    }
+  }
+`;
+
 export const cartLinesRemoveMutation = `
   mutation cartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
     cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {

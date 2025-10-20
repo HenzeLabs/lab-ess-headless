@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
 
 export default function AboutLabEssentialsRedirect() {
-  redirect('/about');
+  redirect('/pages/about');
 }
