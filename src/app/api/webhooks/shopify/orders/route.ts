@@ -47,6 +47,49 @@ interface ShopifyOrder {
   created_at: string;
 }
 
+// Send purchase event to Taboola S2S Conversion API
+async function sendTaboolaPurchase(order: ShopifyOrder, request: NextRequest) {
+  const TABOOLA_PIXEL_ID = '1759164';
+  const TABOOLA_ADVERTISER_ID = process.env.TABOOLA_ADVERTISER_ID;
+
+  if (!TABOOLA_ADVERTISER_ID) {
+    console.warn(
+      'TABOOLA_ADVERTISER_ID not configured - skipping Taboola S2S tracking',
+    );
+    return;
+  }
+
+  const taboolaPayload = {
+    name: 'purchase',
+    site_id: TABOOLA_PIXEL_ID,
+    advertiser_id: TABOOLA_ADVERTISER_ID,
+    value: parseFloat(order.total_price),
+    currency: order.currency || 'USD',
+    orderid: order.id.toString(),
+    user_agent: request.headers.get('user-agent') || undefined,
+    ip: request.headers.get('x-forwarded-for') || undefined,
+  };
+
+  try {
+    const response = await fetch(
+      'https://trc.taboola.com/actions-handler/log/3/s2s-action',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(taboolaPayload),
+      },
+    );
+
+    if (!response.ok) {
+      console.error('Taboola S2S error:', await response.text());
+    } else {
+      console.log('✅ Taboola S2S purchase tracked:', order.order_number);
+    }
+  } catch (error) {
+    console.error('❌ Taboola S2S error:', error);
+  }
+}
+
 // Send purchase event to GA4 Measurement Protocol
 async function sendGA4Purchase(order: ShopifyOrder) {
   const GA4_MEASUREMENT_ID = 'G-QCSHJ4TDMY';
@@ -143,12 +186,12 @@ export async function POST(request: NextRequest) {
       itemCount: order.line_items.length,
     });
 
-    // Send purchase event to GA4
+    // Send purchase events to analytics platforms
     await sendGA4Purchase(order);
+    await sendTaboolaPurchase(order, request);
 
     // You can add more analytics platforms here:
     // - Meta Conversion API
-    // - Taboola Conversion API
     // - Other server-side tracking
 
     return NextResponse.json({

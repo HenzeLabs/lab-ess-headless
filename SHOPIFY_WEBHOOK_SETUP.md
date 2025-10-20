@@ -32,7 +32,14 @@ We've created a secure webhook endpoint that:
    ```
 2. Save this value - you'll add it to both Shopify and Vercel
 
-### 3. Add Environment Variables to Vercel
+### 3. Get Taboola Advertiser ID
+
+1. Log in to [Taboola Ads Manager](https://ads.taboola.com)
+2. Navigate to **Tracking** → **Conversions**
+3. Your Advertiser ID should be visible in the conversion tracking setup
+4. Copy this ID - you'll need it for Vercel
+
+### 4. Add Environment Variables to Vercel
 
 1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
 2. Select your project: **lab-ess-headless**
@@ -42,12 +49,13 @@ We've created a secure webhook endpoint that:
    ```
    GA4_MEASUREMENT_PROTOCOL_SECRET=<your-ga4-secret-from-step-1>
    SHOPIFY_WEBHOOK_SECRET=<your-generated-secret-from-step-2>
+   TABOOLA_ADVERTISER_ID=<your-taboola-advertiser-id-from-step-3>
    ```
 
-5. Click **Save**
+5. Click **Save** for each variable
 6. Redeploy your site to apply the new variables
 
-### 4. Configure Shopify Webhook
+### 5. Configure Shopify Webhook
 
 1. Go to your [Shopify Admin](https://admin.shopify.com)
 2. Navigate to **Settings** → **Notifications**
@@ -62,7 +70,7 @@ We've created a secure webhook endpoint that:
 6. In **Webhook Secret**, paste the `SHOPIFY_WEBHOOK_SECRET` from step 2
 7. Click **Save webhook**
 
-### 5. Test the Webhook
+### 6. Test the Webhook
 
 #### Option A: Use Shopify's Test Feature
 1. In your webhook settings, click **Send test notification**
@@ -75,12 +83,19 @@ We've created a secure webhook endpoint that:
 4. Check Vercel logs for webhook processing
 5. Check GA4 DebugView (Admin → DebugView) for the purchase event
 
-### 6. Verify in GA4
+### 7. Verify in GA4 and Taboola
 
+**Google Analytics 4:**
 1. Go to GA4 → **Reports** → **Realtime**
 2. Make a test purchase
 3. You should see the purchase event appear within 1-2 minutes
 4. Go to **Reports** → **Monetization** → **Ecommerce purchases** to see revenue data
+
+**Taboola:**
+1. Go to Taboola Ads Manager → **Tracking** → **Conversions**
+2. Make a test purchase
+3. Check for the purchase conversion appearing (may take a few minutes)
+4. Verify order value and currency are correct
 
 ## Webhook Endpoint Details
 
@@ -99,8 +114,8 @@ We've created a secure webhook endpoint that:
 
 **Sends to:**
 - ✅ Google Analytics 4 (via Measurement Protocol)
+- ✅ Taboola S2S Conversion API
 - 🔄 Meta Conversion API (can be added)
-- 🔄 Taboola Conversion API (can be added)
 
 ## Extending to Other Platforms
 
