@@ -112,6 +112,22 @@ const nextConfig = {
             key: 'X-XSS-Protection',
             value: '1; mode=block',
           },
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://cdn.shopify.com https://tagmanager.google.com https://www.clarity.ms https://cdn.taboola.com https://connect.facebook.net",
+              "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://region1.analytics.google.com https://*.clarity.ms https://cdn.shopify.com https://trc.taboola.com https://www.facebook.com",
+              "img-src 'self' data: https: blob:",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://tagmanager.google.com",
+              "font-src 'self' data: https://fonts.gstatic.com",
+              "frame-src 'self' https://www.googletagmanager.com https://td.doubleclick.net https://www.facebook.com",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self' https://checkout.shopify.com https://*.myshopify.com",
+              "frame-ancestors 'none'",
+            ].join('; '),
+          },
         ],
       },
       {
