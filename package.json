@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
-    "check:safe": "npm run typecheck && npm run lint && npm run build && playwright test tests/functional.spec.ts tests/accessibility.spec.ts",
+    "validate:brand": "node scripts/validate-brand-tokens.js",
+    "check:safe": "npm run typecheck && npm run lint && npm run validate:brand && npm run build && playwright test tests/functional.spec.ts tests/accessibility.spec.ts",
     "verify:env": "node scripts/verify-env.js",
     "analyze": "cross-env ANALYZE=true next build",
     "lh": "lhci autorun --config=./lighthouse.config.js",
@@ -18,6 +19,7 @@
     "test:a11y": "playwright test tests/accessibility.spec.ts",
     "test:perf": "playwright test tests/performance.spec.ts",
     "test:visual": "playwright test tests/visual-regression.spec.ts",
+    "test:ui": "playwright test tests/ui-consistency.spec.ts",
     "test:core": "playwright test tests/homepage.spec.ts tests/products.spec.ts tests/cart.spec.ts tests/checkout.spec.ts tests/account.spec.ts tests/shopify-core-flow.spec.ts",
     "test:all": "playwright test",
     "test:ci": "npm run test:core",
@@ -80,6 +82,9 @@
     "*.{ts,tsx}": [
       "eslint --fix",
       "prettier --write"
+    ],
+    "src/**/*.{ts,tsx,css}": [
+      "node scripts/validate-brand-tokens.js"
     ]
   }
 }
