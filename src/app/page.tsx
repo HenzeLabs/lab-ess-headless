@@ -5,24 +5,18 @@ import Hero from '@/components/Hero';
 import CollectionSwitcherWrapper from '@/app/components/CollectionSwitcherWrapper';
 import AboutSection from '@/components/AboutSection';
 import FeaturedHeroProduct from '@/components/FeaturedHeroProduct';
+import DeferredHydration from '@/components/DeferredHydration';
 
 import { absoluteUrl, jsonLd } from '@/lib/seo';
 
-// Lazy load below-the-fold components to reduce initial JS bundle
-const CTASection = dynamic(() => import('@/components/CTASection'), {
-  loading: () => <div className="h-64 animate-pulse bg-gray-100" />,
-});
-const EmailSignup = dynamic(() => import('@/components/EmailSignup'), {
-  loading: () => <div className="h-48 animate-pulse bg-gray-50" />,
-});
+// Lazy load below-the-fold components to reduce initial JS bundle + TTI
+const CTASection = dynamic(() => import('@/components/CTASection'));
+const EmailSignup = dynamic(() => import('@/components/EmailSignup'));
 const FeaturedCollections = dynamic(
   () => import('@/components/FeaturedCollections'),
-  {
-    loading: () => <div className="h-96 animate-pulse bg-gray-100" />,
-  },
 );
 
-export const revalidate = 300; // 5 minutes for homepage (longer cache for better TTFB)
+export const revalidate = 60; // 60s ISR for homepage (frequent updates + static performance)
 
 const homeTitle = 'Lab Essentials | Precision Lab Equipment & Supplies';
 const homeDescription =
@@ -100,10 +94,25 @@ export default async function HomePage() {
           subtitle="Trusted performance, expert support, built for daily use"
         />
         <CollectionSwitcherWrapper />
-        <CTASection />
+        <DeferredHydration
+          hydrateOnView
+          fallback={<div className="h-64 animate-pulse bg-gray-100" />}
+        >
+          <CTASection />
+        </DeferredHydration>
         <FeaturedHeroProduct />
-        <FeaturedCollections />
-        <EmailSignup />
+        <DeferredHydration
+          hydrateOnView
+          fallback={<div className="h-96 animate-pulse bg-gray-100" />}
+        >
+          <FeaturedCollections />
+        </DeferredHydration>
+        <DeferredHydration
+          hydrateOnView
+          fallback={<div className="h-48 animate-pulse bg-gray-50" />}
+        >
+          <EmailSignup />
+        </DeferredHydration>
       </main>
     </>
   );
