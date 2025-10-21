@@ -62,9 +62,16 @@ module.exports = {
         lift: '0 18px 40px -18px rgba(255, 135, 48, 0.25)',
       },
       fontFamily: {
+        heading: [
+          'var(--font-heading)',
+          'Montserrat',
+          'ui-sans-serif',
+          'system-ui',
+          'sans-serif',
+        ],
         sans: [
           'var(--font-sans)',
-          'Inter',
+          'Roboto',
           'ui-sans-serif',
           'system-ui',
           'sans-serif',
@@ -72,7 +79,7 @@ module.exports = {
         serif: ['ui-serif', 'Georgia', 'serif'],
         mono: [
           'var(--font-mono)',
-          'JetBrains Mono',
+          'Roboto Mono',
           'ui-monospace',
           'SFMono-Regular',
           'monospace',

@@ -139,14 +139,14 @@ export default function Header({
                     variant="ghost"
                     onClick={() => setIsSearchOpen(true)}
                     aria-label="Open search"
-                    className="h-14 w-14 rounded-full hover:bg-[#4e2cfb] hover:text-white"
+                    className="h-14 w-14 rounded-full hover:bg-[hsl(var(--brand))]"
                   >
                     <Search className="h-8 w-8" />
                   </Button>
                   <Button
                     asChild
                     variant="ghost"
-                    className="h-14 w-14 rounded-full hover:bg-[#4e2cfb] hover:text-white"
+                    className="h-14 w-14 rounded-full hover:bg-[hsl(var(--brand))]"
                   >
                     <Link href="/account" aria-label="Account">
                       <User className="h-8 w-8" />
@@ -155,7 +155,7 @@ export default function Header({
                   <Button
                     asChild
                     variant="ghost"
-                    className="relative h-14 w-14 rounded-full hover:bg-[#4e2cfb] hover:text-white"
+                    className="relative h-14 w-14 rounded-full hover:bg-[hsl(var(--brand))]"
                   >
                     <Link
                       href="/cart"
@@ -271,7 +271,7 @@ export default function Header({
                     <div className="max-w-[1440px] mx-auto px-8 py-16">
                       {/* Enhanced Header Section */}
                       <div className="mb-12 text-center lg:text-left">
-                        <h2 className="text-4xl lg:text-5xl font-bold text-primary mb-4 tracking-tight">
+                        <h2 className="text-3xl lg:text-4xl font-bold text-primary mb-4 tracking-tight">
                           {formatTitleCase(menuItem.title)}
                         </h2>
                         <Link

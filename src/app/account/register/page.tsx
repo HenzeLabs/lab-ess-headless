@@ -119,7 +119,7 @@ export default function RegisterPage() {
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[hsl(var(--brand))] focus:border-[hsl(var(--brand))]"
           />
         </div>
 
@@ -136,7 +136,7 @@ export default function RegisterPage() {
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[hsl(var(--brand))] focus:border-[hsl(var(--brand))]"
           />
         </div>
 
@@ -153,7 +153,7 @@ export default function RegisterPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[hsl(var(--brand))] focus:border-[hsl(var(--brand))]"
           />
         </div>
 
@@ -171,7 +171,7 @@ export default function RegisterPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[hsl(var(--brand))] focus:border-[hsl(var(--brand))]"
           />
         </div>
 
@@ -189,7 +189,7 @@ export default function RegisterPage() {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
             minLength={6}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[hsl(var(--brand))] focus:border-[hsl(var(--brand))]"
           />
         </div>
 
@@ -197,7 +197,7 @@ export default function RegisterPage() {
 
         <Button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700"
+          className="w-full bg-[hsl(var(--brand-dark))] hover:bg-[hsl(var(--brand-dark))]"
           disabled={isLoading}
         >
           {isLoading ? 'Creating Account...' : 'Register'}
@@ -206,7 +206,10 @@ export default function RegisterPage() {
 
       <p className="mt-4 text-center text-sm text-gray-600">
         Already have an account?{' '}
-        <Link href="/account/login" className="text-blue-600 hover:underline">
+        <Link
+          href="/account/login"
+          className="text-[hsl(var(--brand-dark))] hover:underline"
+        >
           Login
         </Link>
       </p>

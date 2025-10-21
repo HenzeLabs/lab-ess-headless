@@ -167,7 +167,7 @@ export default function OrdersPage() {
         <h1 className="text-3xl font-bold mb-6">Order History</h1>
         <div className="bg-white p-12 rounded-lg shadow">
           <div className="flex justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[hsl(var(--brand-dark))]"></div>
           </div>
         </div>
       </div>
@@ -182,7 +182,7 @@ export default function OrdersPage() {
           <p className="text-red-600">{error}</p>
           <button
             onClick={() => fetchOrders()}
-            className="mt-4 text-blue-600 hover:underline"
+            className="mt-4 text-[hsl(var(--brand-dark))] hover:underline"
           >
             Try again
           </button>
@@ -201,7 +201,10 @@ export default function OrdersPage() {
             You have no orders yet.
           </p>
           <div className="text-center">
-            <Link href="/collections" className="text-blue-600 hover:underline">
+            <Link
+              href="/collections"
+              className="text-[hsl(var(--brand-dark))] hover:underline"
+            >
               Start Shopping →
             </Link>
           </div>
@@ -264,7 +267,7 @@ export default function OrdersPage() {
                     </div>
                     <Link
                       href={`/account/orders/${order.id.split('/').pop()}`}
-                      className="text-blue-600 hover:underline text-sm font-medium"
+                      className="text-[hsl(var(--brand-dark))] hover:underline text-sm font-medium"
                     >
                       View Details →
                     </Link>
@@ -282,7 +285,7 @@ export default function OrdersPage() {
                 disabled={!pageInfo.hasPreviousPage}
                 className={`px-4 py-2 rounded ${
                   pageInfo.hasPreviousPage
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                    ? 'bg-[hsl(var(--brand-dark))] text-white hover:bg-[hsl(var(--brand-dark))]'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
               >
@@ -293,7 +296,7 @@ export default function OrdersPage() {
                 disabled={!pageInfo.hasNextPage}
                 className={`px-4 py-2 rounded ${
                   pageInfo.hasNextPage
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                    ? 'bg-[hsl(var(--brand-dark))] text-white hover:bg-[hsl(var(--brand-dark))]'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
               >

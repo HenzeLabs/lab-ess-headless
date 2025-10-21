@@ -11,6 +11,13 @@
 				"$tsc"
 			],
 			"group": "build"
+		},
+		{
+			"label": "next dev smoke test",
+			"type": "shell",
+			"command": "npx next dev",
+			"isBackground": true,
+			"group": "build"
 		}
 	]
 }

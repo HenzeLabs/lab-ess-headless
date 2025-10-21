@@ -260,7 +260,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
           transition={{ duration: 0.2 }}
           className={`relative flex items-center justify-between px-4 py-3 rounded-lg mx-2 mb-1 cursor-pointer transition-all duration-200 ${
             isActive
-              ? 'bg-blue-600 text-white shadow-lg'
+              ? 'bg-[hsl(var(--brand-dark))] text-white shadow-lg'
               : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
           } ${level > 0 ? 'ml-6 py-2' : ''}`}
           onClick={() => handleNavClick(item)}
@@ -362,7 +362,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
                   exit={{ opacity: 0 }}
                   className="flex items-center space-x-3"
                 >
-                  <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-[hsl(var(--brand-dark))] rounded-lg flex items-center justify-center">
                     <BarChart3 className="w-5 h-5 text-white" />
                   </div>
                   <div>
@@ -396,7 +396,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
                     placeholder="Search admin..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[hsl(var(--brand))] focus:border-[hsl(var(--brand))] text-sm"
                   />
                 </div>
               </motion.div>
@@ -420,8 +420,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
                   exit={{ opacity: 0 }}
                   className="flex items-center space-x-3"
                 >
-                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                    <Users className="w-5 h-5 text-blue-600" />
+                  <div className="w-10 h-10 bg-[hsl(var(--brand))]/10 rounded-full flex items-center justify-center">
+                    <Users className="w-5 h-5 text-[hsl(var(--brand-dark))]" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-gray-900 truncate">
@@ -439,8 +439,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
                   exit={{ opacity: 0 }}
                   className="flex justify-center"
                 >
-                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                    <Users className="w-5 h-5 text-blue-600" />
+                  <div className="w-10 h-10 bg-[hsl(var(--brand))]/10 rounded-full flex items-center justify-center">
+                    <Users className="w-5 h-5 text-[hsl(var(--brand-dark))]" />
                   </div>
                 </motion.div>
               )}
@@ -509,8 +509,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
 
               {/* Profile */}
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Users className="w-4 h-4 text-blue-600" />
+                <div className="w-8 h-8 bg-[hsl(var(--brand))]/10 rounded-full flex items-center justify-center">
+                  <Users className="w-4 h-4 text-[hsl(var(--brand-dark))]" />
                 </div>
               </div>
             </div>

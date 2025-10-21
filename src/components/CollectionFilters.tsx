@@ -92,7 +92,7 @@ export default function CollectionFilters({
             id="sort-select"
             value={currentSort}
             onChange={(e) => onSortChange(e.target.value)}
-            className="w-full appearance-none rounded-xl border border-border/60 bg-background px-4 py-3 pr-10 text-sm font-medium text-foreground transition-all duration-200 hover:border-[#4e2cfb]/40 focus:border-[#4e2cfb] focus:outline-none focus:ring-2 focus:ring-[#4e2cfb]/20"
+            className="w-full appearance-none rounded-xl border border-border/60 bg-background px-4 py-3 pr-10 text-sm font-medium text-foreground transition-all duration-200 hover:border-[hsl(var(--brand))]/40 focus:border-[hsl(var(--brand))] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand))]/20"
           >
             {sortOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -142,7 +142,7 @@ export default function CollectionFilters({
                     value={option.value}
                     checked={currentAvailability === option.value}
                     onChange={(e) => onAvailabilityChange(e.target.value)}
-                    className="h-4 w-4 text-[#4e2cfb] focus:ring-[#4e2cfb] focus:ring-offset-2"
+                    className="h-4 w-4 text-[hsl(var(--brand))] focus:ring-[hsl(var(--brand))] focus:ring-offset-2"
                   />
                   <span className={`${textStyles.bodySmall} text-foreground`}>
                     {option.label}
@@ -170,7 +170,7 @@ export default function CollectionFilters({
                       type="checkbox"
                       checked={currentBrands.includes(brand)}
                       onChange={() => handleBrandToggle(brand)}
-                      className="h-4 w-4 text-[#4e2cfb] focus:ring-[#4e2cfb] focus:ring-offset-2 rounded"
+                      className="h-4 w-4 text-[hsl(var(--brand))] focus:ring-[hsl(var(--brand))] focus:ring-offset-2 rounded"
                     />
                     <span className={`${textStyles.bodySmall} text-foreground`}>
                       {brand}
@@ -197,7 +197,7 @@ export default function CollectionFilters({
                     placeholder="Min"
                     value={priceMin}
                     onChange={(e) => setPriceMin(e.target.value)}
-                    className="w-full rounded-xl border border-border/60 bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-[#4e2cfb] focus:outline-none focus:ring-2 focus:ring-[#4e2cfb]/20"
+                    className="w-full rounded-xl border border-border/60 bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-[hsl(var(--brand))] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand))]/20"
                   />
                 </label>
                 <label className="w-full">
@@ -207,7 +207,7 @@ export default function CollectionFilters({
                     placeholder="Max"
                     value={priceMax}
                     onChange={(e) => setPriceMax(e.target.value)}
-                    className="w-full rounded-xl border border-border/60 bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-[#4e2cfb] focus:outline-none focus:ring-2 focus:ring-[#4e2cfb]/20"
+                    className="w-full rounded-xl border border-border/60 bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-[hsl(var(--brand))] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand))]/20"
                   />
                 </label>
               </div>

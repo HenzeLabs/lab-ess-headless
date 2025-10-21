@@ -37,7 +37,7 @@ const SecurityComplianceDashboard: React.FC = () => {
     return (
       <div className="space-y-6">
         <div className="text-center py-12">
-          <RefreshCwIcon className="w-8 h-8 animate-spin mx-auto text-blue-600" />
+          <RefreshCwIcon className="w-8 h-8 animate-spin mx-auto text-[hsl(var(--brand-dark))]" />
           <p className="mt-2 text-gray-600">Loading security data...</p>
         </div>
       </div>
@@ -107,7 +107,7 @@ const SecurityComplianceDashboard: React.FC = () => {
       case 'warning':
         return <AlertTriangleIcon className="w-4 h-4 text-yellow-600" />;
       case 'pending':
-        return <ClockIcon className="w-4 h-4 text-blue-600" />;
+        return <ClockIcon className="w-4 h-4 text-[hsl(var(--brand-dark))]" />;
       default:
         return <ActivityIcon className="w-4 h-4 text-gray-600" />;
     }
@@ -133,7 +133,7 @@ const SecurityComplianceDashboard: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
-          <ShieldCheckIcon className="w-8 h-8 text-blue-600" />
+          <ShieldCheckIcon className="w-8 h-8 text-[hsl(var(--brand-dark))]" />
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
               Security & Compliance
@@ -149,7 +149,7 @@ const SecurityComplianceDashboard: React.FC = () => {
           <select
             value={selectedTimeRange}
             onChange={(e) => setSelectedTimeRange(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[hsl(var(--brand))] focus:border-[hsl(var(--brand))]"
           >
             <option value="1h">Last Hour</option>
             <option value="24h">Last 24 Hours</option>
@@ -160,7 +160,7 @@ const SecurityComplianceDashboard: React.FC = () => {
           <select
             value={filterSeverity}
             onChange={(e) => setFilterSeverity(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[hsl(var(--brand))] focus:border-[hsl(var(--brand))]"
           >
             <option value="all">All Severities</option>
             <option value="critical">Critical</option>
@@ -171,7 +171,7 @@ const SecurityComplianceDashboard: React.FC = () => {
 
           <button
             onClick={refreshData}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
+            className="px-4 py-2 bg-[hsl(var(--brand-dark))] text-white rounded-lg hover:bg-[hsl(var(--brand-dark))] flex items-center gap-2"
           >
             <RefreshCwIcon className="w-4 h-4" />
             Refresh
@@ -193,7 +193,7 @@ const SecurityComplianceDashboard: React.FC = () => {
                 {securityMetrics.riskLevel}
               </p>
             </div>
-            <ShieldCheckIcon className="w-8 h-8 text-blue-600" />
+            <ShieldCheckIcon className="w-8 h-8 text-[hsl(var(--brand-dark))]" />
           </div>
         </div>
 
@@ -254,7 +254,7 @@ const SecurityComplianceDashboard: React.FC = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
                 activeTab === tab.id
-                  ? 'border-blue-500 text-blue-600'
+                  ? 'border-[hsl(var(--brand))] text-[hsl(var(--brand-dark))]'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -278,7 +278,7 @@ const SecurityComplianceDashboard: React.FC = () => {
                 <span className="text-3xl font-bold text-gray-900">
                   {securityMetrics.accessControl}%
                 </span>
-                <LockIcon className="w-8 h-8 text-blue-600" />
+                <LockIcon className="w-8 h-8 text-[hsl(var(--brand-dark))]" />
               </div>
               <p className="text-sm text-gray-600 mt-2">
                 User access management
@@ -357,7 +357,7 @@ const SecurityComplianceDashboard: React.FC = () => {
             <h3 className="text-lg font-semibold text-gray-900">
               Security Audit Log
             </h3>
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
+            <button className="px-4 py-2 bg-[hsl(var(--brand-dark))] text-white rounded-lg hover:bg-[hsl(var(--brand-dark))] flex items-center gap-2">
               <DownloadIcon className="w-4 h-4" />
               Export
             </button>
@@ -495,10 +495,10 @@ const SecurityComplianceDashboard: React.FC = () => {
                           check.priority === 'critical'
                             ? 'bg-red-100 text-red-800'
                             : check.priority === 'high'
-                            ? 'bg-orange-100 text-orange-800'
-                            : check.priority === 'medium'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-green-100 text-green-800'
+                              ? 'bg-orange-100 text-orange-800'
+                              : check.priority === 'medium'
+                                ? 'bg-yellow-100 text-yellow-800'
+                                : 'bg-green-100 text-green-800'
                         }`}
                       >
                         {check.priority}
@@ -508,10 +508,10 @@ const SecurityComplianceDashboard: React.FC = () => {
                           check.status === 'compliant'
                             ? 'bg-green-100 text-green-800'
                             : check.status === 'non_compliant'
-                            ? 'bg-red-100 text-red-800'
-                            : check.status === 'warning'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-blue-100 text-blue-800'
+                              ? 'bg-red-100 text-red-800'
+                              : check.status === 'warning'
+                                ? 'bg-yellow-100 text-yellow-800'
+                                : 'bg-[hsl(var(--brand))]/10 text-[hsl(var(--foreground))]'
                         }`}
                       >
                         {check.status.replace('_', ' ')}
@@ -522,7 +522,7 @@ const SecurityComplianceDashboard: React.FC = () => {
                     {check.description}
                   </p>
                   {check.remediation && check.status !== 'compliant' && (
-                    <p className="text-sm text-blue-600 font-medium">
+                    <p className="text-sm text-[hsl(var(--brand-dark))] font-medium">
                       Remediation: {check.remediation}
                     </p>
                   )}
@@ -546,7 +546,7 @@ const SecurityComplianceDashboard: React.FC = () => {
               <h4 className="font-medium text-gray-900 mb-2">
                 Audit Log Retention
               </h4>
-              <select className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+              <select className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[hsl(var(--brand))] focus:border-[hsl(var(--brand))]">
                 <option value="30">30 days</option>
                 <option value="90">90 days</option>
                 <option value="365">1 year</option>
@@ -562,7 +562,7 @@ const SecurityComplianceDashboard: React.FC = () => {
                 <label className="flex items-center">
                   <input
                     type="checkbox"
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="rounded border-gray-300 text-[hsl(var(--brand-dark))] focus:ring-[hsl(var(--brand))]"
                     defaultChecked
                   />
                   <span className="ml-2 text-sm text-gray-700">
@@ -572,7 +572,7 @@ const SecurityComplianceDashboard: React.FC = () => {
                 <label className="flex items-center">
                   <input
                     type="checkbox"
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="rounded border-gray-300 text-[hsl(var(--brand-dark))] focus:ring-[hsl(var(--brand))]"
                     defaultChecked
                   />
                   <span className="ml-2 text-sm text-gray-700">
@@ -582,7 +582,7 @@ const SecurityComplianceDashboard: React.FC = () => {
                 <label className="flex items-center">
                   <input
                     type="checkbox"
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="rounded border-gray-300 text-[hsl(var(--brand-dark))] focus:ring-[hsl(var(--brand))]"
                   />
                   <span className="ml-2 text-sm text-gray-700">
                     Login anomalies
@@ -595,7 +595,7 @@ const SecurityComplianceDashboard: React.FC = () => {
               <h4 className="font-medium text-gray-900 mb-2">
                 Export Security Report
               </h4>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
+              <button className="px-4 py-2 bg-[hsl(var(--brand-dark))] text-white rounded-lg hover:bg-[hsl(var(--brand-dark))] flex items-center gap-2">
                 <DownloadIcon className="w-4 h-4" />
                 Generate Report
               </button>

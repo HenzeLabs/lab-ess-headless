@@ -1,11 +1,13 @@
 // Heavy test - run manually or in separate CI job
 import { test, expect } from '@playwright/test';
 
-test.describe.skip('Dead Link Crawler', () => {
+test.describe('Dead Link Crawler', () => {
   test('should not have any broken internal links from the homepage', async ({
     page,
   }) => {
-    const baseUrl = page.baseURL || 'http://localhost:3000'; // Fallback if baseURL is not set
+    const baseUrl =
+      process.env.BASE_URL ||
+      new URL(page.url() || 'http://localhost:3000').origin;
     const visitedUrls = new Set<string>();
     const internalLinksToVisit: string[] = [];
 
@@ -20,17 +22,23 @@ test.describe.skip('Dead Link Crawler', () => {
         href &&
         !href.startsWith('#') &&
         !href.startsWith('mailto:') &&
-        !href.startsWith('tel:')
+        !href.startsWith('tel:') &&
+        !href.startsWith('javascript:')
       ) {
-        const url = new URL(href, baseUrl);
-        if (url.origin === new URL(baseUrl).origin) {
-          // Only add if it's an internal link and not already visited/queued
-          if (
-            !visitedUrls.has(url.href) &&
-            !internalLinksToVisit.includes(url.href)
-          ) {
-            internalLinksToVisit.push(url.href);
+        try {
+          const url = new URL(href, baseUrl);
+          if (url.origin === new URL(baseUrl).origin) {
+            // Only add if it's an internal link and not already visited/queued
+            if (
+              !visitedUrls.has(url.href) &&
+              !internalLinksToVisit.includes(url.href)
+            ) {
+              internalLinksToVisit.push(url.href);
+            }
           }
+        } catch (error) {
+          // Skip invalid URLs
+          console.warn(`Skipping invalid URL: ${href}`);
         }
       }
     }

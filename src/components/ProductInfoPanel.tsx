@@ -22,6 +22,12 @@ type ProductInfoPanelProps = {
     tags?: string[];
     variants: { edges: { node: Variant }[] };
     descriptionHtml?: string;
+    metafields?: Array<{
+      namespace: string;
+      key: string;
+      value: string;
+      type: string;
+    }>;
   };
 };
 
@@ -35,6 +41,10 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
   const [isError, setIsError] = useState(false);
   const variants = product.variants?.edges?.map((edge) => edge.node) ?? [];
 
+  // Extract brand from metafields
+  const brand =
+    product.metafields?.find((field) => field.key === 'brand')?.value ?? null;
+
   // Calculate price based on selected variant
   const selectedVariantData = variants.find((v) => v.id === selectedVariant);
   const currentPrice =
@@ -45,6 +55,7 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
     selectedVariantData?.price?.currencyCode ??
     product.priceRange?.minVariantPrice?.currencyCode ??
     'USD';
+  const currentVariantTitle = selectedVariantData?.title ?? null;
 
   return (
     <div className="sticky top-8 flex flex-col space-y-6">
@@ -175,6 +186,8 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
                   currency: currentCurrency,
                   quantity: 1,
                   category: product.tags?.[0] ?? null,
+                  brand,
+                  variant: currentVariantTitle,
                 });
                 setFeedback('Added to cart successfully!');
                 setIsError(false);

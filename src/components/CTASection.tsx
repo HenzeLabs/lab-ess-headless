@@ -28,7 +28,7 @@ export default function CTASection() {
 
   return (
     <section
-      className={`relative isolate overflow-hidden bg-gradient-to-br from-[hsl(var(--brand))] via-[#4457ff] to-[hsl(var(--accent))] ${layout.section} text-white`}
+      className={`relative isolate overflow-hidden bg-gradient-to-br from-[hsl(var(--brand))] via-[hsl(var(--brand))] to-[hsl(var(--accent))] ${layout.section} text-white`}
     >
       <div
         className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.2),transparent_55%)]"
@@ -40,11 +40,11 @@ export default function CTASection() {
       >
         <div className="max-w-2xl">
           <h2 className="text-balance text-white">
-            Ready to Upgrade Your Lab Equipment?
+            Start Your Lab, Simplified
           </h2>
           <p className="mt-3 text-white/80">
-            Join over 1,200 labs that trust Lab Essentials for precision
-            instruments, reliable performance, and expert U.S.-based support.
+            From classrooms to clinical work, find the right equipment to power
+            your next discovery—all in one place.
           </p>
         </div>
 
@@ -53,13 +53,7 @@ export default function CTASection() {
             href="/collections"
             className={`${buttonStyles.primary} text-white shadow-[0_15px_35px_-10px_rgba(255,255,255,0.4)] hover:shadow-[0_20px_45px_-10px_rgba(255,255,255,0.6)] hover:scale-105 transition-all duration-300`}
           >
-            Shop Lab Equipment
-          </Link>
-          <Link
-            href="/about"
-            className={`${buttonStyles.ghost} border-white/70 text-white hover:bg-white/20 hover:scale-105 transition-all duration-300`}
-          >
-            Learn More
+            Explore Lab Equipment →
           </Link>
         </div>
       </div>

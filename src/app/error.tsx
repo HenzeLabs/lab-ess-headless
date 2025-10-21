@@ -25,7 +25,7 @@ export default function Error({
         <p className="text-muted-foreground mb-8">{error.message}</p>
         <button
           onClick={reset}
-          className="px-6 py-3 text-lg font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700"
+          className="px-6 py-3 text-lg font-semibold text-white bg-[hsl(var(--brand-dark))] rounded-md hover:bg-[hsl(var(--brand-dark))]"
         >
           Try again
         </button>

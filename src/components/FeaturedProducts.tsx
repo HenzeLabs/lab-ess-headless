@@ -38,7 +38,7 @@ const ProductSkeleton = () => (
 );
 
 const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
-  title = 'Featured Products',
+  title = 'Featured Product',
   products = [],
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);

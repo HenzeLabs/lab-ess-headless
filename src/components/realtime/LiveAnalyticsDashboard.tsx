@@ -51,7 +51,7 @@ const LiveAnalyticsDashboard: React.FC = () => {
       change: 12,
       trend: 'up',
       icon: Users,
-      color: 'text-blue-600',
+      color: 'text-[hsl(var(--brand-dark))]',
       timestamp: Date.now(),
     },
     {
@@ -81,7 +81,7 @@ const LiveAnalyticsDashboard: React.FC = () => {
       change: 15,
       trend: 'up',
       icon: DollarSign,
-      color: 'text-purple-600',
+      color: 'text-[hsl(var(--brand-dark))]',
       timestamp: Date.now(),
     },
   ]);
@@ -109,69 +109,72 @@ const LiveAnalyticsDashboard: React.FC = () => {
 
   // Simulate real-time data updates
   useEffect(() => {
-    const interval = setInterval(() => {
-      // Update metrics with realistic fluctuations
-      setMetrics((prevMetrics) =>
-        prevMetrics.map((metric) => {
-          const changePercent = (Math.random() - 0.5) * 0.1; // ±5% change
-          const newValue = Math.max(
-            0,
-            Math.round(metric.value * (1 + changePercent)),
-          );
-          const change = ((newValue - metric.value) / metric.value) * 100;
+    const interval = setInterval(
+      () => {
+        // Update metrics with realistic fluctuations
+        setMetrics((prevMetrics) =>
+          prevMetrics.map((metric) => {
+            const changePercent = (Math.random() - 0.5) * 0.1; // ±5% change
+            const newValue = Math.max(
+              0,
+              Math.round(metric.value * (1 + changePercent)),
+            );
+            const change = ((newValue - metric.value) / metric.value) * 100;
 
-          return {
-            ...metric,
-            value: newValue,
-            change: Math.round(change * 10) / 10,
-            trend: change > 1 ? 'up' : change < -1 ? 'down' : 'stable',
-            timestamp: Date.now(),
-          };
-        }),
-      );
+            return {
+              ...metric,
+              value: newValue,
+              change: Math.round(change * 10) / 10,
+              trend: change > 1 ? 'up' : change < -1 ? 'down' : 'stable',
+              timestamp: Date.now(),
+            };
+          }),
+        );
 
-      // Add new real-time event
-      const eventTypes: RealtimeEvent['type'][] = [
-        'pageview',
-        'purchase',
-        'cart_add',
-        'search',
-        'signup',
-      ];
-      const locations = [
-        'New York, US',
-        'Toronto, CA',
-        'London, UK',
-        'Berlin, DE',
-        'Paris, FR',
-      ];
-      const pages = [
-        '/products/wireless-earbuds',
-        '/collections/electronics',
-        '/cart',
-        '/checkout',
-        '/account',
-      ];
+        // Add new real-time event
+        const eventTypes: RealtimeEvent['type'][] = [
+          'pageview',
+          'purchase',
+          'cart_add',
+          'search',
+          'signup',
+        ];
+        const locations = [
+          'New York, US',
+          'Toronto, CA',
+          'London, UK',
+          'Berlin, DE',
+          'Paris, FR',
+        ];
+        const pages = [
+          '/products/wireless-earbuds',
+          '/collections/electronics',
+          '/cart',
+          '/checkout',
+          '/account',
+        ];
 
-      const newEvent: RealtimeEvent = {
-        id: Math.random().toString(36).substr(2, 9),
-        type: eventTypes[Math.floor(Math.random() * eventTypes.length)],
-        userId: `user_${Math.random().toString(36).substr(2, 8)}`,
-        page:
-          Math.random() > 0.3
-            ? pages[Math.floor(Math.random() * pages.length)]
-            : undefined,
-        product: Math.random() > 0.7 ? 'Wireless Earbuds' : undefined,
-        value:
-          Math.random() > 0.8
-            ? Math.round(Math.random() * 200 + 50)
-            : undefined,
-        location: locations[Math.floor(Math.random() * locations.length)],
-        timestamp: Date.now(),
-      };
+        const newEvent: RealtimeEvent = {
+          id: Math.random().toString(36).substr(2, 9),
+          type: eventTypes[Math.floor(Math.random() * eventTypes.length)],
+          userId: `user_${Math.random().toString(36).substr(2, 8)}`,
+          page:
+            Math.random() > 0.3
+              ? pages[Math.floor(Math.random() * pages.length)]
+              : undefined,
+          product: Math.random() > 0.7 ? 'Wireless Earbuds' : undefined,
+          value:
+            Math.random() > 0.8
+              ? Math.round(Math.random() * 200 + 50)
+              : undefined,
+          location: locations[Math.floor(Math.random() * locations.length)],
+          timestamp: Date.now(),
+        };
 
-      setRecentEvents((prev) => [newEvent, ...prev.slice(0, 19)]);
-    }, 2000 + Math.random() * 3000); // Every 2-5 seconds
+        setRecentEvents((prev) => [newEvent, ...prev.slice(0, 19)]);
+      },
+      2000 + Math.random() * 3000,
+    ); // Every 2-5 seconds
 
     // Simulate connection status
     setIsConnected(true);
@@ -204,13 +207,13 @@ const LiveAnalyticsDashboard: React.FC = () => {
   const getEventColor = (type: RealtimeEvent['type']) => {
     switch (type) {
       case 'pageview':
-        return 'text-blue-600 bg-blue-50';
+        return 'text-[hsl(var(--brand-dark))] bg-[hsl(var(--brand))]/5';
       case 'purchase':
         return 'text-green-600 bg-green-50';
       case 'cart_add':
         return 'text-orange-600 bg-orange-50';
       case 'search':
-        return 'text-purple-600 bg-purple-50';
+        return 'text-[hsl(var(--brand-dark))] bg-[hsl(var(--brand))]/5';
       case 'signup':
         return 'text-pink-600 bg-pink-50';
     }
@@ -270,8 +273,8 @@ const LiveAnalyticsDashboard: React.FC = () => {
                         metric.trend === 'up'
                           ? 'text-green-600'
                           : metric.trend === 'down'
-                          ? 'text-red-600'
-                          : 'text-gray-600'
+                            ? 'text-red-600'
+                            : 'text-gray-600'
                       }`}
                     >
                       <TrendingUp
@@ -322,7 +325,7 @@ const LiveAnalyticsDashboard: React.FC = () => {
                           width: `${(country.visitors / 456) * 100}%`,
                         }}
                         transition={{ duration: 1, delay: index * 0.1 }}
-                        className="bg-blue-600 h-2 rounded-full"
+                        className="bg-[hsl(var(--brand-dark))] h-2 rounded-full"
                       />
                     </div>
                   </div>

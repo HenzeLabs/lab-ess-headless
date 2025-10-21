@@ -112,7 +112,7 @@ export default function CookieConsent({ onConsentChange }: CookieConsentProps) {
             <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <Shield className="h-5 w-5 text-blue-600" />
+                  <Shield className="h-5 w-5 text-[hsl(var(--brand-dark))]" />
                   <h3 className="font-semibold text-gray-900">
                     We value your privacy
                   </h3>
@@ -125,7 +125,7 @@ export default function CookieConsent({ onConsentChange }: CookieConsentProps) {
                   practices in our{' '}
                   <a
                     href="/privacy"
-                    className="text-blue-600 hover:text-blue-800 underline"
+                    className="text-[hsl(var(--brand-dark))] hover:text-[hsl(var(--foreground))] underline"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -138,7 +138,7 @@ export default function CookieConsent({ onConsentChange }: CookieConsentProps) {
               <div className="flex flex-col sm:flex-row gap-3 lg:ml-6">
                 <button
                   onClick={() => setShowDetails(true)}
-                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand))] focus:ring-offset-2"
                 >
                   <Settings className="h-4 w-4" />
                   Manage Preferences
@@ -146,14 +146,14 @@ export default function CookieConsent({ onConsentChange }: CookieConsentProps) {
 
                 <button
                   onClick={handleRejectAll}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand))] focus:ring-offset-2"
                 >
                   Reject All
                 </button>
 
                 <button
                   onClick={handleAcceptAll}
-                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="px-4 py-2 text-sm font-medium text-white bg-[hsl(var(--brand-dark))] border border-transparent rounded-md hover:bg-[hsl(var(--brand-dark))] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand))] focus:ring-offset-2"
                   data-test-id="accept-all-cookies"
                 >
                   Accept All
@@ -165,7 +165,7 @@ export default function CookieConsent({ onConsentChange }: CookieConsentProps) {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Shield className="h-5 w-5 text-blue-600" />
+                  <Shield className="h-5 w-5 text-[hsl(var(--brand-dark))]" />
                   <h3 className="text-lg font-semibold text-gray-900">
                     Cookie Preferences
                   </h3>
@@ -186,7 +186,7 @@ export default function CookieConsent({ onConsentChange }: CookieConsentProps) {
                     type="checkbox"
                     checked={true}
                     disabled={true}
-                    className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-50"
+                    className="mt-1 h-4 w-4 text-[hsl(var(--brand-dark))] border-gray-300 rounded focus:ring-[hsl(var(--brand))] disabled:opacity-50"
                   />
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
@@ -214,7 +214,7 @@ export default function CookieConsent({ onConsentChange }: CookieConsentProps) {
                     onChange={(e) =>
                       updatePreference('analytics', e.target.checked)
                     }
-                    className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="mt-1 h-4 w-4 text-[hsl(var(--brand-dark))] border-gray-300 rounded focus:ring-[hsl(var(--brand))]"
                   />
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
@@ -239,7 +239,7 @@ export default function CookieConsent({ onConsentChange }: CookieConsentProps) {
                     onChange={(e) =>
                       updatePreference('marketing', e.target.checked)
                     }
-                    className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="mt-1 h-4 w-4 text-[hsl(var(--brand-dark))] border-gray-300 rounded focus:ring-[hsl(var(--brand))]"
                   />
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
@@ -264,7 +264,7 @@ export default function CookieConsent({ onConsentChange }: CookieConsentProps) {
                     onChange={(e) =>
                       updatePreference('functional', e.target.checked)
                     }
-                    className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="mt-1 h-4 w-4 text-[hsl(var(--brand-dark))] border-gray-300 rounded focus:ring-[hsl(var(--brand))]"
                   />
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
@@ -285,14 +285,14 @@ export default function CookieConsent({ onConsentChange }: CookieConsentProps) {
               <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
                 <button
                   onClick={handleRejectAll}
-                  className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand))] focus:ring-offset-2"
                 >
                   Reject All
                 </button>
 
                 <button
                   onClick={handleSavePreferences}
-                  className="flex-1 px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="flex-1 px-4 py-2 text-sm font-medium text-white bg-[hsl(var(--brand-dark))] border border-transparent rounded-md hover:bg-[hsl(var(--brand-dark))] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand))] focus:ring-offset-2"
                 >
                   Save Preferences
                 </button>
@@ -310,7 +310,7 @@ export default function CookieConsent({ onConsentChange }: CookieConsentProps) {
                 them at any time by visiting our{' '}
                 <a
                   href="/privacy"
-                  className="text-blue-600 hover:text-blue-800 underline"
+                  className="text-[hsl(var(--brand-dark))] hover:text-[hsl(var(--foreground))] underline"
                 >
                   Privacy Policy
                 </a>

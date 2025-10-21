@@ -47,13 +47,13 @@ const NotificationToast: React.FC<NotificationToastProps> = ({
       case 'warning':
         return <AlertTriangle className="w-5 h-5 text-yellow-600" />;
       case 'info':
-        return <Info className="w-5 h-5 text-blue-600" />;
+        return <Info className="w-5 h-5 text-[hsl(var(--brand-dark))]" />;
       case 'promotion':
-        return <Gift className="w-5 h-5 text-purple-600" />;
+        return <Gift className="w-5 h-5 text-[hsl(var(--brand-dark))]" />;
       case 'order_update':
         return <ShoppingCart className="w-5 h-5 text-green-600" />;
       case 'analytics':
-        return <TrendingUp className="w-5 h-5 text-blue-600" />;
+        return <TrendingUp className="w-5 h-5 text-[hsl(var(--brand-dark))]" />;
       default:
         return <Bell className="w-5 h-5 text-gray-600" />;
     }
@@ -68,13 +68,13 @@ const NotificationToast: React.FC<NotificationToastProps> = ({
       case 'warning':
         return 'border-l-yellow-500';
       case 'info':
-        return 'border-l-blue-500';
+        return 'border-l-[hsl(var(--brand))]';
       case 'promotion':
-        return 'border-l-purple-500';
+        return 'border-l-[hsl(var(--brand))]';
       case 'order_update':
         return 'border-l-green-500';
       case 'analytics':
-        return 'border-l-blue-500';
+        return 'border-l-[hsl(var(--brand))]';
       default:
         return 'border-l-gray-500';
     }
@@ -89,13 +89,13 @@ const NotificationToast: React.FC<NotificationToastProps> = ({
       case 'warning':
         return 'bg-yellow-50';
       case 'info':
-        return 'bg-blue-50';
+        return 'bg-[hsl(var(--brand))]/5';
       case 'promotion':
-        return 'bg-purple-50';
+        return 'bg-[hsl(var(--brand))]/5';
       case 'order_update':
         return 'bg-green-50';
       case 'analytics':
-        return 'bg-blue-50';
+        return 'bg-[hsl(var(--brand))]/5';
       default:
         return 'bg-gray-50';
     }
@@ -123,7 +123,7 @@ const NotificationToast: React.FC<NotificationToastProps> = ({
               {notification.actionUrl && (
                 <button
                   onClick={() => window.open(notification.actionUrl, '_blank')}
-                  className="mt-2 text-blue-600 hover:text-blue-800 text-sm font-medium"
+                  className="mt-2 text-[hsl(var(--brand-dark))] hover:text-[hsl(var(--foreground))] text-sm font-medium"
                 >
                   View Details →
                 </button>

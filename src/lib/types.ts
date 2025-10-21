@@ -155,6 +155,8 @@ export interface AnalyticsItemInput {
   currency?: string | null;
   quantity?: number | null;
   category?: string | null;
+  brand?: string | null;
+  variant?: string | null;
 }
 
 export interface AnalyticsOrderInput {
@@ -167,6 +169,7 @@ export interface AnalyticsOrderInput {
 export interface LabAnalytics {
   trackViewItem: (p: AnalyticsItemInput) => void;
   trackViewItemList: (listName: string, products: AnalyticsItemInput[]) => void;
+  trackSelectItem: (product: AnalyticsItemInput, listName?: string) => void;
   trackAddToCart: (p: AnalyticsItemInput) => void;
   trackRemoveFromCart: (p: AnalyticsItemInput) => void;
   trackViewCart: (items: AnalyticsItemInput[]) => void;

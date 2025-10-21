@@ -52,7 +52,7 @@ export default function OfflinePage() {
         </div>
 
         {/* Cached Content Note */}
-        <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-100">
+        <div className="mt-8 p-4 bg-[hsl(var(--brand))]/5 rounded-lg border border-blue-100">
           <p className="text-sm text-blue-700">
             💡 <strong>Pro tip:</strong> Some pages may still be available from
             your cache. Try navigating to recently visited pages.
@@ -70,8 +70,8 @@ export default function OfflinePage() {
 
       {/* Background decoration */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute -top-40 -right-32 w-80 h-80 bg-blue-100 rounded-full opacity-20"></div>
-        <div className="absolute -bottom-40 -left-32 w-80 h-80 bg-purple-100 rounded-full opacity-20"></div>
+        <div className="absolute -top-40 -right-32 w-80 h-80 bg-[hsl(var(--brand))]/10 rounded-full opacity-20"></div>
+        <div className="absolute -bottom-40 -left-32 w-80 h-80 bg-[hsl(var(--brand))]/10 rounded-full opacity-20"></div>
       </div>
 
       <script

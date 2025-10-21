@@ -7,7 +7,6 @@ import AboutSection from '@/components/AboutSection';
 import EmailSignup from '@/components/EmailSignup';
 import FeaturedCollections from '@/components/FeaturedCollections';
 import FeaturedHeroProduct from '@/components/FeaturedHeroProduct';
-import RelatedProducts from '@/components/RelatedProducts';
 
 import { absoluteUrl, jsonLd } from '@/lib/seo';
 
@@ -90,7 +89,6 @@ export default async function HomePage() {
         <CTASection />
         <FeaturedHeroProduct />
         <FeaturedCollections />
-        <RelatedProducts />
         <EmailSignup />
       </main>
     </>

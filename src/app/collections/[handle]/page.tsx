@@ -6,7 +6,7 @@ import type { CollectionData, Product } from '@/lib/types';
 import { getCollectionByHandleQuery } from '@/lib/queries';
 import { shopifyFetch } from '@/lib/shopify';
 import { absoluteUrl, jsonLd, stripHtml } from '@/lib/seo';
-import { textStyles } from '@/lib/ui';
+import { textStyles, layout } from '@/lib/ui';
 import CollectionViewTracker from '@/components/analytics/CollectionViewTracker';
 
 export const revalidate = 60;
@@ -207,15 +207,13 @@ export default async function CollectionPage({
         role="main"
         aria-label={`Collection: ${collection.title || formatHandle(handle)}`}
       >
-        <div className="max-w-[1440px] mx-auto px-4 lg:px-8">
+        <div className={layout.container}>
           <div className="flex justify-between items-center mb-6">
             <h1 className={`${textStyles.h2} text-foreground`}>
               {collection.title || formatHandle(handle)}
             </h1>
           </div>
-        </div>
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <CollectionProducts
             products={products}
             collectionTitle={collection.title || formatHandle(handle)}

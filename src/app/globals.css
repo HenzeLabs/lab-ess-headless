@@ -3,8 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --brand: 244 64% 36%;
-  --brand-dark: 244 68% 30%;
+  /* Brand: Bright Teal (darkened for WCAG AA contrast ≥4.5:1) - Official Lab Essentials brand color */
+  --brand: 175 84% 26%; /* Darkened from 32% to meet 4.5:1 contrast ratio on white */
+  --brand-dark: 175 84% 20%; /* Darkened proportionally */
   --brand-foreground: 0 0% 100%;
   --accent: 24 96% 52%;
   --accent-dark: 24 98% 44%;
@@ -19,7 +20,7 @@
   --muted-foreground: 228 18% 42%;
   --border: 227 24% 85%;
   --input: 226 22% 80%;
-  --ring: 244 64% 36%;
+  --ring: 175 84% 26%; /* Same as brand for focus states */
   --ink: 229 42% 16%;
   --body: 229 18% 36%;
   --card: 0 0% 100%;
@@ -46,7 +47,7 @@
   --muted-foreground: 226 24% 78%;
   --border: 229 28% 32%;
   --input: 229 28% 32%;
-  --ring: 244 64% 64%;
+  --ring: 175 84% 52%; /* Lighter teal for dark mode focus states */
   --ink: 228 45% 92%;
   --body: 228 32% 84%;
   --card: 229 32% 18%;
@@ -87,6 +88,7 @@ body {
   h4,
   h5,
   h6 {
+    font-family: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
     color: hsl(var(--ink));
     font-weight: 700;
     letter-spacing: -0.015em;
@@ -194,6 +196,46 @@ body {
   }
 
   .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .custom-scrollbar {
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--brand)) hsl(var(--muted));
+  }
+
+  /* Webkit browsers (Chrome, Safari, Edge) */
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+    border-radius: 4px;
+    margin: 0 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--brand));
+    border-radius: 4px;
+    min-width: 40px;
+    border: 1px solid hsl(var(--muted));
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--brand-dark));
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  /* Force scrollbar to always show on macOS */
+  .custom-scrollbar::-webkit-scrollbar-button {
     display: none;
   }
 }

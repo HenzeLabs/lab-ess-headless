@@ -1,7 +1,9 @@
+'use client';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/lib/types';
 import { textStyles, buttonStyles } from '@/lib/ui';
+import { trackSelectItem } from '@/lib/analytics';
 
 type ProductWithExtras = Product & {
   description?: string;
@@ -22,8 +24,10 @@ type ProductWithExtras = Product & {
 
 export default function ProductCard({
   product,
+  listName,
 }: {
   product: ProductWithExtras;
+  listName?: string;
 }) {
   const imageSrc =
     product.featuredImage?.url ?? product.images?.edges?.[0]?.node?.url;
@@ -57,10 +61,29 @@ export default function ProductCard({
   const features = getMetafield('features');
   const availabilityStatus = getMetafield('availability_status');
 
+  const handleProductClick = () => {
+    trackSelectItem(
+      {
+        id: product.id,
+        name: product.title,
+        price,
+        currency: currencyCode,
+        category: product.tags?.[0] ?? null,
+        brand,
+        variant: null,
+      },
+      listName,
+    );
+  };
+
   return (
     <div className="group flex flex-col h-full overflow-hidden rounded-2xl border border-border/50 bg-card shadow-sm transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg">
       {/* Image and Product Info - clickable area */}
-      <Link href={`/products/${product.handle}`} className="block flex-grow">
+      <Link
+        href={`/products/${product.handle}`}
+        className="block flex-grow"
+        onClick={handleProductClick}
+      >
         <div className="flex h-60 w-full items-center justify-center rounded-t-2xl bg-background p-6">
           {imageSrc ? (
             <Image
@@ -88,7 +111,7 @@ export default function ProductCard({
             {(brand || modelNumber) && (
               <div className="mt-1 flex flex-wrap gap-2 text-xs">
                 {brand && (
-                  <span className="px-2 py-1 bg-[#4e2cfb]/10 text-[#4e2cfb] rounded-md font-medium">
+                  <span className="px-2 py-1 bg-[hsl(var(--brand))]/10 text-[hsl(var(--brand))] rounded-md font-medium">
                     {brand}
                   </span>
                 )}
@@ -116,8 +139,8 @@ export default function ProductCard({
                   availabilityStatus.toLowerCase() === 'in stock'
                     ? 'bg-green-100 text-green-700'
                     : availabilityStatus.toLowerCase() === 'limited stock'
-                    ? 'bg-yellow-100 text-yellow-700'
-                    : 'bg-red-100 text-red-700'
+                      ? 'bg-yellow-100 text-yellow-700'
+                      : 'bg-red-100 text-red-700'
                 }`}
               >
                 {availabilityStatus}
@@ -139,6 +162,7 @@ export default function ProductCard({
         <Link
           href={`/products/${product.handle}`}
           className={`${buttonStyles.primary} w-full`}
+          onClick={handleProductClick}
         >
           Buy Now
           <svg

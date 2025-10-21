@@ -49,11 +49,14 @@ export default async function RelatedProducts({
     if (!products.length && fallbackCollectionHandle) {
       const fallbackResponse = await shopifyFetch<CollectionResponse>({
         query: getCollectionByHandleQuery,
-        variables: { handle: fallbackCollectionHandle, first: 12 },
+        variables: { handle: fallbackCollectionHandle, first: 50 },
       });
       const fallbackCollection = fallbackResponse.data.collection;
       products =
         fallbackCollection?.products?.edges.map((edge) => edge.node) ?? [];
+      console.log(
+        `RelatedProducts: Fetched ${products.length} products from ${fallbackCollectionHandle} collection`,
+      );
       if (fallbackCollection?.handle) {
         viewAllHref = `/collections/${fallbackCollection.handle}`;
       }
@@ -72,7 +75,7 @@ export default async function RelatedProducts({
     }
 
     return (
-      <section className="w-full py-12 lg:py-24 bg-background">
+      <section className="w-full pb-12 lg:pb-24 bg-background">
         <div className="max-w-[1440px] mx-auto px-4 lg:px-8">
           <ProductRail
             heading={heading}

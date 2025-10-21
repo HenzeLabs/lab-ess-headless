@@ -1,3 +1,21 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Warranty Information | Lab Essentials',
+  description:
+    'Comprehensive warranty coverage for laboratory equipment. Standard 1-year warranty with extended options up to 5 years. Learn about our warranty policies and how to file claims.',
+  alternates: {
+    canonical: 'https://labessentials.com/support/warranty',
+  },
+  openGraph: {
+    title: 'Warranty Information | Lab Essentials',
+    description:
+      'Comprehensive warranty coverage for laboratory equipment. Standard 1-year warranty with extended options up to 5 years.',
+    url: 'https://labessentials.com/support/warranty',
+    type: 'website',
+  },
+};
+
 export default function WarrantyPage() {
   return (
     <main className="bg-[hsl(var(--bg))] text-[hsl(var(--ink))] py-12 md:py-16">
@@ -37,17 +55,17 @@ export default function WarrantyPage() {
             <li>Our team will guide you through the resolution process</li>
           </ol>
 
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-8">
-            <h3 className="text-lg font-semibold text-blue-900 mb-2">
+          <div className="bg-[hsl(var(--brand))]/5 border border-[hsl(var(--brand))]/20 rounded-lg p-6 mt-8">
+            <h3 className="text-lg font-semibold text-[hsl(var(--ink))] mb-2">
               Need Help?
             </h3>
-            <p className="text-blue-800 mb-4">
+            <p className="text-[hsl(var(--foreground))] mb-4">
               Our customer support team is here to help with any warranty
               questions or claims.
             </p>
             <a
               href="/support/contact"
-              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center px-4 py-2 bg-[hsl(var(--brand-dark))] text-white rounded-md hover:bg-[hsl(var(--brand-dark))] transition-colors"
             >
               Contact Support
             </a>

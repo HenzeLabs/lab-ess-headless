@@ -206,7 +206,7 @@ export default function TechnicalSpecs({
               {activeTab === 'compatibility' && (
                 <div className="space-y-3">
                   <div className="flex items-center gap-2 mb-3">
-                    <Beaker className="h-4 w-4 text-blue-600" />
+                    <Beaker className="h-4 w-4 text-[hsl(var(--brand-dark))]" />
                     <span className="font-medium text-foreground">
                       Laboratory Compatibility
                     </span>
@@ -234,7 +234,7 @@ export default function TechnicalSpecs({
               {activeTab === 'downloads' && (
                 <div className="space-y-3">
                   <div className="flex items-center gap-2 mb-3">
-                    <Download className="h-4 w-4 text-blue-600" />
+                    <Download className="h-4 w-4 text-[hsl(var(--brand-dark))]" />
                     <span className="font-medium text-foreground">
                       Documentation & Software
                     </span>
@@ -260,7 +260,7 @@ export default function TechnicalSpecs({
                               {download.category && ` • ${download.category}`}
                             </div>
                           </div>
-                          <Download className="h-4 w-4 text-blue-600" />
+                          <Download className="h-4 w-4 text-[hsl(var(--brand-dark))]" />
                         </button>
                       ))}
                     </div>

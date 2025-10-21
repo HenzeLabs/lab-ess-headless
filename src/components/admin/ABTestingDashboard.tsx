@@ -40,7 +40,7 @@ const ABTestingDashboard = () => {
     return (
       <div className="space-y-6">
         <div className="text-center py-12">
-          <RefreshCwIcon className="w-8 h-8 animate-spin mx-auto text-blue-600" />
+          <RefreshCwIcon className="w-8 h-8 animate-spin mx-auto text-[hsl(var(--brand-dark))]" />
           <p className="mt-2 text-gray-600">Loading A/B testing data...</p>
         </div>
       </div>
@@ -72,7 +72,7 @@ const ABTestingDashboard = () => {
       case 'running':
         return 'text-green-600 bg-green-100';
       case 'completed':
-        return 'text-blue-600 bg-blue-100';
+        return 'text-[hsl(var(--brand-dark))] bg-[hsl(var(--brand))]/10';
       case 'paused':
         return 'text-yellow-600 bg-yellow-100';
       case 'draft':
@@ -106,11 +106,11 @@ const ABTestingDashboard = () => {
       case 'stop_winner':
         return <CheckCircleIcon className="w-5 h-5 text-green-600" />;
       case 'continue':
-        return <PlayIcon className="w-5 h-5 text-blue-600" />;
+        return <PlayIcon className="w-5 h-5 text-[hsl(var(--brand-dark))]" />;
       case 'stop_inconclusive':
         return <AlertTriangleIcon className="w-5 h-5 text-yellow-600" />;
       case 'extend':
-        return <ClockIcon className="w-5 h-5 text-purple-600" />;
+        return <ClockIcon className="w-5 h-5 text-[hsl(var(--brand-dark))]" />;
       default:
         return <AlertTriangleIcon className="w-5 h-5 text-gray-600" />;
     }
@@ -135,7 +135,7 @@ const ABTestingDashboard = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
-          <BeakerIcon className="w-8 h-8 text-purple-600" />
+          <BeakerIcon className="w-8 h-8 text-[hsl(var(--brand-dark))]" />
           <div>
             <h1 className="text-2xl font-bold text-gray-900">A/B Testing</h1>
             <p className="text-gray-600">
@@ -145,7 +145,7 @@ const ABTestingDashboard = () => {
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[hsl(var(--brand-dark))] text-white rounded-lg hover:bg-[hsl(var(--brand-dark))] transition-colors"
         >
           <PlusIcon className="w-4 h-4" />
           Create Test
@@ -186,7 +186,7 @@ const ABTestingDashboard = () => {
                   .toLocaleString()}
               </p>
             </div>
-            <UsersIcon className="w-8 h-8 text-blue-600" />
+            <UsersIcon className="w-8 h-8 text-[hsl(var(--brand-dark))]" />
           </div>
         </motion.div>
 
@@ -212,7 +212,7 @@ const ABTestingDashboard = () => {
                 %
               </p>
             </div>
-            <TargetIcon className="w-8 h-8 text-purple-600" />
+            <TargetIcon className="w-8 h-8 text-[hsl(var(--brand-dark))]" />
           </div>
         </motion.div>
 
@@ -245,7 +245,7 @@ const ABTestingDashboard = () => {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-[hsl(var(--brand))] focus:border-transparent"
             >
               <option value="all">All Status</option>
               <option value="running">Running</option>
@@ -259,7 +259,7 @@ const ABTestingDashboard = () => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-[hsl(var(--brand))] focus:border-transparent"
             >
               <option value="lastModified">Last Modified</option>
               <option value="startDate">Start Date</option>
@@ -544,7 +544,7 @@ const ABTestingDashboard = () => {
                               {test.audience.deviceTypes.map((device) => (
                                 <span
                                   key={device}
-                                  className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs"
+                                  className="px-2 py-1 bg-[hsl(var(--brand))]/10 text-blue-700 rounded text-xs"
                                 >
                                   {device}
                                 </span>
@@ -572,7 +572,7 @@ const ABTestingDashboard = () => {
                               {test.audience.trafficSource.map((source) => (
                                 <span
                                   key={source}
-                                  className="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs"
+                                  className="px-2 py-1 bg-[hsl(var(--brand))]/10 text-[hsl(var(--brand-dark))] rounded text-xs"
                                 >
                                   {source}
                                 </span>

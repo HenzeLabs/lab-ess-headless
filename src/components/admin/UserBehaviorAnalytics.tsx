@@ -35,7 +35,7 @@ const UserBehaviorAnalytics: React.FC = () => {
     return (
       <div className="space-y-6">
         <div className="text-center py-12">
-          <RefreshCwIcon className="w-8 h-8 animate-spin mx-auto text-blue-600" />
+          <RefreshCwIcon className="w-8 h-8 animate-spin mx-auto text-[hsl(var(--brand-dark))]" />
           <p className="mt-2 text-gray-600">Loading user behavior data...</p>
         </div>
       </div>
@@ -95,7 +95,7 @@ const UserBehaviorAnalytics: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
-          <ActivityIcon className="w-8 h-8 text-blue-600" />
+          <ActivityIcon className="w-8 h-8 text-[hsl(var(--brand-dark))]" />
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
               User Behavior Analytics
@@ -111,7 +111,7 @@ const UserBehaviorAnalytics: React.FC = () => {
           <select
             value={selectedTimeRange}
             onChange={(e) => setSelectedTimeRange(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[hsl(var(--brand))] focus:border-[hsl(var(--brand))]"
           >
             <option value="1d">Last 24 hours</option>
             <option value="7d">Last 7 days</option>
@@ -122,7 +122,7 @@ const UserBehaviorAnalytics: React.FC = () => {
           <select
             value={selectedDevice}
             onChange={(e) => setSelectedDevice(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[hsl(var(--brand))] focus:border-[hsl(var(--brand))]"
           >
             <option value="all">All Devices</option>
             <option value="desktop">Desktop</option>
@@ -144,7 +144,7 @@ const UserBehaviorAnalytics: React.FC = () => {
                 {journeys.length.toLocaleString()}
               </p>
             </div>
-            <UsersIcon className="w-8 h-8 text-blue-600" />
+            <UsersIcon className="w-8 h-8 text-[hsl(var(--brand-dark))]" />
           </div>
         </div>
 
@@ -184,7 +184,7 @@ const UserBehaviorAnalytics: React.FC = () => {
                 ${totalRevenue.toFixed(0)}
               </p>
             </div>
-            <CreditCardIcon className="w-8 h-8 text-purple-600" />
+            <CreditCardIcon className="w-8 h-8 text-[hsl(var(--brand-dark))]" />
           </div>
         </div>
       </div>
@@ -203,7 +203,7 @@ const UserBehaviorAnalytics: React.FC = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
                 activeTab === tab.id
-                  ? 'border-blue-500 text-blue-600'
+                  ? 'border-[hsl(var(--brand))] text-[hsl(var(--brand-dark))]'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -226,7 +226,7 @@ const UserBehaviorAnalytics: React.FC = () => {
               {conversionFunnel.map((stage, index) => (
                 <div key={index} className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
-                    <div className="w-4 h-4 bg-blue-600 rounded-full"></div>
+                    <div className="w-4 h-4 bg-[hsl(var(--brand-dark))] rounded-full"></div>
                     <span className="font-medium text-gray-900">
                       {stage.stage}
                     </span>
@@ -324,7 +324,7 @@ const UserBehaviorAnalytics: React.FC = () => {
                   {journey.steps.map((step, index) => (
                     <React.Fragment key={step.id}>
                       <div className="flex items-center space-x-1">
-                        <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                        <div className="w-2 h-2 bg-[hsl(var(--brand-dark))] rounded-full"></div>
                         <span className="text-xs text-gray-600">
                           {step.page}
                         </span>

@@ -238,7 +238,7 @@ export default function Nav({
               <div key={child.name} className="space-y-4">
                 <Link
                   href={child.href}
-                  className="block text-lg font-semibold text-gray-900 hover:text-[#4e2cfb] transition-colors duration-200"
+                  className="block text-lg font-semibold text-gray-900 hover:text-[hsl(var(--brand))] transition-colors duration-200"
                   role="menuitem"
                   tabIndex={0}
                   onClick={closeAllMenus}
@@ -258,7 +258,7 @@ export default function Nav({
                       <li key={grandchild.name}>
                         <Link
                           href={grandchild.href}
-                          className="text-sm text-gray-700 hover:text-[#4e2cfb] transition-colors duration-200"
+                          className="text-sm text-gray-700 hover:text-[hsl(var(--brand))] transition-colors duration-200"
                           role="menuitem"
                           tabIndex={0}
                           onClick={closeAllMenus}
@@ -314,7 +314,7 @@ export default function Nav({
                 <div className="px-4 py-3">
                   <Link
                     href={item.href}
-                    className="block text-lg font-medium text-gray-900 hover:text-[#4e2cfb] transition-colors duration-200"
+                    className="block text-lg font-medium text-gray-900 hover:text-[hsl(var(--brand))] transition-colors duration-200"
                     onClick={() => handleMobileMenuToggle(false)}
                   >
                     {item.name}
@@ -326,7 +326,7 @@ export default function Nav({
                         <li key={child.name}>
                           <Link
                             href={child.href}
-                            className="block text-base text-gray-700 hover:text-[#4e2cfb] transition-colors duration-200"
+                            className="block text-base text-gray-700 hover:text-[hsl(var(--brand))] transition-colors duration-200"
                             onClick={() => handleMobileMenuToggle(false)}
                           >
                             {child.name}
@@ -357,7 +357,7 @@ export default function Nav({
         {/* Mobile Menu Button */}
         <Button
           variant="ghost"
-          className="lg:hidden h-14 w-14 rounded-full hover:bg-[#4e2cfb] hover:text-white transition-colors duration-200"
+          className="lg:hidden h-14 w-14 rounded-full hover:bg-[hsl(var(--brand))] hover:text-white transition-colors duration-200"
           onClick={() => handleMobileMenuToggle()}
           aria-label="Open mobile menu"
           aria-expanded={mobileMenuOpen}
@@ -371,7 +371,7 @@ export default function Nav({
             <li key={item.name} role="none">
               <Button
                 variant="ghost"
-                className="relative h-14 px-4 rounded-none hover:bg-[#4e2cfb] hover:text-white transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-[#4e2cfb]"
+                className="relative h-14 px-4 rounded-none hover:bg-[hsl(var(--brand))] hover:text-white transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand))]"
                 onMouseEnter={() => item.children && setActiveMenu(item.name)}
                 onMouseLeave={() => item.children && setActiveMenu(null)}
                 onClick={() =>

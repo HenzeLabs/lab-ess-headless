@@ -200,7 +200,7 @@ function processExperimentsToABTests(
                 type: 'style',
                 selector: '.cta-button',
                 property: 'background-color',
-                value: '#10B981',
+                value: 'hsl(var(--accent))',
                 description: 'Enhanced button styling',
               },
             ],

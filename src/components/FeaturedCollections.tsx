@@ -48,7 +48,7 @@ export default async function FeaturedCollections() {
     }
 
     return (
-      <section className="w-full py-12 lg:py-24 bg-background">
+      <section className="w-full py-12 lg:pb-16 bg-background">
         <div className="max-w-[1440px] mx-auto px-4 lg:px-8">
           <ProductRail
             heading="Best Sellers"

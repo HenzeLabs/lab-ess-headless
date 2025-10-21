@@ -30,6 +30,8 @@ function mapItem(input: AnalyticsItemInput) {
     price: toNumber(input.price),
     quantity: input.quantity ?? 1,
     item_category: input.category || undefined,
+    item_brand: input.brand || undefined,
+    item_variant: input.variant || undefined,
   };
 }
 
@@ -125,6 +127,30 @@ export function trackViewItemList(
     collection_name: listName,
     product_count: products.length,
     categories: [...new Set(products.map((p) => p.category).filter(Boolean))],
+  });
+}
+
+export function trackSelectItem(
+  product: AnalyticsItemInput,
+  listName?: string,
+) {
+  const items = [mapItem(product)];
+  const currency = normaliseCurrency(product.currency);
+  pushDataLayer('select_item', {
+    item_list_name: listName || undefined,
+    currency,
+    items,
+  });
+  pushTaboola('select_item', {
+    item_id: product.id,
+    item_name: product.name,
+    list_name: listName || undefined,
+  });
+  pushClarity('product_select', {
+    product_id: product.id,
+    product_name: product.name,
+    list_name: listName || 'direct',
+    category: product.category || 'lab-equipment',
   });
 }
 
@@ -286,6 +312,7 @@ if (typeof window !== 'undefined') {
   window.__labAnalytics = {
     trackViewItem,
     trackViewItemList,
+    trackSelectItem,
     trackViewCart,
     trackAddToCart,
     trackRemoveFromCart,

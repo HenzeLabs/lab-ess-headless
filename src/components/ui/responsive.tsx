@@ -523,7 +523,7 @@ export const MobileInput: React.FC<{
     value={value}
     onChange={onChange}
     className={`
-      w-full px-4 py-3 text-base border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+      w-full px-4 py-3 text-base border rounded-lg focus:ring-2 focus:ring-[hsl(var(--brand))] focus:border-[hsl(var(--brand))]
       ${error ? 'border-red-300' : 'border-gray-300'}
       ${className}
     `}

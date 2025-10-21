@@ -135,10 +135,7 @@ const EmailSignup: React.FC<EmailSignupProps> = ({
               onSubmit={handleSubmit}
               className="mx-auto flex w-full max-w-2xl flex-col gap-4 sm:flex-row"
             >
-              <label
-                htmlFor="newsletter-email"
-                className="block text-sm font-medium text-[hsl(var(--ink))] mb-1"
-              >
+              <label htmlFor="newsletter-email" className="sr-only">
                 Email address
               </label>
               <input
@@ -228,7 +225,8 @@ const EmailSignup: React.FC<EmailSignupProps> = ({
                   className="h-5 w-5"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth={1.5}
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
                 >
                   <path
                     d="M5 12l4 4 10-10"
@@ -243,16 +241,11 @@ const EmailSignup: React.FC<EmailSignupProps> = ({
                   className="h-5 w-5"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth={1.5}
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
                 >
-                  <path d="M5 9V7a5 5 0 0110 0v2" />
-                  <path d="M7 12h10" />
-                  <path d="M7 16h6" />
-                  <path
-                    d="M4 11v5a2 2 0 002 2h12a2 2 0 002-2v-5a2 2 0 00-2-2H6a2 2 0 00-2 2z"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0110 0v4" />
                 </svg>
                 Secure & private
               </span>
@@ -261,10 +254,11 @@ const EmailSignup: React.FC<EmailSignupProps> = ({
                   className="h-5 w-5"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth={1.5}
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
                 >
                   <path
-                    d="M12 2l3 7h7l-5.5 4.1L18 21l-6-4-6 4 1.5-7.9L2 9h7z"
+                    d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />

@@ -26,7 +26,7 @@ export default function AdminAuthWrapper({ children }: AdminAuthWrapperProps) {
         // Verify token with API
         const response = await fetch('/api/auth/verify', {
           headers: {
-            'Authorization': `Bearer ${accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         });
 
@@ -38,7 +38,8 @@ export default function AdminAuthWrapper({ children }: AdminAuthWrapperProps) {
           });
 
           if (refreshResponse.ok) {
-            const { accessToken: newAccessToken } = await refreshResponse.json();
+            const { accessToken: newAccessToken } =
+              await refreshResponse.json();
             localStorage.setItem('accessToken', newAccessToken);
             setIsAuthenticated(true);
           } else {
@@ -61,7 +62,7 @@ export default function AdminAuthWrapper({ children }: AdminAuthWrapperProps) {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[hsl(var(--brand-dark))]"></div>
       </div>
     );
   }

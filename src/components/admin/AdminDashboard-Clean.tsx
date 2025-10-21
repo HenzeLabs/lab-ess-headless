@@ -134,8 +134,8 @@ const RecentOrdersFeed: React.FC<{ orders: ShopifyOrder[] }> = ({ orders }) => {
             className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
           >
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <ShoppingCart className="w-4 h-4 text-blue-600" />
+              <div className="p-2 bg-[hsl(var(--brand))]/10 rounded-lg">
+                <ShoppingCart className="w-4 h-4 text-[hsl(var(--brand-dark))]" />
               </div>
               <div>
                 <p className="font-semibold text-gray-900">{order.name}</p>
@@ -190,7 +190,7 @@ const AdminDashboard: React.FC = () => {
       change: 8.2,
       changeType: 'increase' as const,
       icon: ShoppingCart,
-      color: 'bg-blue-500',
+      color: 'bg-[hsl(var(--brand))]',
     },
     {
       title: 'Average Order Value',
@@ -198,7 +198,7 @@ const AdminDashboard: React.FC = () => {
       change: 5.1,
       changeType: 'increase' as const,
       icon: TrendingUp,
-      color: 'bg-purple-500',
+      color: 'bg-[hsl(var(--brand))]',
       prefix: '$',
     },
     {
@@ -217,7 +217,7 @@ const AdminDashboard: React.FC = () => {
       description: 'Manage inventory and product details',
       icon: Package,
       action: () => handleNavClick('/admin/products'),
-      color: 'bg-blue-500',
+      color: 'bg-[hsl(var(--brand))]',
     },
     {
       label: 'View Orders',
@@ -231,7 +231,7 @@ const AdminDashboard: React.FC = () => {
       description: 'Analyze customer behavior and preferences',
       icon: Users,
       action: () => handleNavClick('/admin/customers'),
-      color: 'bg-purple-500',
+      color: 'bg-[hsl(var(--brand))]',
     },
     {
       label: 'Sales Reports',
@@ -286,7 +286,7 @@ const AdminDashboard: React.FC = () => {
             onChange={(e) =>
               setTimeRange(e.target.value as '24h' | '7d' | '30d' | '90d')
             }
-            className="border border-gray-300 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border border-gray-300 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand))]"
           >
             <option value="24h">Last 24 Hours</option>
             <option value="7d">Last 7 Days</option>
@@ -325,7 +325,7 @@ const AdminDashboard: React.FC = () => {
                   <action.icon className="w-5 h-5 text-white" />
                 </div>
               </div>
-              <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+              <h3 className="font-semibold text-gray-900 group-hover:text-[hsl(var(--brand-dark))] transition-colors">
                 {action.label}
               </h3>
               <p className="text-sm text-gray-600 mt-1">{action.description}</p>

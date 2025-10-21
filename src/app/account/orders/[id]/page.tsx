@@ -228,7 +228,7 @@ export default function OrderDetailPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="bg-white p-12 rounded-lg shadow">
           <div className="flex justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[hsl(var(--brand-dark))]"></div>
           </div>
         </div>
       </div>
@@ -242,7 +242,7 @@ export default function OrderDetailPage() {
           <p className="text-red-600">{error}</p>
           <Link
             href="/account/orders"
-            className="mt-4 text-blue-600 hover:underline inline-block"
+            className="mt-4 text-[hsl(var(--brand-dark))] hover:underline inline-block"
           >
             ← Back to Orders
           </Link>
@@ -257,7 +257,7 @@ export default function OrderDetailPage() {
         <p>Order not found</p>
         <Link
           href="/account/orders"
-          className="mt-4 text-blue-600 hover:underline inline-block"
+          className="mt-4 text-[hsl(var(--brand-dark))] hover:underline inline-block"
         >
           ← Back to Orders
         </Link>
@@ -271,7 +271,7 @@ export default function OrderDetailPage() {
       <div className="mb-6">
         <Link
           href="/account/orders"
-          className="text-blue-600 hover:underline mb-4 inline-block"
+          className="text-[hsl(var(--brand-dark))] hover:underline mb-4 inline-block"
         >
           ← Back to Orders
         </Link>
@@ -325,7 +325,7 @@ export default function OrderDetailPage() {
                     <div className="flex-1">
                       <Link
                         href={`/products/${item.node.variant.product.handle}`}
-                        className="font-medium hover:text-blue-600"
+                        className="font-medium hover:text-[hsl(var(--brand-dark))]"
                       >
                         {item.node.title}
                       </Link>
@@ -390,7 +390,7 @@ export default function OrderDetailPage() {
                                 href={tracking.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-600 hover:underline text-sm"
+                                className="text-[hsl(var(--brand-dark))] hover:underline text-sm"
                               >
                                 Track Package →
                               </a>
@@ -542,7 +542,7 @@ export default function OrderDetailPage() {
                   href={order.statusUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block w-full text-center bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+                  className="block w-full text-center bg-[hsl(var(--brand-dark))] text-white py-2 px-4 rounded hover:bg-[hsl(var(--brand-dark))] transition"
                 >
                   View Order Status on Shopify →
                 </a>

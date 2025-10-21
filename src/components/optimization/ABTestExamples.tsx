@@ -51,9 +51,9 @@ export const HeroCTATest: React.FC = () => {
       case 'variant_a':
         return 'bg-red-600 hover:bg-red-700 animate-pulse';
       case 'variant_b':
-        return 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700';
+        return 'bg-gradient-to-r from-[hsl(var(--brand-dark))] to-[hsl(var(--brand-dark))] hover:from-[hsl(var(--brand-dark))] hover:to-[hsl(var(--brand-dark))]';
       default:
-        return 'bg-blue-600 hover:bg-blue-700';
+        return 'bg-[hsl(var(--brand-dark))] hover:bg-[hsl(var(--brand-dark))]';
     }
   };
 
@@ -269,12 +269,12 @@ export const ProductCardTest: React.FC<{ product: Product }> = ({
           </button>
 
           <div className="flex justify-between items-center mt-2">
-            <span className="text-lg font-bold text-blue-600">
+            <span className="text-lg font-bold text-[hsl(var(--brand-dark))]">
               ${product.price}
             </span>
             <Button
               onClick={handleAddToCart}
-              className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+              className="px-4 py-2 bg-[hsl(var(--brand-dark))] text-white text-sm rounded hover:bg-[hsl(var(--brand-dark))]"
             >
               Add to Cart
             </Button>
@@ -312,7 +312,7 @@ export const ProductCardTest: React.FC<{ product: Product }> = ({
           </p>
 
           <div className="flex justify-between items-center">
-            <span className="text-lg font-bold text-blue-600">
+            <span className="text-lg font-bold text-[hsl(var(--brand-dark))]">
               ${product.price}
             </span>
 
@@ -326,7 +326,7 @@ export const ProductCardTest: React.FC<{ product: Product }> = ({
               </Button>
               <Button
                 onClick={handleAddToCart}
-                className="px-3 py-1 bg-blue-600 text-white text-sm"
+                className="px-3 py-1 bg-[hsl(var(--brand-dark))] text-white text-sm"
               >
                 Add to Cart
               </Button>
@@ -377,7 +377,7 @@ export const ConditionalFeatures: React.FC = () => {
             </Button>
             <Button
               onClick={() => handleSocialLogin('facebook')}
-              className="flex items-center space-x-2 bg-blue-600 text-white"
+              className="flex items-center space-x-2 bg-[hsl(var(--brand-dark))] text-white"
             >
               <span>📘</span>
               <span>Facebook</span>
@@ -410,7 +410,7 @@ export const ConditionalFeatures: React.FC = () => {
         <div className="analytics-section">
           <h3 className="text-lg font-semibold mb-3">Advanced Insights</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-lg">
+            <div className="bg-gradient-to-r from-[hsl(var(--brand))] to-[hsl(var(--brand-dark))] text-white p-4 rounded-lg">
               <h4 className="font-semibold">Conversion Rate</h4>
               <p className="text-2xl font-bold">4.2%</p>
             </div>

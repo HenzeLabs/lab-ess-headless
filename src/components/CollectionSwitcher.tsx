@@ -136,7 +136,7 @@ const CollectionSwitcher: React.FC<CollectionSwitcherProps> = ({
           </h2>
         </div>
 
-        <div className="flex justify-center gap-3 overflow-x-auto mb-8 pb-2">
+        <div className="flex justify-center gap-3 overflow-x-scroll overflow-y-visible mb-8 pb-2 py-3 px-1 custom-scrollbar">
           {initialCollections.map((collection) => {
             const isActive = activeCollectionHandle === collection.handle;
             return (
@@ -144,11 +144,11 @@ const CollectionSwitcher: React.FC<CollectionSwitcherProps> = ({
                 type="button"
                 key={collection.handle}
                 onClick={() => setActiveCollectionHandle(collection.handle)}
-                className={`relative min-h-[48px] whitespace-nowrap rounded-full border px-6 py-3 text-sm font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#4e2cfb] sm:text-base transform hover:scale-105
+                className={`relative min-h-[48px] whitespace-nowrap rounded-full border px-6 py-3 text-sm font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[hsl(var(--brand))] sm:text-base transform hover:scale-105
                   ${
                     isActive
-                      ? 'border-transparent bg-[#4e2cfb] text-white shadow-[0_12px_30px_-14px_rgba(72,45,226,0.9)] scale-105'
-                      : 'border-border/60 bg-white/85 text-[#4a4a67] hover:border-[#4e2cfb]/40 hover:bg-white hover:text-[#1f1f3a] hover:shadow-lg'
+                      ? 'border-transparent bg-[hsl(var(--brand))] text-white shadow-[0_12px_30px_-14px_rgba(72,45,226,0.9)] scale-105'
+                      : 'border-border/60 bg-white/85 text-[#4a4a67] hover:border-[hsl(var(--brand))]/40 hover:bg-white hover:text-[#1f1f3a] hover:shadow-lg'
                   }`}
               >
                 <span className="relative z-10 flex items-center gap-2">
@@ -172,19 +172,11 @@ const CollectionSwitcher: React.FC<CollectionSwitcherProps> = ({
           <div className="relative">
             {products.length > 0 && (
               <>
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-y-0 left-0 z-10 hidden w-16 bg-gradient-to-r from-background to-transparent md:block"
-                />
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-y-0 right-0 z-10 hidden w-16 bg-gradient-to-l from-background to-transparent md:block"
-                />
                 <button
                   type="button"
                   onClick={() => handleArrowClick('left')}
                   disabled={!canScrollLeft}
-                  className="absolute left-[-1.5rem] top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[#4e2cfb] text-white shadow-[0_12px_30px_-14px_rgba(72,45,226,0.7)] transition hover:-translate-x-1 hover:bg-[#3f23d6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:bg-muted disabled:text-muted-foreground md:flex"
+                  className="absolute left-[-1.5rem] top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[hsl(var(--brand))] text-white shadow-[0_12px_30px_-14px_rgba(72,45,226,0.7)] transition hover:-translate-x-1 hover:bg-[hsl(var(--brand-dark))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:bg-muted disabled:text-muted-foreground md:flex"
                 >
                   <span className="sr-only">Scroll left</span>
                   <svg
@@ -202,7 +194,7 @@ const CollectionSwitcher: React.FC<CollectionSwitcherProps> = ({
                   type="button"
                   onClick={() => handleArrowClick('right')}
                   disabled={!canScrollRight}
-                  className="absolute right-[-1.5rem] top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[#4e2cfb] text-white shadow-[0_12px_30px_-14px_rgba(72,45,226,0.7)] transition hover:translate-x-1 hover:bg-[#3f23d6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:bg-muted disabled:text-muted-foreground md:flex"
+                  className="absolute right-[-1.5rem] top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[hsl(var(--brand))] text-white shadow-[0_12px_30px_-14px_rgba(72,45,226,0.7)] transition hover:translate-x-1 hover:bg-[hsl(var(--brand-dark))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:bg-muted disabled:text-muted-foreground md:flex"
                 >
                   <span className="sr-only">Scroll right</span>
                   <svg
@@ -230,7 +222,7 @@ const CollectionSwitcher: React.FC<CollectionSwitcherProps> = ({
                 products.map((product) => (
                   <div
                     key={product.id}
-                    className="group flex min-w-[260px] max-w-[280px] flex-shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-border/50 bg-card shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-[#4e2cfb]/10"
+                    className="group flex min-w-[260px] max-w-[280px] flex-shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-border/50 bg-card shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-[hsl(var(--brand))]/10"
                   >
                     <Link
                       href={`/products/${product.handle}`}

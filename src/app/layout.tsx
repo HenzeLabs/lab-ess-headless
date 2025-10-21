@@ -1,20 +1,33 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Inter, JetBrains_Mono } from 'next/font/google';
+import { Montserrat, Roboto, Roboto_Mono } from 'next/font/google';
 import SiteHeader from '@/components/layout/SiteHeader';
 import FooterServer from '@/components/FooterServer';
 import AnalyticsWrapper from '@/AnalyticsWrapper';
 import { ErrorBoundary } from '@/components/error-boundaries/ErrorBoundary';
 
-const sans = Inter({
+// Montserrat for headings (H1-H3)
+const heading = Montserrat({
+  subsets: ['latin'],
+  variable: '--font-heading',
+  display: 'swap',
+  weight: ['400', '500', '600', '700', '800'],
+});
+
+// Roboto for body text
+const sans = Roboto({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
+  weight: ['300', '400', '500', '700'],
 });
-const mono = JetBrains_Mono({
+
+// Roboto Mono for code/specs
+const mono = Roboto_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
   display: 'swap',
+  weight: ['400', '500', '700'],
 });
 
 export const metadata: Metadata = {
@@ -28,7 +41,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
+    <html
+      lang="en"
+      className={`${heading.variable} ${sans.variable} ${mono.variable}`}
+    >
       <head>
         <link
           rel="preconnect"

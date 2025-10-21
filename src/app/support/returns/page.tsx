@@ -1,3 +1,21 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Return Policy | Lab Essentials',
+  description:
+    '30-day return policy on laboratory equipment and supplies. Easy returns process with full refunds on items in original condition. Learn about our hassle-free return policy.',
+  alternates: {
+    canonical: 'https://labessentials.com/support/returns',
+  },
+  openGraph: {
+    title: 'Return Policy | Lab Essentials',
+    description:
+      '30-day return policy on laboratory equipment and supplies. Easy returns process with full refunds.',
+    url: 'https://labessentials.com/support/returns',
+    type: 'website',
+  },
+};
+
 export default function ReturnsPage() {
   return (
     <main className="bg-[hsl(var(--bg))] text-[hsl(var(--ink))] py-12 md:py-16">

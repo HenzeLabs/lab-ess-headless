@@ -35,27 +35,43 @@ interface FeaturedProductData {
 const FEATURED_COLLECTION_HANDLE = 'featured-products';
 
 async function getFeaturedProduct(): Promise<FeaturedProductData | null> {
-  const response = await shopifyFetch<FeaturedCollectionResponse>({
-    query: getCollectionByHandleQuery,
-    variables: {
-      handle: FEATURED_COLLECTION_HANDLE,
-      first: 1,
-    },
-  });
+  try {
+    const response = await shopifyFetch<FeaturedCollectionResponse>({
+      query: getCollectionByHandleQuery,
+      variables: {
+        handle: FEATURED_COLLECTION_HANDLE,
+        first: 10,
+      },
+    });
 
-  const featuredCollection = response.data.collection;
-  const product = featuredCollection?.products?.edges?.[0]?.node;
+    const featuredCollection = response.data.collection;
 
-  if (!product) {
+    // Try to find the centrifuge product first
+    const centrifugeProduct = featuredCollection?.products?.edges?.find(
+      (edge) =>
+        edge.node.handle === 'centrinova-6-place-centrifuge' ||
+        edge.node.title?.toLowerCase().includes('centrifuge'),
+    )?.node;
+
+    // Fall back to first product if centrifuge not found
+    const product =
+      centrifugeProduct || featuredCollection?.products?.edges?.[0]?.node;
+
+    if (!product) {
+      console.error('No products found in featured collection');
+      return null;
+    }
+
+    return {
+      product,
+      collectionTitle: featuredCollection?.title ?? undefined,
+      collectionHandle: featuredCollection?.handle ?? undefined,
+      collectionDescription: featuredCollection?.description ?? null,
+    };
+  } catch (error) {
+    console.error('Error fetching featured product:', error);
     return null;
   }
-
-  return {
-    product,
-    collectionTitle: featuredCollection?.title ?? undefined,
-    collectionHandle: featuredCollection?.handle ?? undefined,
-    collectionDescription: featuredCollection?.description ?? null,
-  };
 }
 
 export default async function FeaturedHeroProduct({
@@ -68,8 +84,7 @@ export default async function FeaturedHeroProduct({
     return null;
   }
 
-  const { product, collectionTitle, collectionHandle, collectionDescription } =
-    featured;
+  const { product, collectionHandle, collectionDescription } = featured;
 
   const plainDescription = stripHtml(product.descriptionHtml ?? '').trim();
 
@@ -87,7 +102,7 @@ export default async function FeaturedHeroProduct({
     learnMoreUrl ??
     (collectionHandle ? `/collections/${collectionHandle}` : undefined);
 
-  const badgeLabel = collectionTitle ?? 'Featured Product';
+  const badgeLabel = 'Featured Product';
   const supportingCopy = descriptionText ?? collectionDescription ?? undefined;
 
   const priceAmount = product.priceRange?.minVariantPrice?.amount;

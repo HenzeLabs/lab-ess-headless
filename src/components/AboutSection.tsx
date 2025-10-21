@@ -25,19 +25,23 @@ const AboutSection: React.FC<AboutSectionProps> = ({
   features = [
     {
       title: 'Precision in Every Detail',
-      description: 'Accurate results with clear optics and exact measurements.',
+      description:
+        "Clear optics and accurate results—because precision isn't optional in the lab.",
     },
     {
-      title: 'Built for Speed',
-      description: 'Rapid sample handling and fast U.S. shipping.',
+      title: 'Ready When You Are',
+      description:
+        'Fast order processing and quick U.S. shipping to keep your work moving.',
     },
     {
-      title: 'Reliability You Can Trust',
-      description: 'Durable equipment designed for long-term use.',
+      title: 'Built to Last',
+      description:
+        'Reliable, high-performance equipment engineered for consistent results and long-term value.',
     },
     {
-      title: 'U.S.-Based Support',
-      description: 'Knowledgeable help from a responsive local team.',
+      title: 'Support That Knows Labs',
+      description:
+        'Responsive, U.S.-based product specialists ready to help you choose, use, and troubleshoot with confidence.',
     },
   ],
 }) => {
@@ -183,7 +187,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({
               </Link>
               <Link
                 href="/pages/contact-us"
-                className={`${buttonStyles.ghost} px-8 py-3 text-base`}
+                className={`${buttonStyles.outline} px-8 py-3 text-base`}
               >
                 Contact Support
               </Link>

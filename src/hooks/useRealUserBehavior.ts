@@ -318,7 +318,7 @@ function generateCustomerSegments(sessions: Session[]): CustomerSegment[] {
         'High bounce potential',
         'Exploration focused',
       ],
-      color: '#3B82F6',
+      color: 'hsl(var(--brand))',
     },
     {
       id: 'returning-customers',
@@ -333,7 +333,7 @@ function generateCustomerSegments(sessions: Session[]): CustomerSegment[] {
         'Higher intent',
         'Comparison shopping',
       ],
-      color: '#10B981',
+      color: 'hsl(var(--accent))',
     },
     {
       id: 'high-value',
@@ -348,7 +348,7 @@ function generateCustomerSegments(sessions: Session[]): CustomerSegment[] {
         'Premium products',
         'Quick decisions',
       ],
-      color: '#F59E0B',
+      color: 'hsl(var(--accent))',
     },
   ];
 

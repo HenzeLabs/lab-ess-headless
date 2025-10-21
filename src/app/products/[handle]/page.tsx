@@ -8,6 +8,7 @@ import type { Product } from '@/lib/types';
 import { getProductByHandleQuery } from '@/lib/queries';
 import { shopifyFetch } from '@/lib/shopify';
 import { absoluteUrl, jsonLd, stripHtml } from '@/lib/seo';
+import { layout } from '@/lib/ui';
 import ProductViewTracker from '@/components/analytics/ProductViewTracker';
 import ProductInfoPanelClient from './ProductInfoPanelClient';
 
@@ -95,12 +96,19 @@ export default async function ProductPage({
   const description = stripHtml(product.descriptionHtml);
   const price = product.priceRange?.minVariantPrice?.amount ?? null;
   const currency = product.priceRange?.minVariantPrice?.currencyCode ?? 'USD';
+
+  // Extract brand from metafields
+  const brand =
+    product.metafields?.find((field) => field.key === 'brand')?.value ?? null;
+
   const analyticsProduct = {
     id: product.id,
     name: product.title,
     price,
     currency,
     category: product.tags?.[0] ?? null,
+    brand,
+    variant: null, // Will be set when variant is selected
   };
   // ProductInfoPanel will be imported via a client wrapper
 
@@ -165,7 +173,7 @@ export default async function ProductPage({
         className="bg-background py-12 lg:py-24"
         role="main"
       >
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className={layout.container}>
           <div className="grid items-start gap-12 md:gap-24 md:grid-cols-2">
             <div className="flex flex-col gap-6">
               <div className="aspect-square w-full overflow-hidden rounded-2xl bg-background border border-border/50">

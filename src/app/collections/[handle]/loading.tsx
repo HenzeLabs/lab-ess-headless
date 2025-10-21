@@ -1,8 +1,10 @@
+import { layout } from '@/lib/ui';
+
 // Loading skeleton for collection page
 export default function LoadingCollectionPage() {
   return (
     <main className="bg-koala-light-grey py-24 animate-pulse">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className={layout.container}>
         <div className="h-12 w-1/3 bg-koala-grey rounded mb-12 mx-auto" />
         <div className="flex flex-col lg:flex-row gap-8">
           <aside className="lg:w-72 flex-shrink-0">

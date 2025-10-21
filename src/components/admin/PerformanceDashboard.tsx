@@ -53,7 +53,7 @@ const PerformanceDashboard: React.FC = () => {
     return (
       <div className="space-y-6">
         <div className="text-center py-12">
-          <RefreshCw className="w-8 h-8 animate-spin mx-auto text-blue-600" />
+          <RefreshCw className="w-8 h-8 animate-spin mx-auto text-[hsl(var(--brand-dark))]" />
           <p className="mt-2 text-gray-600">Loading performance data...</p>
         </div>
       </div>
@@ -100,7 +100,9 @@ const PerformanceDashboard: React.FC = () => {
       case 'warning':
         return <AlertTriangle className="w-5 h-5 text-yellow-600" />;
       case 'suggestion':
-        return <CheckCircle className="w-5 h-5 text-blue-600" />;
+        return (
+          <CheckCircle className="w-5 h-5 text-[hsl(var(--brand-dark))]" />
+        );
       default:
         return <CheckCircle className="w-5 h-5 text-gray-600" />;
     }
@@ -148,7 +150,7 @@ const PerformanceDashboard: React.FC = () => {
                 onClick={() => setDeviceFilter(key as typeof deviceFilter)}
                 className={`flex items-center space-x-2 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                   deviceFilter === key
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-[hsl(var(--brand-dark))] text-white'
                     : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
@@ -166,7 +168,7 @@ const PerformanceDashboard: React.FC = () => {
                 onClick={() => setTimeRange(range)}
                 className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                   timeRange === range
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-[hsl(var(--brand-dark))] text-white'
                     : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
@@ -178,7 +180,7 @@ const PerformanceDashboard: React.FC = () => {
           <button
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+            className="flex items-center space-x-2 px-4 py-2 bg-[hsl(var(--brand-dark))] text-white rounded-lg hover:bg-[hsl(var(--brand-dark))] disabled:opacity-50 transition-colors"
           >
             <RefreshCw
               className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`}
@@ -218,16 +220,16 @@ const PerformanceDashboard: React.FC = () => {
                 {vital.name.includes('Layout')
                   ? ''
                   : vital.name.includes('Paint')
-                  ? 's'
-                  : 'ms'}
+                    ? 's'
+                    : 'ms'}
               </div>
               <div className="text-sm text-gray-600">
                 75th percentile • Target: {vital.threshold.good}
                 {vital.name.includes('Layout')
                   ? ''
                   : vital.name.includes('Paint')
-                  ? 's'
-                  : 'ms'}
+                    ? 's'
+                    : 'ms'}
               </div>
             </motion.div>
           ))}
@@ -254,8 +256,8 @@ const PerformanceDashboard: React.FC = () => {
                   metric.trend === 'up'
                     ? 'text-red-600'
                     : metric.trend === 'down'
-                    ? 'text-green-600'
-                    : 'text-gray-600'
+                      ? 'text-green-600'
+                      : 'text-gray-600'
                 }`}
               >
                 {metric.trend === 'up' ? (
@@ -344,8 +346,8 @@ const PerformanceDashboard: React.FC = () => {
                         page.avgLoadTime <= 2
                           ? 'text-green-600'
                           : page.avgLoadTime <= 3
-                          ? 'text-yellow-600'
-                          : 'text-red-600'
+                            ? 'text-yellow-600'
+                            : 'text-red-600'
                       }`}
                     >
                       {page.avgLoadTime}s
@@ -357,8 +359,8 @@ const PerformanceDashboard: React.FC = () => {
                         page.bounceRate <= 30
                           ? 'text-green-600'
                           : page.bounceRate <= 50
-                          ? 'text-yellow-600'
-                          : 'text-red-600'
+                            ? 'text-yellow-600'
+                            : 'text-red-600'
                       }`}
                     >
                       {page.bounceRate}%
@@ -391,7 +393,7 @@ const PerformanceDashboard: React.FC = () => {
           <h3 className="text-lg font-semibold text-gray-900">
             Performance Recommendations
           </h3>
-          <button className="flex items-center space-x-2 text-sm text-blue-600 hover:text-blue-800 font-medium">
+          <button className="flex items-center space-x-2 text-sm text-[hsl(var(--brand-dark))] hover:text-[hsl(var(--foreground))] font-medium">
             <BarChart3 className="w-4 h-4" />
             <span>View All</span>
           </button>
@@ -419,8 +421,8 @@ const PerformanceDashboard: React.FC = () => {
                           rec.impact === 'high'
                             ? 'bg-red-100 text-red-800'
                             : rec.impact === 'medium'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-green-100 text-green-800'
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : 'bg-green-100 text-green-800'
                         }`}
                       >
                         {rec.impact} impact
@@ -430,8 +432,8 @@ const PerformanceDashboard: React.FC = () => {
                           rec.effort === 'low'
                             ? 'bg-green-100 text-green-800'
                             : rec.effort === 'medium'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-red-100 text-red-800'
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : 'bg-red-100 text-red-800'
                         }`}
                       >
                         {rec.effort} effort

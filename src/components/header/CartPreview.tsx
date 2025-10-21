@@ -175,7 +175,7 @@ export default function CartPreview({
     <Button
       asChild
       variant="ghost"
-      className={`relative h-14 w-14 rounded-full hover:bg-[#4e2cfb] hover:text-white transition-colors duration-200 ${className}`}
+      className={`relative h-14 w-14 rounded-full hover:bg-[hsl(var(--brand))] hover:text-white transition-colors duration-200 ${className}`}
       disabled={isUpdating}
     >
       <Link

@@ -32,12 +32,12 @@ const Hero: React.FC<HeroProps> = ({
   const hasMedia = Boolean(videoUrl || imageUrl);
 
   const ctaPrimaryClass = hasMedia
-    ? `${buttonStyles.primary} text-white shadow-[0_15px_35px_-10px_rgba(255,255,255,0.4)] hover:shadow-[0_20px_45px_-10px_rgba(255,255,255,0.6)] hover:scale-105 transition-all duration-300`
-    : `${buttonStyles.primary} hover:scale-105 transition-all duration-300`;
+    ? `${buttonStyles.primary} text-white text-base px-8 py-4 shadow-[0_15px_35px_-10px_rgba(255,255,255,0.4)] hover:shadow-[0_20px_45px_-10px_rgba(255,255,255,0.6)] hover:scale-105 transition-all duration-300`
+    : `${buttonStyles.primary} text-base px-8 py-4 hover:scale-105 transition-all duration-300`;
 
   const ctaSecondaryClass = hasMedia
-    ? `${buttonStyles.ghost} border-white/70 text-white hover:bg-white/20 hover:scale-105 transition-all duration-300`
-    : `${buttonStyles.ghost} hover:scale-105 transition-all duration-300`;
+    ? `${buttonStyles.outline} border-2 border-white text-white bg-white/10 backdrop-blur-sm text-base px-8 py-4 hover:bg-white hover:text-[hsl(var(--brand))] hover:scale-105 transition-all duration-300`
+    : `${buttonStyles.ghost} text-base px-8 py-4 hover:scale-105 transition-all duration-300`;
 
   useEffect(() => {
     const observer = new IntersectionObserver(

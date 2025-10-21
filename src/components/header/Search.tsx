@@ -214,7 +214,7 @@ export default function Search({
       <Button
         ref={searchButtonRef}
         variant={getButtonVariant()}
-        className={`relative h-14 w-14 rounded-full hover:bg-[#4e2cfb] hover:text-white transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-[#4e2cfb] focus-visible:ring-offset-2 ${className}`}
+        className={`relative h-14 w-14 rounded-full hover:bg-[hsl(var(--brand))] hover:text-white transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand))] focus-visible:ring-offset-2 ${className}`}
         onClick={handleSearchClick}
         onKeyDown={handleKeyDown}
         aria-label={getAriaLabel()}
