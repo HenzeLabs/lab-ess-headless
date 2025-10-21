@@ -1,7 +1,5 @@
 'use client';
 
-import { AnimationWrapper, PulseAnimation } from '@/components/ui/animations';
-
 interface SkeletonProps {
   className?: string;
   variant?: 'text' | 'circular' | 'rectangular' | 'rounded';
@@ -33,18 +31,12 @@ export const Skeleton: React.FC<SkeletonProps> = ({
     }),
   };
 
-  const skeletonElement = (
+  return (
     <div
-      className={`${baseClasses} ${variantClasses[variant]} ${className}`}
+      className={`${baseClasses} ${variantClasses[variant]} ${animate ? 'animate-pulse' : ''} ${className}`}
       style={style}
     />
   );
-
-  if (animate) {
-    return <PulseAnimation>{skeletonElement}</PulseAnimation>;
-  }
-
-  return skeletonElement;
 };
 
 // Specialized skeleton components
@@ -86,9 +78,7 @@ export const SkeletonCard: React.FC<{
   className?: string;
   showAvatar?: boolean;
 }> = ({ className = '', showAvatar = false }) => (
-  <AnimationWrapper
-    className={`border border-gray-200 rounded-lg p-6 ${className}`}
-  >
+  <div className={`border border-gray-200 rounded-lg p-6 ${className}`}>
     <div className="animate-pulse">
       {showAvatar && (
         <div className="flex items-center mb-4">
@@ -113,7 +103,7 @@ export const SkeletonCard: React.FC<{
         <Skeleton variant="rounded" width="100px" height="40px" />
       </div>
     </div>
-  </AnimationWrapper>
+  </div>
 );
 
 export const SkeletonTable: React.FC<{
@@ -182,7 +172,7 @@ export const SkeletonGrid: React.FC<{
 export const SkeletonProductCard: React.FC<{ className?: string }> = ({
   className = '',
 }) => (
-  <AnimationWrapper
+  <div
     className={`border border-gray-200 rounded-lg overflow-hidden ${className}`}
   >
     <div className="animate-pulse">
@@ -203,7 +193,7 @@ export const SkeletonProductCard: React.FC<{ className?: string }> = ({
         </div>
       </div>
     </div>
-  </AnimationWrapper>
+  </div>
 );
 
 export const SkeletonProductGrid: React.FC<{
@@ -230,7 +220,7 @@ export const SkeletonProductDetail: React.FC<{ className?: string }> = ({
   className = '',
 }) => (
   <div className={`max-w-6xl mx-auto ${className}`}>
-    <AnimationWrapper>
+    <div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Product Images */}
         <div className="space-y-4">
@@ -264,6 +254,6 @@ export const SkeletonProductDetail: React.FC<{ className?: string }> = ({
           </div>
         </div>
       </div>
-    </AnimationWrapper>
+    </div>
   </div>
 );

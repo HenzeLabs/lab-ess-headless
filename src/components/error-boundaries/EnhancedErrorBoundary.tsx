@@ -1,7 +1,6 @@
 'use client';
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { AnimatedDiv } from '@/components/ui/animations';
 import { buttonStyles } from '@/lib/ui';
 
 interface Props {
@@ -96,10 +95,7 @@ export class ErrorBoundary extends Component<Props, State> {
       const isCritical = this.props.level === 'critical';
 
       return (
-        <AnimatedDiv
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+        <div
           className={`
             ${
               isPageLevel
@@ -190,7 +186,7 @@ export class ErrorBoundary extends Component<Props, State> {
               </div>
             </div>
           </div>
-        </AnimatedDiv>
+        </div>
       );
     }
 

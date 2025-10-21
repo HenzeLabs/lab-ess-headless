@@ -28,6 +28,8 @@ const nextConfig = {
   // Bundle optimization
   experimental: {
     optimizePackageImports: [
+      'react',
+      'react-dom',
       'lucide-react',
       'framer-motion',
       '@google-analytics/data',
@@ -207,7 +209,7 @@ const withPWAConfig = withPWA({
   },
   runtimeCaching: [
     {
-      urlPattern: /^https:\/\/cdn\.shopify\.com\/.*/i,
+      urlPattern: /^https:\/\/cdn\.shopify\.com\/.*\.(jpg|jpeg|png|webp|avif|gif)$/i,
       handler: 'CacheFirst',
       options: {
         cacheName: 'shopify-images',
@@ -218,10 +220,33 @@ const withPWAConfig = withPWA({
       },
     },
     {
+      urlPattern: /^https:\/\/cdn\.shopify\.com\/.*\.(js|css)$/i,
+      handler: 'StaleWhileRevalidate',
+      options: {
+        cacheName: 'static-resources',
+        expiration: {
+          maxEntries: 50,
+          maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
+        },
+      },
+    },
+    {
+      urlPattern: /\/_next\/static\/.*/i,
+      handler: 'CacheFirst',
+      options: {
+        cacheName: 'next-static',
+        expiration: {
+          maxEntries: 100,
+          maxAgeSeconds: 365 * 24 * 60 * 60, // 1 year
+        },
+      },
+    },
+    {
       urlPattern: /\/api\/.*/i,
       handler: 'NetworkFirst',
       options: {
         cacheName: 'api-cache',
+        networkTimeoutSeconds: 3,
         expiration: {
           maxEntries: 32,
           maxAgeSeconds: 24 * 60 * 60, // 24 hours

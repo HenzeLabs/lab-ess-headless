@@ -26,7 +26,7 @@ const Hero: React.FC<HeroProps> = ({
   imageUrl = '',
   imageAlt = '',
   videoUrl = '/hero.mp4',
-  poster = '',
+  poster = '/hero.avif', // AVIF poster for instant display (36KB vs 2.5MB video)
 }) => {
   const heroRef = useRef<HTMLDivElement>(null);
   const hasMedia = Boolean(videoUrl || imageUrl);
@@ -84,6 +84,8 @@ const Hero: React.FC<HeroProps> = ({
             fill
             className="absolute inset-0 -z-20 h-full w-full object-cover"
             priority
+            fetchPriority="high"
+            sizes="100vw"
           />
         )
       )}

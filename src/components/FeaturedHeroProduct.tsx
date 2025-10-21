@@ -221,6 +221,8 @@ export default async function FeaturedHeroProduct({
                 height={640}
                 className="relative z-10 w-full bg-white object-contain p-8 transition duration-500 ease-out group-hover:scale-[1.05] group-hover:rotate-[0.8deg]"
                 priority
+                fetchPriority="high"
+                sizes="(min-width: 1024px) 640px, 90vw"
               />
             </div>
           </div>

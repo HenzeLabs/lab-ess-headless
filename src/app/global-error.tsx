@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import { AnimationWrapper } from '@/components/ui/animations';
 import { buttonStyles } from '@/lib/ui';
 
 export default function GlobalError({
@@ -20,7 +19,7 @@ export default function GlobalError({
     <html lang="en">
       <body>
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-red-100 px-4">
-          <AnimationWrapper className="max-w-md w-full text-center">
+          <div className="max-w-md w-full text-center">
             <div className="mb-8">
               <div className="mx-auto w-24 h-24 bg-red-200 rounded-full flex items-center justify-center">
                 <svg
@@ -81,7 +80,7 @@ export default function GlobalError({
             <div className="mt-6 text-xs text-gray-500">
               If this problem persists, please contact support
             </div>
-          </AnimationWrapper>
+          </div>
         </div>
       </body>
     </html>

@@ -70,18 +70,6 @@ function pushMeta(event: string, payload: Record<string, unknown> = {}) {
   }
 }
 
-function pushClarity(event: string, payload: Record<string, unknown> = {}) {
-  if (typeof window === 'undefined') {
-    return;
-  }
-  const win = window as typeof window & {
-    clarity?: (...args: unknown[]) => void;
-  };
-  if (win.clarity) {
-    win.clarity('event', event, payload);
-  }
-}
-
 export function trackViewItem(product: AnalyticsItemInput) {
   const items = [mapItem(product)];
   const currency = normaliseCurrency(product.currency);
@@ -97,13 +85,6 @@ export function trackViewItem(product: AnalyticsItemInput) {
     content_ids: [product.id],
     content_name: product.name,
     value: toNumber(product.price),
-    currency,
-  });
-  pushClarity('product_view', {
-    product_id: product.id,
-    product_name: product.name,
-    category: product.category || 'lab-equipment',
-    price: toNumber(product.price),
     currency,
   });
 }
@@ -123,11 +104,6 @@ export function trackViewItemList(
     list_name: listName,
     item_ids: products.map((item) => item.id),
   });
-  pushClarity('collection_view', {
-    collection_name: listName,
-    product_count: products.length,
-    categories: [...new Set(products.map((p) => p.category).filter(Boolean))],
-  });
 }
 
 export function trackSelectItem(
@@ -145,12 +121,6 @@ export function trackSelectItem(
     item_id: product.id,
     item_name: product.name,
     list_name: listName || undefined,
-  });
-  pushClarity('product_select', {
-    product_id: product.id,
-    product_name: product.name,
-    list_name: listName || 'direct',
-    category: product.category || 'lab-equipment',
   });
 }
 
@@ -189,14 +159,6 @@ export function trackAddToCart(item: AnalyticsItemInput) {
     content_name: item.name,
     value: (toNumber(item.price) || 0) * (item.quantity ?? 1),
     currency,
-  });
-  pushClarity('add_to_cart', {
-    product_id: item.id,
-    product_name: item.name,
-    category: item.category || 'lab-equipment',
-    price: toNumber(item.price),
-    quantity: item.quantity ?? 1,
-    cart_value: (toNumber(item.price) || 0) * (item.quantity ?? 1),
   });
 }
 
@@ -253,16 +215,6 @@ export function trackPurchase(order: AnalyticsOrderInput) {
     content_ids: order.items.map((item) => item.id),
     value,
     currency,
-  });
-  pushClarity('purchase_complete', {
-    order_id: order.orderId,
-    order_value: value,
-    currency,
-    item_count: order.items.length,
-    categories: [
-      ...new Set(order.items.map((item) => item.category).filter(Boolean)),
-    ],
-    product_types: order.items.map((item) => item.name),
   });
 }
 

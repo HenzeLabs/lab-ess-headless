@@ -1,16 +1,28 @@
 import type { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 
 import Hero from '@/components/Hero';
 import CollectionSwitcherWrapper from '@/app/components/CollectionSwitcherWrapper';
-import CTASection from '@/components/CTASection';
 import AboutSection from '@/components/AboutSection';
-import EmailSignup from '@/components/EmailSignup';
-import FeaturedCollections from '@/components/FeaturedCollections';
 import FeaturedHeroProduct from '@/components/FeaturedHeroProduct';
 
 import { absoluteUrl, jsonLd } from '@/lib/seo';
 
-export const revalidate = 60;
+// Lazy load below-the-fold components to reduce initial JS bundle
+const CTASection = dynamic(() => import('@/components/CTASection'), {
+  loading: () => <div className="h-64 animate-pulse bg-gray-100" />,
+});
+const EmailSignup = dynamic(() => import('@/components/EmailSignup'), {
+  loading: () => <div className="h-48 animate-pulse bg-gray-50" />,
+});
+const FeaturedCollections = dynamic(
+  () => import('@/components/FeaturedCollections'),
+  {
+    loading: () => <div className="h-96 animate-pulse bg-gray-100" />,
+  },
+);
+
+export const revalidate = 300; // 5 minutes for homepage (longer cache for better TTFB)
 
 const homeTitle = 'Lab Essentials | Precision Lab Equipment & Supplies';
 const homeDescription =
@@ -80,6 +92,8 @@ export default async function HomePage() {
           ctaHref="/collections/microscopes"
           ctaSecondaryText="Find Your Microscope"
           ctaSecondaryHref="/pages/microscope-selector-quiz"
+          imageUrl="/hero.webp"
+          imageAlt="Precision lab equipment and microscopes"
         />
         <AboutSection
           title="Why Labs Choose Lab Essentials"

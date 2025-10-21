@@ -70,6 +70,8 @@ export async function shopifyFetch<T>({
     },
     body: JSON.stringify({ query, variables }),
     signal: AbortSignal.timeout(timeout),
+    // Next.js cache: revalidate after 60s, serve stale while revalidating
+    next: { revalidate: 60, tags: ['shopify'] },
   };
 
   try {
