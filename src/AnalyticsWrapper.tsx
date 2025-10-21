@@ -4,34 +4,18 @@ import { useEffect } from 'react';
 import Script from 'next/script';
 
 const GTM_ID = 'GTM-WNG6Z9ZD';
-const TABOOLA_ID = 1759164;
-const META_PIXEL_ID = '940971967399612';
 
 export default function AnalyticsWrapper() {
-  // Check if on admin route to skip heavy third-party scripts
-  const isAdminRoute =
-    typeof window !== 'undefined' &&
-    window.location.pathname.startsWith('/admin');
-
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     const win = window as typeof window & {
       dataLayer?: unknown[];
       gtag?: (...args: unknown[]) => void;
-      _tfa?: unknown[];
-      fbq?: {
-        (...args: unknown[]): void;
-        callMethod?: (...args: unknown[]) => void;
-        queue?: unknown[];
-        push?: unknown;
-        loaded?: boolean;
-        version?: string;
-      };
       __labAnalytics?: Record<string, unknown>;
     };
 
-    // Initialize dataLayer and gtag immediately (before scripts load)
+    // Initialize dataLayer and gtag immediately (before GTM script loads)
     win.dataLayer = win.dataLayer || [];
     win.gtag =
       win.gtag ||
@@ -51,7 +35,7 @@ export default function AnalyticsWrapper() {
         wait_for_update: 500,
       });
 
-      // Auto-grant consent on user interaction (or wire to cookie consent UI)
+      // Auto-grant consent on user interaction
       const grantConsent = () => {
         if (win.gtag) {
           win.gtag('consent', 'update', {
@@ -128,64 +112,11 @@ export default function AnalyticsWrapper() {
 
   return (
     <>
-      {/* Google Tag Manager - afterInteractive (loads after page is interactive, ~2-3s LCP improvement)
-          Note: GTM configuration already includes GA4 via dataLayer - no need for separate GA4 script */}
+      {/* Google Tag Manager - GTM handles GA4, Taboola, Meta Pixel via Tag Manager */}
       <Script
-        id="gtm-init"
+        src={`https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`}
         strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','${GTM_ID}');
-          `,
-        }}
       />
-
-      {/* Taboola - lazyOnload (deferred to idle, no LCP impact) - Skip on admin routes */}
-      {!isAdminRoute && (
-        <>
-          <Script
-            id="taboola-init"
-            strategy="lazyOnload"
-            dangerouslySetInnerHTML={{
-              __html: `
-                window._tfa = window._tfa || [];
-                window._tfa.push({notify: 'event', name: 'page_view', id: ${TABOOLA_ID}});
-              `,
-            }}
-          />
-          <Script
-            id="taboola-script"
-            strategy="lazyOnload"
-            src={`https://cdn.taboola.com/libtrc/unipixel/${TABOOLA_ID}/tfa.js`}
-          />
-        </>
-      )}
-
-      {/* Meta Pixel - lazyOnload (deferred to idle) - Skip on admin routes */}
-      {!isAdminRoute && (
-        <Script
-          id="meta-pixel-init"
-          strategy="lazyOnload"
-          dangerouslySetInnerHTML={{
-            __html: `
-              !function(f,b,e,v,n,t,s)
-              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-              n.queue=[];t=b.createElement(e);t.async=!0;
-              t.src=v;s=b.getElementsByTagName(e)[0];
-              s.parentNode.insertBefore(t,s)}(window, document,'script',
-              'https://connect.facebook.net/en_US/fbevents.js');
-              fbq('init', '${META_PIXEL_ID}');
-              fbq('track', 'PageView');
-            `,
-          }}
-        />
-      )}
 
       {/* GTM noscript fallback */}
       <noscript>

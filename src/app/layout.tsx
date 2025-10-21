@@ -52,6 +52,15 @@ export default function RootLayout({
       className={`${heading.variable} ${sans.variable} ${mono.variable}`}
     >
       <head>
+        {/* HIGHEST priority - Preload hero poster for instant LCP */}
+        <link
+          rel="preload"
+          href="/hero.avif"
+          as="image"
+          type="image/avif"
+          fetchPriority="high"
+        />
+
         {/* CRITICAL preconnects - Essential for LCP and FCP */}
         <link
           rel="preconnect"

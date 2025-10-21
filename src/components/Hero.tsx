@@ -68,6 +68,7 @@ const Hero: React.FC<HeroProps> = ({
         <video
           className="absolute inset-0 -z-20 h-full w-full min-h-full object-cover"
           poster={poster}
+          preload="none"
           autoPlay
           loop
           muted
