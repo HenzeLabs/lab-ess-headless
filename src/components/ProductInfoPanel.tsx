@@ -55,6 +55,11 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
 
   const tagline = getTagline(product.descriptionHtml);
 
+  // Check if product has multiple meaningful variants (not just "Default Title")
+  const hasMultipleVariants =
+    variants.length > 1 ||
+    (variants.length === 1 && variants[0].title !== 'Default Title');
+
   // Calculate price based on selected variant
   const selectedVariantData = variants.find((v) => v.id === selectedVariant);
   const currentPrice =
@@ -155,8 +160,8 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
           </div>
         </div>
 
-        {/* Variant Selector */}
-        {variants.length > 0 && (
+        {/* Variant Selector - Only show if product has multiple variants */}
+        {hasMultipleVariants && (
           <div className="space-y-3">
             <label
               htmlFor="variant-select"
