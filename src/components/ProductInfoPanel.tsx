@@ -45,6 +45,16 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
   const brand =
     product.metafields?.find((field) => field.key === 'brand')?.value ?? null;
 
+  // Extract first sentence from description for tagline
+  const getTagline = (html?: string) => {
+    if (!html) return '';
+    const text = html.replace(/<[^>]*>/g, '').trim(); // Strip HTML tags
+    const firstSentence = text.split(/[.!?]/)[0];
+    return firstSentence ? firstSentence.trim() + '.' : '';
+  };
+
+  const tagline = getTagline(product.descriptionHtml);
+
   // Calculate price based on selected variant
   const selectedVariantData = variants.find((v) => v.id === selectedVariant);
   const currentPrice =
@@ -105,9 +115,11 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
             >
               {product.title}
             </h1>
-            <p className="text-[hsl(var(--muted-foreground))] text-base leading-relaxed">
-              Compact, high-speed centrifuge for precise sample processing.
-            </p>
+            {tagline && (
+              <p className="text-[hsl(var(--muted-foreground))] text-base leading-relaxed">
+                {tagline}
+              </p>
+            )}
           </div>
 
           {/* Price directly below title */}
