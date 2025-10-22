@@ -143,6 +143,13 @@ async function createMetafieldDefinitions() {
       description: 'List of product use cases',
     },
     {
+      name: 'Technical Specifications',
+      namespace: 'custom',
+      key: 'specs',
+      type: 'list.single_line_text_field',
+      description: 'List of technical specifications (bullet points)',
+    },
+    {
       name: 'User Manual',
       namespace: 'custom',
       key: 'manual_url',
@@ -155,13 +162,6 @@ async function createMetafieldDefinitions() {
       key: 'quick_start_url',
       type: 'url',
       description: 'URL to quick start guide',
-    },
-    {
-      name: 'Technical Specs',
-      namespace: 'custom',
-      key: 'specs_url',
-      type: 'url',
-      description: 'URL to technical specifications sheet',
     },
     {
       name: 'Equipment Category',
