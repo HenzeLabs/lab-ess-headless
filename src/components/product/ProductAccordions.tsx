@@ -1,15 +1,85 @@
 'use client';
 import { FileText, Star, Gauge, Beaker } from 'lucide-react';
 
+type Metafield = {
+  namespace: string;
+  key: string;
+  value: string;
+  type: string;
+};
+
 type ProductAccordionsProps = {
   productTitle: string;
   descriptionHtml?: string;
+  metafields?: Metafield[];
 };
 
 export default function ProductAccordions({
   productTitle,
   descriptionHtml,
+  metafields = [],
 }: ProductAccordionsProps) {
+  // Helper to get metafield value
+  const getMetafield = (key: string): string | null => {
+    const field = metafields.find(
+      (m) => m.key === key && m.namespace === 'custom',
+    );
+    return field?.value ?? null;
+  };
+
+  // Helper to parse list metafields (JSON array of strings)
+  const getListMetafield = (key: string): string[] => {
+    const value = getMetafield(key);
+    if (!value) return [];
+    try {
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  };
+
+  const features = getListMetafield('features');
+  const applications = getListMetafield('applications');
+  const specs = getListMetafield('specs');
+  const faq = getMetafield('faq');
+
+  // Default fallback data
+  const defaultFeatures = [
+    'High-precision performance for accurate, reproducible results',
+    'Compact, space-saving design perfect for any laboratory environment',
+    'Intuitive controls for easy operation and minimal training time',
+    'Durable construction with premium materials for long-term reliability',
+    'Energy-efficient operation to reduce operating costs',
+    'Safety features including automatic shut-off and error detection',
+  ];
+
+  const defaultApplications = [
+    'DNA/RNA extraction and purification',
+    'Cell culture and sample preparation',
+    'Blood sample processing and serum separation',
+    'Microbiological testing and culture work',
+    'Clinical diagnostics and medical research',
+    'Quality control and analytical testing',
+    'Pharmaceutical research and development',
+    'Educational and training laboratories',
+  ];
+
+  const defaultSpecs = [
+    'Voltage: 110-240V AC, 50/60Hz',
+    'Speed Range: 100-6,000 RPM',
+    'Capacity: 6 x 1.5/2.0 mL tubes',
+    'Dimensions (L×W×H): 18 × 15 × 12 cm',
+    'Weight: 2.5 kg',
+    'Timer Range: 0-99 minutes',
+    'Noise Level: <55 dB',
+  ];
+
+  const displayFeatures = features.length > 0 ? features : defaultFeatures;
+  const displayApplications =
+    applications.length > 0 ? applications : defaultApplications;
+  const displaySpecs = specs.length > 0 ? specs : defaultSpecs;
+
   return (
     <div className="space-y-3">
       {/* Overview */}
@@ -72,24 +142,9 @@ export default function ProductAccordions({
         </summary>
         <div className="border-t border-border/50 bg-muted/10 px-6 py-5">
           <ul className="list-inside list-disc space-y-3 text-[hsl(var(--muted-foreground))]">
-            <li>
-              High-precision performance for accurate, reproducible results
-            </li>
-            <li>
-              Compact, space-saving design perfect for any laboratory
-              environment
-            </li>
-            <li>
-              Intuitive controls for easy operation and minimal training time
-            </li>
-            <li>
-              Durable construction with premium materials for long-term
-              reliability
-            </li>
-            <li>Energy-efficient operation to reduce operating costs</li>
-            <li>
-              Safety features including automatic shut-off and error detection
-            </li>
+            {displayFeatures.map((feature, index) => (
+              <li key={index}>{feature}</li>
+            ))}
           </ul>
         </div>
       </details>
@@ -117,66 +172,11 @@ export default function ProductAccordions({
           </svg>
         </summary>
         <div className="border-t border-border/50 bg-muted/10 px-6 py-5">
-          <table className="w-full text-sm">
-            <tbody className="divide-y divide-border/50">
-              <tr>
-                <td className="py-2 text-[hsl(var(--muted-foreground))]">
-                  Voltage
-                </td>
-                <td className="py-2 text-right text-[hsl(var(--ink))] font-medium">
-                  110-240V AC, 50/60Hz
-                </td>
-              </tr>
-              <tr>
-                <td className="py-2 text-[hsl(var(--muted-foreground))]">
-                  Speed Range
-                </td>
-                <td className="py-2 text-right text-[hsl(var(--ink))] font-medium">
-                  100-6,000 RPM
-                </td>
-              </tr>
-              <tr>
-                <td className="py-2 text-[hsl(var(--muted-foreground))]">
-                  Capacity
-                </td>
-                <td className="py-2 text-right text-[hsl(var(--ink))] font-medium">
-                  6 x 1.5/2.0 mL tubes
-                </td>
-              </tr>
-              <tr>
-                <td className="py-2 text-[hsl(var(--muted-foreground))]">
-                  Dimensions (L×W×H)
-                </td>
-                <td className="py-2 text-right text-[hsl(var(--ink))] font-medium">
-                  18 × 15 × 12 cm
-                </td>
-              </tr>
-              <tr>
-                <td className="py-2 text-[hsl(var(--muted-foreground))]">
-                  Weight
-                </td>
-                <td className="py-2 text-right text-[hsl(var(--ink))] font-medium">
-                  2.5 kg
-                </td>
-              </tr>
-              <tr>
-                <td className="py-2 text-[hsl(var(--muted-foreground))]">
-                  Timer Range
-                </td>
-                <td className="py-2 text-right text-[hsl(var(--ink))] font-medium">
-                  0-99 minutes
-                </td>
-              </tr>
-              <tr>
-                <td className="py-2 text-[hsl(var(--muted-foreground))]">
-                  Noise Level
-                </td>
-                <td className="py-2 text-right text-[hsl(var(--ink))] font-medium">
-                  &lt;55 dB
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <ul className="list-inside list-disc space-y-3 text-[hsl(var(--muted-foreground))]">
+            {displaySpecs.map((spec, index) => (
+              <li key={index}>{spec}</li>
+            ))}
+          </ul>
         </div>
       </details>
 
@@ -204,17 +204,41 @@ export default function ProductAccordions({
         </summary>
         <div className="border-t border-border/50 bg-muted/10 px-6 py-5">
           <ul className="list-inside list-disc space-y-3 text-[hsl(var(--muted-foreground))]">
-            <li>DNA/RNA extraction and purification</li>
-            <li>Cell culture and sample preparation</li>
-            <li>Blood sample processing and serum separation</li>
-            <li>Microbiological testing and culture work</li>
-            <li>Clinical diagnostics and medical research</li>
-            <li>Quality control and analytical testing</li>
-            <li>Pharmaceutical research and development</li>
-            <li>Educational and training laboratories</li>
+            {displayApplications.map((application, index) => (
+              <li key={index}>{application}</li>
+            ))}
           </ul>
         </div>
       </details>
+
+      {/* FAQ - Only show if metafield exists */}
+      {faq && (
+        <details className="group overflow-hidden rounded-xl border-2 border-border bg-background shadow-sm transition-all hover:border-[hsl(var(--brand))]/30 hover:shadow-md">
+          <summary className="flex cursor-pointer items-center gap-3 px-6 py-5 text-lg font-semibold text-[hsl(var(--ink))] transition-colors hover:bg-muted/30 list-none">
+            <FileText
+              className="h-5 w-5 flex-shrink-0 text-[hsl(var(--brand))]"
+              aria-hidden="true"
+            />
+            <span className="flex-1">FAQ</span>
+            <svg
+              className="h-5 w-5 flex-shrink-0 text-[hsl(var(--muted-foreground))] transition-transform group-open:rotate-180"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </summary>
+          <div className="prose prose-sm max-w-none border-t border-border/50 bg-muted/10 px-6 py-5 text-[hsl(var(--muted-foreground))]">
+            <div style={{ whiteSpace: 'pre-wrap' }}>{faq}</div>
+          </div>
+        </details>
+      )}
     </div>
   );
 }

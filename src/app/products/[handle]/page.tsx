@@ -218,12 +218,16 @@ export default async function ProductPage({
                 <ProductAccordions
                   productTitle={product.title}
                   descriptionHtml={product.descriptionHtml}
+                  metafields={product.metafields}
                 />
               </div>
 
               {/* Technical Summary Card - sticky sidebar, 1 column on large screens */}
               <div className="lg:col-span-1">
-                <TechnicalSummaryCard productTitle={product.title} />
+                <TechnicalSummaryCard
+                  productTitle={product.title}
+                  metafields={product.metafields}
+                />
               </div>
             </div>
 

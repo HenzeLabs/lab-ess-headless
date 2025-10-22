@@ -189,6 +189,7 @@ export const getProductByHandleQuery = `
       title
       descriptionHtml
       tags
+      handle
       images(first: 10) {
         edges {
           node {
@@ -219,6 +220,20 @@ export const getProductByHandleQuery = `
           amount
           currencyCode
         }
+      }
+      metafields(identifiers: [
+        { namespace: "custom", key: "features" },
+        { namespace: "custom", key: "applications" },
+        { namespace: "custom", key: "specs" },
+        { namespace: "custom", key: "equipment_category" },
+        { namespace: "custom", key: "faq" },
+        { namespace: "custom", key: "manual_url" },
+        { namespace: "custom", key: "quick_start_url" }
+      ]) {
+        namespace
+        key
+        value
+        type
       }
     }
   }
