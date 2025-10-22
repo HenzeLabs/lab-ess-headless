@@ -97,38 +97,50 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
       {/* Desktop/Tablet Layout */}
       <div className="sticky top-8 flex flex-col space-y-6">
         {/* Hero Section: Title + Tagline */}
-        <div className="space-y-3">
-          <h1
-            className={`${textStyles.h1} leading-tight`}
-            data-test-id="product-title"
-          >
-            {product.title}
-          </h1>
-          <p className="text-[hsl(var(--muted-foreground))] text-base leading-relaxed">
-            Compact, high-speed centrifuge for precise sample processing.
-          </p>
-        </div>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <h1
+              className={`${textStyles.h1} leading-tight`}
+              data-test-id="product-title"
+            >
+              {product.title}
+            </h1>
+            <p className="text-[hsl(var(--muted-foreground))] text-base leading-relaxed">
+              Compact, high-speed centrifuge for precise sample processing.
+            </p>
+          </div>
 
-        {/* Price directly below title */}
-        <div className="space-y-2">
-          <p
-            className={`${textStyles.h3} text-[hsl(var(--ink))]`}
-            data-test-id="product-price"
-          >
-            $
-            {currentPrice
-              ? Number(currentPrice).toLocaleString('en-US', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })
-              : 'Price not available'}
-          </p>
-          <p
-            className={`${textStyles.bodySmall} text-[hsl(var(--brand))] font-medium`}
-            data-test-id="product-stock"
-          >
-            In stock
-          </p>
+          {/* Price directly below title */}
+          <div className="rounded-xl border border-border/50 bg-muted/20 p-4">
+            <div className="flex items-baseline justify-between">
+              <div>
+                <p
+                  className={`${textStyles.h3} text-[hsl(var(--ink))]`}
+                  data-test-id="product-price"
+                >
+                  $
+                  {currentPrice
+                    ? Number(currentPrice).toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })
+                    : 'Price not available'}
+                </p>
+                <p className="mt-1 text-xs text-[hsl(var(--muted-foreground))]">
+                  Free shipping over $300
+                </p>
+              </div>
+              <div className="flex items-center gap-2 rounded-full bg-[hsl(var(--brand))]/10 px-3 py-1.5">
+                <div className="h-2 w-2 rounded-full bg-[hsl(var(--brand))]"></div>
+                <span
+                  className="text-xs font-semibold text-[hsl(var(--brand))]"
+                  data-test-id="product-stock"
+                >
+                  In Stock
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Variant Selector */}
@@ -136,14 +148,14 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
           <div className="space-y-3">
             <label
               htmlFor="variant-select"
-              className={`${textStyles.bodySmall} font-medium text-[hsl(var(--ink))]`}
+              className="text-sm font-semibold text-[hsl(var(--ink))]"
             >
-              Options
+              Select Option
             </label>
             <div className="relative">
               <select
                 id="variant-select"
-                className="w-full appearance-none rounded-xl border border-border bg-background px-4 py-3 pr-10 text-sm font-medium text-foreground transition-colors hover:bg-muted/50 focus:border-[hsl(var(--brand))] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand))]/20"
+                className="w-full appearance-none rounded-xl border-2 border-border bg-background px-4 py-3.5 pr-10 text-sm font-medium text-foreground shadow-sm transition-all hover:border-[hsl(var(--brand))]/50 hover:bg-muted/30 focus:border-[hsl(var(--brand))] focus:outline-none focus:ring-4 focus:ring-[hsl(var(--brand))]/10"
                 aria-label="Product options"
                 value={selectedVariant}
                 onChange={(e) => setSelectedVariant(e.target.value)}
@@ -156,7 +168,7 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
                 ))}
               </select>
               <svg
-                className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground pointer-events-none"
+                className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[hsl(var(--muted-foreground))]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -173,10 +185,10 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
         )}
 
         {/* Add to Cart Button (Desktop) */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           <button
             type="button"
-            className={`${buttonStyles.primary} w-full py-3 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity`}
+            className={`${buttonStyles.primary} w-full py-4 text-base font-bold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all`}
             disabled={isPending || !selectedVariant}
             onClick={handleAddToCart}
             data-test-id="add-to-cart-button"
@@ -184,7 +196,134 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
             {isPending ? (
               <span className="flex items-center justify-center gap-2">
                 <svg
-                  className="animate-spin h-4 w-4"
+                  className="h-5 w-5 animate-spin"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    className="opacity-25"
+                  ></circle>
+                  <path
+                    fill="currentColor"
+                    className="opacity-75"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Adding to cart...
+              </span>
+            ) : (
+              'Add to Cart'
+            )}
+          </button>
+
+          {feedback && (
+            <div
+              className={`${
+                isError
+                  ? 'border-[hsl(var(--destructive))]/30 bg-[hsl(var(--destructive))]/10 text-[hsl(var(--destructive))]'
+                  : 'border-[hsl(var(--brand))]/30 bg-[hsl(var(--brand))]/10 text-[hsl(var(--brand))]'
+              } rounded-lg border px-4 py-3 text-sm font-medium`}
+              data-test-id="cart-feedback"
+            >
+              {feedback}
+            </div>
+          )}
+
+          <div className="flex items-center justify-center gap-2 rounded-lg border border-border/50 bg-muted/20 px-4 py-3 text-center">
+            <p className="text-xs text-[hsl(var(--muted-foreground))]">
+              or 4 interest-free payments of{' '}
+              <span className="font-semibold text-[hsl(var(--ink))]">
+                ${currentPrice ? (Number(currentPrice) / 4).toFixed(2) : '0.00'}
+              </span>{' '}
+              with <span className="font-semibold">Afterpay</span>
+            </p>
+          </div>
+        </div>
+
+        {/* Trust Bar */}
+        <TrustBar />
+
+        {/* Collapsible Product Description */}
+        <div className="space-y-3">
+          <button
+            type="button"
+            className="flex w-full items-center justify-between rounded-xl border-2 border-border bg-background px-5 py-4 text-sm font-semibold text-foreground shadow-sm transition-all hover:border-[hsl(var(--brand))]/50 hover:bg-muted/30 focus:border-[hsl(var(--brand))] focus:outline-none focus:ring-4 focus:ring-[hsl(var(--brand))]/10"
+            onClick={() => setShowDescription((v) => !v)}
+            aria-expanded={showDescription}
+            aria-controls="product-description-panel"
+          >
+            <span className="flex items-center gap-2">
+              <svg
+                className="h-5 w-5 text-[hsl(var(--brand))]"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              Product Description
+            </span>
+            <svg
+              className={`h-5 w-5 transition-transform ${
+                showDescription ? 'rotate-180' : ''
+              }`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+          {showDescription && (
+            <div
+              id="product-description-panel"
+              className="rounded-xl border border-border/50 bg-muted/20 px-5 py-4 text-sm leading-relaxed text-[hsl(var(--ink))]"
+              dangerouslySetInnerHTML={{
+                __html: product.descriptionHtml ?? '',
+              }}
+              data-test-id="product-description"
+            />
+          )}
+        </div>
+      </div>
+
+      {/* Sticky Mobile CTA */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/98 p-4 shadow-[0_-8px_16px_rgba(0,0,0,0.08)] backdrop-blur-lg md:hidden">
+        <div className="flex items-center gap-3">
+          <div className="flex flex-col">
+            <span className="text-xs text-[hsl(var(--muted-foreground))]">
+              Price
+            </span>
+            <span className="text-lg font-bold text-[hsl(var(--ink))]">
+              ${currentPrice ? Number(currentPrice).toFixed(2) : '0.00'}
+            </span>
+          </div>
+          <button
+            type="button"
+            className={`${buttonStyles.primary} flex-1 py-4 text-base font-bold shadow-lg disabled:cursor-not-allowed disabled:opacity-50 transition-all`}
+            disabled={isPending || !selectedVariant}
+            onClick={handleAddToCart}
+            data-test-id="add-to-cart-button-mobile"
+          >
+            {isPending ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg
+                  className="h-5 w-5 animate-spin"
                   fill="none"
                   viewBox="0 0 24 24"
                 >
@@ -205,108 +344,10 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
                 Adding...
               </span>
             ) : (
-              'Add to cart'
+              'Add to Cart'
             )}
           </button>
-
-          {feedback && (
-            <div
-              className={`${textStyles.bodySmall} ${
-                isError
-                  ? 'text-[hsl(var(--destructive))]'
-                  : 'text-[hsl(var(--brand))]'
-              } bg-background border border-border rounded-lg px-3 py-2`}
-              data-test-id="cart-feedback"
-            >
-              {feedback}
-            </div>
-          )}
-
-          <div className={`${textStyles.caption} text-muted-foreground`}>
-            or 4 payments of $
-            {currentPrice ? (Number(currentPrice) / 4).toFixed(2) : '0.00'} with
-            Afterpay
-          </div>
         </div>
-
-        {/* Trust Bar */}
-        <TrustBar />
-
-        {/* Collapsible Product Description */}
-        <div className="space-y-3">
-          <button
-            type="button"
-            className="w-full flex items-center justify-between rounded-xl border border-border bg-background px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted/50 focus:border-[hsl(var(--brand))] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand))]/20"
-            onClick={() => setShowDescription((v) => !v)}
-            aria-expanded={showDescription}
-            aria-controls="product-description-panel"
-          >
-            Product Description
-            <svg
-              className={`ml-2 h-4 w-4 transition-transform ${
-                showDescription ? 'rotate-180' : ''
-              }`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </button>
-          {showDescription && (
-            <div
-              id="product-description-panel"
-              className={`${textStyles.body} px-4 py-3 bg-muted/20 rounded-xl border border-border/50 leading-relaxed`}
-              dangerouslySetInnerHTML={{
-                __html: product.descriptionHtml ?? '',
-              }}
-              data-test-id="product-description"
-            />
-          )}
-        </div>
-      </div>
-
-      {/* Sticky Mobile CTA */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-t border-border shadow-[0_-4px_12px_rgba(0,0,0,0.1)] p-4">
-        <button
-          type="button"
-          className={`${buttonStyles.primary} w-full py-3 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity`}
-          disabled={isPending || !selectedVariant}
-          onClick={handleAddToCart}
-          data-test-id="add-to-cart-button-mobile"
-        >
-          {isPending ? (
-            <span className="flex items-center justify-center gap-2">
-              <svg
-                className="animate-spin h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                  className="opacity-25"
-                ></circle>
-                <path
-                  fill="currentColor"
-                  className="opacity-75"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-              Adding...
-            </span>
-          ) : (
-            `Add to cart · $${currentPrice ? Number(currentPrice).toFixed(2) : '0.00'}`
-          )}
-        </button>
       </div>
     </>
   );

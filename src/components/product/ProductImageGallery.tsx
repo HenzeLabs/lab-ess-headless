@@ -84,7 +84,7 @@ export default function ProductImageGallery({
     <div className="flex flex-col gap-4">
       {/* Main Image */}
       <div
-        className="aspect-square w-full overflow-hidden rounded-2xl bg-background border border-border/50 relative group"
+        className="group relative aspect-square w-full overflow-hidden rounded-2xl border-2 border-border/50 bg-background shadow-sm transition-all hover:border-[hsl(var(--brand))]/30 hover:shadow-md"
         onMouseEnter={() => setIsZoomed(true)}
         onMouseLeave={() => setIsZoomed(false)}
         onMouseMove={handleMouseMove}
@@ -97,7 +97,7 @@ export default function ProductImageGallery({
             src={currentImage.url}
             alt={currentImage.altText || productTitle}
             fill
-            className={`object-contain p-6 transition-transform duration-200 ${
+            className={`object-contain p-8 transition-transform duration-300 ${
               isZoomed ? 'scale-150' : 'scale-100'
             }`}
             style={
@@ -114,8 +114,23 @@ export default function ProductImageGallery({
         </div>
 
         {/* Zoom indicator (desktop only) */}
-        <div className="hidden md:block absolute top-4 right-4 bg-background/80 backdrop-blur-sm border border-border rounded-lg px-3 py-1.5 text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
-          Hover to zoom
+        <div className="absolute right-4 top-4 hidden rounded-lg border border-border bg-background/90 px-3 py-2 text-xs font-medium text-[hsl(var(--muted-foreground))] opacity-0 shadow-sm backdrop-blur-sm transition-opacity group-hover:opacity-100 md:block">
+          <span className="flex items-center gap-1.5">
+            <svg
+              className="h-3.5 w-3.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
+              />
+            </svg>
+            Hover to zoom
+          </span>
         </div>
 
         {/* Mobile swipe indicators */}
@@ -139,15 +154,15 @@ export default function ProductImageGallery({
       {images.length > 1 && (
         <div className="w-full">
           {/* Desktop: Grid */}
-          <div className="hidden md:grid grid-cols-4 gap-3">
+          <div className="hidden gap-4 md:grid md:grid-cols-4">
             {images.slice(0, 4).map((image, index) => (
               <button
                 key={index}
                 onClick={() => setSelectedIndex(index)}
-                className={`aspect-square overflow-hidden rounded-xl bg-background border-2 transition-all hover:border-[hsl(var(--brand))]/50 ${
+                className={`group aspect-square overflow-hidden rounded-xl border-2 bg-background shadow-sm transition-all hover:scale-105 hover:shadow-md ${
                   index === selectedIndex
-                    ? 'border-[hsl(var(--brand))] ring-2 ring-[hsl(var(--brand))]/20'
-                    : 'border-border/30'
+                    ? 'border-[hsl(var(--brand))] ring-4 ring-[hsl(var(--brand))]/20'
+                    : 'border-border/40 hover:border-[hsl(var(--brand))]/50'
                 }`}
                 aria-label={`View image ${index + 1}`}
               >
@@ -158,8 +173,8 @@ export default function ProductImageGallery({
                       image.altText || `${productTitle} - Image ${index + 1}`
                     }
                     fill
-                    className="object-contain p-2"
-                    sizes="100px"
+                    className="object-contain p-3"
+                    sizes="120px"
                     loading="lazy"
                   />
                 </div>
@@ -168,16 +183,16 @@ export default function ProductImageGallery({
           </div>
 
           {/* Mobile: Horizontal scroll */}
-          <div className="md:hidden overflow-x-auto scrollbar-hide">
-            <div className="flex gap-2 pb-2">
+          <div className="overflow-x-auto scrollbar-hide md:hidden">
+            <div className="flex gap-3 pb-2">
               {images.map((image, index) => (
                 <button
                   key={index}
                   onClick={() => setSelectedIndex(index)}
-                  className={`flex-shrink-0 w-20 h-20 overflow-hidden rounded-lg bg-background border-2 transition-all ${
+                  className={`h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border-2 bg-background shadow-sm transition-all ${
                     index === selectedIndex
-                      ? 'border-[hsl(var(--brand))] ring-2 ring-[hsl(var(--brand))]/20'
-                      : 'border-border/30'
+                      ? 'border-[hsl(var(--brand))] ring-4 ring-[hsl(var(--brand))]/20 scale-105'
+                      : 'border-border/40'
                   }`}
                   aria-label={`View image ${index + 1}`}
                 >
@@ -188,7 +203,7 @@ export default function ProductImageGallery({
                         image.altText || `${productTitle} - Image ${index + 1}`
                       }
                       fill
-                      className="object-contain p-1"
+                      className="object-contain p-2"
                       sizes="80px"
                       loading="lazy"
                     />

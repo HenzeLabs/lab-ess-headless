@@ -10,17 +10,17 @@ export default function ProductAccordions({
   descriptionHtml,
 }: ProductAccordionsProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* Overview */}
-      <details className="group border-b border-border pb-4">
-        <summary className="flex cursor-pointer items-center gap-3 text-lg font-medium text-[hsl(var(--ink))] hover:text-[hsl(var(--brand))] transition-colors list-none">
+      <details className="group overflow-hidden rounded-xl border-2 border-border bg-background shadow-sm transition-all hover:border-[hsl(var(--brand))]/30 hover:shadow-md">
+        <summary className="flex cursor-pointer items-center gap-3 px-6 py-5 text-lg font-semibold text-[hsl(var(--ink))] transition-colors hover:bg-muted/30 list-none">
           <FileText
-            className="h-5 w-5 text-[hsl(var(--brand))]"
+            className="h-5 w-5 flex-shrink-0 text-[hsl(var(--brand))]"
             aria-hidden="true"
           />
-          <span>Overview</span>
+          <span className="flex-1">Overview</span>
           <svg
-            className="ml-auto h-5 w-5 transition-transform group-open:rotate-180"
+            className="h-5 w-5 flex-shrink-0 text-[hsl(var(--muted-foreground))] transition-transform group-open:rotate-180"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -33,7 +33,7 @@ export default function ProductAccordions({
             />
           </svg>
         </summary>
-        <div className="mt-4 prose prose-sm max-w-none text-[hsl(var(--muted-foreground))]">
+        <div className="prose prose-sm max-w-none border-t border-border/50 bg-muted/10 px-6 py-5 text-[hsl(var(--muted-foreground))]">
           {descriptionHtml ? (
             <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} />
           ) : (
@@ -48,15 +48,15 @@ export default function ProductAccordions({
       </details>
 
       {/* Key Features */}
-      <details className="group border-b border-border pb-4">
-        <summary className="flex cursor-pointer items-center gap-3 text-lg font-medium text-[hsl(var(--ink))] hover:text-[hsl(var(--brand))] transition-colors list-none">
+      <details className="group overflow-hidden rounded-xl border-2 border-border bg-background shadow-sm transition-all hover:border-[hsl(var(--brand))]/30 hover:shadow-md">
+        <summary className="flex cursor-pointer items-center gap-3 px-6 py-5 text-lg font-semibold text-[hsl(var(--ink))] transition-colors hover:bg-muted/30 list-none">
           <Star
-            className="h-5 w-5 text-[hsl(var(--brand))]"
+            className="h-5 w-5 flex-shrink-0 text-[hsl(var(--brand))]"
             aria-hidden="true"
           />
-          <span>Key Features</span>
+          <span className="flex-1">Key Features</span>
           <svg
-            className="ml-auto h-5 w-5 transition-transform group-open:rotate-180"
+            className="h-5 w-5 flex-shrink-0 text-[hsl(var(--muted-foreground))] transition-transform group-open:rotate-180"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -69,8 +69,8 @@ export default function ProductAccordions({
             />
           </svg>
         </summary>
-        <div className="mt-4 space-y-3">
-          <ul className="list-disc list-inside space-y-2 text-[hsl(var(--muted-foreground))]">
+        <div className="border-t border-border/50 bg-muted/10 px-6 py-5">
+          <ul className="list-inside list-disc space-y-3 text-[hsl(var(--muted-foreground))]">
             <li>
               High-precision performance for accurate, reproducible results
             </li>
@@ -94,15 +94,15 @@ export default function ProductAccordions({
       </details>
 
       {/* Technical Specifications */}
-      <details className="group border-b border-border pb-4">
-        <summary className="flex cursor-pointer items-center gap-3 text-lg font-medium text-[hsl(var(--ink))] hover:text-[hsl(var(--brand))] transition-colors list-none">
+      <details className="group overflow-hidden rounded-xl border-2 border-border bg-background shadow-sm transition-all hover:border-[hsl(var(--brand))]/30 hover:shadow-md">
+        <summary className="flex cursor-pointer items-center gap-3 px-6 py-5 text-lg font-semibold text-[hsl(var(--ink))] transition-colors hover:bg-muted/30 list-none">
           <Gauge
-            className="h-5 w-5 text-[hsl(var(--brand))]"
+            className="h-5 w-5 flex-shrink-0 text-[hsl(var(--brand))]"
             aria-hidden="true"
           />
-          <span>Technical Specifications</span>
+          <span className="flex-1">Technical Specifications</span>
           <svg
-            className="ml-auto h-5 w-5 transition-transform group-open:rotate-180"
+            className="h-5 w-5 flex-shrink-0 text-[hsl(var(--muted-foreground))] transition-transform group-open:rotate-180"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -115,9 +115,9 @@ export default function ProductAccordions({
             />
           </svg>
         </summary>
-        <div className="mt-4">
+        <div className="border-t border-border/50 bg-muted/10 px-6 py-5">
           <table className="w-full text-sm">
-            <tbody className="divide-y divide-border">
+            <tbody className="divide-y divide-border/50">
               <tr>
                 <td className="py-2 text-[hsl(var(--muted-foreground))]">
                   Voltage
@@ -180,15 +180,15 @@ export default function ProductAccordions({
       </details>
 
       {/* Applications */}
-      <details className="group border-b border-border pb-4">
-        <summary className="flex cursor-pointer items-center gap-3 text-lg font-medium text-[hsl(var(--ink))] hover:text-[hsl(var(--brand))] transition-colors list-none">
+      <details className="group overflow-hidden rounded-xl border-2 border-border bg-background shadow-sm transition-all hover:border-[hsl(var(--brand))]/30 hover:shadow-md">
+        <summary className="flex cursor-pointer items-center gap-3 px-6 py-5 text-lg font-semibold text-[hsl(var(--ink))] transition-colors hover:bg-muted/30 list-none">
           <Beaker
-            className="h-5 w-5 text-[hsl(var(--brand))]"
+            className="h-5 w-5 flex-shrink-0 text-[hsl(var(--brand))]"
             aria-hidden="true"
           />
-          <span>Applications</span>
+          <span className="flex-1">Applications</span>
           <svg
-            className="ml-auto h-5 w-5 transition-transform group-open:rotate-180"
+            className="h-5 w-5 flex-shrink-0 text-[hsl(var(--muted-foreground))] transition-transform group-open:rotate-180"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -201,8 +201,8 @@ export default function ProductAccordions({
             />
           </svg>
         </summary>
-        <div className="mt-4 space-y-3">
-          <ul className="list-disc list-inside space-y-2 text-[hsl(var(--muted-foreground))]">
+        <div className="border-t border-border/50 bg-muted/10 px-6 py-5">
+          <ul className="list-inside list-disc space-y-3 text-[hsl(var(--muted-foreground))]">
             <li>DNA/RNA extraction and purification</li>
             <li>Cell culture and sample preparation</li>
             <li>Blood sample processing and serum separation</li>
@@ -216,15 +216,15 @@ export default function ProductAccordions({
       </details>
 
       {/* Manuals & Resources */}
-      <details className="group border-b border-border pb-4">
-        <summary className="flex cursor-pointer items-center gap-3 text-lg font-medium text-[hsl(var(--ink))] hover:text-[hsl(var(--brand))] transition-colors list-none">
+      <details className="group overflow-hidden rounded-xl border-2 border-border bg-background shadow-sm transition-all hover:border-[hsl(var(--brand))]/30 hover:shadow-md">
+        <summary className="flex cursor-pointer items-center gap-3 px-6 py-5 text-lg font-semibold text-[hsl(var(--ink))] transition-colors hover:bg-muted/30 list-none">
           <Download
-            className="h-5 w-5 text-[hsl(var(--brand))]"
+            className="h-5 w-5 flex-shrink-0 text-[hsl(var(--brand))]"
             aria-hidden="true"
           />
-          <span>Manuals &amp; Resources</span>
+          <span className="flex-1">Manuals &amp; Resources</span>
           <svg
-            className="ml-auto h-5 w-5 transition-transform group-open:rotate-180"
+            className="h-5 w-5 flex-shrink-0 text-[hsl(var(--muted-foreground))] transition-transform group-open:rotate-180"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -237,62 +237,94 @@ export default function ProductAccordions({
             />
           </svg>
         </summary>
-        <div className="mt-4 space-y-3">
-          <div className="space-y-2">
+        <div className="border-t border-border/50 bg-muted/10 px-6 py-5 space-y-4">
+          <div className="grid gap-3 sm:grid-cols-2">
             <a
               href="#"
-              className="flex items-center gap-2 text-[hsl(var(--brand))] hover:underline"
+              className="flex items-center gap-3 rounded-lg border border-border/50 bg-background px-4 py-3 text-sm font-medium text-[hsl(var(--ink))] transition-all hover:border-[hsl(var(--brand))]/50 hover:bg-muted/30"
               onClick={(e) => {
                 e.preventDefault();
                 // TODO: Replace with actual PDF download link
                 console.log('Download user manual');
               }}
             >
-              <Download className="h-4 w-4" aria-hidden="true" />
-              <span>User Manual (PDF, 2.3 MB)</span>
+              <Download
+                className="h-5 w-5 flex-shrink-0 text-[hsl(var(--brand))]"
+                aria-hidden="true"
+              />
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold">User Manual</span>
+                <span className="text-xs text-[hsl(var(--muted-foreground))]">
+                  PDF, 2.3 MB
+                </span>
+              </div>
             </a>
             <a
               href="#"
-              className="flex items-center gap-2 text-[hsl(var(--brand))] hover:underline"
+              className="flex items-center gap-3 rounded-lg border border-border/50 bg-background px-4 py-3 text-sm font-medium text-[hsl(var(--ink))] transition-all hover:border-[hsl(var(--brand))]/50 hover:bg-muted/30"
               onClick={(e) => {
                 e.preventDefault();
                 // TODO: Replace with actual PDF download link
                 console.log('Download technical specifications');
               }}
             >
-              <Download className="h-4 w-4" aria-hidden="true" />
-              <span>Technical Specifications (PDF, 850 KB)</span>
+              <Download
+                className="h-5 w-5 flex-shrink-0 text-[hsl(var(--brand))]"
+                aria-hidden="true"
+              />
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold">Tech Specs</span>
+                <span className="text-xs text-[hsl(var(--muted-foreground))]">
+                  PDF, 850 KB
+                </span>
+              </div>
             </a>
             <a
               href="#"
-              className="flex items-center gap-2 text-[hsl(var(--brand))] hover:underline"
+              className="flex items-center gap-3 rounded-lg border border-border/50 bg-background px-4 py-3 text-sm font-medium text-[hsl(var(--ink))] transition-all hover:border-[hsl(var(--brand))]/50 hover:bg-muted/30"
               onClick={(e) => {
                 e.preventDefault();
                 // TODO: Replace with actual PDF download link
                 console.log('Download quick start guide');
               }}
             >
-              <Download className="h-4 w-4" aria-hidden="true" />
-              <span>Quick Start Guide (PDF, 450 KB)</span>
+              <Download
+                className="h-5 w-5 flex-shrink-0 text-[hsl(var(--brand))]"
+                aria-hidden="true"
+              />
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold">Quick Start</span>
+                <span className="text-xs text-[hsl(var(--muted-foreground))]">
+                  PDF, 450 KB
+                </span>
+              </div>
             </a>
             <a
               href="#"
-              className="flex items-center gap-2 text-[hsl(var(--brand))] hover:underline"
+              className="flex items-center gap-3 rounded-lg border border-border/50 bg-background px-4 py-3 text-sm font-medium text-[hsl(var(--ink))] transition-all hover:border-[hsl(var(--brand))]/50 hover:bg-muted/30"
               onClick={(e) => {
                 e.preventDefault();
                 // TODO: Replace with actual PDF download link
                 console.log('Download warranty information');
               }}
             >
-              <Download className="h-4 w-4" aria-hidden="true" />
-              <span>Warranty Information (PDF, 320 KB)</span>
+              <Download
+                className="h-5 w-5 flex-shrink-0 text-[hsl(var(--brand))]"
+                aria-hidden="true"
+              />
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold">Warranty Info</span>
+                <span className="text-xs text-[hsl(var(--muted-foreground))]">
+                  PDF, 320 KB
+                </span>
+              </div>
             </a>
           </div>
-          <p className="text-sm text-[hsl(var(--muted-foreground))] pt-2">
+          <p className="rounded-lg border border-border/50 bg-background/50 px-4 py-3 text-sm text-[hsl(var(--muted-foreground))]">
             Need additional support? Contact our{' '}
             <a
               href="/support/contact"
-              className="text-[hsl(var(--brand))] hover:underline"
+              className="font-semibold text-[hsl(var(--brand))] hover:underline"
             >
               technical support team
             </a>{' '}

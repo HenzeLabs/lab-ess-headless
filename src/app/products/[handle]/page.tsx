@@ -11,6 +11,9 @@ import ProductInfoPanelClient from './ProductInfoPanelClient';
 import ProductImageGallery from '@/components/product/ProductImageGallery';
 import ProductAccordions from '@/components/product/ProductAccordions';
 import TechnicalSummaryCard from '@/components/product/TechnicalSummaryCard';
+import ProductHighlights from '@/components/product/ProductHighlights';
+import ProductSpecsGrid from '@/components/product/ProductSpecsGrid';
+import ProductComparisonCTA from '@/components/product/ProductComparisonCTA';
 
 export const revalidate = 60;
 
@@ -170,12 +173,12 @@ export default async function ProductPage({
       <ProductViewTracker product={analyticsProduct} currency={currency} />
       <main
         id="main-content"
-        className="bg-background py-12 lg:py-24"
+        className="bg-background py-8 md:py-12 lg:py-16"
         role="main"
       >
+        {/* Hero Section: Image Gallery + Product Info */}
         <div className={layout.container}>
-          {/* Hero Section: Image Gallery + Product Info */}
-          <div className="grid items-start gap-12 md:gap-24 md:grid-cols-2 mb-16">
+          <div className="grid items-start gap-8 md:gap-12 lg:gap-16 md:grid-cols-2 mb-12 md:mb-16">
             <ProductImageGallery
               images={images.map((img) => ({
                 url: img.url,
@@ -195,21 +198,37 @@ export default async function ProductPage({
               }}
             />
           </div>
+        </div>
 
-          {/* Product Details Section: Accordions + Technical Summary */}
-          <div className="grid items-start gap-12 lg:grid-cols-3">
-            {/* Accordions - takes 2 columns on large screens */}
-            <div className="lg:col-span-2">
-              <ProductAccordions
-                productTitle={product.title}
-                descriptionHtml={product.descriptionHtml}
-              />
+        {/* Product Highlights Section */}
+        <div className={layout.container}>
+          <ProductHighlights />
+        </div>
+
+        {/* Product Details Section: Specs Grid + Accordions + Technical Summary */}
+        <div className={`${layout.container} mt-12 md:mt-16`}>
+          <div className="space-y-8 md:space-y-12">
+            {/* Specs Grid - Full width */}
+            <ProductSpecsGrid />
+
+            {/* Accordions + Technical Summary - 3 column layout */}
+            <div className="grid items-start gap-8 lg:grid-cols-3">
+              {/* Accordions - takes 2 columns on large screens */}
+              <div className="lg:col-span-2">
+                <ProductAccordions
+                  productTitle={product.title}
+                  descriptionHtml={product.descriptionHtml}
+                />
+              </div>
+
+              {/* Technical Summary Card - sticky sidebar, 1 column on large screens */}
+              <div className="lg:col-span-1">
+                <TechnicalSummaryCard productTitle={product.title} />
+              </div>
             </div>
 
-            {/* Technical Summary Card - sticky sidebar, 1 column on large screens */}
-            <div className="lg:col-span-1">
-              <TechnicalSummaryCard productTitle={product.title} />
-            </div>
+            {/* Comparison CTA */}
+            <ProductComparisonCTA />
           </div>
         </div>
       </main>
