@@ -221,24 +221,27 @@ async function createMetafieldDefinitions() {
 }
 
 // Delete metafield definition
-async function deleteMetafieldDefinition(key) {
+async function deleteMetafieldDefinition(key, namespace = 'custom') {
   if (!key) {
     console.error('❌ Error: Please provide a metafield key to delete');
-    console.log('Usage: node scripts/shopify-metafields.js delete <key>');
+    console.log('Usage: node scripts/shopify-metafields.js delete <key> [namespace]');
+    console.log('Example: node scripts/shopify-metafields.js delete features custom');
+    console.log('         node scripts/shopify-metafields.js delete primary_keyword lab');
     return;
   }
 
-  console.log(`🗑️  Deleting metafield definition: ${key}...\n`);
+  console.log(`🗑️  Deleting metafield definition: ${namespace}.${key}...\n`);
 
   // First, find the metafield definition ID
   const listQuery = `
     query {
-      metafieldDefinitions(first: 50, ownerType: PRODUCT, namespace: "custom", key: "${key}") {
+      metafieldDefinitions(first: 50, ownerType: PRODUCT, namespace: "${namespace}", key: "${key}") {
         edges {
           node {
             id
             name
             key
+            namespace
           }
         }
       }
@@ -256,6 +259,7 @@ async function deleteMetafieldDefinition(key) {
 
     const metafieldId = definitions[0].node.id;
     const metafieldName = definitions[0].node.name;
+    const metafieldNamespace = definitions[0].node.namespace;
 
     // Delete the metafield definition
     const deleteMutation = `
@@ -278,7 +282,7 @@ async function deleteMetafieldDefinition(key) {
         console.log(`   ${err.message}`);
       });
     } else {
-      console.log(`✅ Deleted: ${metafieldName} (${key})`);
+      console.log(`✅ Deleted: ${metafieldName} (${metafieldNamespace}.${key})`);
     }
   } catch (error) {
     console.error('❌ Error:', error.message);
@@ -287,7 +291,8 @@ async function deleteMetafieldDefinition(key) {
 
 // Main CLI
 const command = process.argv[2];
-const arg = process.argv[3];
+const arg1 = process.argv[3];
+const arg2 = process.argv[4];
 
 (async () => {
   switch (command) {
@@ -298,16 +303,17 @@ const arg = process.argv[3];
       await createMetafieldDefinitions();
       break;
     case 'delete':
-      await deleteMetafieldDefinition(arg);
+      await deleteMetafieldDefinition(arg1, arg2);
       break;
     default:
       console.log('Shopify Metafield Management Tool\n');
       console.log('Usage:');
-      console.log('  node scripts/shopify-metafields.js list           # List all metafield definitions');
-      console.log('  node scripts/shopify-metafields.js create         # Create new metafield definitions');
-      console.log('  node scripts/shopify-metafields.js delete [key]   # Delete specific metafield');
-      console.log('\nExample:');
-      console.log('  node scripts/shopify-metafields.js delete features');
+      console.log('  node scripts/shopify-metafields.js list                    # List all metafield definitions');
+      console.log('  node scripts/shopify-metafields.js create                  # Create new metafield definitions');
+      console.log('  node scripts/shopify-metafields.js delete [key] [namespace] # Delete specific metafield');
+      console.log('\nExamples:');
+      console.log('  node scripts/shopify-metafields.js delete features          # Delete custom.features');
+      console.log('  node scripts/shopify-metafields.js delete primary_keyword lab  # Delete lab.primary_keyword');
       break;
   }
 })();
