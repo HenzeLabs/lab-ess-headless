@@ -250,16 +250,6 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
               {feedback}
             </div>
           )}
-
-          <div className="flex items-center justify-center gap-2 rounded-lg border border-border/50 bg-muted/20 px-4 py-3 text-center">
-            <p className="text-xs text-[hsl(var(--muted-foreground))]">
-              or 4 interest-free payments of{' '}
-              <span className="font-semibold text-[hsl(var(--ink))]">
-                ${currentPrice ? (Number(currentPrice) / 4).toFixed(2) : '0.00'}
-              </span>{' '}
-              with <span className="font-semibold">Afterpay</span>
-            </p>
-          </div>
         </div>
 
         {/* Trust Bar */}
