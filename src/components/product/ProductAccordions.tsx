@@ -1,3 +1,4 @@
+'use client';
 import { FileText, Star, Gauge, Beaker, Download } from 'lucide-react';
 
 type ProductAccordionsProps = {
