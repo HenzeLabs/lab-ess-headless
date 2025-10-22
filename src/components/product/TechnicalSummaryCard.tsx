@@ -11,61 +11,8 @@ export default function TechnicalSummaryCard({
   return (
     <div className="sticky top-24 hidden lg:block">
       <div className="space-y-6 rounded-2xl border-2 border-border bg-background p-6 shadow-md">
-        <div className="border-b border-border/50 pb-4">
-          <h3 className="text-lg font-bold text-[hsl(var(--ink))]">
-            Technical Summary
-          </h3>
-          <p className="mt-1 text-xs text-[hsl(var(--muted-foreground))]">
-            Quick reference specifications
-          </p>
-        </div>
-
-        {/* Key Specifications */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between rounded-lg border border-border/50 bg-muted/20 px-4 py-3">
-            <span className="text-xs font-medium uppercase tracking-wide text-[hsl(var(--muted-foreground))]">
-              Voltage
-            </span>
-            <span className="text-sm font-bold text-[hsl(var(--ink))]">
-              110-240V AC
-            </span>
-          </div>
-          <div className="flex items-center justify-between rounded-lg border border-border/50 bg-muted/20 px-4 py-3">
-            <span className="text-xs font-medium uppercase tracking-wide text-[hsl(var(--muted-foreground))]">
-              Speed Range
-            </span>
-            <span className="text-sm font-bold text-[hsl(var(--ink))]">
-              100-6,000 RPM
-            </span>
-          </div>
-          <div className="flex items-center justify-between rounded-lg border border-border/50 bg-muted/20 px-4 py-3">
-            <span className="text-xs font-medium uppercase tracking-wide text-[hsl(var(--muted-foreground))]">
-              Capacity
-            </span>
-            <span className="text-sm font-bold text-[hsl(var(--ink))]">
-              6 × 1.5/2.0 mL
-            </span>
-          </div>
-          <div className="flex items-center justify-between rounded-lg border border-border/50 bg-muted/20 px-4 py-3">
-            <span className="text-xs font-medium uppercase tracking-wide text-[hsl(var(--muted-foreground))]">
-              Dimensions
-            </span>
-            <span className="text-sm font-bold text-[hsl(var(--ink))]">
-              18 × 15 × 12 cm
-            </span>
-          </div>
-          <div className="flex items-center justify-between rounded-lg border border-border/50 bg-muted/20 px-4 py-3">
-            <span className="text-xs font-medium uppercase tracking-wide text-[hsl(var(--muted-foreground))]">
-              Weight
-            </span>
-            <span className="text-sm font-bold text-[hsl(var(--ink))]">
-              2.5 kg
-            </span>
-          </div>
-        </div>
-
         {/* Download Buttons */}
-        <div className="space-y-3 border-t border-border/50 pt-6">
+        <div className="space-y-3">
           <a
             href="#"
             className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-border bg-background px-4 py-3 text-sm font-semibold text-[hsl(var(--ink))] shadow-sm transition-all hover:border-[hsl(var(--brand))]/50 hover:bg-muted/30"
