@@ -1,5 +1,5 @@
 'use client';
-import { Download, FileText } from 'lucide-react';
+import { FileText } from 'lucide-react';
 
 type TechnicalSummaryCardProps = {
   productTitle: string;
@@ -66,21 +66,6 @@ export default function TechnicalSummaryCard({
 
         {/* Download Buttons */}
         <div className="space-y-3 border-t border-border/50 pt-6">
-          <a
-            href="#"
-            className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-border bg-background px-4 py-3 text-sm font-semibold text-[hsl(var(--ink))] shadow-sm transition-all hover:border-[hsl(var(--brand))]/50 hover:bg-muted/30"
-            onClick={(e) => {
-              e.preventDefault();
-              // TODO: Replace with actual PDF download link
-              console.log('Download specs PDF');
-            }}
-          >
-            <Download
-              className="h-5 w-5 text-[hsl(var(--brand))]"
-              aria-hidden="true"
-            />
-            <span>Download Specs</span>
-          </a>
           <a
             href="#"
             className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-border bg-background px-4 py-3 text-sm font-semibold text-[hsl(var(--ink))] shadow-sm transition-all hover:border-[hsl(var(--brand))]/50 hover:bg-muted/30"

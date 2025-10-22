@@ -1,0 +1,137 @@
+📋 Fetching product metafield definitions...
+
+Found 20 metafield definition(s):
+
+📌 Google: Custom Product
+   Namespace: mm-google-shopping
+   Key: custom_product
+   Type: boolean
+   Description: Use to indicate whether or not the unique product identifiers (UPIs) GTIN, MPN, and brand are available for your product.
+   ID: gid://shopify/MetafieldDefinition/15805448251
+
+📌 Search product boosts
+   Namespace: shopify--discovery--product_search_boost
+   Key: queries
+   Type: list.single_line_text_field
+   Description: List of search queries for which a product gets higher rank in search results
+   ID: gid://shopify/MetafieldDefinition/16569598011
+
+📌 Related products
+   Namespace: shopify--discovery--product_recommendation
+   Key: related_products
+   Type: list.product_reference
+   Description: List of related products
+   ID: gid://shopify/MetafieldDefinition/16569630779
+
+📌 Related products settings
+   Namespace: shopify--discovery--product_recommendation
+   Key: related_products_display
+   Type: single_line_text_field
+   Description: Determines how related products are displayed along with algorithmic product recommendations
+   ID: gid://shopify/MetafieldDefinition/16569663547
+
+📌 Complementary products
+   Namespace: shopify--discovery--product_recommendation
+   Key: complementary_products
+   Type: list.product_reference
+   Description: List of complementary products
+   ID: gid://shopify/MetafieldDefinition/16569696315
+
+📌 Product rating count
+   Namespace: reviews
+   Key: rating_count
+   Type: number_integer
+   Description: Total number of ratings from customers
+   ID: gid://shopify/MetafieldDefinition/76344131643
+
+📌 Product rating
+   Namespace: reviews
+   Key: rating
+   Type: rating
+   Description: Average rating from customers
+   ID: gid://shopify/MetafieldDefinition/76344164411
+
+📌 Related Collections
+   Namespace: lab
+   Key: related_collections
+   Type: multi_line_text_field
+   ID: gid://shopify/MetafieldDefinition/78109245499
+
+📌 Use Cases
+   Namespace: lab
+   Key: featured_use_cases
+   Type: multi_line_text_field
+   ID: gid://shopify/MetafieldDefinition/78109278267
+
+📌 Trust Signals
+   Namespace: lab
+   Key: trust_signals
+   Type: multi_line_text_field
+   ID: gid://shopify/MetafieldDefinition/78110294075
+
+📌 FAQ
+   Namespace: lab
+   Key: faq
+   Type: multi_line_text_field
+   ID: gid://shopify/MetafieldDefinition/78110326843
+
+📌 Primary Keyword
+   Namespace: lab
+   Key: primary_keyword
+   Type: single_line_text_field
+   ID: gid://shopify/MetafieldDefinition/78110359611
+
+📌 Secondary Keywords
+   Namespace: lab
+   Key: secondary_keywords
+   Type: single_line_text_field
+   ID: gid://shopify/MetafieldDefinition/78110392379
+
+📌 Guide Link
+   Namespace: lab
+   Key: guide_link
+   Type: url
+   ID: gid://shopify/MetafieldDefinition/78111080507
+
+📌 Key Features
+   Namespace: custom
+   Key: features
+   Type: list.single_line_text_field
+   Description: List of product features (bullet points)
+   ID: gid://shopify/MetafieldDefinition/95322570811
+
+📌 Applications
+   Namespace: custom
+   Key: applications
+   Type: list.single_line_text_field
+   Description: List of product use cases
+   ID: gid://shopify/MetafieldDefinition/95322603579
+
+📌 User Manual PDF
+   Namespace: custom
+   Key: manual_pdf
+   Type: file_reference
+   Description: Main product manual
+   ID: gid://shopify/MetafieldDefinition/95322636347
+
+📌 Quick Start Guide PDF
+   Namespace: custom
+   Key: quick_start_pdf
+   Type: file_reference
+   Description: Quick start guide
+   ID: gid://shopify/MetafieldDefinition/95322669115
+
+📌 Technical Specs PDF
+   Namespace: custom
+   Key: specs_pdf
+   Type: file_reference
+   Description: Technical specifications sheet
+   ID: gid://shopify/MetafieldDefinition/95322701883
+
+📌 Equipment Category
+   Namespace: custom
+   Key: equipment_category
+   Type: single_line_text_field
+   Description: Type of lab equipment (microscope, centrifuge, incubator, etc.)
+   ID: gid://shopify/MetafieldDefinition/95322734651
+
