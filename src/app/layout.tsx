@@ -10,7 +10,7 @@ import { ErrorBoundary } from '@/components/error-boundaries/ErrorBoundary';
 const heading = Montserrat({
   subsets: ['latin'],
   variable: '--font-heading',
-  display: 'swap',
+  display: 'optional', // Use fallback immediately if font not cached - prevents render blocking
   weight: ['400', '700'],
   preload: true, // Preload critical font
   fallback: ['ui-sans-serif', 'system-ui', 'sans-serif'],
@@ -20,7 +20,7 @@ const heading = Montserrat({
 const sans = Roboto({
   subsets: ['latin'],
   variable: '--font-sans',
-  display: 'swap',
+  display: 'optional', // Use fallback immediately if font not cached - prevents render blocking
   weight: ['400', '700'],
   preload: true, // Preload critical font
   fallback: ['ui-sans-serif', 'system-ui', 'sans-serif'],
@@ -30,7 +30,7 @@ const sans = Roboto({
 const mono = Roboto_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
-  display: 'swap',
+  display: 'optional', // Use fallback immediately if font not cached
   weight: ['400'],
   preload: false, // Don't preload - used sparingly
   fallback: ['ui-monospace', 'monospace'],

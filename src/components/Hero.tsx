@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { buttonStyles, textStyles, layout } from '@/lib/ui';
@@ -28,7 +28,6 @@ const Hero: React.FC<HeroProps> = ({
   videoUrl = '/hero.mp4',
   poster = '/hero.avif', // AVIF poster for instant display (36KB vs 2.5MB video)
 }) => {
-  const heroRef = useRef<HTMLDivElement>(null);
   const hasMedia = Boolean(videoUrl || imageUrl);
 
   const ctaPrimaryClass = hasMedia
@@ -38,25 +37,6 @@ const Hero: React.FC<HeroProps> = ({
   const ctaSecondaryClass = hasMedia
     ? `${buttonStyles.outline} border-2 border-white text-white bg-white/10 backdrop-blur-sm text-base px-8 py-4 hover:bg-white hover:text-[hsl(var(--brand))] hover:scale-105 transition-all duration-300`
     : `${buttonStyles.ghost} text-base px-8 py-4 hover:scale-105 transition-all duration-300`;
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-in');
-          }
-        });
-      },
-      { threshold: 0.1 },
-    );
-
-    if (heroRef.current) {
-      observer.observe(heroRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
 
   return (
     <section
@@ -97,8 +77,7 @@ const Hero: React.FC<HeroProps> = ({
         />
       )}
       <div
-        ref={heroRef}
-        className={`relative z-10 ${layout.container} flex flex-col items-center justify-center gap-8 md:gap-10 opacity-0 translate-y-8 transition-all duration-1000 ease-out [&.animate-in]:opacity-100 [&.animate-in]:translate-y-0`}
+        className={`relative z-10 ${layout.container} flex flex-col items-center justify-center gap-8 md:gap-10`}
       >
         <h1
           className={`text-balance max-w-3xl ${textStyles.h1} drop-shadow-2xl ${
