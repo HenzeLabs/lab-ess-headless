@@ -19,8 +19,9 @@ export default function TechnicalSummaryCard({
 }: TechnicalSummaryCardProps) {
   // Helper to get metafield value
   const getMetafield = (key: string): string | null => {
+    if (!metafields || !Array.isArray(metafields)) return null;
     const field = metafields.find(
-      (m) => m.key === key && m.namespace === 'custom',
+      (m) => m && m.key === key && m.namespace === 'custom',
     );
     return field?.value ?? null;
   };
