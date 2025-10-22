@@ -10,21 +10,21 @@ export default function ProductHighlights() {
   const highlights: Highlight[] = [
     {
       icon: Zap,
-      title: 'High Performance',
+      title: 'Professional Grade',
       description:
-        'Fast processing speeds up to 6,000 RPM for efficient workflows',
+        'Precision-engineered equipment designed for demanding laboratory environments',
     },
     {
       icon: Shield,
-      title: 'Built to Last',
+      title: 'Quality Guaranteed',
       description:
-        'Premium construction with 1-year warranty and technical support',
+        'Premium construction backed by comprehensive warranty and expert support',
     },
     {
       icon: Award,
       title: 'Lab Certified',
       description:
-        'Meets rigorous laboratory standards for precision equipment',
+        'Meets rigorous industry standards for accuracy and reliability',
     },
   ];
 
