@@ -93,6 +93,9 @@ export default async function ProductPage({
     notFound();
   }
 
+  // Ensure metafields is always an array (defensive null check)
+  const safeMetafields = product.metafields ?? [];
+
   const images = product.images?.edges?.map((edge) => edge.node) ?? [];
 
   const productUrl = absoluteUrl(`/products/${product.handle}`);
@@ -102,7 +105,8 @@ export default async function ProductPage({
 
   // Extract brand from metafields
   const brand =
-    product.metafields?.find((field) => field.key === 'brand')?.value ?? null;
+    safeMetafields.find((field) => field && field.key === 'brand')?.value ??
+    null;
 
   const analyticsProduct = {
     id: product.id,
@@ -218,7 +222,7 @@ export default async function ProductPage({
                 <ProductAccordions
                   productTitle={product.title}
                   descriptionHtml={product.descriptionHtml}
-                  metafields={product.metafields}
+                  metafields={safeMetafields}
                 />
               </div>
 
@@ -226,7 +230,7 @@ export default async function ProductPage({
               <div className="lg:col-span-1">
                 <TechnicalSummaryCard
                   productTitle={product.title}
-                  metafields={product.metafields}
+                  metafields={safeMetafields}
                 />
               </div>
             </div>
