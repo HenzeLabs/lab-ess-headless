@@ -10,21 +10,21 @@ export default function ProductHighlights() {
   const highlights: Highlight[] = [
     {
       icon: Zap,
-      title: 'Professional Grade',
+      title: 'Built for Real Labs',
       description:
-        'Precision-engineered equipment designed for demanding laboratory environments',
+        'Durable, precision-tested instruments designed for classrooms, clinics, and research environments.',
     },
     {
       icon: Shield,
-      title: 'Quality Guaranteed',
+      title: 'Reliable by Design',
       description:
-        'Premium construction backed by comprehensive warranty and expert support',
+        'Every product is backed by thorough quality checks, a solid warranty, and expert U.S. support.',
     },
     {
       icon: Award,
-      title: 'Lab Certified',
+      title: 'Trusted Performance',
       description:
-        'Meets rigorous industry standards for accuracy and reliability',
+        'Meets essential lab standards for accuracy and consistency—without the premium price tag.',
     },
   ];
 
