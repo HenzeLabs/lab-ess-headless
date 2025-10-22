@@ -9,6 +9,8 @@ import { layout } from '@/lib/ui';
 import ProductViewTracker from '@/components/analytics/ProductViewTracker';
 import ProductInfoPanelClient from './ProductInfoPanelClient';
 import ProductImageGallery from '@/components/product/ProductImageGallery';
+import ProductAccordions from '@/components/product/ProductAccordions';
+import TechnicalSummaryCard from '@/components/product/TechnicalSummaryCard';
 
 export const revalidate = 60;
 
@@ -172,7 +174,8 @@ export default async function ProductPage({
         role="main"
       >
         <div className={layout.container}>
-          <div className="grid items-start gap-12 md:gap-24 md:grid-cols-2">
+          {/* Hero Section: Image Gallery + Product Info */}
+          <div className="grid items-start gap-12 md:gap-24 md:grid-cols-2 mb-16">
             <ProductImageGallery
               images={images.map((img) => ({
                 url: img.url,
@@ -191,6 +194,22 @@ export default async function ProductPage({
                 descriptionHtml: product.descriptionHtml,
               }}
             />
+          </div>
+
+          {/* Product Details Section: Accordions + Technical Summary */}
+          <div className="grid items-start gap-12 lg:grid-cols-3">
+            {/* Accordions - takes 2 columns on large screens */}
+            <div className="lg:col-span-2">
+              <ProductAccordions
+                productTitle={product.title}
+                descriptionHtml={product.descriptionHtml}
+              />
+            </div>
+
+            {/* Technical Summary Card - sticky sidebar, 1 column on large screens */}
+            <div className="lg:col-span-1">
+              <TechnicalSummaryCard productTitle={product.title} />
+            </div>
           </div>
         </div>
       </main>
