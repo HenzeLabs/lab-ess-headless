@@ -21,18 +21,18 @@
 
 const https = require('https');
 
-const SHOPIFY_STORE = process.env.SHOPIFY_STORE_DOMAIN || 'labessentials-inc.myshopify.com';
-const SHOPIFY_TOKEN = process.env.SHOPIFY_ADMIN_API_TOKEN;
+const SHOPIFY_STORE = process.env.SHOPIFY_STORE_DOMAIN || 'labessentials.myshopify.com';
+const SHOPIFY_TOKEN = process.env.SHOPIFY_ADMIN_API_TOKEN || process.env.SHOPIFY_ADMIN_ACCESS_TOKEN;
 const SHOPIFY_API_VERSION = '2024-01';
 
 if (!SHOPIFY_TOKEN) {
-  console.error('❌ Error: SHOPIFY_ADMIN_API_TOKEN environment variable not set');
+  console.error('❌ Error: SHOPIFY_ADMIN_API_TOKEN or SHOPIFY_ADMIN_ACCESS_TOKEN environment variable not set');
   console.log('\nHow to get your token:');
   console.log('1. Go to Shopify Admin → Settings → Apps and sales channels');
   console.log('2. Click "Develop apps" → Create an app');
   console.log('3. Configure Admin API scopes: read_products, write_products, read_metaobjects, write_metaobjects');
   console.log('4. Install app and reveal Admin API access token');
-  console.log('5. Set environment variable: export SHOPIFY_ADMIN_API_TOKEN=shpat_xxxxx');
+  console.log('5. Set environment variable: export SHOPIFY_ADMIN_ACCESS_TOKEN=shpat_xxxxx');
   process.exit(1);
 }
 
