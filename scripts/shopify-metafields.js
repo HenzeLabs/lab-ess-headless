@@ -170,6 +170,13 @@ async function createMetafieldDefinitions() {
       type: 'single_line_text_field',
       description: 'Type of lab equipment (microscope, centrifuge, incubator, etc.)',
     },
+    {
+      name: 'FAQ',
+      namespace: 'custom',
+      key: 'faq',
+      type: 'multi_line_text_field',
+      description: 'Frequently asked questions for this product',
+    },
   ];
 
   for (const def of definitions) {
