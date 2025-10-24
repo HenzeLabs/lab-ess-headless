@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import { FileText, Star, Gauge, Beaker } from 'lucide-react';
 
 type Metafield = {
@@ -12,13 +13,18 @@ type ProductAccordionsProps = {
   productTitle: string;
   descriptionHtml?: string;
   metafields?: Metafield[];
+  manualButtons?: React.ReactNode;
 };
+
+type TabId = 'overview' | 'features' | 'specs' | 'applications' | null;
 
 export default function ProductAccordions({
   productTitle,
   descriptionHtml,
   metafields = [],
+  manualButtons,
 }: ProductAccordionsProps) {
+  const [activeTab, setActiveTab] = useState<TabId>(null);
   // Helper to get metafield value
   const getMetafield = (key: string): string | null => {
     if (!metafields || !Array.isArray(metafields)) return null;
@@ -43,7 +49,6 @@ export default function ProductAccordions({
   const features = getListMetafield('features');
   const applications = getListMetafield('applications');
   const specs = getListMetafield('specs');
-  const faq = getMetafield('faq');
 
   // Default fallback data
   const defaultFeatures = [
@@ -81,18 +86,34 @@ export default function ProductAccordions({
     applications.length > 0 ? applications : defaultApplications;
   const displaySpecs = specs.length > 0 ? specs : defaultSpecs;
 
+  const toggleTab = (tabId: TabId) => {
+    setActiveTab(activeTab === tabId ? null : tabId);
+  };
+
   return (
-    <div className="space-y-3">
-      {/* Overview */}
-      <details className="group overflow-hidden rounded-xl border-2 border-border bg-background shadow-sm transition-all hover:border-[hsl(var(--brand))]/30 hover:shadow-md">
-        <summary className="flex cursor-pointer items-center gap-3 px-6 py-5 text-lg font-semibold text-[hsl(var(--ink))] transition-colors hover:bg-muted/30 list-none">
+    <div className="space-y-4">
+      {/* Tabs Row - stays at top, includes manual buttons */}
+      <div className="flex flex-wrap gap-3">
+        {/* Overview Tab */}
+        <button
+          key="overview-tab"
+          type="button"
+          onClick={() => toggleTab('overview')}
+          className={`flex flex-1 min-w-[200px] items-center gap-3 rounded-xl border-2 px-4 py-3 text-left text-sm font-semibold transition-all ${
+            activeTab === 'overview'
+              ? 'border-[hsl(var(--brand))] bg-[hsl(var(--brand))]/5 shadow-md'
+              : 'border-border bg-background shadow-sm hover:border-[hsl(var(--brand))]/30 hover:shadow-md'
+          }`}
+        >
           <FileText
             className="h-5 w-5 flex-shrink-0 text-[hsl(var(--brand))]"
             aria-hidden="true"
           />
-          <span className="flex-1">Overview</span>
+          <span className="flex-1 text-[hsl(var(--ink))]">Overview</span>
           <svg
-            className="h-5 w-5 flex-shrink-0 text-[hsl(var(--muted-foreground))] transition-transform group-open:rotate-180"
+            className={`h-5 w-5 flex-shrink-0 text-[hsl(var(--muted-foreground))] transition-transform ${
+              activeTab === 'overview' ? 'rotate-180' : ''
+            }`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -104,31 +125,28 @@ export default function ProductAccordions({
               d="M19 9l-7 7-7-7"
             />
           </svg>
-        </summary>
-        <div className="prose prose-sm max-w-none border-t border-border/50 bg-muted/10 px-6 py-5 text-[hsl(var(--muted-foreground))]">
-          {descriptionHtml ? (
-            <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} />
-          ) : (
-            <p>
-              The {productTitle} is designed for laboratory professionals who
-              demand precision, reliability, and performance. Engineered with
-              cutting-edge technology, this product delivers consistent results
-              for critical research and diagnostic applications.
-            </p>
-          )}
-        </div>
-      </details>
+        </button>
 
-      {/* Key Features */}
-      <details className="group overflow-hidden rounded-xl border-2 border-border bg-background shadow-sm transition-all hover:border-[hsl(var(--brand))]/30 hover:shadow-md">
-        <summary className="flex cursor-pointer items-center gap-3 px-6 py-5 text-lg font-semibold text-[hsl(var(--ink))] transition-colors hover:bg-muted/30 list-none">
+        {/* Features Tab */}
+        <button
+          key="features-tab"
+          type="button"
+          onClick={() => toggleTab('features')}
+          className={`flex flex-1 min-w-[200px] items-center gap-3 rounded-xl border-2 px-4 py-3 text-left text-sm font-semibold transition-all ${
+            activeTab === 'features'
+              ? 'border-[hsl(var(--brand))] bg-[hsl(var(--brand))]/5 shadow-md'
+              : 'border-border bg-background shadow-sm hover:border-[hsl(var(--brand))]/30 hover:shadow-md'
+          }`}
+        >
           <Star
             className="h-5 w-5 flex-shrink-0 text-[hsl(var(--brand))]"
             aria-hidden="true"
           />
-          <span className="flex-1">Key Features</span>
+          <span className="flex-1 text-[hsl(var(--ink))]">Features</span>
           <svg
-            className="h-5 w-5 flex-shrink-0 text-[hsl(var(--muted-foreground))] transition-transform group-open:rotate-180"
+            className={`h-5 w-5 flex-shrink-0 text-[hsl(var(--muted-foreground))] transition-transform ${
+              activeTab === 'features' ? 'rotate-180' : ''
+            }`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -140,26 +158,28 @@ export default function ProductAccordions({
               d="M19 9l-7 7-7-7"
             />
           </svg>
-        </summary>
-        <div className="border-t border-border/50 bg-muted/10 px-6 py-5">
-          <ul className="list-inside list-disc space-y-3 text-[hsl(var(--muted-foreground))]">
-            {displayFeatures.map((feature, index) => (
-              <li key={index}>{feature}</li>
-            ))}
-          </ul>
-        </div>
-      </details>
+        </button>
 
-      {/* Technical Specifications */}
-      <details className="group overflow-hidden rounded-xl border-2 border-border bg-background shadow-sm transition-all hover:border-[hsl(var(--brand))]/30 hover:shadow-md">
-        <summary className="flex cursor-pointer items-center gap-3 px-6 py-5 text-lg font-semibold text-[hsl(var(--ink))] transition-colors hover:bg-muted/30 list-none">
+        {/* Specifications Tab */}
+        <button
+          key="specs-tab"
+          type="button"
+          onClick={() => toggleTab('specs')}
+          className={`flex flex-1 min-w-[200px] items-center gap-3 rounded-xl border-2 px-4 py-3 text-left text-sm font-semibold transition-all ${
+            activeTab === 'specs'
+              ? 'border-[hsl(var(--brand))] bg-[hsl(var(--brand))]/5 shadow-md'
+              : 'border-border bg-background shadow-sm hover:border-[hsl(var(--brand))]/30 hover:shadow-md'
+          }`}
+        >
           <Gauge
             className="h-5 w-5 flex-shrink-0 text-[hsl(var(--brand))]"
             aria-hidden="true"
           />
-          <span className="flex-1">Technical Specifications</span>
+          <span className="flex-1 text-[hsl(var(--ink))]">Specifications</span>
           <svg
-            className="h-5 w-5 flex-shrink-0 text-[hsl(var(--muted-foreground))] transition-transform group-open:rotate-180"
+            className={`h-5 w-5 flex-shrink-0 text-[hsl(var(--muted-foreground))] transition-transform ${
+              activeTab === 'specs' ? 'rotate-180' : ''
+            }`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -171,26 +191,28 @@ export default function ProductAccordions({
               d="M19 9l-7 7-7-7"
             />
           </svg>
-        </summary>
-        <div className="border-t border-border/50 bg-muted/10 px-6 py-5">
-          <ul className="list-inside list-disc space-y-3 text-[hsl(var(--muted-foreground))]">
-            {displaySpecs.map((spec, index) => (
-              <li key={index}>{spec}</li>
-            ))}
-          </ul>
-        </div>
-      </details>
+        </button>
 
-      {/* Applications */}
-      <details className="group overflow-hidden rounded-xl border-2 border-border bg-background shadow-sm transition-all hover:border-[hsl(var(--brand))]/30 hover:shadow-md">
-        <summary className="flex cursor-pointer items-center gap-3 px-6 py-5 text-lg font-semibold text-[hsl(var(--ink))] transition-colors hover:bg-muted/30 list-none">
+        {/* Applications Tab */}
+        <button
+          key="applications-tab"
+          type="button"
+          onClick={() => toggleTab('applications')}
+          className={`flex flex-1 min-w-[200px] items-center gap-3 rounded-xl border-2 px-4 py-3 text-left text-sm font-semibold transition-all ${
+            activeTab === 'applications'
+              ? 'border-[hsl(var(--brand))] bg-[hsl(var(--brand))]/5 shadow-md'
+              : 'border-border bg-background shadow-sm hover:border-[hsl(var(--brand))]/30 hover:shadow-md'
+          }`}
+        >
           <Beaker
             className="h-5 w-5 flex-shrink-0 text-[hsl(var(--brand))]"
             aria-hidden="true"
           />
-          <span className="flex-1">Applications</span>
+          <span className="flex-1 text-[hsl(var(--ink))]">Applications</span>
           <svg
-            className="h-5 w-5 flex-shrink-0 text-[hsl(var(--muted-foreground))] transition-transform group-open:rotate-180"
+            className={`h-5 w-5 flex-shrink-0 text-[hsl(var(--muted-foreground))] transition-transform ${
+              activeTab === 'applications' ? 'rotate-180' : ''
+            }`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -202,43 +224,60 @@ export default function ProductAccordions({
               d="M19 9l-7 7-7-7"
             />
           </svg>
-        </summary>
-        <div className="border-t border-border/50 bg-muted/10 px-6 py-5">
-          <ul className="list-inside list-disc space-y-3 text-[hsl(var(--muted-foreground))]">
-            {displayApplications.map((application, index) => (
-              <li key={index}>{application}</li>
-            ))}
-          </ul>
-        </div>
-      </details>
+        </button>
 
-      {/* FAQ - Only show if metafield exists */}
-      {faq && (
-        <details className="group overflow-hidden rounded-xl border-2 border-border bg-background shadow-sm transition-all hover:border-[hsl(var(--brand))]/30 hover:shadow-md">
-          <summary className="flex cursor-pointer items-center gap-3 px-6 py-5 text-lg font-semibold text-[hsl(var(--ink))] transition-colors hover:bg-muted/30 list-none">
-            <FileText
-              className="h-5 w-5 flex-shrink-0 text-[hsl(var(--brand))]"
-              aria-hidden="true"
-            />
-            <span className="flex-1">FAQ</span>
-            <svg
-              className="h-5 w-5 flex-shrink-0 text-[hsl(var(--muted-foreground))] transition-transform group-open:rotate-180"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </summary>
-          <div className="prose prose-sm max-w-none border-t border-border/50 bg-muted/10 px-6 py-5 text-[hsl(var(--muted-foreground))]">
-            <div style={{ whiteSpace: 'pre-wrap' }}>{faq}</div>
-          </div>
-        </details>
+        {/* Manual Buttons - rendered inline with tabs */}
+        {manualButtons && <div key="manual-buttons">{manualButtons}</div>}
+      </div>
+
+      {/* Content Area - appears below tabs */}
+      {activeTab && (
+        <div className="overflow-hidden rounded-xl border-2 border-[hsl(var(--brand))]/50 bg-background shadow-lg">
+          {activeTab === 'overview' && (
+            <div className="prose prose-sm max-w-none bg-muted/10 px-6 py-5 text-[hsl(var(--muted-foreground))]">
+              {descriptionHtml ? (
+                <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} />
+              ) : (
+                <p>
+                  The {productTitle} is designed for laboratory professionals who
+                  demand precision, reliability, and performance. Engineered with
+                  cutting-edge technology, this product delivers consistent results
+                  for critical research and diagnostic applications.
+                </p>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'features' && (
+            <div className="prose prose-sm max-w-none bg-muted/10 px-6 py-5 text-[hsl(var(--muted-foreground))]">
+              <ul className="space-y-2">
+                {displayFeatures.map((feature, index) => (
+                  <li key={index}>{feature}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {activeTab === 'specs' && (
+            <div className="prose prose-sm max-w-none bg-muted/10 px-6 py-5 text-[hsl(var(--muted-foreground))]">
+              <ul className="space-y-2">
+                {displaySpecs.map((spec, index) => (
+                  <li key={index}>{spec}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {activeTab === 'applications' && (
+            <div className="prose prose-sm max-w-none bg-muted/10 px-6 py-5 text-[hsl(var(--muted-foreground))]">
+              <ul className="space-y-2">
+                {displayApplications.map((application, index) => (
+                  <li key={index}>{application}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );
