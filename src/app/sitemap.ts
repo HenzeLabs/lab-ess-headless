@@ -32,6 +32,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.warn('NEXT_PUBLIC_SITE_URL not set, using fallback URL:', siteUrl);
   }
 
+  // Check if Shopify credentials are available (required for fetching dynamic data)
+  const hasShopifyCredentials =
+    process.env.SHOPIFY_STORE_DOMAIN &&
+    (process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN || process.env.SHOPIFY_STOREFRONT_API_TOKEN);
+
+  // If no Shopify credentials, return minimal sitemap (for CI/preview builds)
+  if (!hasShopifyCredentials) {
+    console.warn('Shopify credentials not available, generating minimal sitemap');
+    return [
+      {
+        url: siteUrl,
+        lastModified: new Date(),
+      },
+    ];
+  }
+
+  // Fetch collections and products from Shopify
   const { data: collectionsData } = await shopifyFetch<CollectionSitemapData>({
     query: getCollectionsListQuery,
   });
