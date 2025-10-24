@@ -33,6 +33,10 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN }}
+          SHOPIFY_STOREFRONT_ACCESS_TOKEN: ${{ secrets.SHOPIFY_STOREFRONT_ACCESS_TOKEN }}
+          NEXT_PUBLIC_SITE_URL: https://labessentials.com
 
       # E2E tests skipped in CI - they require a running server with Shopify credentials
       # Use the separate e2e-tests.yml workflow for full E2E testing
