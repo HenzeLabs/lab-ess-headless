@@ -34,10 +34,12 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Run Playwright tests
-        run: npm run test:e2e
-        env:
-          CI: true
+      # E2E tests skipped in CI - they require a running server with Shopify credentials
+      # Use the separate e2e-tests.yml workflow for full E2E testing
+      # - name: Run Playwright tests
+      #   run: npm run test:e2e
+      #   env:
+      #     CI: true
 
       - name: Run Lighthouse CI
         run: npm run lh
