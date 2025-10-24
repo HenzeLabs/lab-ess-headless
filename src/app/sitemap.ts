@@ -25,9 +25,11 @@ type ProductSitemapData = {
 };
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
-  if (!siteUrl) {
-    throw new Error('NEXT_PUBLIC_SITE_URL is not set');
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://labessentials.com';
+
+  // Warn if using fallback URL
+  if (!process.env.NEXT_PUBLIC_SITE_URL) {
+    console.warn('NEXT_PUBLIC_SITE_URL not set, using fallback URL:', siteUrl);
   }
 
   const { data: collectionsData } = await shopifyFetch<CollectionSitemapData>({
