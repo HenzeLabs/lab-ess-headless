@@ -12,8 +12,8 @@ import ProductImageGallery from '@/components/product/ProductImageGallery';
 import ProductAccordions from '@/components/product/ProductAccordions';
 import TechnicalSummaryCard from '@/components/product/TechnicalSummaryCard';
 import ProductHighlights from '@/components/product/ProductHighlights';
-import ProductSpecsGrid from '@/components/product/ProductSpecsGrid';
 import ProductComparisonCTA from '@/components/product/ProductComparisonCTA';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 export const revalidate = 60;
 
@@ -180,6 +180,39 @@ export default async function ProductPage({
         className="bg-background py-8 md:py-12 lg:py-16"
         role="main"
       >
+        {/* Breadcrumbs */}
+        <div className={layout.container}>
+          <Breadcrumbs
+            items={(() => {
+              const breadcrumbItems = [];
+
+              // Add collection if available
+              const collection = product.collections?.edges?.[0]?.node;
+              if (collection) {
+                breadcrumbItems.push({
+                  label: collection.title,
+                  href: `/collections/${collection.handle}`,
+                });
+              } else {
+                // Fallback to generic Collections
+                breadcrumbItems.push({
+                  label: 'Products',
+                  href: '/collections',
+                });
+              }
+
+              // Add product
+              breadcrumbItems.push({
+                label: product.title,
+                href: `/products/${product.handle}`,
+              });
+
+              return breadcrumbItems;
+            })()}
+            className="mb-6"
+          />
+        </div>
+
         {/* Hero Section: Image Gallery + Product Info */}
         <div className={layout.container}>
           <div className="grid items-start gap-8 md:gap-12 lg:gap-16 md:grid-cols-2 mb-12 md:mb-16">
@@ -204,40 +237,30 @@ export default async function ProductPage({
           </div>
         </div>
 
+        {/* Product Details Section: Accordions */}
+        <div className={`${layout.container} mt-12 md:mt-16`}>
+          <ProductAccordions
+            productTitle={product.title}
+            descriptionHtml={product.descriptionHtml}
+            metafields={safeMetafields}
+            manualButtons={
+              <TechnicalSummaryCard
+                productTitle={product.title}
+                metafields={safeMetafields}
+              />
+            }
+          />
+        </div>
+
         {/* Product Highlights Section */}
-        <div className={layout.container}>
+        <div className={`${layout.container} mt-8 md:mt-12`}>
           <ProductHighlights />
         </div>
 
-        {/* Product Details Section: Specs Grid + Accordions + Technical Summary */}
-        <div className={`${layout.container} mt-12 md:mt-16`}>
-          <div className="space-y-8 md:space-y-12">
-            {/* Specs Grid - Full width */}
-            <ProductSpecsGrid />
-
-            {/* Accordions + Technical Summary - 3 column layout */}
-            <div className="grid items-start gap-8 lg:grid-cols-3">
-              {/* Accordions - takes 2 columns on large screens */}
-              <div className="lg:col-span-2">
-                <ProductAccordions
-                  productTitle={product.title}
-                  descriptionHtml={product.descriptionHtml}
-                  metafields={safeMetafields}
-                />
-              </div>
-
-              {/* Technical Summary Card - sticky sidebar, 1 column on large screens */}
-              <div className="lg:col-span-1">
-                <TechnicalSummaryCard
-                  productTitle={product.title}
-                  metafields={safeMetafields}
-                />
-              </div>
-            </div>
-
-            {/* Comparison CTA */}
-            <ProductComparisonCTA />
-          </div>
+        {/* Bottom Section */}
+        <div className={`${layout.container} mt-8 md:mt-12`}>
+          {/* Comparison CTA */}
+          <ProductComparisonCTA />
         </div>
       </main>
     </>

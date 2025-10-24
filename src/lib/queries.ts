@@ -221,6 +221,15 @@ export const getProductByHandleQuery = `
           currencyCode
         }
       }
+      collections(first: 1) {
+        edges {
+          node {
+            id
+            title
+            handle
+          }
+        }
+      }
       metafields(identifiers: [
         { namespace: "custom", key: "features" },
         { namespace: "custom", key: "applications" },
@@ -234,6 +243,18 @@ export const getProductByHandleQuery = `
         key
         value
         type
+        references(first: 10) {
+          edges {
+            node {
+              ... on Metaobject {
+                fields {
+                  key
+                  value
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -314,16 +335,11 @@ export const getCollectionByHandleQuery = `
               }
             }
             metafields(identifiers: [
-              { namespace: "custom", key: "specifications" },
-              { namespace: "custom", key: "technical_details" },
               { namespace: "custom", key: "features" },
-              { namespace: "custom", key: "brand" },
-              { namespace: "custom", key: "model_number" },
-              { namespace: "custom", key: "weight" },
-              { namespace: "custom", key: "dimensions" },
-              { namespace: "custom", key: "warranty" },
-              { namespace: "custom", key: "certification" },
-              { namespace: "custom", key: "availability_status" }
+              { namespace: "custom", key: "applications" },
+              { namespace: "custom", key: "specs" },
+              { namespace: "custom", key: "equipment_category" },
+              { namespace: "custom", key: "brand" }
             ]) {
               namespace
               key

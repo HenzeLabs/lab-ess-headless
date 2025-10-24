@@ -72,6 +72,15 @@ export type Product = {
       };
     }[];
   };
+  collections?: {
+    edges: {
+      node: {
+        id: string;
+        title: string;
+        handle: string;
+      };
+    }[];
+  };
   metafields?: {
     namespace: string;
     key: string;
