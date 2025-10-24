@@ -58,8 +58,20 @@ export default function ProductCard({
   // Get key metafields for display
   const brand = getMetafield('brand');
   const modelNumber = getMetafield('model_number');
-  const features = getMetafield('features');
+  const featuresRaw = getMetafield('features');
   const availabilityStatus = getMetafield('availability_status');
+
+  // Parse features JSON array
+  let features: string[] = [];
+  if (featuresRaw) {
+    try {
+      const parsed = JSON.parse(featuresRaw);
+      features = Array.isArray(parsed) ? parsed : [];
+    } catch {
+      // If parsing fails, ignore features
+      features = [];
+    }
+  }
 
   const handleProductClick = () => {
     trackSelectItem(
@@ -125,9 +137,21 @@ export default function ProductCard({
           </div>
 
           {/* Key Features */}
-          {features && (
-            <div className="text-xs text-muted-foreground mt-3">
-              <p className="line-clamp-2">{features}</p>
+          {features.length > 0 && (
+            <div className="text-sm text-muted-foreground mt-3">
+              <ul className="space-y-1">
+                {features.slice(0, 3).map((feature, index) => (
+                  <li key={index} className="flex items-start gap-1.5">
+                    <span className="text-[hsl(var(--brand))] mt-0.5">•</span>
+                    <span className="line-clamp-1">{feature}</span>
+                  </li>
+                ))}
+                {features.length > 3 && (
+                  <li className="text-[hsl(var(--brand))] font-medium">
+                    +{features.length - 3} more features
+                  </li>
+                )}
+              </ul>
             </div>
           )}
 

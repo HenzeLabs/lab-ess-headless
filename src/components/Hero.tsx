@@ -40,7 +40,7 @@ const Hero: React.FC<HeroProps> = ({
 
   return (
     <section
-      className={`relative isolate flex flex-col items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top_left,rgba(88,45,159,0.14),transparent_55%),radial-gradient(circle_at_bottom_right,rgba(255,148,74,0.16),transparent_60%)] ${layout.section} text-center`}
+      className={`relative isolate flex flex-col items-center justify-center overflow-hidden ${layout.section} text-center`}
       style={{ minHeight: '70vh' }}
       data-test-id="hero-section"
     >
@@ -70,22 +70,18 @@ const Hero: React.FC<HeroProps> = ({
           />
         )
       )}
-      {hasMedia && (
-        <div
-          className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(68,24,123,0.82),transparent_65%),radial-gradient(circle_at_bottom_right,rgba(255,119,44,0.75),transparent_60%)]"
-          aria-hidden="true"
-        />
-      )}
       <div
         className={`relative z-10 ${layout.container} flex flex-col items-center justify-center gap-8 md:gap-10`}
       >
-        <h1
-          className={`text-balance max-w-3xl ${textStyles.h1} drop-shadow-2xl ${
-            hasMedia ? 'text-white' : ''
-          }`}
-        >
-          {title}
-        </h1>
+        <div className={hasMedia ? 'bg-[hsl(var(--brand))]/75 backdrop-blur-sm rounded-3xl px-12 py-8 border-2 border-white/20' : ''}>
+          <h1
+            className={`text-balance max-w-3xl ${textStyles.h1} drop-shadow-2xl ${
+              hasMedia ? 'text-white' : ''
+            }`}
+          >
+            {title}
+          </h1>
+        </div>
         {(ctaText && ctaHref) || (ctaSecondaryText && ctaSecondaryHref) ? (
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
             {ctaText && ctaHref && (

@@ -5,87 +5,84 @@ import {
   SparklesIcon,
 } from '@heroicons/react/24/outline';
 
-import { buttonStyles, textStyles } from '@/lib/ui';
 
 const signals = [
   {
     icon: ShieldCheckIcon,
-    title: 'Certified & Calibrated',
+    title: 'Quality Guaranteed',
     description:
-      'ISO 9001 processes with calibration certificates available on request.',
+      '1-year warranty on all lab equipment for your peace of mind.',
   },
   {
     icon: ClockIcon,
-    title: '48-Hour Support SLA',
-    description: 'Lab onboarding specialists respond within two business days.',
+    title: 'Expert Support',
+    description: 'Our team is ready to help with your equipment needs.',
   },
   {
     icon: TruckIcon,
-    title: 'Fast, Insured Shipping',
-    description: 'Cold-chain packaging and proactive tracking on every order.',
+    title: 'Free Shipping',
+    description: 'Free delivery on orders over $300 to keep costs down.',
   },
   {
     icon: SparklesIcon,
-    title: '2-Year Equipment Warranty',
-    description: 'Coverage extends across parts, labor, and onsite servicing.',
+    title: 'Trusted by Professionals',
+    description: 'Used by leading labs, clinics, and universities nationwide.',
   },
 ];
 
 export default function TrustSignals() {
   return (
-    <section className="bg-[hsl(var(--bg))]">
-      <div className="rounded-lg border border-[hsl(var(--border))]/60 bg-[hsl(var(--surface))]">
-        <div className="flex flex-col gap-8 p-8 md:p-10">
-          <div className="max-w-2xl space-y-4">
-            <span className="inline-flex items-center gap-2 rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--muted))] px-4 py-2 text-xs font-semibold uppercase tracking-wider text-heading/80">
-              Trusted Lab Partner
-            </span>
-            <div>
-              <h2 className={`${textStyles.heading} text-heading`}>
-                Rock-solid guarantees on every order.
-              </h2>
-              <p className="mt-3 text-base text-body/80">
-                From compliance paperwork to white-glove installs, our team
-                keeps your workflow running without surprises.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <a
-                href="/support/warranty"
-                className={`${buttonStyles.primary} px-5 py-2`}
-              >
-                Explore warranty
-              </a>
-              <a
-                href="/support/shipping"
-                className={`${buttonStyles.outline} px-5 py-2`}
-              >
-                Shipping details
-              </a>
-            </div>
-          </div>
+    <section className="relative overflow-hidden bg-gradient-to-br from-[hsl(var(--muted))] via-white to-[hsl(var(--muted))] rounded-2xl border-2 border-border/50 shadow-lg p-8 md:p-10">
+      {/* Background decoration */}
+      <div
+        className="absolute inset-0 opacity-[0.02]"
+        style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, hsl(var(--brand)) 1px, transparent 0)', backgroundSize: '30px 30px' }}
+      />
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {signals.map((signal) => {
-              const Icon = signal.icon;
-              return (
-                <div
-                  key={signal.title}
-                  className="rounded-lg border border-[hsl(var(--border))]/60 bg-[hsl(var(--surface))] p-6"
-                >
-                  <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[hsl(var(--brand))]/12 text-[hsl(var(--brand))]">
+      <div className="relative z-10">
+        <div className="max-w-2xl space-y-3 mb-8">
+          <div className="inline-flex items-center gap-2 rounded-full bg-[hsl(var(--brand))]/10 px-4 py-1.5 border border-[hsl(var(--brand))]/20">
+            <svg className="w-4 h-4 text-[hsl(var(--brand))]" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            <span className="text-xs font-semibold uppercase tracking-wider text-[hsl(var(--brand))]">
+              Why Choose Us
+            </span>
+          </div>
+          <div>
+            <h2 className="text-2xl md:text-3xl font-bold text-[hsl(var(--ink))] mb-2">
+              Quality you can trust
+            </h2>
+            <p className="text-base text-[hsl(var(--body))]">
+              We're committed to providing the best lab equipment and service experience.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {signals.map((signal) => {
+            const Icon = signal.icon;
+            return (
+              <div
+                key={signal.title}
+                className="group bg-white rounded-xl border-2 border-border/50 p-5 hover:border-[hsl(var(--brand))]/30 hover:shadow-lg transition-all duration-300"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-[hsl(var(--brand))] to-[hsl(var(--brand-dark))] text-white rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300">
                     <Icon className="h-6 w-6" aria-hidden="true" />
                   </div>
-                  <h3 className="text-base font-semibold text-heading">
-                    {signal.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-body/75">
-                    {signal.description}
-                  </p>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-base font-bold text-[hsl(var(--ink))] mb-1">
+                      {signal.title}
+                    </h3>
+                    <p className="text-sm text-[hsl(var(--body))] leading-relaxed">
+                      {signal.description}
+                    </p>
+                  </div>
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

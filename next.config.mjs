@@ -115,6 +115,14 @@ const nextConfig = {
             value: '1; mode=block',
           },
           {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains; preload',
+          },
+          {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
@@ -147,6 +155,9 @@ const nextConfig = {
   // Webpack optimizations
   webpack: (config, { dev, isServer }) => {
     if (!dev && !isServer) {
+      // Enable minification
+      config.optimization.minimize = true;
+
       // Optimize bundle splitting
       config.optimization.splitChunks = {
         chunks: 'all',

@@ -29,19 +29,19 @@ export default function ProductHighlights() {
   ];
 
   return (
-    <div className="border-y border-border bg-muted/20 py-8 md:py-12">
-      <div className="grid gap-6 md:grid-cols-3 md:gap-8">
+    <div className="border-y border-border bg-muted/20 py-12 md:py-16 px-6">
+      <div className="grid gap-8 md:grid-cols-3 md:gap-10">
         {highlights.map((highlight, index) => {
           const Icon = highlight.icon;
           return (
             <div key={index} className="flex flex-col items-center text-center">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[hsl(var(--brand))]/10 ring-1 ring-[hsl(var(--brand))]/20">
+              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[hsl(var(--brand))]/10 ring-1 ring-[hsl(var(--brand))]/20">
                 <Icon
                   className="h-6 w-6 text-[hsl(var(--brand))]"
                   aria-hidden="true"
                 />
               </div>
-              <h3 className="mb-2 text-base font-semibold text-[hsl(var(--ink))]">
+              <h3 className="mb-3 text-base font-semibold text-[hsl(var(--ink))]">
                 {highlight.title}
               </h3>
               <p className="text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">

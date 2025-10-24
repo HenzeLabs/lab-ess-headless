@@ -17,12 +17,12 @@
   --surface-muted: 225 42% 97%;
   --surface-foreground: 229 42% 18%;
   --muted: 228 36% 95%;
-  --muted-foreground: 228 18% 42%;
+  --muted-foreground: 228 18% 38%; /* Darkened from 42% to 38% for WCAG AA contrast */
   --border: 227 24% 85%;
   --input: 226 22% 80%;
   --ring: 175 84% 26%; /* Same as brand for focus states */
   --ink: 229 42% 16%;
-  --body: 229 18% 36%;
+  --body: 229 18% 32%; /* Darkened from 36% to 32% for WCAG AA contrast */
   --card: 0 0% 100%;
   --card-foreground: 229 28% 20%;
   --secondary: 226 26% 92%;

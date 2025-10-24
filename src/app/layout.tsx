@@ -5,6 +5,8 @@ import SiteHeader from '@/components/layout/SiteHeader';
 import FooterServer from '@/components/FooterServer';
 import AnalyticsWrapper from '@/AnalyticsWrapper';
 import { ErrorBoundary } from '@/components/error-boundaries/ErrorBoundary';
+import { SearchProvider } from '@/components/providers/SearchProvider';
+import { CartProvider } from '@/components/providers/CartContext';
 
 // Montserrat for headings (H1-H3) - Optimized: 400, 700 only
 const heading = Montserrat({
@@ -97,14 +99,18 @@ export default function RootLayout({
           ></iframe>
         </noscript>
         <ErrorBoundary level="app" context="application">
-          <AnalyticsWrapper />
-          <ErrorBoundary level="component" context="header">
-            <SiteHeader />
-          </ErrorBoundary>
-          {children}
-          <ErrorBoundary level="component" context="footer">
-            <FooterServer />
-          </ErrorBoundary>
+          <CartProvider>
+            <SearchProvider>
+              <AnalyticsWrapper />
+              <ErrorBoundary level="component" context="header">
+                <SiteHeader />
+              </ErrorBoundary>
+              {children}
+              <ErrorBoundary level="component" context="footer">
+                <FooterServer />
+              </ErrorBoundary>
+            </SearchProvider>
+          </CartProvider>
         </ErrorBoundary>
       </body>
     </html>

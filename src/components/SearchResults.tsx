@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Filter, Grid, List } from 'lucide-react';
+import { Search, Filter, Grid3x3, List, Package, FolderOpen, ChevronRight } from 'lucide-react';
 import { useSearchContext } from '@/components/providers/SearchProvider';
 import type {
   SearchResults as SearchResultsType,
@@ -77,7 +77,6 @@ export default function SearchResults({
     }
   }, [initialQuery, type, sort, search]);
 
-  // Perform search when parameters change
   useEffect(() => {
     if (initialQuery) {
       performSearch();
@@ -91,7 +90,7 @@ export default function SearchResults({
       params.set('q', query.trim());
       params.set('type', type);
       params.set('sort', sort);
-      router.push(`/search?${params.toString()}`);
+      router.push('/search?' + params.toString());
     }
   };
 
@@ -99,9 +98,9 @@ export default function SearchResults({
     const params = new URLSearchParams(searchParams);
     params.set(key, value);
     if (key !== 'q') {
-      params.set('page', '1'); // Reset page when changing filters
+      params.set('page', '1');
     }
-    router.push(`/search?${params.toString()}`);
+    router.push('/search?' + params.toString());
   };
 
   const getTotalResults = () => {
@@ -114,52 +113,43 @@ export default function SearchResults({
     );
   };
 
+
   return (
-    <div className="space-y-6">
-      {/* Search Header */}
-      <div className="space-y-4">
-        <form onSubmit={handleNewSearch} className="flex gap-2">
+    <div className="space-y-8">
+      <div className="bg-white dark:bg-card rounded-2xl border-2 border-border/50 p-6 shadow-md">
+        <form onSubmit={handleNewSearch} className="flex gap-3">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[hsl(var(--brand))]" />
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search for products, collections..."
-              className="pl-10"
+              className="pl-12 h-12 text-base border-2 focus:border-[hsl(var(--brand))]"
             />
           </div>
-          <Button type="submit" disabled={isLoading}>
+          <Button 
+            type="submit" 
+            disabled={isLoading}
+            className="h-12 px-8 bg-[hsl(var(--brand))] hover:bg-[hsl(var(--brand-dark))] text-white font-semibold"
+          >
             Search
           </Button>
         </form>
+      </div>
 
-        {initialQuery && (
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold">
-              Search results for &quot;{initialQuery}&quot;
-            </h1>
-            {results && (
-              <p className="text-muted-foreground">
-                {getTotalResults()}{' '}
-                {getTotalResults() === 1 ? 'result' : 'results'}
-              </p>
-            )}
-          </div>
-        )}
-
-        {/* Filters */}
-        <div className="flex items-center gap-4 py-4 border-y">
+      <div className="flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-card rounded-xl border border-border/50 p-4">
+        <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4" />
-            <span className="text-sm font-medium">Filter:</span>
+            <Filter className="h-4 w-4 text-[hsl(var(--brand))]" />
+            <span className="text-sm font-semibold text-[hsl(var(--ink))]">Filters:</span>
           </div>
 
           <select
             value={type}
             onChange={(e) => handleFilterChange('type', e.target.value)}
-            className="px-3 py-2 border rounded-md"
+            className="px-4 py-2 border-2 border-border rounded-lg bg-background hover:border-[hsl(var(--brand))] focus:border-[hsl(var(--brand))] outline-none transition-colors text-sm font-medium"
           >
-            <option value="all">All</option>
+            <option value="all">All Results</option>
             <option value="products">Products</option>
             <option value="collections">Collections</option>
             <option value="pages">Pages</option>
@@ -169,7 +159,7 @@ export default function SearchResults({
           <select
             value={sort}
             onChange={(e) => handleFilterChange('sort', e.target.value)}
-            className="px-3 py-2 border rounded-md"
+            className="px-4 py-2 border-2 border-border rounded-lg bg-background hover:border-[hsl(var(--brand))] focus:border-[hsl(var(--brand))] outline-none transition-colors text-sm font-medium"
           >
             <option value="relevance">Relevance</option>
             <option value="price">Price</option>
@@ -177,173 +167,173 @@ export default function SearchResults({
             <option value="created">Newest</option>
             <option value="title">A-Z</option>
           </select>
+        </div>
 
-          <div className="ml-auto flex items-center gap-2">
-            <Button
-              variant={viewMode === 'grid' ? 'primary' : 'ghost'}
-              size="sm"
-              onClick={() => setViewMode('grid')}
-            >
-              <Grid className="h-4 w-4" />
-            </Button>
-            <Button
-              variant={viewMode === 'list' ? 'primary' : 'ghost'}
-              size="sm"
-              onClick={() => setViewMode('list')}
-            >
-              <List className="h-4 w-4" />
-            </Button>
-          </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant={viewMode === 'grid' ? 'primary' : 'ghost'}
+            size="sm"
+            onClick={() => setViewMode('grid')}
+            className={viewMode === 'grid' ? 'bg-[hsl(var(--brand))] text-white' : ''}
+          >
+            <Grid3x3 className="h-4 w-4" />
+          </Button>
+          <Button
+            variant={viewMode === 'list' ? 'primary' : 'ghost'}
+            size="sm"
+            onClick={() => setViewMode('list')}
+            className={viewMode === 'list' ? 'bg-[hsl(var(--brand))] text-white' : ''}
+          >
+            <List className="h-4 w-4" />
+          </Button>
         </div>
       </div>
 
-      {/* Loading State */}
+      {initialQuery && results && !isLoading && (
+        <div className="flex items-center justify-between">
+          <p className="text-lg font-semibold text-[hsl(var(--ink))]">
+            {getTotalResults()} {getTotalResults() === 1 ? 'result' : 'results'} for "{initialQuery}"
+          </p>
+        </div>
+      )}
+
       {isLoading && (
-        <div className="flex items-center justify-center py-20">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="flex items-center justify-center py-32">
+          <div className="flex flex-col items-center gap-4">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-[hsl(var(--brand))]/20 border-t-[hsl(var(--brand))]"></div>
+            <p className="text-[hsl(var(--muted-foreground))] font-medium">Searching...</p>
+          </div>
         </div>
       )}
 
-      {/* Error State */}
       {error && (
-        <div className="text-center py-20">
-          <p className="text-destructive mb-4">{error}</p>
-          <Button onClick={performSearch}>Try Again</Button>
+        <div className="text-center py-20 bg-white dark:bg-card rounded-2xl border-2 border-destructive/20">
+          <p className="text-destructive mb-4 font-semibold text-lg">{error}</p>
+          <Button onClick={performSearch} className="bg-[hsl(var(--brand))] hover:bg-[hsl(var(--brand-dark))]">
+            Try Again
+          </Button>
         </div>
       )}
 
-      {/* Results */}
       {!isLoading && !error && results && (
-        <div className="space-y-8">
-          {/* Products */}
+        <div className="space-y-10">
           {results.products && results.products.length > 0 && (
             <section>
-              <h2 className="text-xl font-semibold mb-4">Products</h2>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[hsl(var(--brand))]/10">
+                  <Package className="h-5 w-5 text-[hsl(var(--brand))]" />
+                </div>
+                <h2 className="text-2xl font-bold text-[hsl(var(--ink))]">
+                  Products ({results.products.length})
+                </h2>
+              </div>
               <div
                 className={
                   viewMode === 'grid'
-                    ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'
+                    ? 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6'
                     : 'space-y-4'
                 }
               >
                 {results.products.map((product: SearchProduct) => (
-                  <div
+                  <Link
                     key={product.id}
-                    className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                    href={'/products/' + product.handle}
+                    className={
+                      viewMode === 'grid'
+                        ? 'group bg-white dark:bg-card border-2 border-border/50 rounded-2xl overflow-hidden hover:shadow-xl hover:border-[hsl(var(--brand))]/30 transition-all duration-300'
+                        : 'group bg-white dark:bg-card border-2 border-border/50 rounded-2xl overflow-hidden hover:shadow-xl hover:border-[hsl(var(--brand))]/30 transition-all duration-300 flex flex-row'
+                    }
                   >
-                    <Link href={`/products/${product.handle}`}>
-                      {product.images.edges[0] && (
-                        <div className="aspect-square mb-3 overflow-hidden rounded-md">
-                          <Image
-                            src={product.images.edges[0].node.url}
-                            alt={
-                              product.images.edges[0].node.altText ||
-                              product.title
-                            }
-                            width={300}
-                            height={300}
-                            className="w-full h-full object-cover hover:scale-105 transition-transform"
-                          />
-                        </div>
-                      )}
-                      <h3 className="font-medium hover:text-primary">
+                    {product.images.edges[0] && (
+                      <div className={
+                        viewMode === 'grid'
+                          ? 'aspect-[4/3] overflow-hidden bg-gray-50 flex items-center justify-center p-4'
+                          : 'w-48 flex-shrink-0 overflow-hidden bg-gray-50 flex items-center justify-center p-4'
+                      }>
+                        <Image
+                          src={product.images.edges[0].node.url}
+                          alt={product.images.edges[0].node.altText || product.title}
+                          width={400}
+                          height={300}
+                          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    )}
+                    <div className={viewMode === 'grid' ? 'p-4 space-y-1.5' : 'p-6 space-y-2 flex-1'}>
+                      <h3 className={
+                        viewMode === 'grid'
+                          ? 'text-sm font-semibold text-[hsl(var(--ink))] group-hover:text-[hsl(var(--brand))] transition-colors line-clamp-2'
+                          : 'text-lg font-semibold text-[hsl(var(--ink))] group-hover:text-[hsl(var(--brand))] transition-colors line-clamp-1'
+                      }>
                         {product.title}
                       </h3>
-                      {product.priceRange && (
-                        <p className="text-sm text-muted-foreground mt-1">
-                          ${product.priceRange.minVariantPrice.amount}
-                          {product.priceRange.minVariantPrice.amount !==
-                            product.priceRange.maxVariantPrice.amount &&
-                            ` - $${product.priceRange.maxVariantPrice.amount}`}
+                      {product.vendor && (
+                        <p className={viewMode === 'grid' ? 'text-xs text-[hsl(var(--muted-foreground))]' : 'text-sm text-[hsl(var(--muted-foreground))]'}>
+                          {product.vendor}
                         </p>
                       )}
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {product.vendor}
-                      </p>
-                    </Link>
-                  </div>
+                      {product.priceRange && (
+                        <p className={viewMode === 'grid' ? 'text-base font-bold text-[hsl(var(--brand))]' : 'text-xl font-bold text-[hsl(var(--brand))]'}>
+                          ${parseFloat(product.priceRange.minVariantPrice.amount).toFixed(2)}
+                          {product.priceRange.minVariantPrice.amount !== product.priceRange.maxVariantPrice.amount &&
+                            ' - $' + parseFloat(product.priceRange.maxVariantPrice.amount).toFixed(2)}
+                        </p>
+                      )}
+                    </div>
+                  </Link>
                 ))}
               </div>
             </section>
           )}
 
-          {/* Collections */}
           {results.collections && results.collections.length > 0 && (
             <section>
-              <h2 className="text-xl font-semibold mb-4">Collections</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[hsl(var(--brand))]/10">
+                  <FolderOpen className="h-5 w-5 text-[hsl(var(--brand))]" />
+                </div>
+                <h2 className="text-2xl font-bold text-[hsl(var(--ink))]">
+                  Collections ({results.collections.length})
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {results.collections.map((collection) => (
-                  <a
+                  <Link
                     key={collection.id}
-                    href={`/collections/${collection.handle}`}
-                    className="group block p-4 border rounded-lg hover:shadow-md transition-shadow"
+                    href={'/collections/' + collection.handle}
+                    className="group bg-white dark:bg-card border-2 border-border/50 rounded-2xl p-6 hover:shadow-xl hover:border-[hsl(var(--brand))]/30 transition-all duration-300"
                   >
-                    <h3 className="font-medium group-hover:text-primary">
+                    <h3 className="font-bold text-lg text-[hsl(var(--ink))] group-hover:text-[hsl(var(--brand))] transition-colors mb-2">
                       {collection.title}
                     </h3>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {collection.description}
-                    </p>
-                  </a>
+                    {collection.description && (
+                      <p className="text-sm text-[hsl(var(--muted-foreground))] line-clamp-3 mb-3">
+                        {collection.description.replace(/<[^>]*>/g, '').substring(0, 200)}
+                      </p>
+                    )}
+                    <div className="flex items-center gap-1 text-[hsl(var(--brand))] font-semibold text-sm">
+                      View Collection <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </Link>
                 ))}
               </div>
             </section>
           )}
 
-          {/* Pages */}
-          {results.pages && results.pages.length > 0 && (
-            <section>
-              <h2 className="text-xl font-semibold mb-4">Pages</h2>
-              <div className="space-y-4">
-                {results.pages.map((page) => (
-                  <a
-                    key={page.id}
-                    href={`/pages/${page.handle}`}
-                    className="block p-4 border rounded-lg hover:shadow-md transition-shadow"
-                  >
-                    <h3 className="font-medium hover:text-primary">
-                      {page.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                      {page.body}
-                    </p>
-                  </a>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* Articles */}
-          {results.articles && results.articles.length > 0 && (
-            <section>
-              <h2 className="text-xl font-semibold mb-4">Articles</h2>
-              <div className="space-y-4">
-                {results.articles.map((article) => (
-                  <a
-                    key={article.id}
-                    href={`/blogs/${article.handle}`}
-                    className="block p-4 border rounded-lg hover:shadow-md transition-shadow"
-                  >
-                    <h3 className="font-medium hover:text-primary">
-                      {article.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                      {article.excerpt}
-                    </p>
-                  </a>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* No Results */}
           {getTotalResults() === 0 && (
-            <div className="text-center py-20">
-              <h2 className="text-xl font-semibold mb-2">No results found</h2>
-              <p className="text-muted-foreground mb-4">
-                Try searching with different keywords or check your spelling.
+            <div className="text-center py-20 bg-white dark:bg-card rounded-2xl border-2 border-border/50">
+              <div className="flex items-center justify-center w-20 h-20 rounded-full bg-[hsl(var(--brand))]/10 mx-auto mb-6">
+                <Search className="h-10 w-10 text-[hsl(var(--brand))]" />
+              </div>
+              <h2 className="text-2xl font-bold mb-3 text-[hsl(var(--ink))]">No results found</h2>
+              <p className="text-[hsl(var(--muted-foreground))] mb-6 max-w-md mx-auto">
+                We could not find any results for "{initialQuery}". Try searching with different keywords or check your spelling.
               </p>
-              <Button variant="outline" onClick={() => router.push('/')}>
+              <Button 
+                variant="outline" 
+                onClick={() => router.push('/')}
+                className="border-2 hover:border-[hsl(var(--brand))] hover:text-[hsl(var(--brand))]"
+              >
                 Continue Shopping
               </Button>
             </div>

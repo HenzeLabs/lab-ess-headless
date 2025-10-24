@@ -22,7 +22,7 @@ export default async function CollectionSwitcherWrapper() {
         'centrifuges',
         'microscope-cameras',
         'incubators-slide-preparation',
-        'measuring-testing-instruments',
+        'lab-equipmen',
       ].includes(collection.handle),
     );
 

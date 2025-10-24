@@ -147,8 +147,8 @@ const CollectionSwitcher: React.FC<CollectionSwitcherProps> = ({
                 className={`relative min-h-[48px] whitespace-nowrap rounded-full border px-6 py-3 text-sm font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[hsl(var(--brand))] sm:text-base transform hover:scale-105
                   ${
                     isActive
-                      ? 'border-transparent bg-[hsl(var(--brand))] text-white shadow-[0_12px_30px_-14px_rgba(72,45,226,0.9)] scale-105'
-                      : 'border-border/60 bg-white/85 text-[#4a4a67] hover:border-[hsl(var(--brand))]/40 hover:bg-white hover:text-[#1f1f3a] hover:shadow-lg'
+                      ? 'border-transparent bg-[hsl(var(--brand))] text-white shadow-lg scale-105'
+                      : 'border-border/60 bg-white/85 text-[hsl(var(--ink))] hover:border-[hsl(var(--brand))]/40 hover:bg-white hover:text-[hsl(var(--brand))] hover:shadow-lg'
                   }`}
               >
                 <span className="relative z-10 flex items-center gap-2">
@@ -176,7 +176,7 @@ const CollectionSwitcher: React.FC<CollectionSwitcherProps> = ({
                   type="button"
                   onClick={() => handleArrowClick('left')}
                   disabled={!canScrollLeft}
-                  className="absolute left-[-1.5rem] top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[hsl(var(--brand))] text-white shadow-[0_12px_30px_-14px_rgba(72,45,226,0.7)] transition hover:-translate-x-1 hover:bg-[hsl(var(--brand-dark))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:bg-muted disabled:text-muted-foreground md:flex"
+                  className="absolute left-[-1.5rem] top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[hsl(var(--brand))] text-white shadow-lg transition hover:-translate-x-1 hover:bg-[hsl(var(--brand-dark))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:bg-muted disabled:text-muted-foreground md:flex"
                 >
                   <span className="sr-only">Scroll left</span>
                   <svg
@@ -194,7 +194,7 @@ const CollectionSwitcher: React.FC<CollectionSwitcherProps> = ({
                   type="button"
                   onClick={() => handleArrowClick('right')}
                   disabled={!canScrollRight}
-                  className="absolute right-[-1.5rem] top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[hsl(var(--brand))] text-white shadow-[0_12px_30px_-14px_rgba(72,45,226,0.7)] transition hover:translate-x-1 hover:bg-[hsl(var(--brand-dark))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:bg-muted disabled:text-muted-foreground md:flex"
+                  className="absolute right-[-1.5rem] top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[hsl(var(--brand))] text-white shadow-lg transition hover:translate-x-1 hover:bg-[hsl(var(--brand-dark))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:bg-muted disabled:text-muted-foreground md:flex"
                 >
                   <span className="sr-only">Scroll right</span>
                   <svg

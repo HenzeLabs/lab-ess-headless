@@ -1,8 +1,9 @@
 'use client';
-import { trackAddToCart } from '@/lib/analytics';
 import React, { useState, useTransition } from 'react';
 import TrustBar from '@/components/product/TrustBar';
 import { buttonStyles, textStyles } from '@/lib/ui';
+import { trackAddToCart } from '@/lib/analytics';
+import { useCartContext } from '@/components/providers/CartContext';
 
 type Variant = {
   id: string;
@@ -32,13 +33,13 @@ type ProductInfoPanelProps = {
 };
 
 export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
-  const [showDescription, setShowDescription] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState<string | undefined>(
     product.variants?.edges?.[0]?.node.id,
   );
   const [isPending, startTransition] = useTransition();
   const [feedback, setFeedback] = useState<string | null>(null);
   const [isError, setIsError] = useState(false);
+  const { cartId, updateCartState } = useCartContext();
   const variants = product.variants?.edges?.map((edge) => edge.node) ?? [];
 
   // Extract brand from metafields
@@ -73,21 +74,48 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
   const currentVariantTitle = selectedVariantData?.title ?? null;
 
   const handleAddToCart = () => {
-    if (!selectedVariant) return;
+    if (!selectedVariant) {
+      return;
+    }
+
     setFeedback(null);
     setIsError(false);
     startTransition(async () => {
       try {
-        await fetch('/api/cart', {
+        const requestBody = {
+          cartId: cartId ?? undefined,
+          lines: [
+            {
+              merchandiseId: selectedVariant,
+              quantity: 1,
+            },
+          ],
+        };
+
+        const response = await fetch('/api/cart', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({
-            variantId: selectedVariant,
-            quantity: 1,
-          }),
+          body: JSON.stringify(requestBody),
         });
-        // Signal other parts of the app (e.g., header) to refresh cart count
-        window.dispatchEvent(new CustomEvent('cart:updated'));
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to add to cart');
+        }
+
+        const data = await response.json();
+
+        // Check if cart was returned successfully
+        if (!data.cart) {
+          throw new Error('Cart not created or updated');
+        }
+
+        // Update the cart state in the provider with the fresh data from POST
+        // We do NOT fire the 'cart:updated' event here because that would trigger
+        // a GET /api/cart which might return stale cached data and overwrite our fresh data.
+        // The updateCartState call already updates all consumers via React context.
+        updateCartState(data.cart);
+
         trackAddToCart({
           id: product.id,
           name: product.title,
@@ -98,10 +126,11 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
           brand,
           variant: currentVariantTitle,
         });
+
         setFeedback('Added to cart successfully!');
         setIsError(false);
       } catch (e) {
-        setFeedback('Error adding to cart');
+        setFeedback(e instanceof Error ? e.message : 'Error adding to cart');
         setIsError(true);
       }
     });
@@ -110,10 +139,10 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
   return (
     <>
       {/* Desktop/Tablet Layout */}
-      <div className="sticky top-8 flex flex-col space-y-6">
+      <div className="sticky top-8 flex flex-col space-y-8">
         {/* Hero Section: Title + Tagline */}
-        <div className="space-y-4">
-          <div className="space-y-2">
+        <div className="space-y-5">
+          <div className="space-y-3">
             <h1
               className={`${textStyles.h1} leading-tight`}
               data-test-id="product-title"
@@ -162,7 +191,7 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
 
         {/* Variant Selector - Only show if product has multiple variants */}
         {hasMultipleVariants && (
-          <div className="space-y-3">
+          <div className="space-y-4">
             <label
               htmlFor="variant-select"
               className="text-sm font-semibold text-[hsl(var(--ink))]"
@@ -202,7 +231,7 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
         )}
 
         {/* Add to Cart Button (Desktop) */}
-        <div className="space-y-4">
+        <div className="space-y-5">
           <button
             type="button"
             className={`${buttonStyles.primary} w-full py-4 text-base font-bold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all`}
@@ -254,59 +283,6 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
 
         {/* Trust Bar */}
         <TrustBar />
-
-        {/* Collapsible Product Description */}
-        <div className="space-y-3">
-          <button
-            type="button"
-            className="flex w-full items-center justify-between rounded-xl border-2 border-border bg-background px-5 py-4 text-sm font-semibold text-foreground shadow-sm transition-all hover:border-[hsl(var(--brand))]/50 hover:bg-muted/30 focus:border-[hsl(var(--brand))] focus:outline-none focus:ring-4 focus:ring-[hsl(var(--brand))]/10"
-            onClick={() => setShowDescription((v) => !v)}
-            aria-expanded={showDescription}
-            aria-controls="product-description-panel"
-          >
-            <span className="flex items-center gap-2">
-              <svg
-                className="h-5 w-5 text-[hsl(var(--brand))]"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-              Product Description
-            </span>
-            <svg
-              className={`h-5 w-5 transition-transform ${
-                showDescription ? 'rotate-180' : ''
-              }`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </button>
-          {showDescription && (
-            <div
-              id="product-description-panel"
-              className="rounded-xl border border-border/50 bg-muted/20 px-5 py-4 text-sm leading-relaxed text-[hsl(var(--ink))]"
-              dangerouslySetInnerHTML={{
-                __html: product.descriptionHtml ?? '',
-              }}
-              data-test-id="product-description"
-            />
-          )}
-        </div>
       </div>
 
       {/* Sticky Mobile CTA */}

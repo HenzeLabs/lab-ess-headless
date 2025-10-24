@@ -151,7 +151,6 @@ export const SEARCH_PAGES = `
           bodySummary
           createdAt
           updatedAt
-          url
         }
       }
     }
@@ -187,7 +186,6 @@ export const SEARCH_ARTICLES = `
           author {
             firstName
             lastName
-            displayName
           }
           blog {
             id
@@ -195,7 +193,6 @@ export const SEARCH_ARTICLES = `
             handle
           }
           tags
-          url
         }
       }
     }
@@ -206,7 +203,6 @@ export const PREDICTIVE_SEARCH = `
   query predictiveSearch($query: String!, $limit: Int) {
     predictiveSearch(query: $query, limit: $limit) {
       queries {
-        id
         text
         styledText
       }
@@ -435,11 +431,10 @@ export const SEARCH_ALL = `
           bodySummary
           createdAt
           updatedAt
-          url
         }
       }
     }
-    
+
     articles(query: $query, first: 5) {
       edges {
         node {
@@ -460,7 +455,6 @@ export const SEARCH_ALL = `
           author {
             firstName
             lastName
-            displayName
           }
           blog {
             id
@@ -468,7 +462,6 @@ export const SEARCH_ALL = `
             handle
           }
           tags
-          url
         }
       }
     }

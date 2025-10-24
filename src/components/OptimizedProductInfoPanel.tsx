@@ -1,7 +1,8 @@
 'use client';
-import { trackAddToCart } from '@/lib/analytics';
 import React, { useState, useTransition, useOptimistic } from 'react';
 import { buttonStyles, textStyles } from '@/lib/ui';
+import { trackAddToCart } from '@/lib/analytics';
+import { useCartContext } from '@/components/providers/CartContext';
 
 type Variant = {
   id: string;
@@ -37,6 +38,7 @@ export default function OptimizedProductInfoPanel({
     product.variants?.edges?.[0]?.node.id,
   );
   const [isPending, startTransition] = useTransition();
+  const { cartId, updateCartState } = useCartContext();
 
   // Optimistic UI state for instant feedback
   const [optimisticState, setOptimisticState] = useOptimistic(
@@ -61,30 +63,47 @@ export default function OptimizedProductInfoPanel({
     // INSTANT FEEDBACK: Update UI immediately (INP < 50ms)
     setOptimisticState({ status: 'adding', message: 'Adding to cart...' });
 
-    // Track analytics in parallel (non-blocking)
-    trackAddToCart({
-      id: product.id,
-      name: product.title,
-      price: currentPrice,
-      currency: currentCurrency,
-      quantity: 1,
-      category: product.tags?.[0] ?? null,
-      brand: product.metafields?.find((f) => f.key === 'brand')?.value ?? null,
-      variant: selectedVariantData?.title ?? null,
-    });
-
     startTransition(async () => {
       try {
         const response = await fetch('/api/cart', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            variantId: selectedVariant,
-            quantity: 1,
+            cartId: cartId ?? undefined,
+            lines: [
+              {
+                merchandiseId: selectedVariant,
+                quantity: 1,
+              },
+            ],
           }),
         });
 
-        if (!response.ok) throw new Error('Failed to add to cart');
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => null);
+          throw new Error(
+            errorData?.error ?? 'Failed to add to cart. Please retry.',
+          );
+        }
+
+        const data = await response.json();
+        if (!data.cart) {
+          throw new Error('Cart response missing; please retry.');
+        }
+
+        updateCartState(data.cart);
+        window.dispatchEvent(new CustomEvent('cart:updated'));
+
+        trackAddToCart({
+          id: product.id,
+          name: product.title,
+          price: currentPrice,
+          currency: currentCurrency,
+          quantity: 1,
+          category: product.tags?.[0] ?? null,
+          brand: product.metafields?.find((f) => f.key === 'brand')?.value ?? null,
+          variant: selectedVariantData?.title ?? null,
+        });
 
         // SUCCESS: Show confirmation for 2 seconds
         setOptimisticState({ status: 'success', message: '✓ Added to cart!' });

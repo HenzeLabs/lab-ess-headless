@@ -89,8 +89,8 @@ export default async function FeaturedHeroProduct({
   const plainDescription = stripHtml(product.descriptionHtml ?? '').trim();
 
   const descriptionText = plainDescription
-    ? plainDescription.length > 220
-      ? `${plainDescription.slice(0, plainDescription.lastIndexOf(' ', 220))}…`
+    ? plainDescription.length > 215
+      ? `${plainDescription.slice(0, plainDescription.lastIndexOf(' ', 215))}…`
       : plainDescription
     : null;
 
@@ -109,61 +109,124 @@ export default async function FeaturedHeroProduct({
   const priceCurrency = product.priceRange?.minVariantPrice?.currencyCode;
 
   return (
-    <section className="relative isolate overflow-hidden bg-[radial-gradient(circle_at_top_left,hsl(var(--brand)_/_0.12),transparent_60%),radial-gradient(circle_at_bottom_right,hsl(var(--accent)_/_0.1),transparent_55%)] px-4 py-20 sm:py-24">
+    <section className={`relative isolate overflow-hidden bg-gradient-to-br from-[hsl(var(--muted))] via-white to-[hsl(var(--muted))] ${layout.section}`}>
+      {/* Animated background elements */}
       <div
-        className="absolute inset-0 -z-10 bg-[linear-gradient(160deg,rgba(9,12,40,0.85)0%,rgba(9,13,46,0.55)45%,rgba(9,12,40,0.82)100%)]"
+        className="absolute inset-0 -z-10 opacity-[0.03]"
+        style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, hsl(var(--brand)) 1px, transparent 0)', backgroundSize: '40px 40px' }}
         aria-hidden="true"
       />
-      <div className="absolute inset-0 -z-5 opacity-40">
-        <div className="absolute -left-12 top-10 h-40 w-40 rounded-full bg-white/20 blur-3xl" />
-        <div className="absolute bottom-8 right-0 h-56 w-56 rounded-full bg-[hsl(var(--accent))]/30 blur-3xl" />
-      </div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-[hsl(var(--brand))]/5 rounded-full blur-3xl" aria-hidden="true" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[hsl(var(--accent))]/5 rounded-full blur-3xl" aria-hidden="true" />
 
-      <div className={`${layout.container} relative mx-auto max-w-[1200px]`}>
-        <div className="relative grid items-center gap-12 overflow-hidden rounded-[32px] border border-white/15 bg-white/90 p-10 shadow-[0_45px_95px_-48px_rgba(6,11,40,0.9)] backdrop-blur-xl lg:grid-cols-[1.15fr_0.85fr] lg:p-14">
-          <div
-            className="pointer-events-none absolute -top-16 left-1/2 h-44 w-44 -translate-x-1/2 rounded-full bg-white/18 blur-[90px]"
-            aria-hidden="true"
-          />
-          <div
-            className="pointer-events-none absolute bottom-0 right-0 h-36 w-36 translate-x-12 translate-y-12 rounded-full bg-[hsl(var(--brand))]/20 blur-[70px]"
-            aria-hidden="true"
-          />
-
-          <div className="relative z-10 space-y-6 text-[hsl(var(--ink))]">
-            <span className="inline-flex items-center rounded-full bg-[hsl(var(--brand))]/15 px-4 py-1 text-sm font-semibold uppercase tracking-wide text-[hsl(var(--brand))]">
+      <div className={`${layout.container} relative mx-auto max-w-[1400px]`}>
+        {/* Section Header */}
+        <div className="text-center mb-12 space-y-4">
+          <div className="inline-flex items-center gap-2 rounded-full bg-[hsl(var(--brand))]/10 px-5 py-2 border border-[hsl(var(--brand))]/20">
+            <svg className="w-5 h-5 text-[hsl(var(--brand))]" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+            <span className="text-sm font-semibold uppercase tracking-wider text-[hsl(var(--brand))]">
               {badgeLabel}
             </span>
-            <h2 className="text-balance text-4xl font-semibold leading-tight sm:text-5xl">
-              {product.title}
-            </h2>
-            {priceAmount ? (
-              <p className="text-lg font-semibold text-[hsl(var(--brand))]">
-                {priceAmount} {priceCurrency}
-              </p>
-            ) : null}
-            {supportingCopy ? (
-              <p className="max-w-xl text-base text-[hsl(var(--body))] sm:text-lg">
-                {supportingCopy}
-              </p>
-            ) : null}
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold text-[hsl(var(--ink))]">
+            Product Spotlight
+          </h2>
+        </div>
 
-            <div className="flex flex-wrap gap-4 pt-4">
+        <div className="relative grid items-center gap-10 overflow-hidden rounded-3xl border-2 border-border/50 bg-white p-8 md:p-12 lg:p-16 shadow-[0_20px_70px_-20px_rgba(15,23,42,0.15)] lg:grid-cols-[1fr_1fr]">
+          {/* Decorative corner elements */}
+          <div className="absolute top-0 left-0 w-24 h-24 border-t-4 border-l-4 border-[hsl(var(--brand))]/10 rounded-tl-3xl"></div>
+          <div className="absolute bottom-0 right-0 w-24 h-24 border-b-4 border-r-4 border-[hsl(var(--brand))]/10 rounded-br-3xl"></div>
+
+          {/* Glowing orbs */}
+          <div className="pointer-events-none absolute -top-20 right-20 h-40 w-40 rounded-full bg-[hsl(var(--brand))]/10 blur-3xl" aria-hidden="true" />
+          <div className="pointer-events-none absolute -bottom-20 left-20 h-40 w-40 rounded-full bg-[hsl(var(--accent))]/10 blur-3xl" aria-hidden="true" />
+
+          {/* Product Image */}
+          <div className="relative z-10 order-2 lg:order-1">
+            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-50 to-white border-2 border-border/30 shadow-xl transition-all duration-500 hover:shadow-2xl hover:border-[hsl(var(--brand))]/30">
+              {/* Shine effect on hover */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/0 to-transparent group-hover:via-white/20 transition-all duration-700 -translate-x-full group-hover:translate-x-full"></div>
+
+              <div className="aspect-square flex items-center justify-center p-8 md:p-12">
+                <Image
+                  src={product.featuredImage?.url ?? '/images/default-product.jpg'}
+                  alt={product.featuredImage?.altText ?? product.title}
+                  width={640}
+                  height={640}
+                  className="relative z-10 w-full h-full object-contain transition-all duration-500 ease-out group-hover:scale-105"
+                  priority
+                  fetchPriority="high"
+                  sizes="(min-width: 1024px) 640px, 90vw"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Product Details */}
+          <div className="relative z-10 space-y-6 text-[hsl(var(--ink))] order-1 lg:order-2">
+            <div className="space-y-4">
+              <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight text-[hsl(var(--ink))]">
+                {product.title}
+              </h3>
+
+              {priceAmount ? (
+                <div className="inline-flex items-center gap-2 bg-[hsl(var(--brand))]/10 border-2 border-[hsl(var(--brand))]/20 rounded-xl px-5 py-2.5">
+                  <svg className="w-5 h-5 text-[hsl(var(--brand))]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="text-2xl font-bold text-[hsl(var(--brand))]">
+                    ${priceAmount}
+                  </span>
+                  {priceCurrency && priceCurrency !== 'USD' ? (
+                    <span className="text-sm text-[hsl(var(--muted-foreground))]">{priceCurrency}</span>
+                  ) : null}
+                </div>
+              ) : null}
+
+              {supportingCopy ? (
+                <p className="text-base md:text-lg text-[hsl(var(--body))] leading-relaxed">
+                  {supportingCopy}
+                </p>
+              ) : null}
+            </div>
+
+            {/* Feature highlights */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+              <div className="flex items-start gap-3 bg-[hsl(var(--muted))] p-4 rounded-xl border border-border/50">
+                <div className="flex-shrink-0 w-10 h-10 bg-[hsl(var(--brand))]/10 rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-[hsl(var(--brand))]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-semibold text-sm text-[hsl(var(--ink))]">Free Shipping</p>
+                  <p className="text-xs text-[hsl(var(--muted-foreground))]">On orders $300+</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 bg-[hsl(var(--muted))] p-4 rounded-xl border border-border/50">
+                <div className="flex-shrink-0 w-10 h-10 bg-[hsl(var(--brand))]/10 rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-[hsl(var(--brand))]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-semibold text-sm text-[hsl(var(--ink))]">1-Year Warranty</p>
+                  <p className="text-xs text-[hsl(var(--muted-foreground))]">Full coverage</p>
+                </div>
+              </div>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <Link
                 href={primaryCtaHref}
-                className={`${buttonStyles.primary} px-8 py-3 text-base hover:scale-105 transition-all duration-300 shadow-[0_8px_25px_-8px_rgba(78,44,251,0.6)]`}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[hsl(var(--brand))] px-8 py-4 text-base font-bold text-white hover:text-white shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-[hsl(var(--brand))]/30 hover:scale-105 hover:bg-[hsl(var(--brand-dark))] group"
               >
                 Shop Now
-                <svg
-                  aria-hidden="true"
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.8}
-                  viewBox="0 0 24 24"
-                >
+                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24">
                   <path d="M5 12h14" />
                   <path d="M13 6l6 6-6 6" />
                 </svg>
@@ -171,15 +234,16 @@ export default async function FeaturedHeroProduct({
               {secondaryCtaHref ? (
                 <Link
                   href={secondaryCtaHref}
-                  className={`${buttonStyles.ghost} px-8 py-3 text-base hover:scale-105 transition-all duration-300 shadow-[0_8px_25px_-8px_rgba(255,255,255,0.2)]`}
+                  className={`${buttonStyles.outline} px-8 py-4 text-base font-semibold hover:scale-105 transition-all duration-300`}
                 >
                   Learn More
                 </Link>
               ) : null}
             </div>
 
+            {/* Lifestyle image/video if provided */}
             {lifestyleImage ? (
-              <div className="relative mt-8 overflow-hidden rounded-3xl border border-white/60 bg-white shadow-[0_30px_75px_-48px_rgba(19,23,64,0.55)]">
+              <div className="relative mt-8 overflow-hidden rounded-2xl border-2 border-border/50 bg-white shadow-lg">
                 {isLifestyleVideo ? (
                   <video
                     key={lifestyleImage}
@@ -204,27 +268,6 @@ export default async function FeaturedHeroProduct({
                 )}
               </div>
             ) : null}
-          </div>
-
-          <div className="relative z-10">
-            <div className="group relative overflow-hidden rounded-[28px] bg-white/95 shadow-[0_35px_85px_-45px_rgba(19,23,64,0.65)] transition duration-500">
-              <div
-                className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(76,102,255,0.12),transparent_65%)]"
-                aria-hidden="true"
-              />
-              <Image
-                src={
-                  product.featuredImage?.url ?? '/images/default-product.jpg'
-                }
-                alt={product.featuredImage?.altText ?? product.title}
-                width={640}
-                height={640}
-                className="relative z-10 w-full bg-white object-contain p-8 transition duration-500 ease-out group-hover:scale-[1.05] group-hover:rotate-[0.8deg]"
-                priority
-                fetchPriority="high"
-                sizes="(min-width: 1024px) 640px, 90vw"
-              />
-            </div>
           </div>
         </div>
       </div>

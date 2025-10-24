@@ -1,5 +1,5 @@
 export const layout = {
-  container: 'mx-auto w-full max-w-6xl px-6 md:px-10',
+  container: 'mx-auto w-full max-w-[1440px] px-6 md:px-10',
   section: 'py-12 md:py-16',
   center: 'flex items-center justify-center',
 };

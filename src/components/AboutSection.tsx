@@ -169,16 +169,16 @@ const AboutSection: React.FC<AboutSectionProps> = ({
       <div className="mx-auto max-w-[1440px] px-6 md:px-12 lg:px-20">
         <div
           ref={sectionRef}
-          className="mb-16 grid items-center gap-12 opacity-0 transition-all duration-700 ease-out [&.is-visible]:translate-y-0 [&.is-visible]:opacity-100 [&:not(.is-visible)]:translate-y-8 lg:grid-cols-2"
+          className="mb-16 opacity-0 transition-all duration-700 ease-out [&.is-visible]:translate-y-0 [&.is-visible]:opacity-100 [&:not(.is-visible)]:translate-y-8"
         >
-          <div className="space-y-6 text-center lg:text-left">
+          <div className="max-w-3xl mx-auto space-y-6 text-center">
             <h2 className={`${textStyles.h2} text-balance`}>{title}</h2>
-            <h3 className={`${textStyles.h3} text-balance`}>{subtitle}</h3>
+            <h3 className={`${textStyles.h3} text-balance text-[hsl(var(--brand))]`}>{subtitle}</h3>
             <p className="text-base leading-relaxed text-[hsl(var(--body))] sm:text-lg">
               {description}
             </p>
 
-            <div className="flex flex-wrap items-center justify-center gap-4 pt-4 lg:justify-start">
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
               <Link
                 href="/pages/about-lab-essentials"
                 className={`${buttonStyles.primary} px-8 py-3 text-base`}
@@ -191,33 +191,6 @@ const AboutSection: React.FC<AboutSectionProps> = ({
               >
                 Contact Support
               </Link>
-            </div>
-          </div>
-
-          <div className="relative flex items-center justify-center">
-            <div className="rounded-3xl bg-gradient-to-br from-[hsl(var(--bg))] to-[hsl(var(--muted))] border border-[hsl(var(--border))] p-12 shadow-2xl">
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-[hsl(var(--brand))] rounded-full mb-6">
-                  <svg
-                    className="w-8 h-8 text-white"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-[hsl(var(--ink))] mb-2">
-                  1,200+ Labs
-                </h3>
-                <p className="text-[hsl(var(--body))] max-w-xs">
-                  Trusted by research facilities, universities, and clinical
-                  labs worldwide
-                </p>
-              </div>
             </div>
           </div>
         </div>

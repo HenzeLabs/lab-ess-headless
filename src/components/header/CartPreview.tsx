@@ -2,14 +2,15 @@
  * CartPreview Component
  *
  * Handles cart icon display and live cart count updates.
- * Manages cart count state and provides real-time updates via API polling.
+ * Uses CartContext for real-time cart state synchronization.
  */
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart } from 'lucide-react';
+import { useCartContext } from '@/components/providers/CartContext';
 
 /**
  * Props interface for CartPreview component
@@ -59,91 +60,13 @@ export default function CartPreview({
   className = '',
   testId = 'nav-cart',
 }: CartPreviewProps) {
-  // Live cart count state with initial value from props
-  const [liveCartCount, setLiveCartCount] = useState<number>(initialCartCount);
+  // Get cart state from context - this automatically updates when cart changes
+  const { cart, isRefreshing } = useCartContext();
 
-  // Loading state for cart updates
-  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  // Calculate cart count from context
+  const liveCartCount = cart?.totalQuantity ?? initialCartCount ?? 0;
 
-  /**
-   * Fetches current cart count from API
-   * Handles errors gracefully and updates state
-   *
-   * @returns Promise that resolves when cart count is updated
-   */
-  const refreshCartCount = async (): Promise<void> => {
-    try {
-      setIsUpdating(true);
-
-      // Fetch cart data with no-cache to ensure fresh data
-      const response = await fetch('/api/cart', {
-        cache: 'no-store',
-        headers: {
-          'Cache-Control': 'no-cache',
-        },
-      });
-
-      // Handle non-OK responses
-      if (!response.ok) {
-        console.warn(
-          `Cart API returned ${response.status}: ${response.statusText}`,
-        );
-        return;
-      }
-
-      // Parse and validate response
-      const data = (await response.json()) as CartApiResponse;
-      const newCount = data.cart?.totalQuantity ?? 0;
-
-      // Update state with new count
-      setLiveCartCount(newCount);
-
-      // Log successful update in development
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`Cart count updated: ${newCount}`);
-      }
-    } catch (error) {
-      // Log error but don't break the UI
-      console.error('Failed to refresh cart count:', error);
-
-      // Could emit an event or show a toast notification here
-      // For now, we fail silently to maintain UX
-    } finally {
-      setIsUpdating(false);
-    }
-  };
-
-  /**
-   * Effect hook to set up cart update listeners
-   * Listens for custom 'cart:updated' events and refreshes count
-   */
-  useEffect(() => {
-    const handleCartUpdate = () => {
-      refreshCartCount();
-    };
-
-    // Listen for cart update events
-    window.addEventListener('cart:updated', handleCartUpdate);
-
-    // Cleanup event listener on unmount
-    return () => {
-      window.removeEventListener('cart:updated', handleCartUpdate);
-    };
-  }, []);
-
-  /**
-   * Effect hook for periodic cart count refresh
-   * Polls the cart API every 30 seconds to ensure accuracy
-   */
-  useEffect(() => {
-    // Set up periodic refresh interval (30 seconds)
-    const interval = setInterval(() => {
-      refreshCartCount();
-    }, 30000);
-
-    // Clear interval on unmount
-    return () => clearInterval(interval);
-  }, []);
+  // Note: Periodic refresh removed - CartContext handles all cart state updates
 
   /**
    * Generates accessible aria-label based on cart count
@@ -176,7 +99,7 @@ export default function CartPreview({
       asChild
       variant="ghost"
       className={`relative h-14 w-14 rounded-full hover:bg-[hsl(var(--brand))] hover:text-white transition-colors duration-200 ${className}`}
-      disabled={isUpdating}
+      disabled={isRefreshing}
     >
       <Link
         href="/cart"
@@ -187,7 +110,7 @@ export default function CartPreview({
         {/* Cart Icon */}
         <ShoppingCart
           className={`h-9 w-9 transition-transform duration-200 ${
-            isUpdating ? 'scale-95' : 'hover:scale-105'
+            isRefreshing ? 'scale-95' : 'hover:scale-105'
           }`}
         />
 
@@ -209,7 +132,7 @@ export default function CartPreview({
         )}
 
         {/* Loading indicator for updates */}
-        {isUpdating && (
+        {isRefreshing && (
           <div className="absolute inset-0 bg-black/10 rounded-full flex items-center justify-center">
             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
           </div>

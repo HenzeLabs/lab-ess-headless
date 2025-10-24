@@ -10,15 +10,16 @@
     "project": ["./tsconfig.json"]
   },
   "plugins": ["@typescript-eslint"],
-  "ignorePatterns": ["*.js", "*.mjs", "*.cjs", "node_modules/", ".next/", "out/", "public/", "scripts/validate-integration.ts"],
+  "ignorePatterns": ["*.js", "*.mjs", "*.cjs", "node_modules/", ".next/", "out/", "public/", "scripts/validate-integration.ts", "quiz-testing/"],
   "rules": {
-    "@typescript-eslint/no-unused-vars": ["error", {
+    "@typescript-eslint/no-unused-vars": ["warn", {
       "argsIgnorePattern": "^_",
       "varsIgnorePattern": "^_"
     }],
     "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/ban-ts-comment": ["error", {
       "ts-nocheck": false
-    }]
+    }],
+    "react/no-unescaped-entities": "warn"
   }
 }

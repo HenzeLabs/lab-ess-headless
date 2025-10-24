@@ -3,13 +3,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from './ui/button';
+import { Input } from './ui/input';
 import { useState, useEffect } from 'react';
 import type { MenuItem } from '@/lib/types';
-import { Search, User, ShoppingCart, X as _X } from 'lucide-react';
+import { Search, User, ShoppingCart, X } from 'lucide-react';
 import AnnouncementBar from '@/components/AnnouncementBar';
-import SearchModal from '@/components/SearchModal';
 import { buttonStyles } from '@/lib/ui';
-import { useCartContext } from '@/components/providers/CartContext';
 
 function extractHandle(url: string | undefined): string {
   if (!url) return '';
@@ -54,10 +53,7 @@ export default function Header({
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-
-  // Get live cart count from context instead of local state
-  const { cart } = useCartContext();
-  const liveCartCount = cart?.totalQuantity ?? cartItemCount ?? 0;
+  const [liveCartCount, setLiveCartCount] = useState<number>(cartItemCount);
 
   const menuItems = collections.map((item) => ({
     ...item,
@@ -79,6 +75,25 @@ export default function Header({
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Listen for cart updates and refresh the badge count from /api/cart
+  useEffect(() => {
+    async function refreshCount() {
+      try {
+        const res = await fetch('/api/cart', { cache: 'no-store' });
+        if (!res.ok) return;
+        const json = (await res.json()) as {
+          cart: { totalQuantity?: number } | null;
+        };
+        setLiveCartCount(json.cart?.totalQuantity ?? 0);
+      } catch {
+        // noop
+      }
+    }
+    const handler = () => refreshCount();
+    window.addEventListener('cart:updated', handler);
+    return () => window.removeEventListener('cart:updated', handler);
   }, []);
 
   const handleMouseEnter = (handle: string) => setActiveMenu(handle);
@@ -453,8 +468,28 @@ export default function Header({
         </div>
       </div>
 
-      {/* Search Modal */}
-      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+      {/* Search Overlay */}
+      {isSearchOpen && (
+        <div className="fixed inset-0 z-[100] bg-background/80 backdrop-blur-sm flex items-center justify-center">
+          <div className="relative w-full max-w-2xl p-4">
+            <Button
+              variant="ghost"
+              className="absolute top-4 right-4 text-foreground/70 hover:text-foreground"
+              onClick={() => setIsSearchOpen(false)}
+              aria-label="Close search"
+            >
+              <X className="h-8 w-8" />
+            </Button>
+            <form role="search">
+              <Input
+                inputSize="lg"
+                placeholder="Search for products..."
+                className="w-full text-2xl"
+              />
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
 }

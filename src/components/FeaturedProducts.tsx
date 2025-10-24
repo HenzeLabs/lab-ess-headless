@@ -7,6 +7,7 @@ import { HeartIcon, EyeIcon } from '@heroicons/react/24/outline';
 
 import { buttonStyles, layout, textStyles } from '@/lib/ui';
 import { trackAddToCart } from '@/lib/analytics';
+import { useCartContext } from '@/components/providers/CartContext';
 
 interface Product {
   id: string;
@@ -16,6 +17,7 @@ interface Product {
   compareAtPrice?: string;
   image: string;
   lifestyleImage?: string; // Added lifestyleImage
+  variantId?: string;
 }
 
 interface FeaturedProductsProps {
@@ -44,6 +46,71 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const productRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [isPending, startTransition] = useTransition();
+  const { cartId, updateCartState } = useCartContext();
+
+  const resolveVariantId = (product: Product): string | null => {
+    if (
+      product.variantId &&
+      product.variantId.startsWith('gid://shopify/ProductVariant/')
+    ) {
+      return product.variantId;
+    }
+    if (product.id?.startsWith('gid://shopify/ProductVariant/')) {
+      return product.id;
+    }
+    return null;
+  };
+
+  const quickAdd = async (
+    product: Product,
+    priceValue: number | null,
+    currencyCode: string | null,
+  ) => {
+    const merchandiseId = resolveVariantId(product);
+    if (!merchandiseId) {
+      throw new Error(
+        `Unable to add "${product.title}" to cart: missing variantId`,
+      );
+    }
+
+    const response = await fetch('/api/cart', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        cartId: cartId ?? undefined,
+        lines: [
+          {
+            merchandiseId,
+            quantity: 1,
+          },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      throw new Error(
+        errorData?.error ??
+          `Unable to add "${product.title}" to cart (status ${response.status})`,
+      );
+    }
+
+    const data = await response.json();
+    if (!data.cart) {
+      throw new Error('Cart not returned in response.');
+    }
+
+    updateCartState(data.cart);
+    window.dispatchEvent(new CustomEvent('cart:updated'));
+
+    trackAddToCart({
+      id: product.id,
+      name: product.title,
+      price: Number.isFinite(priceValue ?? NaN) ? priceValue ?? undefined : undefined,
+      quantity: 1,
+      currency: currencyCode ?? undefined,
+    });
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -178,30 +245,13 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
                               product.price.match(/([A-Z]{3})$/);
                             startTransition(async () => {
                               try {
-                                await fetch('/api/cart', {
-                                  method: 'POST',
-                                  headers: {
-                                    'content-type': 'application/json',
-                                  },
-                                  body: JSON.stringify({
-                                    variantId: product.id, // Assuming product.id is the variantId for simplicity here
-                                    quantity: 1,
-                                  }),
-                                });
-                                window.dispatchEvent(
-                                  new CustomEvent('cart:updated'),
-                                );
-                                trackAddToCart({
-                                  id: product.id,
-                                  name: product.title,
-                                  price: Number.isFinite(priceValue)
+                                await quickAdd(
+                                  product,
+                                  Number.isFinite(priceValue)
                                     ? priceValue
-                                    : undefined,
-                                  quantity: 1,
-                                  currency: currencyMatch
-                                    ? currencyMatch[1]
-                                    : undefined,
-                                });
+                                    : null,
+                                  currencyMatch ? currencyMatch[1] : null,
+                                );
                               } catch (e) {
                                 console.error('Error adding to cart:', e);
                               }
@@ -310,30 +360,13 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
                               product.price.match(/([A-Z]{3})$/);
                             startTransition(async () => {
                               try {
-                                await fetch('/api/cart', {
-                                  method: 'POST',
-                                  headers: {
-                                    'content-type': 'application/json',
-                                  },
-                                  body: JSON.stringify({
-                                    variantId: product.id, // Assuming product.id is the variantId for simplicity here
-                                    quantity: 1,
-                                  }),
-                                });
-                                window.dispatchEvent(
-                                  new CustomEvent('cart:updated'),
-                                );
-                                trackAddToCart({
-                                  id: product.id,
-                                  name: product.title,
-                                  price: Number.isFinite(priceValue)
+                                await quickAdd(
+                                  product,
+                                  Number.isFinite(priceValue)
                                     ? priceValue
-                                    : undefined,
-                                  quantity: 1,
-                                  currency: currencyMatch
-                                    ? currencyMatch[1]
-                                    : undefined,
-                                });
+                                    : null,
+                                  currencyMatch ? currencyMatch[1] : null,
+                                );
                               } catch (e) {
                                 console.error('Error adding to cart:', e);
                               }
