@@ -70,6 +70,16 @@ function pushMeta(event: string, payload: Record<string, unknown> = {}) {
   }
 }
 
+function pushReddit(event: string, payload: Record<string, unknown> = {}) {
+  if (typeof window === 'undefined') {
+    return;
+  }
+  const win = window as typeof window & { rdt?: (...args: unknown[]) => void };
+  if (win.rdt) {
+    win.rdt('track', event, payload);
+  }
+}
+
 export function trackViewItem(product: AnalyticsItemInput) {
   const items = [mapItem(product)];
   const currency = normaliseCurrency(product.currency);
@@ -86,6 +96,16 @@ export function trackViewItem(product: AnalyticsItemInput) {
     content_name: product.name,
     value: toNumber(product.price),
     currency,
+  });
+  pushReddit('ViewContent', {
+    itemCount: 1,
+    value: toNumber(product.price),
+    currency,
+    products: [{
+      id: product.id,
+      name: product.name,
+      category: product.category,
+    }],
   });
 }
 
@@ -142,9 +162,10 @@ export function trackViewCart(items: AnalyticsItemInput[]) {
 
 export function trackAddToCart(item: AnalyticsItemInput) {
   const currency = normaliseCurrency(item.currency);
+  const value = (toNumber(item.price) || 0) * (item.quantity ?? 1);
   pushDataLayer('add_to_cart', {
     currency,
-    value: (toNumber(item.price) || 0) * (item.quantity ?? 1),
+    value,
     items: [mapItem(item)],
   });
   pushTaboola('add_to_cart', {
@@ -157,8 +178,18 @@ export function trackAddToCart(item: AnalyticsItemInput) {
     content_type: 'product',
     content_ids: [item.id],
     content_name: item.name,
-    value: (toNumber(item.price) || 0) * (item.quantity ?? 1),
+    value,
     currency,
+  });
+  pushReddit('AddToCart', {
+    itemCount: item.quantity ?? 1,
+    value,
+    currency,
+    products: [{
+      id: item.id,
+      name: item.name,
+      category: item.category,
+    }],
   });
 }
 
@@ -216,6 +247,17 @@ export function trackPurchase(order: AnalyticsOrderInput) {
     value,
     currency,
   });
+  pushReddit('Purchase', {
+    transactionId: order.orderId,
+    value,
+    currency,
+    itemCount: order.items.reduce((sum, item) => sum + (item.quantity ?? 1), 0),
+    products: order.items.map((item) => ({
+      id: item.id,
+      name: item.name,
+      category: item.category,
+    })),
+  });
 }
 
 export function trackNewsletterSignup(email?: string) {
@@ -225,6 +267,9 @@ export function trackNewsletterSignup(email?: string) {
     email,
   });
   pushTaboola('newsletter_signup', {
+    email,
+  });
+  pushReddit('Lead', {
     email,
   });
 }
@@ -256,6 +301,7 @@ declare global {
   interface Window {
     dataLayer: Record<string, unknown>[];
     _tfa: Record<string, unknown>[];
+    rdt?: (...args: unknown[]) => void;
     __labAnalytics: LabAnalytics;
   }
 }

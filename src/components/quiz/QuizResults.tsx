@@ -40,9 +40,9 @@ export default function QuizResults({ products, onRestart }: QuizResultsProps) {
   const otherMatches = products.slice(1, 3);
 
   const getMatchQuality = (score: number) => {
-    if (score >= 0.8) return { text: 'Excellent Match', color: 'text-green-600', bgColor: 'bg-green-50', borderColor: 'border-green-200' };
-    if (score >= 0.6) return { text: 'Good Match', color: 'text-blue-600', bgColor: 'bg-blue-50', borderColor: 'border-blue-200' };
-    return { text: 'Fair Match', color: 'text-orange-600', bgColor: 'bg-orange-50', borderColor: 'border-orange-200' };
+    if (score >= 0.8) return { text: 'Excellent Match', color: 'text-[hsl(var(--brand))]', bgColor: 'bg-[hsl(var(--surface))]', borderColor: 'border-[hsl(var(--brand))]' };
+    if (score >= 0.6) return { text: 'Good Match', color: 'text-[hsl(var(--accent))]', bgColor: 'bg-[hsl(var(--surface))]', borderColor: 'border-[hsl(var(--accent))]' };
+    return { text: 'Fair Match', color: 'text-[hsl(var(--muted-foreground))]', bgColor: 'bg-[hsl(var(--surface))]', borderColor: 'border-[hsl(var(--border))]' };
   };
 
   const getMetafieldValue = (product: Product, key: string) => {
