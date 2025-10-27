@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import type { AnalyticsItemInput, AnalyticsOrderInput } from '../src/lib/types';
 
 interface NetworkRequest {
@@ -296,7 +296,6 @@ test.describe('GA4 Core Analytics Validation', () => {
 
 test.describe('Ad Platform Integration Validation', () => {
   test('validate Reddit Pixel on purchase', async ({ page }) => {
-    const redditCalls: any[] = [];
 
     // Mock Reddit pixel
     await page.addInitScript(() => {
