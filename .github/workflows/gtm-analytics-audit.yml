@@ -1,0 +1,44 @@
+name: GTM Analytics Audit
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  audit:
+    name: Run GTM Analytics Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run GTM Audit (Quick)
+        run: npm run check:gtm
+
+      - name: Run Full Audit (Optional)
+        if: always()
+        run: |
+          echo "Attempting full validation suite (requires Playwright browsers)..."
+          npx playwright install-deps || true
+          npm run audit:gtm || echo "Full audit optional; ignoring exit code."
+
+      - name: Upload Audit Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gtm-analytics-audit-results
+          path: |
+            reports/POST_REDDIT_VALIDATION_REPORT.md
+            docs/PRODUCTION_ANALYTICS_VALIDATION_REPORT.md
+            docs/GTM_AUDIT_SUMMARY.md
