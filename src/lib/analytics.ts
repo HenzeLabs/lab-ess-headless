@@ -97,10 +97,12 @@ export function trackViewItem(product: AnalyticsItemInput) {
     value: toNumber(product.price),
     currency,
   });
+  // Reddit Pixel requires value as float, never undefined
+  const redditPrice = parseFloat(String(toNumber(product.price))) || 0;
   pushReddit('ViewContent', {
     itemCount: 1,
-    value: toNumber(product.price),
-    currency,
+    value: redditPrice,
+    currency: currency || 'USD',
     products: [{
       id: product.id,
       name: product.name,
@@ -181,10 +183,12 @@ export function trackAddToCart(item: AnalyticsItemInput) {
     value,
     currency,
   });
+  // Reddit Pixel requires value as float, never undefined
+  const redditCartValue = parseFloat(String(value)) || 0;
   pushReddit('AddToCart', {
     itemCount: item.quantity ?? 1,
-    value,
-    currency,
+    value: redditCartValue,
+    currency: currency || 'USD',
     products: [{
       id: item.id,
       name: item.name,
@@ -247,10 +251,12 @@ export function trackPurchase(order: AnalyticsOrderInput) {
     value,
     currency,
   });
+  // Reddit Pixel requires value as float, never undefined
+  const redditValue = parseFloat(String(value)) || 0;
   pushReddit('Purchase', {
     transactionId: order.orderId,
-    value,
-    currency,
+    value: redditValue,
+    currency: currency || 'USD',
     itemCount: order.items.reduce((sum, item) => sum + (item.quantity ?? 1), 0),
     products: order.items.map((item) => ({
       id: item.id,
