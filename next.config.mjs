@@ -126,8 +126,8 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://cdn.shopify.com https://tagmanager.google.com https://www.clarity.ms https://cdn.taboola.com https://connect.facebook.net",
-              "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://region1.analytics.google.com https://*.clarity.ms https://cdn.shopify.com https://trc.taboola.com https://www.facebook.com",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://cdn.shopify.com https://tagmanager.google.com https://www.clarity.ms https://scripts.clarity.ms https://cdn.taboola.com https://trc.taboola.com https://connect.facebook.net https://www.redditstatic.com",
+              "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://region1.analytics.google.com https://*.clarity.ms https://cdn.shopify.com https://trc.taboola.com https://trc-events.taboola.com https://psb.taboola.com https://www.facebook.com",
               "img-src 'self' data: https: blob:",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://tagmanager.google.com",
               "font-src 'self' data: https://fonts.gstatic.com",
