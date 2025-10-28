@@ -87,7 +87,18 @@ export default function RootLayout({
         {/* Prefetch hero video for faster playback (low priority) */}
         <link rel="prefetch" href="/hero.mp4" as="video" type="video/mp4" />
 
-        {/* Note: GTM/GA4 scripts moved to AnalyticsWrapper with proper loading strategies */}
+        {/* GTM - Inline for immediate execution before React hydration */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','GTM-WNG6Z9ZD');
+            `,
+          }}
+        />
       </head>
       <body>
         <noscript>

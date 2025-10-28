@@ -1,9 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import Script from 'next/script';
-
-const GTM_ID = 'GTM-WNG6Z9ZD';
 
 export default function AnalyticsWrapper() {
   useEffect(() => {
@@ -112,21 +109,8 @@ export default function AnalyticsWrapper() {
 
   return (
     <>
-      {/* Google Tag Manager - GTM handles GA4, Taboola, Meta Pixel via Tag Manager */}
-      <Script
-        src={`https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`}
-        strategy="afterInteractive"
-      />
-
-      {/* GTM noscript fallback */}
-      <noscript>
-        <iframe
-          src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
-          height="0"
-          width="0"
-          style={{ display: 'none', visibility: 'hidden' }}
-        />
-      </noscript>
+      {/* GTM now loads inline in layout.tsx <head> for immediate execution */}
+      {/* This component initializes dataLayer and configures Consent Mode V2 */}
     </>
   );
 }
