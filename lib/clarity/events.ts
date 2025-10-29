@@ -45,7 +45,7 @@ export function initClarity() {
 
   // Load Clarity script
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (function (c: any, l: any, a: any, r: any, i: any, t: any, y: any) {
+  (function (c: any, l: any, a: any, r: any, i: any, t?: any, y?: any) {
     c[a] =
       c[a] ||
       // eslint-disable-next-line prefer-rest-params
