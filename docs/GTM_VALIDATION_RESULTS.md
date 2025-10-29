@@ -31,11 +31,13 @@ npm run check:gtm
 |-----------|--------|---------|
 | **GTM Container** | ✅ Active | GTM-WNG6Z9ZD |
 | **DataLayer** | ✅ Initialized | Before GTM loads |
-| **GA4** | ✅ Configured | G-QCSHJ4TDMY (via GTM) |
+| **GA4** | ⚠️ Needs Update | G-7NR2JG1EDP (Update in GTM Container) |
 | **Reddit Pixel** | ✅ Ready | Base script added to GTM |
 | **Taboola** | ✅ Active | Official tag |
 | **Meta Pixel** | ✅ Active | Via code + GTM |
 | **Microsoft Clarity** | ✅ Active | Custom + Official |
+
+> **⚠️ Action Required:** Update GA4 Config tag in GTM to use `G-7NR2JG1EDP`. See [GA4_ALIGNMENT_GUIDE.md](./GA4_ALIGNMENT_GUIDE.md) for step-by-step instructions.
 
 ---
 
