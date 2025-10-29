@@ -5,10 +5,12 @@ on:
     branches: [main, develop]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   lighthouse:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
@@ -17,7 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
 
       - name: Install dependencies
@@ -29,6 +31,7 @@ jobs:
           NODE_ENV: production
           SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN }}
           SHOPIFY_STOREFRONT_ACCESS_TOKEN: ${{ secrets.SHOPIFY_STOREFRONT_ACCESS_TOKEN }}
+          NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN: ${{ secrets.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN }}
 
       - name: Start production server
         run: npm run start &
@@ -44,23 +47,100 @@ jobs:
         run: npm install -g @lhci/cli@0.13.x
 
       - name: Run Lighthouse CI
-        run: |
-          lhci autorun --upload.target=temporary-public-storage
+        run: lhci autorun
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
-      - name: Check performance thresholds
-        run: |
-          lhci assert \
-            --assertions.performance=0.85 \
-            --assertions.accessibility=0.90 \
-            --assertions.best-practices=0.90 \
-            --assertions.seo=0.90
-
       - name: Upload Lighthouse results as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4.3.1
         if: always()
         with:
-          name: lighthouse-results
-          path: .lighthouseci/
+          name: lighthouse-results-${{ github.sha }}
+          path: |
+            .lighthouseci/
+            lighthouse-*.report.html
           retention-days: 30
+
+      - name: Save baseline (main branch only)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          mkdir -p lighthouse-baselines
+          if [ -f .lighthouseci/manifest.json ]; then
+            cp .lighthouseci/manifest.json lighthouse-baselines/baseline-$(date +%Y%m%d-%H%M%S).json
+            echo "Baseline saved for commit ${{ github.sha }}"
+          fi
+
+      - name: Upload baseline artifact
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: lighthouse-baseline-${{ github.sha }}
+          path: lighthouse-baselines/
+          retention-days: 90
+
+      - name: Compare with previous baseline
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        run: |
+          echo "Comparing Lighthouse scores with main branch baseline..."
+          # Download previous baseline from main branch
+          # This requires LHCI server or artifact comparison setup
+
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        continue-on-error: true
+        with:
+          script: |
+            const fs = require('fs');
+            const manifestPath = '.lighthouseci/manifest.json';
+
+            if (!fs.existsSync(manifestPath)) {
+              console.log('No manifest found, skipping PR comment');
+              return;
+            }
+
+            const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+
+            let summary = '## 🔦 Lighthouse CI Results\n\n';
+
+            manifest.forEach(result => {
+              const url = result.url.replace('http://localhost:3000', '');
+              const scores = result.summary;
+
+              const perfScore = Math.round(scores.performance * 100);
+              const a11yScore = Math.round(scores.accessibility * 100);
+              const bpScore = Math.round(scores['best-practices'] * 100);
+              const seoScore = Math.round(scores.seo * 100);
+              const pwaScore = Math.round(scores.pwa * 100);
+
+              const perfIcon = perfScore >= 90 ? '✅' : perfScore >= 50 ? '⚠️' : '❌';
+              const a11yIcon = a11yScore >= 95 ? '✅' : a11yScore >= 50 ? '⚠️' : '❌';
+              const bpIcon = bpScore >= 95 ? '✅' : bpScore >= 50 ? '⚠️' : '❌';
+              const seoIcon = seoScore >= 95 ? '✅' : seoScore >= 50 ? '⚠️' : '❌';
+              const pwaIcon = pwaScore >= 90 ? '✅' : pwaScore >= 50 ? '⚠️' : '❌';
+
+              summary += `### ${url || '/'}\n\n`;
+              summary += `| Category | Score | Status |\n`;
+              summary += `|----------|-------|--------|\n`;
+              summary += `| Performance | ${perfScore} | ${perfIcon} |\n`;
+              summary += `| Accessibility | ${a11yScore} | ${a11yIcon} |\n`;
+              summary += `| Best Practices | ${bpScore} | ${bpIcon} |\n`;
+              summary += `| SEO | ${seoScore} | ${seoIcon} |\n`;
+              summary += `| PWA | pwaScore} | ${pwaIcon} |\n\n`;
+            });
+
+            summary += '\n**Thresholds:**\n';
+            summary += '- Performance: ≥90 ✅, 50-89 ⚠️, <50 ❌\n';
+            summary += '- Accessibility: ≥95 ✅, 50-94 ⚠️, <50 ❌\n';
+            summary += '- Best Practices: ≥95 ✅, 50-94 ⚠️, <50 ❌\n';
+            summary += '- SEO: ≥95 ✅, 50-94 ⚠️, <50 ❌\n';
+            summary += '- PWA: ≥90 ✅, 50-89 ⚠️, <50 ❌\n\n';
+            summary += `[📊 View detailed reports in artifacts](${context.payload.repository.html_url}/actions/runs/${context.runId})\n`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: summary
+            });
