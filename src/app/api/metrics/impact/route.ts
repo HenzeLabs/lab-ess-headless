@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { measureConfigImpact } from '../../../../lib/ga4/metrics';
+// @ts-expect-error - lib is at project root
+import { measureConfigImpact } from '../../../../../lib/ga4/metrics';
 import { getAllConfig, ConfigRecord } from '@/lib/configStore';
 
 export async function GET(req: NextRequest) {

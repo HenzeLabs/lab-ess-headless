@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { fetchGA4Metrics } from '../../../../lib/ga4/metrics';
+// @ts-expect-error - lib is at project root
+import { fetchGA4Metrics } from '../../../../../lib/ga4/metrics';
 
 export async function GET(req: NextRequest) {
   try {
