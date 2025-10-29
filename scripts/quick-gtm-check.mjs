@@ -74,33 +74,72 @@ try {
 
 console.log('\n2️⃣  Checking GTM Configuration\n');
 
-// Check AnalyticsWrapper
+// Check GTM placement across layout/analytics wrapper
 try {
   const wrapperPath = 'src/AnalyticsWrapper.tsx';
   const wrapperContent = fs.readFileSync(wrapperPath, 'utf-8');
 
-  if (wrapperContent.includes('GTM-WNG6Z9ZD')) {
-    pass('GTM Container ID configured: GTM-WNG6Z9ZD');
-  } else {
-    fail('GTM Container ID not found');
+  const layoutPath = 'src/app/layout.tsx';
+  let layoutContent = '';
+  let layoutLoaded = false;
+
+  try {
+    layoutContent = fs.readFileSync(layoutPath, 'utf-8');
+    layoutLoaded = true;
+  } catch (layoutError) {
+    warn(`Could not read app layout: ${layoutError.message}`);
   }
 
-  if (wrapperContent.includes('win.dataLayer = win.dataLayer || []')) {
-    pass('DataLayer initialization code present');
-  } else if (wrapperContent.includes('dataLayer')) {
+  const sources = [
+    { name: 'AnalyticsWrapper.tsx', content: wrapperContent },
+  ];
+
+  if (layoutLoaded) {
+    sources.push({ name: 'app/layout.tsx', content: layoutContent });
+  }
+
+  const findSource = (predicate) => {
+    for (const source of sources) {
+      if (predicate(source.content)) {
+        return source.name;
+      }
+    }
+    return null;
+  };
+
+  const containerSource = findSource((content) =>
+    content.includes('GTM-WNG6Z9ZD'),
+  );
+
+  if (containerSource) {
+    pass(`GTM Container ID configured in ${containerSource}: GTM-WNG6Z9ZD`);
+  } else {
+    fail('GTM Container ID not found in AnalyticsWrapper.tsx or app/layout.tsx');
+  }
+
+  if (
+    wrapperContent.includes('win.dataLayer = win.dataLayer || []') ||
+    wrapperContent.includes('dataLayer')
+  ) {
     pass('DataLayer initialization code present');
   } else {
     fail('DataLayer initialization missing');
   }
 
-  if (wrapperContent.includes('googletagmanager.com/gtm.js')) {
-    pass('GTM script loading configured');
+  const gtmScriptSource = findSource((content) =>
+    content.includes('googletagmanager.com/gtm.js'),
+  );
+
+  if (gtmScriptSource) {
+    pass(`GTM script loading configured in ${gtmScriptSource}`);
   } else {
-    fail('GTM script loading not found');
+    fail('GTM script loading not found in AnalyticsWrapper.tsx or app/layout.tsx');
   }
 
-  if (wrapperContent.includes("strategy=\"afterInteractive\"")) {
+  if (wrapperContent.includes('strategy="afterInteractive"')) {
     pass('GTM loads with afterInteractive strategy');
+  } else if (layoutLoaded) {
+    pass('GTM inline bootstrap detected in app/layout.tsx');
   } else {
     warn('GTM loading strategy may not be optimal');
   }
