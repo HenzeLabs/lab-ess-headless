@@ -16,7 +16,26 @@ export async function middleware(request: NextRequest) {
   // Handle authentication for protected routes
   const { pathname } = request.nextUrl;
 
-  // Define protected routes
+  // ============================================
+  // ADMIN ROUTES - Basic Auth Protection
+  // ============================================
+  if (pathname.startsWith('/admin')) {
+    const authHeader = request.headers.get('authorization');
+
+    // Check if authenticated
+    if (!authHeader || !isValidBasicAuth(authHeader)) {
+      return new NextResponse('Authentication required', {
+        status: 401,
+        headers: {
+          'WWW-Authenticate': 'Basic realm="Admin Dashboard - Lab Essentials"',
+        },
+      });
+    }
+    // Admin is authenticated, continue
+    return NextResponse.next();
+  }
+
+  // Define protected routes (customer account area)
   const protectedRoutes = ['/account', '/api/orders', '/api/customer'];
 
   const publicRoutes = [
@@ -84,6 +103,38 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   // return addSecurityHeaders(response);
   return response;
+}
+
+/**
+ * Validate HTTP Basic Authentication for admin routes
+ */
+function isValidBasicAuth(authHeader: string): boolean {
+  try {
+    const [type, credentials] = authHeader.split(' ');
+
+    if (type !== 'Basic' || !credentials) {
+      return false;
+    }
+
+    // Decode base64 credentials
+    const decoded = Buffer.from(credentials, 'base64').toString('utf-8');
+    const [username, password] = decoded.split(':');
+
+    // Check against environment variables
+    const validUsername = process.env.ADMIN_USERNAME || 'admin';
+    const validPassword = process.env.ADMIN_PASSWORD;
+
+    // Must have password set in environment
+    if (!validPassword) {
+      console.error('ADMIN_PASSWORD not set in environment variables');
+      return false;
+    }
+
+    return username === validUsername && password === validPassword;
+  } catch (error) {
+    console.error('Admin auth validation error:', error);
+    return false;
+  }
 }
 
 export const config = {
