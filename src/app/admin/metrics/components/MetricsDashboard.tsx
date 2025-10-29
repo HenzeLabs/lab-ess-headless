@@ -220,6 +220,19 @@ CLARITY_API_KEY=your-api-key`}
             📊 Showing demo data. Configure GA4 and Clarity to see real metrics.
           </div>
         )}
+        {!hasMockData && metrics.clarity && (
+          <div className="mt-3 text-xs text-gray-600 bg-gray-50 border border-gray-200 rounded p-2">
+            ℹ️ Clarity metrics show data from the <strong>last 3 days</strong> (API limitation: 10 calls/day, 1-3 day range only).{' '}
+            <a
+              href={`https://clarity.microsoft.com/projects/view/m5xby3pax0`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              View full Clarity dashboard →
+            </a>
+          </div>
+        )}
       </div>
 
       {/* KPI Cards */}

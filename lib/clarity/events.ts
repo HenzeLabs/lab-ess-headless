@@ -123,46 +123,51 @@ export function identifyClarityUser(
  * @returns Clarity metrics or null if unavailable
  */
 export async function fetchClarityMetrics(
-  startDate: string,
-  endDate: string,
+  _startDate: string,
+  _endDate: string,
 ): Promise<ClarityMetrics | null> {
   try {
     const projectId = process.env.CLARITY_PROJECT_ID;
-    const apiKey = process.env.CLARITY_API_KEY;
+    const apiKey = process.env.CLARITY_API;
 
     if (!projectId || !apiKey) {
       console.warn('Clarity API credentials not configured');
       return null;
     }
 
-    // Note: Microsoft Clarity API is limited and may not have all these endpoints
-    // This is a placeholder for when the API becomes more robust
-    // For now, most metrics are viewed through the Clarity dashboard
-
+    // Clarity API only supports last 1-3 days (numOfDays: 1, 2, or 3)
+    // Rate limit: 10 calls per project per day
+    // We fetch last 3 days for maximum coverage
     const response = await fetch(
-      `https://www.clarity.ms/api/v1/projects/${projectId}/metrics?start=${startDate}&end=${endDate}`,
+      'https://www.clarity.ms/export-data/api/v1/project-live-insights?numOfDays=3',
       {
         headers: {
           Authorization: `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
         },
+        // Cache for 24 hours to stay within rate limits (10 calls/day)
+        next: { revalidate: 86400 }, // 24 hours
       },
     );
 
     if (!response.ok) {
-      console.warn('Clarity API request failed:', response.statusText);
+      console.warn(
+        `Clarity API request failed: ${response.status} ${response.statusText}`,
+      );
       return null;
     }
 
     const data = await response.json();
 
+    // Extract metrics from Clarity's response structure
+    // The API returns aggregated insights for the specified period
     return {
-      totalSessions: data.totalSessions || 0,
-      deadClicks: data.deadClicks || 0,
-      rageClicks: data.rageClicks || 0,
-      quickBacks: data.quickBacks || 0,
-      avgScrollDepth: data.avgScrollDepth || 0,
-      heatmapUrl: data.heatmapUrl,
+      totalSessions: data.sessions || data.totalSessions || 0,
+      deadClicks: data.deadClicks || data.deadClickCount || 0,
+      rageClicks: data.rageClicks || data.rageClickCount || 0,
+      quickBacks: data.quickBacks || data.quickBackCount || 0,
+      avgScrollDepth: data.scrollDepth || data.avgScrollDepth || 0,
+      heatmapUrl: `https://clarity.microsoft.com/projects/view/${projectId}/heatmaps`,
     };
   } catch (error) {
     console.error('Error fetching Clarity metrics:', error);
