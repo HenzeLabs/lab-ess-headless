@@ -173,7 +173,11 @@ const AboutSection: React.FC<AboutSectionProps> = ({
         >
           <div className="max-w-3xl mx-auto space-y-6 text-center">
             <h2 className={`${textStyles.h2} text-balance`}>{title}</h2>
-            <h3 className={`${textStyles.h3} text-balance text-[hsl(var(--brand))]`}>{subtitle}</h3>
+            <h3
+              className={`${textStyles.h3} text-balance text-[hsl(var(--brand))]`}
+            >
+              {subtitle}
+            </h3>
             <p className="text-base leading-relaxed text-[hsl(var(--body))] sm:text-lg">
               {description}
             </p>
@@ -185,10 +189,24 @@ const AboutSection: React.FC<AboutSectionProps> = ({
               >
                 About Lab Essentials
               </Link>
+              {/* Contact Support - More prominent on desktop with primary styling */}
               <Link
                 href="/pages/contact-us"
-                className={`${buttonStyles.outline} px-8 py-3 text-base`}
+                className="inline-flex items-center justify-center gap-2 rounded-xl px-8 py-3 text-base font-semibold transition-all duration-200 ease-out-soft hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 border border-[hsl(var(--border))] bg-surface text-heading hover:border-[hsl(var(--brand))] hover:bg-[hsl(var(--muted))] lg:border-0 lg:bg-[hsl(var(--brand))] lg:text-white lg:shadow-lg lg:hover:bg-[hsl(var(--brand-dark))]"
               >
+                <svg
+                  className="inline-block h-5 w-5 lg:h-0 lg:w-0"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                  />
+                </svg>
                 Contact Support
               </Link>
             </div>

@@ -17,7 +17,7 @@ interface Product {
       currencyCode: string;
     };
   };
-  metafields: Array<{
+  metafields?: Array<{
     namespace: string;
     key: string;
     value: string;
@@ -40,9 +40,26 @@ export default function QuizResults({ products, onRestart }: QuizResultsProps) {
   const otherMatches = products.slice(1, 3);
 
   const getMatchQuality = (score: number) => {
-    if (score >= 0.8) return { text: 'Excellent Match', color: 'text-[hsl(var(--brand))]', bgColor: 'bg-[hsl(var(--surface))]', borderColor: 'border-[hsl(var(--brand))]' };
-    if (score >= 0.6) return { text: 'Good Match', color: 'text-[hsl(var(--accent))]', bgColor: 'bg-[hsl(var(--surface))]', borderColor: 'border-[hsl(var(--accent))]' };
-    return { text: 'Fair Match', color: 'text-[hsl(var(--muted-foreground))]', bgColor: 'bg-[hsl(var(--surface))]', borderColor: 'border-[hsl(var(--border))]' };
+    if (score >= 0.8)
+      return {
+        text: 'Excellent Match',
+        color: 'text-[hsl(var(--brand))]',
+        bgColor: 'bg-[hsl(var(--surface))]',
+        borderColor: 'border-[hsl(var(--brand))]',
+      };
+    if (score >= 0.6)
+      return {
+        text: 'Good Match',
+        color: 'text-[hsl(var(--accent))]',
+        bgColor: 'bg-[hsl(var(--surface))]',
+        borderColor: 'border-[hsl(var(--accent))]',
+      };
+    return {
+      text: 'Fair Match',
+      color: 'text-[hsl(var(--muted-foreground))]',
+      bgColor: 'bg-[hsl(var(--surface))]',
+      borderColor: 'border-[hsl(var(--border))]',
+    };
   };
 
   const getMetafieldValue = (product: Product, key: string) => {
@@ -55,12 +72,26 @@ export default function QuizResults({ products, onRestart }: QuizResultsProps) {
       {/* Header */}
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 rounded-full bg-green-50 px-5 py-2 border-2 border-green-200">
-          <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <svg
+            className="w-5 h-5 text-green-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
-          <span className="text-sm font-semibold text-green-900">Quiz Complete!</span>
+          <span className="text-sm font-semibold text-green-900">
+            Quiz Complete!
+          </span>
         </div>
-        <h2 className="text-3xl md:text-4xl font-bold">Your Perfect Microscope Match</h2>
+        <h2 className="text-3xl md:text-4xl font-bold">
+          Your Perfect Microscope Match
+        </h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           Based on your answers, we found the best microscopes for your needs
         </p>
@@ -90,14 +121,27 @@ export default function QuizResults({ products, onRestart }: QuizResultsProps) {
                 {topMatch.product.featuredImage?.url ? (
                   <Image
                     src={topMatch.product.featuredImage.url}
-                    alt={topMatch.product.featuredImage.altText || topMatch.product.title}
+                    alt={
+                      topMatch.product.featuredImage.altText ||
+                      topMatch.product.title
+                    }
                     fill
                     className="object-contain p-6"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-[hsl(var(--muted))]">
-                    <svg className="w-24 h-24 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <svg
+                      className="w-24 h-24 text-muted-foreground"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1}
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
                     </svg>
                   </div>
                 )}
@@ -109,7 +153,9 @@ export default function QuizResults({ products, onRestart }: QuizResultsProps) {
                   <div className="text-4xl font-bold text-[hsl(var(--brand))]">
                     {Math.round(topMatch.score * 100)}%
                   </div>
-                  <div className="text-xs font-semibold text-muted-foreground">Match</div>
+                  <div className="text-xs font-semibold text-muted-foreground">
+                    Match
+                  </div>
                 </div>
               </div>
             </div>
@@ -117,21 +163,40 @@ export default function QuizResults({ products, onRestart }: QuizResultsProps) {
             {/* Product Details */}
             <div className="space-y-4">
               <div>
-                <h3 className="text-2xl md:text-3xl font-bold mb-2">{topMatch.product.title}</h3>
+                <h3 className="text-2xl md:text-3xl font-bold mb-2">
+                  {topMatch.product.title}
+                </h3>
                 <div className="flex items-center gap-3">
                   <div className="inline-flex items-center gap-2 bg-[hsl(var(--brand))]/10 border-2 border-[hsl(var(--brand))]/20 rounded-xl px-4 py-2">
-                    <svg className="w-5 h-5 text-[hsl(var(--brand))]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <svg
+                      className="w-5 h-5 text-[hsl(var(--brand))]"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                     <span className="text-xl font-bold text-[hsl(var(--brand))]">
-                      ${parseFloat(topMatch.product.priceRange.minVariantPrice.amount).toFixed(2)}
+                      $
+                      {parseFloat(
+                        topMatch.product.priceRange.minVariantPrice.amount,
+                      ).toFixed(2)}
                     </span>
                   </div>
                   {(() => {
                     const matchQuality = getMatchQuality(topMatch.score);
                     return (
-                      <div className={`inline-flex items-center gap-2 ${matchQuality.bgColor} border-2 ${matchQuality.borderColor} rounded-xl px-4 py-2`}>
-                        <span className={`text-sm font-semibold ${matchQuality.color}`}>
+                      <div
+                        className={`inline-flex items-center gap-2 ${matchQuality.bgColor} border-2 ${matchQuality.borderColor} rounded-xl px-4 py-2`}
+                      >
+                        <span
+                          className={`text-sm font-semibold ${matchQuality.color}`}
+                        >
                           {matchQuality.text}
                         </span>
                       </div>
@@ -143,7 +208,9 @@ export default function QuizResults({ products, onRestart }: QuizResultsProps) {
               {/* Features */}
               {getMetafieldValue(topMatch.product, 'features') && (
                 <div className="space-y-2">
-                  <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Key Features</h4>
+                  <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                    Key Features
+                  </h4>
                   <div className="space-y-2">
                     {getMetafieldValue(topMatch.product, 'features')
                       .split('\n')
@@ -151,10 +218,22 @@ export default function QuizResults({ products, onRestart }: QuizResultsProps) {
                       .slice(0, 4)
                       .map((feature, index) => (
                         <div key={index} className="flex items-start gap-2">
-                          <svg className="w-5 h-5 text-[hsl(var(--brand))] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          <svg
+                            className="w-5 h-5 text-[hsl(var(--brand))] flex-shrink-0 mt-0.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M5 13l4 4L19 7"
+                            />
                           </svg>
-                          <span className="text-sm">{feature.replace(/^[•\-\*]\s*/, '')}</span>
+                          <span className="text-sm">
+                            {feature.replace(/^[•\-\*]\s*/, '')}
+                          </span>
                         </div>
                       ))}
                   </div>
@@ -164,8 +243,12 @@ export default function QuizResults({ products, onRestart }: QuizResultsProps) {
               {/* Applications */}
               {getMetafieldValue(topMatch.product, 'applications') && (
                 <div className="space-y-2">
-                  <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Perfect For</h4>
-                  <p className="text-sm">{getMetafieldValue(topMatch.product, 'applications')}</p>
+                  <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                    Perfect For
+                  </h4>
+                  <p className="text-sm">
+                    {getMetafieldValue(topMatch.product, 'applications')}
+                  </p>
                 </div>
               )}
 
@@ -176,16 +259,36 @@ export default function QuizResults({ products, onRestart }: QuizResultsProps) {
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-br from-[hsl(var(--brand))] to-[hsl(var(--brand-dark))] hover:shadow-xl transition-all duration-300 hover:scale-105"
                 >
                   View Full Specs
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
                   </svg>
                 </Link>
                 <button
                   onClick={onRestart}
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-foreground border-2 border-border/50 hover:border-[hsl(var(--brand))]/50 transition-all duration-300 hover:scale-105"
                 >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
                   </svg>
                   Restart Quiz
                 </button>
@@ -213,14 +316,27 @@ export default function QuizResults({ products, onRestart }: QuizResultsProps) {
                       {scoredProduct.product.featuredImage?.url ? (
                         <Image
                           src={scoredProduct.product.featuredImage.url}
-                          alt={scoredProduct.product.featuredImage.altText || scoredProduct.product.title}
+                          alt={
+                            scoredProduct.product.featuredImage.altText ||
+                            scoredProduct.product.title
+                          }
                           fill
                           className="object-contain p-3"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <svg className="w-12 h-12 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          <svg
+                            className="w-12 h-12 text-muted-foreground"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={1}
+                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            />
                           </svg>
                         </div>
                       )}
@@ -234,10 +350,18 @@ export default function QuizResults({ products, onRestart }: QuizResultsProps) {
                         </h4>
                         <div className="flex items-center gap-2">
                           <span className="text-lg font-bold text-[hsl(var(--brand))]">
-                            ${parseFloat(scoredProduct.product.priceRange.minVariantPrice.amount).toFixed(2)}
+                            $
+                            {parseFloat(
+                              scoredProduct.product.priceRange.minVariantPrice
+                                .amount,
+                            ).toFixed(2)}
                           </span>
-                          <div className={`inline-flex items-center gap-1 ${matchQuality.bgColor} border ${matchQuality.borderColor} rounded-lg px-2 py-1`}>
-                            <span className={`text-xs font-semibold ${matchQuality.color}`}>
+                          <div
+                            className={`inline-flex items-center gap-1 ${matchQuality.bgColor} border ${matchQuality.borderColor} rounded-lg px-2 py-1`}
+                          >
+                            <span
+                              className={`text-xs font-semibold ${matchQuality.color}`}
+                            >
                               {Math.round(scoredProduct.score * 100)}% match
                             </span>
                           </div>
@@ -249,8 +373,18 @@ export default function QuizResults({ products, onRestart }: QuizResultsProps) {
                         className="inline-flex items-center gap-1 text-sm font-semibold text-[hsl(var(--brand))] hover:gap-2 transition-all"
                       >
                         View Details
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
                         </svg>
                       </Link>
                     </div>
@@ -267,15 +401,26 @@ export default function QuizResults({ products, onRestart }: QuizResultsProps) {
         <div className="relative space-y-3">
           <h3 className="text-2xl font-bold">Need Help Deciding?</h3>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Our team of experts is here to help you find the perfect microscope for your specific needs
+            Our team of experts is here to help you find the perfect microscope
+            for your specific needs
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <Link
               href="/support/contact"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-br from-[hsl(var(--brand))] to-[hsl(var(--brand-dark))] hover:shadow-xl transition-all duration-300 hover:scale-105"
             >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                />
               </svg>
               Contact Our Experts
             </Link>
@@ -283,8 +428,18 @@ export default function QuizResults({ products, onRestart }: QuizResultsProps) {
               onClick={onRestart}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-foreground border-2 border-border/50 hover:border-[hsl(var(--brand))]/50 transition-all duration-300 hover:scale-105"
             >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
               </svg>
               Retake Quiz
             </button>

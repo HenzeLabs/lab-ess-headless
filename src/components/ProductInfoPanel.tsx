@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useTransition } from 'react';
 import TrustBar from '@/components/product/TrustBar';
+import StickyAddToCart from '@/components/StickyAddToCart';
 import { buttonStyles, textStyles } from '@/lib/ui';
 import { trackAddToCart } from '@/lib/analytics';
 import { useCartContext } from '@/components/providers/CartContext';
@@ -332,6 +333,18 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
           </button>
         </div>
       </div>
+
+      {/* Sticky Add to Cart Bar */}
+      {currentPrice && (
+        <StickyAddToCart
+          productTitle={product.title}
+          price={currentPrice}
+          currencyCode={currentCurrency}
+          onAddToCart={handleAddToCart}
+          isAdding={isPending}
+          showAfterScroll={500}
+        />
+      )}
     </>
   );
 }

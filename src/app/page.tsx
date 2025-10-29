@@ -86,6 +86,8 @@ export default async function HomePage() {
           ctaHref="/collections/microscopes"
           ctaSecondaryText="Find Your Microscope"
           ctaSecondaryHref="/pages/microscope-selector-quiz"
+          ctaTertiaryText="Shop Centrifuges"
+          ctaTertiaryHref="/collections/centrifuges"
           imageUrl="/hero.webp"
           imageAlt="Precision lab equipment and microscopes"
         />

@@ -3,12 +3,13 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 
 import CollectionProducts from '@/components/CollectionProducts';
+import StickyCollectionCTAWrapper from '@/components/StickyCollectionCTAWrapper';
 import type { CollectionData, Product } from '@/lib/types';
 import { getCollectionByHandleQuery } from '@/lib/queries';
 import { shopifyFetch } from '@/lib/shopify';
 import { absoluteUrl, jsonLd, stripHtml } from '@/lib/seo';
 import CollectionViewTracker from '@/components/analytics/CollectionViewTracker';
-import { layout } from "@/lib/ui";
+import { layout } from '@/lib/ui';
 
 export const revalidate = 60;
 
@@ -18,7 +19,13 @@ const formatHandle = (value: string) =>
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 
-function CollectionDescription({ description, title }: { description: string; title: string }) {
+function CollectionDescription({
+  description,
+  title,
+}: {
+  description: string;
+  title: string;
+}) {
   // Strip HTML and remove JSON-LD schema markup
   let cleanDescription = stripHtml(description);
 
@@ -29,7 +36,9 @@ function CollectionDescription({ description, title }: { description: string; ti
 
   if (jsonStartMatch && jsonStartMatch.index !== undefined) {
     // If we find JSON, take everything before it
-    cleanDescription = cleanDescription.substring(0, jsonStartMatch.index).trim();
+    cleanDescription = cleanDescription
+      .substring(0, jsonStartMatch.index)
+      .trim();
   }
 
   // Clean up any remaining artifacts (stray braces, commas, brackets)
@@ -250,7 +259,11 @@ export default async function CollectionPage({
           {/* Animated background pattern */}
           <div
             className="absolute inset-0 opacity-[0.03]"
-            style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, hsl(var(--brand)) 1px, transparent 0)', backgroundSize: '40px 40px' }}
+            style={{
+              backgroundImage:
+                'radial-gradient(circle at 1px 1px, hsl(var(--brand)) 1px, transparent 0)',
+              backgroundSize: '40px 40px',
+            }}
           />
 
           {/* Glowing orb */}
@@ -269,8 +282,18 @@ export default async function CollectionPage({
                   </Link>
                 </li>
                 <li className="text-[hsl(var(--muted-foreground))]">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
                   </svg>
                 </li>
                 <li>
@@ -282,8 +305,18 @@ export default async function CollectionPage({
                   </Link>
                 </li>
                 <li className="text-[hsl(var(--muted-foreground))]">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
                   </svg>
                 </li>
                 <li>
@@ -297,8 +330,16 @@ export default async function CollectionPage({
             {/* Collection Header */}
             <div className="space-y-4">
               <div className="inline-flex items-center gap-2 rounded-full bg-[hsl(var(--brand))]/10 px-5 py-2 border border-[hsl(var(--brand))]/20">
-                <svg className="w-5 h-5 text-[hsl(var(--brand))]" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clipRule="evenodd" />
+                <svg
+                  className="w-5 h-5 text-[hsl(var(--brand))]"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 <span className="text-sm font-semibold uppercase tracking-wider text-[hsl(var(--brand))]">
                   Collection
@@ -308,7 +349,8 @@ export default async function CollectionPage({
                 {collection.title || formatHandle(handle)}
               </h1>
               <p className="text-lg text-[hsl(var(--body))] max-w-3xl">
-                {products.length} {products.length === 1 ? 'product' : 'products'} available
+                {products.length}{' '}
+                {products.length === 1 ? 'product' : 'products'} available
               </p>
             </div>
           </div>
@@ -330,6 +372,12 @@ export default async function CollectionPage({
           )}
         </div>
       </main>
+
+      {/* Sticky Collection CTA Bar */}
+      <StickyCollectionCTAWrapper
+        collectionTitle={collection.title || formatHandle(handle)}
+        productCount={products.length}
+      />
     </>
   );
 }

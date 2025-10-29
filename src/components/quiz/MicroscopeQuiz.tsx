@@ -19,7 +19,7 @@ interface Product {
       currencyCode: string;
     };
   };
-  metafields: Array<{
+  metafields?: Array<{
     namespace: string;
     key: string;
     value: string;
@@ -167,10 +167,13 @@ export default function MicroscopeQuiz({ products }: { products: Product[] }) {
     // Get metafields as a map - filter out null/undefined fields
     const metafieldsMap = (product.metafields || [])
       .filter((field) => field && field.key && field.value)
-      .reduce((acc, field) => {
-        acc[field.key] = field.value;
-        return acc;
-      }, {} as Record<string, string>);
+      .reduce(
+        (acc, field) => {
+          acc[field.key] = field.value;
+          return acc;
+        },
+        {} as Record<string, string>,
+      );
 
     // Q1: Application type (40% weight)
     if (answers.q1) {
@@ -178,13 +181,29 @@ export default function MicroscopeQuiz({ products }: { products: Product[] }) {
       const productType = product.title.toLowerCase();
 
       // Check if product type matches the application
-      if (answers.q1 === 'Compound' && (productType.includes('compound') || applicationsValue.toLowerCase().includes('compound'))) {
+      if (
+        answers.q1 === 'Compound' &&
+        (productType.includes('compound') ||
+          applicationsValue.toLowerCase().includes('compound'))
+      ) {
         score += WEIGHTS.application;
-      } else if (answers.q1 === 'Stereo' && (productType.includes('stereo') || applicationsValue.toLowerCase().includes('stereo'))) {
+      } else if (
+        answers.q1 === 'Stereo' &&
+        (productType.includes('stereo') ||
+          applicationsValue.toLowerCase().includes('stereo'))
+      ) {
         score += WEIGHTS.application;
-      } else if (answers.q1 === 'Inverted' && (productType.includes('inverted') || applicationsValue.toLowerCase().includes('inverted'))) {
+      } else if (
+        answers.q1 === 'Inverted' &&
+        (productType.includes('inverted') ||
+          applicationsValue.toLowerCase().includes('inverted'))
+      ) {
         score += WEIGHTS.application;
-      } else if (answers.q1 === 'Digital' && (productType.includes('digital') || applicationsValue.toLowerCase().includes('digital'))) {
+      } else if (
+        answers.q1 === 'Digital' &&
+        (productType.includes('digital') ||
+          applicationsValue.toLowerCase().includes('digital'))
+      ) {
         score += WEIGHTS.application;
       }
     }
@@ -194,7 +213,10 @@ export default function MicroscopeQuiz({ products }: { products: Product[] }) {
       const productType = product.title.toLowerCase();
       if (answers.q2 === 'Stereo' && productType.includes('stereo')) {
         score += 0.05;
-      } else if (answers.q2 === 'Compound' && productType.includes('compound')) {
+      } else if (
+        answers.q2 === 'Compound' &&
+        productType.includes('compound')
+      ) {
         score += 0.05;
       }
     }
@@ -202,10 +224,11 @@ export default function MicroscopeQuiz({ products }: { products: Product[] }) {
     // Q3: Camera needed (15% weight)
     if (answers.q3 !== undefined) {
       const featuresValue = metafieldsMap.features || '';
-      const hasCamera = featuresValue.toLowerCase().includes('camera') ||
-                       featuresValue.toLowerCase().includes('trinocular') ||
-                       product.title.toLowerCase().includes('camera') ||
-                       product.title.toLowerCase().includes('digital');
+      const hasCamera =
+        featuresValue.toLowerCase().includes('camera') ||
+        featuresValue.toLowerCase().includes('trinocular') ||
+        product.title.toLowerCase().includes('camera') ||
+        product.title.toLowerCase().includes('digital');
 
       if (answers.q3 === true && hasCamera) {
         score += WEIGHTS.camera;
@@ -224,7 +247,7 @@ export default function MicroscopeQuiz({ products }: { products: Product[] }) {
         // Score based on how close the magnification is
         const difference = Math.abs(productMag - answers.q4);
         const maxDifference = 2000; // max range
-        const similarity = 1 - (difference / maxDifference);
+        const similarity = 1 - difference / maxDifference;
         score += WEIGHTS.magnification * Math.max(0, similarity);
       }
     }
@@ -234,18 +257,32 @@ export default function MicroscopeQuiz({ products }: { products: Product[] }) {
       const categoryValue = metafieldsMap.equipment_category || '';
       const productTitle = product.title.toLowerCase();
 
-      if (answers.q5 === 'Education' && (categoryValue.toLowerCase().includes('education') || productTitle.includes('student'))) {
+      if (
+        answers.q5 === 'Education' &&
+        (categoryValue.toLowerCase().includes('education') ||
+          productTitle.includes('student'))
+      ) {
         score += WEIGHTS.persona;
-      } else if (answers.q5 === 'Clinical' && (categoryValue.toLowerCase().includes('clinical') || productTitle.includes('clinical'))) {
+      } else if (
+        answers.q5 === 'Clinical' &&
+        (categoryValue.toLowerCase().includes('clinical') ||
+          productTitle.includes('clinical'))
+      ) {
         score += WEIGHTS.persona;
-      } else if (answers.q5 === 'Research' && (categoryValue.toLowerCase().includes('research') || productTitle.includes('professional'))) {
+      } else if (
+        answers.q5 === 'Research' &&
+        (categoryValue.toLowerCase().includes('research') ||
+          productTitle.includes('professional'))
+      ) {
         score += WEIGHTS.persona;
       }
     }
 
     // Q6: Budget (10% weight)
     if (answers.q6) {
-      const productPrice = parseFloat(product.priceRange.minVariantPrice.amount);
+      const productPrice = parseFloat(
+        product.priceRange.minVariantPrice.amount,
+      );
       if (productPrice <= answers.q6) {
         // Full score if within budget
         score += WEIGHTS.budget;
@@ -292,7 +329,9 @@ export default function MicroscopeQuiz({ products }: { products: Product[] }) {
 
   const currentQuestionData = QUIZ_QUESTIONS[currentQuestion];
   const currentAnswer = answers[currentQuestionData.id as keyof QuizData];
-  const isAnswered = currentAnswer !== undefined && currentAnswer !== null &&
+  const isAnswered =
+    currentAnswer !== undefined &&
+    currentAnswer !== null &&
     (Array.isArray(currentAnswer) ? currentAnswer.length > 0 : true);
 
   const progress = ((currentQuestion + 1) / QUIZ_QUESTIONS.length) * 100;
@@ -323,7 +362,13 @@ export default function MicroscopeQuiz({ products }: { products: Product[] }) {
           id={currentQuestionData.id}
           label={currentQuestionData.label}
           type={currentQuestionData.type}
-          options={currentQuestionData.options ? (typeof currentQuestionData.options[0] === "string" ? [] : currentQuestionData.options as QuizOption[]) : undefined}
+          options={
+            currentQuestionData.options
+              ? typeof currentQuestionData.options[0] === 'string'
+                ? []
+                : (currentQuestionData.options as QuizOption[])
+              : undefined
+          }
           min={currentQuestionData.min}
           max={currentQuestionData.max}
           value={currentAnswer}
@@ -338,8 +383,18 @@ export default function MicroscopeQuiz({ products }: { products: Product[] }) {
           disabled={currentQuestion === 0}
           className="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-foreground border-2 border-border/50 hover:border-[hsl(var(--brand))]/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
         >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
           </svg>
           Previous
         </button>
@@ -349,9 +404,21 @@ export default function MicroscopeQuiz({ products }: { products: Product[] }) {
           disabled={!isAnswered}
           className="flex items-center gap-2 px-8 py-3 rounded-xl font-semibold text-white bg-gradient-to-br from-[hsl(var(--brand))] to-[hsl(var(--brand-dark))] hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-105"
         >
-          {currentQuestion === QUIZ_QUESTIONS.length - 1 ? 'See Results' : 'Next'}
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          {currentQuestion === QUIZ_QUESTIONS.length - 1
+            ? 'See Results'
+            : 'Next'}
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
           </svg>
         </button>
       </div>

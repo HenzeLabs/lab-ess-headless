@@ -11,6 +11,8 @@ interface HeroProps {
   ctaHref?: string;
   ctaSecondaryText?: string;
   ctaSecondaryHref?: string;
+  ctaTertiaryText?: string;
+  ctaTertiaryHref?: string;
   imageUrl?: string;
   imageAlt?: string;
   videoUrl?: string;
@@ -23,6 +25,8 @@ const Hero: React.FC<HeroProps> = ({
   ctaHref = '',
   ctaSecondaryText = '',
   ctaSecondaryHref = '',
+  ctaTertiaryText = '',
+  ctaTertiaryHref = '',
   imageUrl = '',
   imageAlt = '',
   videoUrl = '/hero.mp4',
@@ -73,7 +77,13 @@ const Hero: React.FC<HeroProps> = ({
       <div
         className={`relative z-10 ${layout.container} flex flex-col items-center justify-center gap-8 md:gap-10`}
       >
-        <div className={hasMedia ? 'bg-[hsl(var(--brand))]/75 backdrop-blur-sm rounded-3xl px-12 py-8 border-2 border-white/20' : ''}>
+        <div
+          className={
+            hasMedia
+              ? 'bg-[hsl(var(--brand))]/75 backdrop-blur-sm rounded-3xl px-12 py-8 border-2 border-white/20'
+              : ''
+          }
+        >
           <h1
             className={`text-balance max-w-3xl ${textStyles.h1} drop-shadow-2xl ${
               hasMedia ? 'text-white' : ''
@@ -82,20 +92,40 @@ const Hero: React.FC<HeroProps> = ({
             {title}
           </h1>
         </div>
-        {(ctaText && ctaHref) || (ctaSecondaryText && ctaSecondaryHref) ? (
+        {(ctaText && ctaHref) ||
+        (ctaSecondaryText && ctaSecondaryHref) ||
+        (ctaTertiaryText && ctaTertiaryHref) ? (
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
+            {/* Primary CTA - Extra prominent on mobile (larger text, full-width), visible on all devices */}
             {ctaText && ctaHref && (
               <Link
                 href={ctaHref}
-                className={`${ctaPrimaryClass}`}
+                className={`${ctaPrimaryClass} w-full sm:w-auto text-lg sm:text-base py-5 sm:py-4 font-bold`}
                 data-test-id="hero-cta"
               >
                 {ctaText}
               </Link>
             )}
+
+            {/* Secondary CTA - More prominent on tablet (md), visible on all devices */}
             {ctaSecondaryText && ctaSecondaryHref && (
-              <Link href={ctaSecondaryHref} className={`${ctaSecondaryClass}`}>
+              <Link
+                href={ctaSecondaryHref}
+                className={`${ctaSecondaryClass} w-full sm:w-auto md:text-lg md:px-10 md:py-5`}
+                data-test-id="hero-cta-secondary"
+              >
                 {ctaSecondaryText}
+              </Link>
+            )}
+
+            {/* Tertiary CTA - Desktop only for Centrifuges/Contact */}
+            {ctaTertiaryText && ctaTertiaryHref && (
+              <Link
+                href={ctaTertiaryHref}
+                className={`${ctaSecondaryClass} hidden lg:inline-flex`}
+                data-test-id="hero-cta-tertiary"
+              >
+                {ctaTertiaryText}
               </Link>
             )}
           </div>
