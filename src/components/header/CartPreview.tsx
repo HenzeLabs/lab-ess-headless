@@ -6,7 +6,7 @@
  */
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart } from 'lucide-react';
@@ -61,16 +61,12 @@ export default function CartPreview({
   testId = 'nav-cart',
 }: CartPreviewProps) {
   // Get cart state from context - this automatically updates when cart changes
-  const { cart, isRefreshing } = useCartContext();
-  const [hasHydrated, setHasHydrated] = useState(false);
+  const { cart, isRefreshing, hasResolved } = useCartContext();
 
-  useEffect(() => {
-    setHasHydrated(true);
-  }, []);
-
-  // Calculate cart count from context
-  const liveCartCount =
-    cart?.totalQuantity ?? (hasHydrated ? 0 : initialCartCount ?? 0);
+  // Keep SSR fallback until cart context has resolved with real data
+  const liveCartCount = hasResolved
+    ? (cart?.totalQuantity ?? 0)
+    : (initialCartCount ?? 0);
 
   // Note: Periodic refresh removed - CartContext handles all cart state updates
 

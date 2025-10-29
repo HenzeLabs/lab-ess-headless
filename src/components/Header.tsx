@@ -56,16 +56,12 @@ export default function Header({
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   // Get live cart count from context instead of local state
-  const { cart } = useCartContext();
-  const [hasHydrated, setHasHydrated] = useState(false);
+  const { cart, hasResolved } = useCartContext();
 
-  useEffect(() => {
-    setHasHydrated(true);
-  }, []);
-
-  const liveCartCount =
-    cart?.totalQuantity ??
-    (hasHydrated ? 0 : cartItemCount ?? 0);
+  // Keep SSR fallback until cart context has resolved with real data
+  const liveCartCount = hasResolved
+    ? (cart?.totalQuantity ?? 0)
+    : (cartItemCount ?? 0);
 
   const menuItems = collections.map((item) => ({
     ...item,

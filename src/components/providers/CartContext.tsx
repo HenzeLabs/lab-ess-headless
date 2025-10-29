@@ -21,6 +21,7 @@ type CartContextValue = {
   cart: Cart | null;
   cartId: string | null;
   isRefreshing: boolean;
+  hasResolved: boolean;
   refreshCart: (options?: RefreshOptions) => Promise<Cart | null>;
   updateCartState: (next: Cart | null) => Cart | null;
 };
@@ -37,6 +38,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<Cart | null>(null);
   const [cartId, setCartId] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [hasResolved, setHasResolved] = useState(false);
   const inFlight = useRef<Promise<Cart | null> | null>(null);
   const cartRef = useRef<Cart | null>(null);
 
@@ -98,6 +100,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           return cartRef.current;
         } finally {
           if (!silent) setIsRefreshing(false);
+          setHasResolved(true);
           inFlight.current = null;
         }
       })();
@@ -134,10 +137,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
       cart,
       cartId,
       isRefreshing,
+      hasResolved,
       refreshCart,
       updateCartState: applyCart,
     }),
-    [applyCart, cart, cartId, isRefreshing, refreshCart],
+    [applyCart, cart, cartId, isRefreshing, hasResolved, refreshCart],
   );
 
   return (
