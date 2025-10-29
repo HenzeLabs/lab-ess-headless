@@ -59,21 +59,31 @@ test.describe('Post-Deploy Smoke Tests', () => {
             cls: 0,
           };
 
-          // @ts-expect-error - PerformanceObserver types
           if (window.PerformanceObserver) {
             // LCP
             new PerformanceObserver((list) => {
               const entries = list.getEntries();
-              const lastEntry = entries[entries.length - 1];
-              // @ts-expect-error - Performance entry types
-              metrics.lcp = lastEntry.renderTime || lastEntry.loadTime;
+              const lastEntry = entries[
+                entries.length - 1
+              ] as PerformanceEntry & {
+                renderTime?: number;
+                loadTime?: number;
+              };
+              metrics.lcp = lastEntry.renderTime || lastEntry.loadTime || 0;
             }).observe({ entryTypes: ['largest-contentful-paint'] });
 
             // FID
             new PerformanceObserver((list) => {
               const entries = list.getEntries();
-              // @ts-expect-error - Performance entry types
-              metrics.fid = entries[0]?.processingStart - entries[0]?.startTime;
+              const firstEntry = entries[0] as PerformanceEntry & {
+                processingStart?: number;
+                startTime?: number;
+              };
+              if (firstEntry) {
+                metrics.fid =
+                  (firstEntry.processingStart || 0) -
+                  (firstEntry.startTime || 0);
+              }
             }).observe({ entryTypes: ['first-input'] });
 
             // CLS
@@ -87,7 +97,7 @@ test.describe('Post-Deploy Smoke Tests', () => {
                     hadRecentInput?: boolean;
                   },
                 ) => {
-                  if (!entry.hadRecentInput) {
+                  if (!entry.hadRecentInput && entry.value !== undefined) {
                     cls += entry.value;
                   }
                 },
@@ -213,10 +223,11 @@ test.describe('Post-Deploy Smoke Tests', () => {
       await page.goto('/', { waitUntil: 'networkidle', timeout: TIMEOUT });
 
       const hasGA4 = await page.evaluate(() => {
-        // @ts-expect-error - Global analytics objects
         return (
-          typeof window.gtag !== 'undefined' ||
-          typeof window.dataLayer !== 'undefined'
+          typeof (window as Window & { gtag?: unknown; dataLayer?: unknown })
+            .gtag !== 'undefined' ||
+          typeof (window as Window & { gtag?: unknown; dataLayer?: unknown })
+            .dataLayer !== 'undefined'
         );
       });
 
