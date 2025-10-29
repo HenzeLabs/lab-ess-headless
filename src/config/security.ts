@@ -1,47 +1,63 @@
 import { NextRequest } from 'next/server';
+import { getConfigNumber } from '@/lib/configStore';
 
-// Security configuration for the application
-export const securityConfig = {
-  rateLimit: {
+/**
+ * Get security configuration from the config store
+ * Falls back to environment variables and static defaults
+ */
+function getSecurityRateLimitConfig() {
+  return {
     // Default rate limits
     default: {
-      windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '60000', 10),
-      maxRequests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100', 10),
+      windowMs: getConfigNumber(
+        'security.rateLimit.default.windowMs',
+        parseInt(process.env.RATE_LIMIT_WINDOW_MS || '60000', 10),
+      ),
+      maxRequests: getConfigNumber(
+        'security.rateLimit.default.maxRequests',
+        parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100', 10),
+      ),
     },
 
     // API endpoint specific limits
     api: {
-      windowMs: 60000, // 1 minute
-      maxRequests: 60,
+      windowMs: getConfigNumber('security.rateLimit.api.windowMs', 60000),
+      maxRequests: getConfigNumber('security.rateLimit.api.maxRequests', 60),
     },
 
     auth: {
-      windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000', 10), // 15 minutes
-      maxRequests: parseInt(
-        process.env.RATE_LIMIT_AUTH_MAX_REQUESTS || '5',
-        10,
+      windowMs: getConfigNumber(
+        'security.rateLimit.auth.windowMs',
+        parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000', 10),
+      ),
+      maxRequests: getConfigNumber(
+        'security.rateLimit.auth.maxRequests',
+        parseInt(process.env.RATE_LIMIT_AUTH_MAX_REQUESTS || '5', 10),
       ),
     },
 
     cart: {
-      windowMs: 60000, // 1 minute
-      maxRequests: parseInt(
-        process.env.RATE_LIMIT_CART_MAX_REQUESTS || '30',
-        10,
+      windowMs: getConfigNumber('security.rateLimit.cart.windowMs', 60000),
+      maxRequests: getConfigNumber(
+        'security.rateLimit.cart.maxRequests',
+        parseInt(process.env.RATE_LIMIT_CART_MAX_REQUESTS || '30', 10),
       ),
     },
 
     admin: {
-      windowMs: 60000, // 1 minute
-      maxRequests: parseInt(
-        process.env.RATE_LIMIT_ADMIN_MAX_REQUESTS || '10',
-        10,
+      windowMs: getConfigNumber('security.rateLimit.admin.windowMs', 60000),
+      maxRequests: getConfigNumber(
+        'security.rateLimit.admin.maxRequests',
+        parseInt(process.env.RATE_LIMIT_ADMIN_MAX_REQUESTS || '10', 10),
       ),
     },
 
     search: {
-      windowMs: 60000, // 1 minute
-      maxRequests: 100,
+      windowMs: getConfigNumber('security.rateLimit.search.windowMs', 60000),
+      maxRequests: getConfigNumber(
+        'security.rateLimit.search.maxRequests',
+        100,
+      ),
     },
 
     // Burst protection settings
@@ -49,7 +65,12 @@ export const securityConfig = {
       limit: 10,
       windowMs: 10000, // 10 seconds
     },
-  },
+  };
+}
+
+// Security configuration for the application
+export const securityConfig = {
+  rateLimit: getSecurityRateLimitConfig(),
 
   // Redis configuration
   redis: {

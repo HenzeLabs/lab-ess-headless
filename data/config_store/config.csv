@@ -1,0 +1,21 @@
+key,value,updated_by,updated_at,version
+seo.siteName,Lab Essentials,system,2025-10-29T17:45:00Z,1
+seo.siteUrl,https://lab-essentials.com,system,2025-10-29T17:45:00Z,1
+seo.defaultTitle,Lab Essentials - Premium Lab Equipment for Research and Industry,system,2025-10-29T17:45:00Z,1
+seo.defaultDescription,"Discover high-quality laboratory equipment and instruments. Trusted by over 1,200 labs worldwide for precision, reliability, and expert support.",system,2025-10-29T17:45:00Z,1
+seo.defaultImage,/images/og/default.jpg,system,2025-10-29T17:45:00Z,1
+seo.twitterHandle,@LabEssentials,system,2025-10-29T17:45:00Z,1
+seo.organizationName,Lab Essentials,system,2025-10-29T17:45:00Z,1
+seo.organizationUrl,https://lab-essentials.com,system,2025-10-29T17:45:00Z,1
+security.rateLimit.default.windowMs,60000,system,2025-10-29T17:45:00Z,1
+security.rateLimit.default.maxRequests,100,system,2025-10-29T17:45:00Z,1
+security.rateLimit.api.windowMs,60000,system,2025-10-29T17:45:00Z,1
+security.rateLimit.api.maxRequests,60,system,2025-10-29T17:45:00Z,1
+security.rateLimit.auth.windowMs,900000,system,2025-10-29T17:45:00Z,1
+security.rateLimit.auth.maxRequests,5,system,2025-10-29T17:45:00Z,1
+security.rateLimit.cart.windowMs,60000,system,2025-10-29T17:45:00Z,1
+security.rateLimit.cart.maxRequests,30,system,2025-10-29T17:45:00Z,1
+security.rateLimit.admin.windowMs,60000,system,2025-10-29T17:45:00Z,1
+security.rateLimit.admin.maxRequests,10,system,2025-10-29T17:45:00Z,1
+security.rateLimit.search.windowMs,60000,system,2025-10-29T17:45:00Z,1
+security.rateLimit.search.maxRequests,100,system,2025-10-29T17:45:00Z,1

@@ -1,6 +1,7 @@
 // @ts-nocheck
 import type { Metadata } from 'next';
 import type { Product, CollectionData as Collection } from '@/lib/types';
+import { getConfig } from '@/lib/configStore';
 
 interface SEOConfig {
   siteName: string;
@@ -13,18 +14,33 @@ interface SEOConfig {
   organizationUrl: string;
 }
 
-const seoConfig: SEOConfig = {
-  siteName: 'Lab Essentials',
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://lab-essentials.com',
-  defaultTitle:
-    'Lab Essentials - Premium Lab Equipment for Research and Industry',
-  defaultDescription:
-    'Discover high-quality laboratory equipment and instruments. Trusted by over 1,200 labs worldwide for precision, reliability, and expert support.',
-  defaultImage: '/images/og/default.jpg',
-  twitterHandle: '@LabEssentials',
-  organizationName: 'Lab Essentials',
-  organizationUrl: 'https://lab-essentials.com',
-};
+/**
+ * Get SEO configuration from the config store
+ * Falls back to static values if config store is unavailable
+ */
+function getSEOConfig(): SEOConfig {
+  return {
+    siteName: getConfig('seo.siteName') || 'Lab Essentials',
+    siteUrl:
+      getConfig('seo.siteUrl') ||
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      'https://lab-essentials.com',
+    defaultTitle:
+      getConfig('seo.defaultTitle') ||
+      'Lab Essentials - Premium Lab Equipment for Research and Industry',
+    defaultDescription:
+      getConfig('seo.defaultDescription') ||
+      'Discover high-quality laboratory equipment and instruments. Trusted by over 1,200 labs worldwide for precision, reliability, and expert support.',
+    defaultImage: getConfig('seo.defaultImage') || '/images/og/default.jpg',
+    twitterHandle: getConfig('seo.twitterHandle') || '@LabEssentials',
+    organizationName: getConfig('seo.organizationName') || 'Lab Essentials',
+    organizationUrl:
+      getConfig('seo.organizationUrl') || 'https://lab-essentials.com',
+  };
+}
+
+// Get config at runtime
+const seoConfig: SEOConfig = getSEOConfig();
 
 // Enhanced metadata generation
 export function generateEnhancedMetadata({

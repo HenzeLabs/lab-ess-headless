@@ -29,6 +29,10 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "lib/**/*.ts",
+    "lib/**/*.tsx",
     "tests/**/*.ts",
     "tests/**/*.tsx",
     "scripts/fetch-real-products.ts",
