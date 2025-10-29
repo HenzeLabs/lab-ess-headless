@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-// @ts-expect-error - lib is at project root
 import { fetchClarityMetrics } from '../../../../../lib/clarity/events';
 
 export async function GET(req: NextRequest) {
