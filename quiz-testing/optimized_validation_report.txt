@@ -1,0 +1,152 @@
+================================================================================
+MICROSCOPE QUIZ VALIDATION REPORT
+================================================================================
+
+OVERALL ACCURACY
+--------------------------------------------------------------------------------
+Total test cases: 100
+Type accuracy: 55.0% (55/100)
+Category accuracy: 57.0% (57/100)
+
+CURRENT WEIGHTS
+--------------------------------------------------------------------------------
+application    : 0.45
+magnification  : 0.15
+camera         : 0.20
+persona        : 0.10
+budget         : 0.05
+
+TYPE CONFUSION MATRIX
+--------------------------------------------------------------------------------
+Expected        Predicted       Count     
+--------------------------------------------------------------------------------
+compound        compound        38         ✓
+compound        inverted        2          ✗
+stereo          compound        22         ✗
+stereo          inverted        20         ✗
+inverted        inverted        17         ✓
+inverted        compound        1          ✗
+
+MISMATCHES (First 20)
+--------------------------------------------------------------------------------
+Test #2: insects
+  Expected: stereo (education)
+  Predicted: compound (clinical)
+  Product: Revelation III DIN, 4 Objective Microscope
+  Score: 0.359
+
+Test #4: rocks
+  Expected: stereo (education)
+  Predicted: inverted (research)
+  Product: Inverted Infinity Microscope
+  Score: 0.323
+
+Test #6: plant tissue
+  Expected: stereo (education)
+  Predicted: compound (education)
+  Product: Standard Service Microscope Cleaning Kit
+  Score: 0.280
+
+Test #9: circuit boards
+  Expected: stereo (research)
+  Predicted: inverted (research)
+  Product: Inverted Infinity Microscope
+  Score: 0.426
+
+Test #11: crystals
+  Expected: stereo (education)
+  Predicted: compound (education)
+  Product: Standard Service Microscope Cleaning Kit
+  Score: 0.280
+
+Test #14: fibers
+  Expected: stereo (research)
+  Predicted: inverted (research)
+  Product: Inverted Infinity Microscope
+  Score: 0.477
+
+Test #15: yeast cells
+  Expected: compound (clinical)
+  Predicted: inverted (research)
+  Product: Inverted Infinity Microscope
+  Score: 0.835
+
+Test #16: leaves
+  Expected: stereo (education)
+  Predicted: compound (education)
+  Product: Standard Service Microscope Cleaning Kit
+  Score: 0.280
+
+Test #18: metals
+  Expected: stereo (research)
+  Predicted: inverted (research)
+  Product: Inverted Infinity Microscope
+  Score: 0.431
+
+Test #20: pollen
+  Expected: stereo (education)
+  Predicted: compound (education)
+  Product: Standard Service Microscope Cleaning Kit
+  Score: 0.280
+
+Test #23: gemstones
+  Expected: stereo (research)
+  Predicted: inverted (research)
+  Product: Inverted Infinity Microscope
+  Score: 0.323
+
+Test #26: solder joints
+  Expected: stereo (education)
+  Predicted: compound (education)
+  Product: Standard Service Microscope Cleaning Kit
+  Score: 0.280
+
+Test #28: minerals
+  Expected: stereo (research)
+  Predicted: inverted (research)
+  Product: Inverted Infinity Microscope
+  Score: 0.424
+
+Test #30: lichen
+  Expected: stereo (education)
+  Predicted: compound (education)
+  Product: Standard Service Microscope Cleaning Kit
+  Score: 0.280
+
+Test #32: soil particles
+  Expected: stereo (education)
+  Predicted: compound (clinical)
+  Product: Revelation III DIN, 4 Objective Microscope
+  Score: 0.359
+
+Test #35: moss
+  Expected: stereo (education)
+  Predicted: compound (education)
+  Product: Standard Service Microscope Cleaning Kit
+  Score: 0.280
+
+Test #37: PCB defects
+  Expected: stereo (research)
+  Predicted: inverted (research)
+  Product: Inverted Infinity Microscope
+  Score: 0.462
+
+Test #39: fossils
+  Expected: stereo (education)
+  Predicted: compound (education)
+  Product: Standard Service Microscope Cleaning Kit
+  Score: 0.280
+
+Test #41: textile fibers
+  Expected: stereo (education)
+  Predicted: compound (clinical)
+  Product: Revelation III DIN, 4 Objective Microscope
+  Score: 0.360
+
+Test #43: 3D objects
+  Expected: stereo (research)
+  Predicted: inverted (research)
+  Product: Inverted Infinity Microscope
+  Score: 0.325
+
+================================================================================

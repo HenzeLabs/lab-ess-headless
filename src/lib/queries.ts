@@ -335,6 +335,7 @@ export const getCollectionByHandleQuery = `
               }
             }
             metafields(identifiers: [
+              { namespace: "custom", key: "type" },
               { namespace: "custom", key: "features" },
               { namespace: "custom", key: "applications" },
               { namespace: "custom", key: "specs" },

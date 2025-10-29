@@ -1,0 +1,1019 @@
+{
+  "summary": {
+    "totalTests": 100,
+    "typeCorrect": 18,
+    "categoryCorrect": 68,
+    "typeAccuracy": 18,
+    "categoryAccuracy": 68,
+    "overallAccuracy": 43
+  },
+  "weights": {
+    "application": 0.4,
+    "magnification": 0.2,
+    "camera": 0.15,
+    "persona": 0.15,
+    "budget": 0.1
+  },
+  "results": [
+    {
+      "testId": "1",
+      "sampleType": "soil microbes",
+      "expectedType": "compound",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.63535,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "2",
+      "sampleType": "insects",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Revelation III DIN, 4 Objective Microscope",
+      "score": 0.356,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "3",
+      "sampleType": "cells",
+      "expectedType": "inverted",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.79,
+      "typeMatch": true,
+      "categoryMatch": false
+    },
+    {
+      "testId": "4",
+      "sampleType": "rocks",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.5731875000000001,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "5",
+      "sampleType": "bacteria",
+      "expectedType": "compound",
+      "expectedCategory": "research",
+      "recommendedProduct": "i4 Infinity, 4 Objective Microscope",
+      "score": 0.45,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "6",
+      "sampleType": "plant tissue",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.42758333333333337,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "7",
+      "sampleType": "blood samples",
+      "expectedType": "compound",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "i4 Infinity, 4 Objective Microscope",
+      "score": 0.6461349999999999,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "8",
+      "sampleType": "microorganisms",
+      "expectedType": "compound",
+      "expectedCategory": "education",
+      "recommendedProduct": "Revelation III DIN, 4 Objective Microscope",
+      "score": 0.41000000000000003,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "9",
+      "sampleType": "circuit boards",
+      "expectedType": "stereo",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.46799999999999997,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "10",
+      "sampleType": "tissue slides",
+      "expectedType": "compound",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "Student Pro",
+      "score": 0.49,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "11",
+      "sampleType": "crystals",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.4867222222222223,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "12",
+      "sampleType": "cell cultures",
+      "expectedType": "inverted",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.8700000000000001,
+      "typeMatch": true,
+      "categoryMatch": true
+    },
+    {
+      "testId": "13",
+      "sampleType": "pond water",
+      "expectedType": "compound",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.5705,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "14",
+      "sampleType": "fibers",
+      "expectedType": "stereo",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.52,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "15",
+      "sampleType": "yeast cells",
+      "expectedType": "compound",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "Revelation III DIN, 4 Objective Microscope",
+      "score": 0.56,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "16",
+      "sampleType": "leaves",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.46480263157894736,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "17",
+      "sampleType": "pathogens",
+      "expectedType": "compound",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "i4 Infinity, 4 Objective Microscope",
+      "score": 0.5866666666666667,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "18",
+      "sampleType": "metals",
+      "expectedType": "stereo",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.475,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "19",
+      "sampleType": "protozoans",
+      "expectedType": "compound",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.45,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "20",
+      "sampleType": "pollen",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.4814166666666667,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "21",
+      "sampleType": "cancer cells",
+      "expectedType": "inverted",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.8066666666666668,
+      "typeMatch": true,
+      "categoryMatch": true
+    },
+    {
+      "testId": "22",
+      "sampleType": "algae",
+      "expectedType": "compound",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.6209895833333333,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "23",
+      "sampleType": "gemstones",
+      "expectedType": "stereo",
+      "expectedCategory": "research",
+      "recommendedProduct": "Student Pro",
+      "score": 0.354,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "24",
+      "sampleType": "neurons",
+      "expectedType": "inverted",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.7400000000000001,
+      "typeMatch": true,
+      "categoryMatch": false
+    },
+    {
+      "testId": "25",
+      "sampleType": "fungus",
+      "expectedType": "compound",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.44,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "26",
+      "sampleType": "solder joints",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.49884999999999996,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "27",
+      "sampleType": "parasites",
+      "expectedType": "compound",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "i4 Infinity, 4 Objective Microscope",
+      "score": 0.6710088888888889,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "28",
+      "sampleType": "minerals",
+      "expectedType": "stereo",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.46499999999999997,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "29",
+      "sampleType": "sperm cells",
+      "expectedType": "inverted",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.7200000000000001,
+      "typeMatch": true,
+      "categoryMatch": false
+    },
+    {
+      "testId": "30",
+      "sampleType": "lichen",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.4736875,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "31",
+      "sampleType": "bacteria colonies",
+      "expectedType": "compound",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "Student Pro",
+      "score": 0.52,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "32",
+      "sampleType": "soil particles",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Revelation III DIN, 4 Objective Microscope",
+      "score": 0.355,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "33",
+      "sampleType": "stem cells",
+      "expectedType": "inverted",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.8566666666666667,
+      "typeMatch": true,
+      "categoryMatch": true
+    },
+    {
+      "testId": "34",
+      "sampleType": "chromosomes",
+      "expectedType": "compound",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "i4 Infinity, 4 Objective Microscope",
+      "score": 0.59,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "35",
+      "sampleType": "moss",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.4535,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "36",
+      "sampleType": "diatoms",
+      "expectedType": "compound",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.48000000000000004,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "37",
+      "sampleType": "PCB defects",
+      "expectedType": "stereo",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.5053333333333333,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "38",
+      "sampleType": "embryos",
+      "expectedType": "inverted",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.7600000000000001,
+      "typeMatch": true,
+      "categoryMatch": false
+    },
+    {
+      "testId": "39",
+      "sampleType": "fossils",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.4678333333333334,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "40",
+      "sampleType": "protozoa",
+      "expectedType": "compound",
+      "expectedCategory": "research",
+      "recommendedProduct": "i4 Infinity, 4 Objective Microscope",
+      "score": 0.5066666666666666,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "41",
+      "sampleType": "textile fibers",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Revelation III DIN, 4 Objective Microscope",
+      "score": 0.357,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "42",
+      "sampleType": "blood parasites",
+      "expectedType": "compound",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "i4 Infinity, 4 Objective Microscope",
+      "score": 0.6563625806451613,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "43",
+      "sampleType": "3D objects",
+      "expectedType": "stereo",
+      "expectedCategory": "research",
+      "recommendedProduct": "Student Pro",
+      "score": 0.356,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "44",
+      "sampleType": "tissue culture",
+      "expectedType": "inverted",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.8600000000000001,
+      "typeMatch": true,
+      "categoryMatch": true
+    },
+    {
+      "testId": "45",
+      "sampleType": "spores",
+      "expectedType": "compound",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.6409895833333333,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "46",
+      "sampleType": "small parts",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Revelation III DIN, 4 Objective Microscope",
+      "score": 0.35350000000000004,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "47",
+      "sampleType": "urine sediment",
+      "expectedType": "compound",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "Revelation III DIN, 4 Objective Microscope",
+      "score": 0.6100000000000001,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "48",
+      "sampleType": "coins",
+      "expectedType": "stereo",
+      "expectedCategory": "research",
+      "recommendedProduct": "Student Pro",
+      "score": 0.353,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "49",
+      "sampleType": "oocytes",
+      "expectedType": "inverted",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.7400000000000001,
+      "typeMatch": true,
+      "categoryMatch": false
+    },
+    {
+      "testId": "50",
+      "sampleType": "plankton",
+      "expectedType": "compound",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.435,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "51",
+      "sampleType": "solder paste",
+      "expectedType": "stereo",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.5023333333333333,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "52",
+      "sampleType": "fungal hyphae",
+      "expectedType": "compound",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "Student Pro",
+      "score": 0.53,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "53",
+      "sampleType": "arthropods",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.46108108108108103,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "54",
+      "sampleType": "viruses",
+      "expectedType": "compound",
+      "expectedCategory": "research",
+      "recommendedProduct": "i4 Infinity, 4 Objective Microscope",
+      "score": 0.42666666666666664,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "55",
+      "sampleType": "wood grain",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Revelation III DIN, 4 Objective Microscope",
+      "score": 0.354,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "56",
+      "sampleType": "tumor cells",
+      "expectedType": "inverted",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.7466666666666667,
+      "typeMatch": true,
+      "categoryMatch": false
+    },
+    {
+      "testId": "57",
+      "sampleType": "mold",
+      "expectedType": "compound",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.6382142857142856,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "58",
+      "sampleType": "welding defects",
+      "expectedType": "stereo",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.4675,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "59",
+      "sampleType": "mammalian cells",
+      "expectedType": "inverted",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.8500000000000001,
+      "typeMatch": true,
+      "categoryMatch": true
+    },
+    {
+      "testId": "60",
+      "sampleType": "pollen grains",
+      "expectedType": "compound",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.45,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "61",
+      "sampleType": "jewelry",
+      "expectedType": "stereo",
+      "expectedCategory": "research",
+      "recommendedProduct": "Student Pro",
+      "score": 0.35450000000000004,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "62",
+      "sampleType": "malaria parasites",
+      "expectedType": "compound",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "i4 Infinity, 4 Objective Microscope",
+      "score": 0.6166666666666667,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "63",
+      "sampleType": "insects wings",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.47537804878048784,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "64",
+      "sampleType": "bacterial smears",
+      "expectedType": "compound",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "i4 Infinity, 4 Objective Microscope",
+      "score": 0.6614896,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "65",
+      "sampleType": "seeds",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Revelation III DIN, 4 Objective Microscope",
+      "score": 0.34376875,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "66",
+      "sampleType": "neuronal culture",
+      "expectedType": "inverted",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.8600000000000001,
+      "typeMatch": true,
+      "categoryMatch": true
+    },
+    {
+      "testId": "67",
+      "sampleType": "algae blooms",
+      "expectedType": "compound",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.6187222222222223,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "68",
+      "sampleType": "micro-welds",
+      "expectedType": "stereo",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.5043333333333333,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "69",
+      "sampleType": "epithelial cells",
+      "expectedType": "inverted",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.7600000000000001,
+      "typeMatch": true,
+      "categoryMatch": false
+    },
+    {
+      "testId": "70",
+      "sampleType": "tree rings",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.45715277777777774,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "71",
+      "sampleType": "amoebae",
+      "expectedType": "compound",
+      "expectedCategory": "research",
+      "recommendedProduct": "i4 Infinity, 4 Objective Microscope",
+      "score": 0.5166666666666666,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "72",
+      "sampleType": "solder balls",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Revelation III DIN, 4 Objective Microscope",
+      "score": 0.35550000000000004,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "73",
+      "sampleType": "cervical smears",
+      "expectedType": "compound",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "i4 Infinity, 4 Objective Microscope",
+      "score": 0.6338661016949152,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "74",
+      "sampleType": "coral",
+      "expectedType": "stereo",
+      "expectedCategory": "research",
+      "recommendedProduct": "Student Pro",
+      "score": 0.35350000000000004,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "75",
+      "sampleType": "monolayer cultures",
+      "expectedType": "inverted",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.8800000000000001,
+      "typeMatch": true,
+      "categoryMatch": true
+    },
+    {
+      "testId": "76",
+      "sampleType": "stained slides",
+      "expectedType": "compound",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.46,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "77",
+      "sampleType": "stamp details",
+      "expectedType": "stereo",
+      "expectedCategory": "research",
+      "recommendedProduct": "Student Pro",
+      "score": 0.354,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "78",
+      "sampleType": "helminth eggs",
+      "expectedType": "compound",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "i4 Infinity, 4 Objective Microscope",
+      "score": 0.6012611111111111,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "79",
+      "sampleType": "moss sporophytes",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.46510263157894743,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "80",
+      "sampleType": "dividing cells",
+      "expectedType": "inverted",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.8466666666666668,
+      "typeMatch": true,
+      "categoryMatch": true
+    },
+    {
+      "testId": "81",
+      "sampleType": "water quality",
+      "expectedType": "compound",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.44,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "82",
+      "sampleType": "component leads",
+      "expectedType": "stereo",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.4685,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "83",
+      "sampleType": "bone marrow",
+      "expectedType": "compound",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "i4 Infinity, 4 Objective Microscope",
+      "score": 0.6466666666666666,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "84",
+      "sampleType": "flower parts",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.4527,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "85",
+      "sampleType": "ciliated protozoa",
+      "expectedType": "compound",
+      "expectedCategory": "research",
+      "recommendedProduct": "i4 Infinity, 4 Objective Microscope",
+      "score": 0.4866666666666667,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "86",
+      "sampleType": "microfossils",
+      "expectedType": "compound",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.47000000000000003,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "87",
+      "sampleType": "surface mount",
+      "expectedType": "stereo",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.5028333333333334,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "88",
+      "sampleType": "adherent cells",
+      "expectedType": "inverted",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.7500000000000001,
+      "typeMatch": true,
+      "categoryMatch": false
+    },
+    {
+      "testId": "89",
+      "sampleType": "leaf stomata",
+      "expectedType": "compound",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.6332142857142856,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "90",
+      "sampleType": "coin details",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Revelation III DIN, 4 Objective Microscope",
+      "score": 0.3538,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "91",
+      "sampleType": "leukocytes",
+      "expectedType": "compound",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "i4 Infinity, 4 Objective Microscope",
+      "score": 0.6549970464135021,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "92",
+      "sampleType": "beetle specimens",
+      "expectedType": "stereo",
+      "expectedCategory": "research",
+      "recommendedProduct": "Student Pro",
+      "score": 0.353,
+      "typeMatch": false,
+      "categoryMatch": false
+    },
+    {
+      "testId": "93",
+      "sampleType": "fibroblasts",
+      "expectedType": "inverted",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.8700000000000001,
+      "typeMatch": true,
+      "categoryMatch": true
+    },
+    {
+      "testId": "94",
+      "sampleType": "root hairs",
+      "expectedType": "compound",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.435,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "95",
+      "sampleType": "wire bonding",
+      "expectedType": "stereo",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.5038333333333334,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "96",
+      "sampleType": "CSF cells",
+      "expectedType": "compound",
+      "expectedCategory": "clinical",
+      "recommendedProduct": "i4 Infinity, 4 Objective Microscope",
+      "score": 0.6253147826086956,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "97",
+      "sampleType": "butterfly scales",
+      "expectedType": "stereo",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.4726875,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "98",
+      "sampleType": "primary culture",
+      "expectedType": "inverted",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.8566666666666667,
+      "typeMatch": true,
+      "categoryMatch": true
+    },
+    {
+      "testId": "99",
+      "sampleType": "freshwater microbes",
+      "expectedType": "compound",
+      "expectedCategory": "education",
+      "recommendedProduct": "Student Pro",
+      "score": 0.64035,
+      "typeMatch": false,
+      "categoryMatch": true
+    },
+    {
+      "testId": "100",
+      "sampleType": "BGA defects",
+      "expectedType": "stereo",
+      "expectedCategory": "research",
+      "recommendedProduct": "Inverted Infinity Microscope",
+      "score": 0.5053333333333333,
+      "typeMatch": false,
+      "categoryMatch": true
+    }
+  ]
+}

@@ -24,7 +24,7 @@
     "test:visual": "playwright test tests/visual-regression.spec.ts",
     "test:ui": "playwright test tests/ui-consistency.spec.ts",
     "test:core": "playwright test tests/homepage.spec.ts tests/products.spec.ts tests/cart.spec.ts tests/checkout.spec.ts tests/account.spec.ts tests/shopify-core-flow.spec.ts",
-    "test:e2e": "node scripts/run-playwright-e2e.js",
+    "test:e2e": "playwright test tests/homepage.spec.ts tests/products.spec.ts tests/cart.spec.ts tests/checkout.spec.ts",
     "test:all": "playwright test",
     "test:ci": "npm run test:core",
     "test:links": "node scripts/check-links.mjs",

@@ -10,23 +10,11 @@
 import fetch from 'node-fetch';
 import fs from 'fs';
 
-const GA4_MEASUREMENT_ID = process.env.GA4_MEASUREMENT_ID;
-const GA4_MEASUREMENT_PROTOCOL_SECRET =
-  process.env.GA4_MEASUREMENT_PROTOCOL_SECRET;
-
-if (!GA4_MEASUREMENT_ID) {
-  console.warn('GA4_MEASUREMENT_ID missing');
-}
-
-if (!GA4_MEASUREMENT_PROTOCOL_SECRET) {
-  console.warn('GA4_MEASUREMENT_PROTOCOL_SECRET missing');
-}
-
 // Your actual analytics configuration
 const CONFIG = {
   ga4: {
-    measurementId: GA4_MEASUREMENT_ID,
-    apiSecret: GA4_MEASUREMENT_PROTOCOL_SECRET,
+    measurementId: 'G-7NR2JG1EDP',
+    apiSecret: 'Y-eokJURRGCDdOpXsNm2dw',
     propertyId: '123456789', // You'll need to get this from GA4
   },
   meta: {

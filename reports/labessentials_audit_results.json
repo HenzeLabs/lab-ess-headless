@@ -1,0 +1,166 @@
+{
+  "Parameter Changes": {
+    "files_found": [
+      "src/lib/experiments/types.ts",
+      "src/lib/experiments/manager.ts",
+      "src/components/optimization/ABTesting.tsx",
+      "src/components/optimization/ABTestingFramework.tsx",
+      "src/hooks/useRealPerformance.ts",
+      "src/hooks/useSearch.ts",
+      "src/lib/analytics.ts",
+      "src/lib/experiments/types.ts:FEATURE_FLAGS"
+    ],
+    "description": "Parameters for experiments, feature flags, analytics, and performance thresholds are defined in TypeScript interfaces and objects. Feature flags and experiment configs are modifiable via code and .env variables (see docs/guides/ADVANCED_FEATURES.md).",
+    "gaps": ["No UI or API for live parameter editing by non-devs.", "No audit trail for parameter changes."],
+    "suggestions": ["Implement admin dashboard for parameter management.", "Log parameter changes with user/timestamp."]
+  },
+  "Change Logs": {
+    "files_found": [
+      "src/lib/experiments/manager.ts:trackExperimentEvent",
+      "src/components/optimization/ABTestingFramework.tsx:trackConversion",
+      "src/lib/analytics.ts",
+      "src/lib/analytics-tracking.ts",
+      "src/hooks/useRealPerformance.ts"
+    ],
+    "description": "Experiment events and conversions are logged to localStorage and console. Analytics events are tracked via window.analytics and third-party integrations.",
+    "gaps": ["No centralized change log for all parameter/experiment changes.", "No persistent server-side event log."],
+    "suggestions": ["Add server-side logging for all experiment and parameter changes.", "Export logs to CSV/JSON for audit."]
+  },
+  "Result Tracking": {
+    "files_found": [
+      "src/lib/experiments/types.ts:ExperimentResult",
+      "src/lib/analytics/types.ts:ExperimentAnalytics",
+      "src/hooks/useRealABTesting.ts",
+      "src/lib/analytics.ts",
+      "src/components/optimization/ABTestExamples.tsx"
+    ],
+    "description": "Results tracked via ExperimentResult, ExperimentAnalytics, and analytics events. Metrics include conversion rate, confidence, revenue, etc. Some results visualized in UI components.",
+    "gaps": ["No unified dashboard for all test results.", "Limited export/sharing of results."],
+    "suggestions": ["Build results dashboard aggregating all experiments.", "Enable export to CSV/Sheets."]
+  },
+  "Explanations/Documentation": {
+    "files_found": [
+      "docs/guides/ADVANCED_FEATURES.md",
+      "docs/guides/ENHANCEMENTS.md",
+      "src/lib/experiments/types.ts",
+      "src/components/optimization/README.md",
+      "UX_CONVERSION_OPTIMIZATION_PLAN.md"
+    ],
+    "description": "Documentation and code comments explain experiment rationale, optimization goals, and business logic. Some docstrings and markdown files provide 'why' context.",
+    "gaps": ["Sparse inline code comments explaining optimization decisions.", "Docs not always linked to code changes."],
+    "suggestions": ["Add more inline comments for key logic.", "Reference docs in code where relevant."]
+  },
+  "Backup/Transparency": {
+    "files_found": [
+      "quiz-testing/export_products.js",
+      "quiz-testing/populate_metafields.js",
+      "metafields-backup-20251022-131256.txt",
+      "quiz-testing/quiz_accuracy_report.json",
+      "src/lib/experiments/manager.ts:trackExperimentEvent (localStorage export)",
+      "src/hooks/useRealABTesting.ts (metrics export)"
+    ],
+    "description": "Some scripts export data to JSON/CSV. Experiment events are stored in localStorage. Manual backups exist for metafields and quiz results.",
+    "gaps": ["No automated backup/export for experiment results or analytics.", "No transparency dashboard for stakeholders."],
+    "suggestions": ["Automate regular exports of experiment/analytics data.", "Provide transparency portal for stakeholders."]
+  },
+  "Input Signals": {
+    "files_found": [
+      "src/hooks/useRealPerformance.ts",
+      "src/lib/analytics.ts",
+      "src/lib/experiments/types.ts:ExperimentMetric",
+      "src/hooks/useRealABTesting.ts",
+      "src/lib/experiments/manager.ts:shouldIncludeInExperiment",
+      "src/lib/experiments/types.ts:TargetingRule"
+    ],
+    "description": "Input signals include GA4 events, Clarity, Core Web Vitals (LCP, FID, CLS), user context, and targeting rules. Analytics events are fetched and processed for decision logic.",
+    "gaps": ["No explicit mapping of all external signals to experiment logic.", "Limited support for new signal types (e.g., heatmaps)."],
+    "suggestions": ["Document all input signals and their sources.", "Add support for new analytics/UX signals."]
+  },
+  "Decision Logic": {
+    "files_found": [
+      "src/lib/experiments/manager.ts:shouldIncludeInExperiment",
+      "src/lib/experiments/manager.ts:shouldIncludeInFeature",
+      "src/lib/experiments/manager.ts:validateExperiment",
+      "src/components/optimization/ABTestingFramework.tsx:assignVariantByWeight",
+      "src/hooks/useRealABTesting.ts:processExperimentsToABTests",
+      "src/lib/experiments/types.ts:TargetingRule"
+    ],
+    "description": "Conditional logic for experiment assignment, feature flag rollout, and variant selection is implemented in manager classes and utility functions. Targeting rules and thresholds are used for decisions.",
+    "gaps": ["No visual editor for decision logic.", "Limited explainability for why a user is assigned a variant."],
+    "suggestions": ["Add UI to visualize/edit decision logic.", "Log decision rationale for each assignment."]
+  },
+  "Metrics & Tools": {
+    "files_found": [
+      "src/lib/analytics.ts",
+      "src/lib/analytics-tracking.ts",
+      "src/lib/analytics/types.ts",
+      "src/hooks/useRealPerformance.ts",
+      "lighthouse.config.js",
+      "public/gtm-debug.html",
+      "public/taboola-test.html",
+      "public/clarity-insights-test.html",
+      "public/analytics-dashboard.html"
+    ],
+    "description": "Integrations for GA4, Clarity, Meta Pixel, Taboola, GTM, AdRoll, and Lighthouse are present. Analytics events are tracked and some dashboards exist for visualization.",
+    "gaps": ["No unified integration config file.", "Some tools (AdRoll, Meta) are referenced but not fully documented."],
+    "suggestions": ["Centralize integration configs.", "Document all tool usage and data flows."]
+  },
+  "LLM/AI Dependence": {
+    "files_found": [
+      "src/lib/experiments/types.ts:FEATURE_FLAGS (AI Product Recommendations)",
+      "src/hooks/useSearch.ts (predictive search)",
+      "quiz-testing/quiz_validator.py",
+      "quiz-testing/quiz_validator.ts"
+    ],
+    "description": "AI is used for product recommendations and predictive search. Quiz validator scripts may use LLMs for answer checking. No direct LLM usage for page updates detected.",
+    "gaps": ["No explicit LLM integration for content or UX optimization.", "No feedback loop from AI to site updates."],
+    "suggestions": ["Explore LLMs for dynamic content/UX optimization.", "Log AI-driven changes for audit."]
+  },
+  "Anchors of Performance": {
+    "files_found": [
+      "src/lib/experiments/types.ts:EXPERIMENT_CONFIGS (hero-cta-test)",
+      "src/app/pages/amscope-or-lab-essentials/page.tsx (hero, nav)",
+      "src/components/optimization/ABTestingFramework.tsx",
+      "src/hooks/useRealPerformance.ts"
+    ],
+    "description": "Core elements like hero CTA, PDP layout, and navigation are referenced in experiment configs and page components. Performance metrics are tracked for these anchors.",
+    "gaps": ["No explicit registry of anchor elements.", "No automated performance tracking for all anchors."],
+    "suggestions": ["Create anchor registry for key elements.", "Automate performance tracking for all anchors."]
+  },
+  "A/B Testing": {
+    "files_found": [
+      "src/lib/experiments/types.ts",
+      "src/lib/experiments/manager.ts",
+      "src/lib/experiments/hooks.tsx",
+      "src/components/optimization/ABTesting.tsx",
+      "src/components/optimization/ABTestingFramework.tsx",
+      "src/hooks/useRealABTesting.ts",
+      "docs/guides/ADVANCED_FEATURES.md",
+      "docs/guides/ENHANCEMENTS.md",
+      "src/components/optimization/README.md"
+    ],
+    "description": "A/B testing framework is implemented with experiment configs, feature flags, context providers, and tracking. Docs provide API and usage details. Assignment and tracking logic is present.",
+    "gaps": ["No UI for test creation or monitoring.", "No automated winner selection or rollout.", "Limited test result export."],
+    "suggestions": ["Add admin UI for test management.", "Automate winner selection and rollout.", "Enable result export."]
+  },
+  "AI Feedback Loop": {
+    "files_found": [
+      "quiz-testing/quiz_validator.py",
+      "quiz-testing/quiz_validator.ts"
+    ],
+    "description": "Quiz validator scripts may use AI/LLM for feedback, but no direct feedback loop from AI to UX optimization detected.",
+    "gaps": ["No AI-driven feedback loop for UX or experiment optimization."],
+    "suggestions": ["Integrate AI feedback into experiment analysis and UX changes."]
+  },
+  "Brand Storytelling": {
+    "files_found": [
+      "src/app/pages/amscope-or-lab-essentials/page.tsx",
+      "docs/guides/ENHANCEMENTS.md",
+      "src/lib/experiments/types.ts:EXPERIMENT_CONFIGS (hero-cta-test)",
+      "src/components/optimization/README.md"
+    ],
+    "description": "Brand narrative and 'why' messaging are present in page content and experiment configs. Docs reference storytelling goals.",
+    "gaps": ["No automated enforcement or tracking of brand messaging.", "No content audit for brand consistency."],
+    "suggestions": ["Add content audit for brand consistency.", "Automate checks for brand messaging in key areas."]
+  }
+}

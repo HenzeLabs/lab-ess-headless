@@ -1,0 +1,81 @@
+{
+  "timestamp": "2025-10-24T15:41:04.831Z",
+  "passed": true,
+  "checks": [
+    {
+      "id": "env",
+      "name": "Environment Variables",
+      "status": "pass",
+      "critical": true,
+      "duration": 158
+    },
+    {
+      "id": "typecheck",
+      "name": "TypeScript Type Check",
+      "status": "pass",
+      "critical": true,
+      "duration": 2937
+    },
+    {
+      "id": "lint",
+      "name": "ESLint Check",
+      "status": "pass",
+      "critical": true,
+      "duration": 7219
+    },
+    {
+      "id": "security",
+      "name": "Security Audit",
+      "status": "pass",
+      "critical": true,
+      "duration": 2171
+    },
+    {
+      "id": "build",
+      "name": "Production Build",
+      "status": "skipped",
+      "critical": true
+    },
+    {
+      "id": "bundle",
+      "name": "Bundle Size Check",
+      "status": "pass",
+      "critical": true,
+      "duration": 51
+    },
+    {
+      "id": "seo",
+      "name": "SEO Validation",
+      "status": "pass",
+      "critical": false,
+      "duration": 39
+    },
+    {
+      "id": "tests-core",
+      "name": "Core Functional Tests",
+      "status": "skipped",
+      "critical": true
+    },
+    {
+      "id": "tests-a11y",
+      "name": "Accessibility Tests",
+      "status": "skipped",
+      "critical": true
+    },
+    {
+      "id": "lighthouse",
+      "name": "Lighthouse Performance Audit",
+      "status": "skipped",
+      "critical": true
+    },
+    {
+      "id": "links",
+      "name": "Link Validation",
+      "status": "skipped",
+      "critical": false
+    }
+  ],
+  "criticalFailures": [],
+  "warnings": [],
+  "duration": 12580
+}

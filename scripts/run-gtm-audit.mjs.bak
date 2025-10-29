@@ -16,12 +16,6 @@ import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
-const GA4_MEASUREMENT_ID = process.env.GA4_MEASUREMENT_ID;
-
-if (!GA4_MEASUREMENT_ID) {
-  console.warn('GA4_MEASUREMENT_ID missing');
-}
-
 const REPORT_DIR = 'reports/analytics';
 const TIMESTAMP = new Date().toISOString().replace(/:/g, '-').split('.')[0];
 
@@ -52,9 +46,7 @@ try {
   console.log('📋 Summary:');
   console.log('━'.repeat(60));
   console.log('   GTM Container ID: GTM-WNG6Z9ZD');
-  console.log(
-    `   GA4 Measurement ID: ${GA4_MEASUREMENT_ID || 'unset'} (configured in GTM)`,
-  );
+  console.log('   GA4 Measurement ID: G-QCSHJ4TDMY (configured in GTM)');
   console.log('   Reddit Pixel ID: a2_hwuo2umsdjch');
   console.log('   Taboola Pixel: Official tag configured');
   console.log('   Microsoft Clarity: Custom + Official tags');

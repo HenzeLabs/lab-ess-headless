@@ -1,0 +1,122 @@
+[
+  {
+    "id": "mock-compound-edu-1",
+    "title": "Student Compound Microscope 40-400x",
+    "handle": "student-compound-40-400x",
+    "price": 299,
+    "metafields": {
+      "features": "LED illumination, Mechanical stage, 40x-400x magnification",
+      "applications": "Bacteria, blood samples, pond water, tissue slides, microorganisms, transparent specimens",
+      "specs": "Magnification: 40x-400x, Type: Compound, Head: Monocular",
+      "equipment_category": "Education"
+    }
+  },
+  {
+    "id": "mock-compound-edu-2",
+    "title": "Educational Compound Microscope with Camera 40-1000x",
+    "handle": "edu-compound-camera-1000x",
+    "price": 599,
+    "metafields": {
+      "features": "LED illumination, USB camera, Mechanical stage, Trinocular head",
+      "applications": "Soil microbes, bacteria, yeast cells, algae, spores, plankton, water quality analysis",
+      "specs": "Magnification: 40x-1000x, Type: Compound, Head: Trinocular, Camera: Yes",
+      "equipment_category": "Education"
+    }
+  },
+  {
+    "id": "mock-compound-clinical-1",
+    "title": "Clinical Compound Microscope 100-1500x",
+    "handle": "clinical-compound-1500x",
+    "price": 1199,
+    "metafields": {
+      "features": "LED illumination, Mechanical stage, Phase contrast, Oil immersion",
+      "applications": "Blood samples, urine sediment, parasites, bacterial smears, clinical bacteriology",
+      "specs": "Magnification: 100x-1500x, Type: Compound, Head: Binocular",
+      "equipment_category": "Clinical"
+    }
+  },
+  {
+    "id": "mock-compound-research-1",
+    "title": "Research Compound Microscope 100-2000x",
+    "handle": "research-compound-2000x",
+    "price": 1899,
+    "metafields": {
+      "features": "LED illumination, USB camera, Mechanical stage, Phase contrast, Infinity optics",
+      "applications": "Bacteria, parasites, pathogens, chromosomes, protozoans, viruses, dividing cells",
+      "specs": "Magnification: 100x-2000x, Type: Compound, Head: Trinocular, Camera: Yes",
+      "equipment_category": "Research"
+    }
+  },
+  {
+    "id": "mock-stereo-edu-1",
+    "title": "Student Stereo Microscope 20-40x",
+    "handle": "student-stereo-20-40x",
+    "price": 399,
+    "metafields": {
+      "features": "Dual light, LED illumination, Wide field view",
+      "applications": "Insects, rocks, minerals, leaves, moss, seeds, coins, fossils, flowers, opaque specimens",
+      "specs": "Magnification: 20x-40x, Type: Stereo, Head: Binocular",
+      "equipment_category": "Education"
+    }
+  },
+  {
+    "id": "mock-stereo-edu-2",
+    "title": "Educational Stereo Microscope with Camera 20-80x",
+    "handle": "edu-stereo-camera-80x",
+    "price": 699,
+    "metafields": {
+      "features": "Dual light, USB camera, LED illumination, Wide zoom range",
+      "applications": "Insects, circuit boards, solder joints, plant tissue, pollen, arthropods, textile fibers",
+      "specs": "Magnification: 20x-80x, Type: Stereo, Head: Trinocular, Camera: Yes",
+      "equipment_category": "Education"
+    }
+  },
+  {
+    "id": "mock-stereo-research-1",
+    "title": "Professional Stereo Microscope 10-120x",
+    "handle": "professional-stereo-120x",
+    "price": 1599,
+    "metafields": {
+      "features": "Dual light, USB camera, Mechanical stage, Zoom optics",
+      "applications": "Circuit boards, metals, gemstones, welding defects, PCB inspection, micro-welds, electronics",
+      "specs": "Magnification: 10x-120x, Type: Stereo, Head: Trinocular, Camera: Yes",
+      "equipment_category": "Research"
+    }
+  },
+  {
+    "id": "mock-inverted-clinical-1",
+    "title": "Clinical Inverted Microscope 40-400x",
+    "handle": "clinical-inverted-400x",
+    "price": 1499,
+    "metafields": {
+      "features": "LED illumination, Phase contrast, Mechanical stage, USB camera",
+      "applications": "Cell cultures, tissue culture, embryos, oocytes, adherent cells, mammalian cells",
+      "specs": "Magnification: 40x-400x, Type: Inverted, Head: Trinocular, Camera: Yes",
+      "equipment_category": "Clinical"
+    }
+  },
+  {
+    "id": "mock-inverted-research-1",
+    "title": "Research Inverted Microscope 40-1500x",
+    "handle": "research-inverted-1500x",
+    "price": 1950,
+    "metafields": {
+      "features": "LED illumination, USB camera, Mechanical stage, Phase contrast, Infinity optics",
+      "applications": "Stem cells, neuronal culture, fibroblasts, primary culture, monolayer cultures, dividing cells",
+      "specs": "Magnification: 40x-1500x, Type: Inverted, Head: Trinocular, Camera: Yes",
+      "equipment_category": "Research"
+    }
+  },
+  {
+    "id": "mock-digital-1",
+    "title": "Digital Microscope with LCD Screen 50-1000x",
+    "handle": "digital-microscope-lcd",
+    "price": 799,
+    "metafields": {
+      "features": "LCD screen, USB camera, LED illumination, Image capture, Video recording",
+      "applications": "Digital imaging, photography, video microscopy, classroom presentations",
+      "specs": "Magnification: 50x-1000x, Type: Digital, Camera: Built-in",
+      "equipment_category": "Education"
+    }
+  }
+]

@@ -1,0 +1,114 @@
+{
+  "hardGates": {
+    "description": "These gates MUST pass for deployment to proceed. ANY failure blocks deploy.",
+    "tests": {
+      "passingRate": 100,
+      "allowFlaky": false,
+      "description": "100% passing tests (unit/integration/E2E), zero flaky"
+    },
+    "lighthouse": {
+      "mobile": {
+        "performance": 90,
+        "seo": 95,
+        "bestPractices": 95,
+        "pwa": 95,
+        "accessibility": 95
+      },
+      "desktop": {
+        "performance": 95,
+        "seo": 95,
+        "bestPractices": 95,
+        "pwa": 95,
+        "accessibility": 95
+      },
+      "network": "3G Fast",
+      "cpu": "4x slowdown",
+      "description": "Lighthouse PWA+SEO+Best Practices ≥ 95, Perf ≥ 90 on 3G Fast, 4X CPU"
+    },
+    "cwv": {
+      "percentile": 75,
+      "device": "mobile",
+      "lcp": 2500,
+      "inp": 200,
+      "cls": 0.1,
+      "description": "CWV p75 (mobile): LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1"
+    },
+    "console": {
+      "errors": 0,
+      "description": "Zero console errors during test runs"
+    },
+    "links": {
+      "broken": 0,
+      "notFound": 0,
+      "description": "0 broken links, 0 404s (except intentional exclusions)"
+    },
+    "accessibility": {
+      "axeCritical": 0,
+      "wcag21AABlockers": 0,
+      "description": "axe-core zero critical, WCAG 2.1 AA blockers = 0"
+    },
+    "security": {
+      "secretsInRepo": false,
+      "cspEnabled": true,
+      "sriEnabled": true,
+      "httpsOnly": true,
+      "highVulns": 0,
+      "criticalVulns": 0,
+      "description": "No secrets in repo, CSP + SRI + HTTPS only, deps with 0 high/critical vulns"
+    }
+  },
+  "performanceBudgets": {
+    "bundle": {
+      "maxJsKb": 1300,
+      "maxThirdPartyKb": 200,
+      "maxCssKb": 150,
+      "maxFontsKb": 100
+    },
+    "requests": {
+      "maxTotal": 50,
+      "maxThirdParty": 10
+    },
+    "timing": {
+      "maxFCP": 1800,
+      "maxLCP": 2500,
+      "maxTTI": 3800,
+      "maxTBT": 300,
+      "maxCLS": 0.1,
+      "maxINP": 200
+    }
+  },
+  "testMatrix": {
+    "devices": [
+      "iPhone 12",
+      "iPhone 14",
+      "iPhone SE",
+      "Pixel 5",
+      "Pixel 7",
+      "iPad",
+      "Galaxy S21"
+    ],
+    "browsers": [
+      "chrome-latest",
+      "firefox-latest",
+      "safari-latest",
+      "safari-previous",
+      "edge-latest"
+    ],
+    "networks": [
+      "3G Fast",
+      "4G",
+      "offline"
+    ]
+  },
+  "exclusions": {
+    "intentional404s": [
+      "/404",
+      "/test-404"
+    ],
+    "externalLinks": [
+      "https://checkout.shopify.com",
+      "https://www.facebook.com",
+      "https://www.instagram.com"
+    ]
+  }
+}

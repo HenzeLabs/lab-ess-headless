@@ -1,0 +1,315 @@
+name: Continuous Governance
+
+# Weekly quality audits and monitoring
+on:
+  schedule:
+    # Every Sunday at 2 AM UTC
+    - cron: '0 2 * * 0'
+
+  # Allow manual trigger
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '20.x'
+
+jobs:
+  weekly-audit:
+    name: Weekly Quality Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run weekly audit
+        run: npm run pre-deploy:quick
+        continue-on-error: true
+        id: audit
+
+      - name: Upload audit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-audit-reports
+          path: |
+            deployment-checklist-report.html
+            deployment-checklist-report.json
+          retention-days: 90
+
+      - name: Check for failures
+        if: steps.audit.outcome == 'failure'
+        run: |
+          echo "::error::Weekly audit failed! Review the reports."
+          exit 1
+
+      - name: Notify on success
+        if: success()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              text: '✅ Weekly governance audit passed',
+              attachments: [{
+                color: 'good',
+                fields: [
+                  {
+                    title: 'Status',
+                    value: 'All quality gates passed',
+                    short: true
+                  },
+                  {
+                    title: 'Date',
+                    value: '${{ github.event.head_commit.timestamp }}',
+                    short: true
+                  }
+                ]
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+        if: ${{ secrets.SLACK_WEBHOOK != '' }}
+
+      - name: Notify on failure
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              text: '🚨 Weekly governance audit FAILED',
+              attachments: [{
+                color: 'danger',
+                fields: [
+                  {
+                    title: 'Status',
+                    value: 'Quality gates failed - review required',
+                    short: true
+                  },
+                  {
+                    title: 'Action Required',
+                    value: 'Check GitHub Actions logs',
+                    short: true
+                  }
+                ],
+                actions: [{
+                  type: 'button',
+                  text: 'View Logs',
+                  url: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+                }]
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+        if: ${{ secrets.SLACK_WEBHOOK != '' }}
+
+  bundle-size-tracking:
+    name: Bundle Size Monitoring
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+        env:
+          SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN }}
+          SHOPIFY_STOREFRONT_ACCESS_TOKEN: ${{ secrets.SHOPIFY_STOREFRONT_ACCESS_TOKEN }}
+          NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN: ${{ secrets.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN }}
+
+      - name: Check bundle size
+        run: npm run audit:bundle
+
+      - name: Calculate bundle metrics
+        id: bundle
+        run: |
+          JS_SIZE=$(du -sk .next/static/chunks | cut -f1)
+          CSS_SIZE=$(du -sk .next/static/css 2>/dev/null | cut -f1 || echo 0)
+          TOTAL_SIZE=$((JS_SIZE + CSS_SIZE))
+
+          echo "js_size=${JS_SIZE}" >> $GITHUB_OUTPUT
+          echo "css_size=${CSS_SIZE}" >> $GITHUB_OUTPUT
+          echo "total_size=${TOTAL_SIZE}" >> $GITHUB_OUTPUT
+
+      - name: Store bundle size history
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-size-${{ github.sha }}
+          path: |
+            .next/analyze/
+          retention-days: 90
+
+      - name: Comment bundle size
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo "📦 Bundle Size Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Asset | Size |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|------|" >> $GITHUB_STEP_SUMMARY
+          echo "| JavaScript | ${{ steps.bundle.outputs.js_size }} KB |" >> $GITHUB_STEP_SUMMARY
+          echo "| CSS | ${{ steps.bundle.outputs.css_size }} KB |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Total** | **${{ steps.bundle.outputs.total_size }} KB** |" >> $GITHUB_STEP_SUMMARY
+
+  dependency-audit:
+    name: Dependency Security Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+        id: npm-audit
+
+      - name: Run security checks
+        run: npm run audit:security
+        continue-on-error: true
+        id: security-audit
+
+      - name: Check for outdated dependencies
+        run: |
+          echo "## Outdated Dependencies" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          npm outdated >> $GITHUB_STEP_SUMMARY || true
+
+      - name: Notify if vulnerabilities found
+        if: steps.npm-audit.outcome == 'failure' || steps.security-audit.outcome == 'failure'
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              text: '⚠️ Security vulnerabilities detected',
+              attachments: [{
+                color: 'warning',
+                text: 'Run `npm audit` and `npm run audit:security` to review and fix vulnerabilities',
+                actions: [{
+                  type: 'button',
+                  text: 'View Details',
+                  url: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+                }]
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+        if: ${{ secrets.SLACK_WEBHOOK != '' }}
+
+  performance-baseline:
+    name: Performance Baseline Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: false # Disabled by default - enable when you have a staging environment
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Lighthouse CI
+        run: npm run lh
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Upload Lighthouse results
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-results
+          path: .lighthouseci/
+          retention-days: 30
+
+  quarterly-review:
+    name: Quarterly Budget Review
+    runs-on: ubuntu-latest
+    # Only run on first Sunday of the quarter
+    if: github.event.schedule == '0 2 * * 0' && (github.event.head_commit.timestamp | fromJSON).month % 3 == 1
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create quarterly review issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const quarterlyReview = `
+            ## 📊 Quarterly Governance Review
+
+            It's time for our quarterly review of deployment gates and performance budgets!
+
+            ### Review Checklist
+
+            - [ ] Review and update bundle size budgets in \`deployment-gates.config.json\`
+            - [ ] Review Core Web Vitals thresholds
+            - [ ] Update Lighthouse score requirements
+            - [ ] Review test coverage and add missing scenarios
+            - [ ] Update dependencies and fix security vulnerabilities
+            - [ ] Review and update observability alerts
+            - [ ] Test rollback procedures
+            - [ ] Review and update documentation
+
+            ### Current Metrics
+
+            - Bundle Size: Review last 90 days of bundle sizes
+            - Performance: Check Lighthouse CI trends
+            - Security: Review npm audit history
+            - Tests: Analyze test reliability and coverage
+
+            ### Action Items
+
+            Please complete this review within 2 weeks and update thresholds as needed.
+
+            ---
+            *Automated by Continuous Governance workflow*
+            `;
+
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Quarterly Governance Review - Q${Math.ceil((new Date().getMonth() + 1) / 3)} ${new Date().getFullYear()}`,
+              body: quarterlyReview,
+              labels: ['governance', 'quarterly-review', 'high-priority']
+            });

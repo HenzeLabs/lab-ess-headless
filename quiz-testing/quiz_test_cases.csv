@@ -1,0 +1,101 @@
+test_id,sample_type,sample_opacity,persona,camera_need,magnification,budget,special_features,expected_type,expected_product_category,notes
+1,soil microbes,transparent,education,no,400,500,LED illumination,compound,education,Basic educational compound microscope
+2,insects,opaque,education,yes,60,800,Dual light,stereo,education,Stereo with camera for classroom
+3,cells,transparent,clinical,yes,1000,1500,Mechanical stage,inverted,clinical,Inverted for cell culture work
+4,rocks,opaque,education,no,40,400,LED illumination,stereo,education,Simple stereo for geology
+5,bacteria,transparent,research,yes,1500,1800,USB camera|Mechanical stage,compound,research,High-end compound for research
+6,plant tissue,opaque,education,no,20,300,,stereo,education,Low magnification for botany
+7,blood samples,transparent,clinical,yes,800,1200,LED illumination|Mechanical stage,compound,clinical,Clinical compound for hematology
+8,microorganisms,transparent,education,yes,600,700,USB camera,compound,education,Educational compound with camera
+9,circuit boards,opaque,research,yes,80,1600,Dual light|USB camera,stereo,research,Professional stereo for electronics
+10,tissue slides,transparent,clinical,no,400,900,LED illumination,compound,clinical,Basic clinical compound
+11,crystals,opaque,education,no,30,450,Dual light,stereo,education,Mineralogy classroom use
+12,cell cultures,transparent,research,yes,1200,1900,Mechanical stage|USB camera,inverted,research,Advanced inverted for research
+13,pond water,transparent,education,no,200,350,LED illumination,compound,education,Entry-level biology
+14,fibers,opaque,research,yes,100,1400,Dual light|Mechanical stage,stereo,research,Forensics stereo microscope
+15,yeast cells,transparent,clinical,yes,600,1100,USB camera,compound,clinical,Microbiology lab compound
+16,leaves,opaque,education,no,25,380,Dual light,stereo,education,Basic botany stereo
+17,pathogens,transparent,clinical,yes,1800,1950,Mechanical stage|USB camera|LED illumination,compound,clinical,High-mag clinical compound
+18,metals,opaque,research,yes,150,1700,Dual light|USB camera,stereo,research,Metallurgy stereo
+19,protozoans,transparent,education,yes,500,650,LED illumination|USB camera,compound,education,Biology classroom with imaging
+20,pollen,opaque,education,no,60,420,,stereo,education,Simple palynology stereo
+21,cancer cells,transparent,research,yes,2000,2000,Mechanical stage|USB camera|LED illumination,inverted,research,Advanced cell research
+22,algae,transparent,education,no,300,480,LED illumination,compound,education,Aquatic biology compound
+23,gemstones,opaque,research,no,40,1300,Dual light,stereo,research,Gemology professional stereo
+24,neurons,transparent,clinical,yes,1000,1450,Mechanical stage|USB camera,inverted,clinical,Neuroscience inverted
+25,fungus,transparent,education,yes,400,550,LED illumination|USB camera,compound,education,Mycology classroom
+26,solder joints,opaque,education,no,35,500,Dual light,stereo,education,Electronics training stereo
+27,parasites,transparent,clinical,yes,900,1350,Mechanical stage|LED illumination,compound,clinical,Parasitology clinical
+28,minerals,opaque,research,yes,50,1500,Dual light|USB camera,stereo,research,Geology research stereo
+29,sperm cells,transparent,clinical,yes,1200,1600,Mechanical stage|USB camera,inverted,clinical,IVF clinic inverted
+30,lichen,opaque,education,no,45,400,,stereo,education,Ecology education stereo
+31,bacteria colonies,transparent,clinical,no,700,950,LED illumination,compound,clinical,Bacteriology basic compound
+32,soil particles,opaque,education,yes,50,600,Dual light|USB camera,stereo,education,Soil science classroom
+33,stem cells,transparent,research,yes,1500,1950,Mechanical stage|USB camera|LED illumination,inverted,research,Stem cell research inverted
+34,chromosomes,transparent,clinical,yes,1600,1700,Mechanical stage|USB camera,compound,clinical,Cytogenetics clinical
+35,moss,opaque,education,no,30,350,Dual light,stereo,education,Bryology education stereo
+36,diatoms,transparent,education,yes,800,720,LED illumination|USB camera,compound,education,Phycology classroom
+37,PCB defects,opaque,research,yes,120,1650,Dual light|Mechanical stage|USB camera,stereo,research,Quality control stereo
+38,embryos,transparent,clinical,yes,800,1400,Mechanical stage|USB camera,inverted,clinical,Embryology IVF
+39,fossils,opaque,education,no,20,390,,stereo,education,Paleontology education
+40,protozoa,transparent,research,yes,1100,1800,Mechanical stage|USB camera|LED illumination,compound,research,Protozoology research
+41,textile fibers,opaque,education,yes,70,650,Dual light|USB camera,stereo,education,Textile science classroom
+42,blood parasites,transparent,clinical,yes,1400,1550,Mechanical stage|LED illumination,compound,clinical,Tropical medicine clinical
+43,3D objects,opaque,research,no,60,1450,Dual light,stereo,research,Professional 3D inspection
+44,tissue culture,transparent,research,yes,1300,1900,Mechanical stage|USB camera,inverted,research,Cell biology research
+45,spores,transparent,education,no,500,480,LED illumination,compound,education,Microbiology education
+46,small parts,opaque,education,yes,35,550,Dual light|USB camera,stereo,education,Manufacturing training
+47,urine sediment,transparent,clinical,yes,600,1050,LED illumination|Mechanical stage,compound,clinical,Urinalysis clinical
+48,coins,opaque,research,no,30,1350,Dual light,stereo,research,Numismatics professional
+49,oocytes,transparent,clinical,yes,1000,1500,Mechanical stage|USB camera,inverted,clinical,Reproductive medicine
+50,plankton,transparent,education,yes,350,590,LED illumination|USB camera,compound,education,Marine biology classroom
+51,solder paste,opaque,research,yes,90,1600,Dual light|USB camera|Mechanical stage,stereo,research,SMT inspection stereo
+52,fungal hyphae,transparent,clinical,no,800,1100,LED illumination,compound,clinical,Medical mycology
+53,arthropods,opaque,education,no,25,370,,stereo,education,Entomology basic
+54,viruses,transparent,research,yes,1900,1980,Mechanical stage|USB camera|LED illumination,compound,research,Virology research (note: EM preferred)
+55,wood grain,opaque,education,yes,40,520,Dual light|USB camera,stereo,education,Dendrochronology classroom
+56,tumor cells,transparent,clinical,yes,1100,1650,Mechanical stage|USB camera|LED illumination,inverted,clinical,Oncology clinical
+57,mold,transparent,education,no,450,490,LED illumination,compound,education,Food science education
+58,welding defects,opaque,research,yes,75,1550,Dual light|USB camera,stereo,research,Metallurgy QC
+59,mammalian cells,transparent,research,yes,1400,1950,Mechanical stage|USB camera,inverted,research,Cell culture research
+60,pollen grains,transparent,education,yes,500,620,LED illumination|USB camera,compound,education,Palynology with imaging
+61,jewelry,opaque,research,no,45,1400,Dual light,stereo,research,Gemology professional
+62,malaria parasites,transparent,clinical,yes,1500,1700,Mechanical stage|USB camera|LED illumination,compound,clinical,Tropical disease clinical
+63,insects wings,opaque,education,no,30,410,Dual light,stereo,education,Entomology detail study
+64,bacterial smears,transparent,clinical,yes,900,1250,LED illumination|Mechanical stage,compound,clinical,Clinical bacteriology
+65,seeds,opaque,education,yes,20,480,Dual light|USB camera,stereo,education,Seed identification classroom
+66,neuronal culture,transparent,research,yes,1300,1880,Mechanical stage|USB camera,inverted,research,Neuroscience research
+67,algae blooms,transparent,education,no,350,450,LED illumination,compound,education,Environmental science
+68,micro-welds,opaque,research,yes,110,1620,Dual light|USB camera|Mechanical stage,stereo,research,Precision welding QC
+69,epithelial cells,transparent,clinical,yes,800,1350,Mechanical stage|USB camera,inverted,clinical,Cytology clinical
+70,tree rings,opaque,education,no,25,360,,stereo,education,Forestry education
+71,amoebae,transparent,research,yes,1000,1750,Mechanical stage|USB camera|LED illumination,compound,research,Microbiology research
+72,solder balls,opaque,education,yes,55,580,Dual light|USB camera,stereo,education,Electronics QC training
+73,cervical smears,transparent,clinical,yes,700,1180,LED illumination|Mechanical stage,compound,clinical,Gynecology clinical
+74,coral,opaque,research,no,35,1320,Dual light,stereo,research,Marine biology research
+75,monolayer cultures,transparent,research,yes,1100,1850,Mechanical stage|USB camera,inverted,research,Cell biology lab
+76,stained slides,transparent,education,yes,600,640,LED illumination|USB camera,compound,education,Histology classroom
+77,stamp details,opaque,research,no,40,1280,Dual light,stereo,research,Philately professional
+78,helminth eggs,transparent,clinical,yes,500,1080,LED illumination|Mechanical stage,compound,clinical,Parasitology clinical
+79,moss sporophytes,opaque,education,no,28,380,Dual light,stereo,education,Bryology detail
+80,dividing cells,transparent,research,yes,1600,1920,Mechanical stage|USB camera|LED illumination,inverted,research,Mitosis research
+81,water quality,transparent,education,yes,400,570,LED illumination|USB camera,compound,education,Environmental monitoring
+82,component leads,opaque,research,yes,85,1580,Dual light|USB camera,stereo,research,Electronics inspection
+83,bone marrow,transparent,clinical,yes,1200,1620,Mechanical stage|USB camera|LED illumination,compound,clinical,Hematology clinical
+84,flower parts,opaque,education,no,22,350,,stereo,education,Botany dissection
+85,ciliated protozoa,transparent,research,yes,1300,1820,Mechanical stage|USB camera|LED illumination,compound,research,Protist research
+86,microfossils,transparent,education,yes,700,680,LED illumination|USB camera,compound,education,Micropaleontology
+87,surface mount,opaque,research,yes,95,1640,Dual light|USB camera|Mechanical stage,stereo,research,SMD inspection pro
+88,adherent cells,transparent,clinical,yes,900,1420,Mechanical stage|USB camera,inverted,clinical,Cell therapy clinical
+89,leaf stomata,transparent,education,no,400,490,LED illumination,compound,education,Plant anatomy education
+90,coin details,opaque,education,yes,38,540,Dual light|USB camera,stereo,education,Numismatics classroom
+91,leukocytes,transparent,clinical,yes,1100,1580,Mechanical stage|USB camera|LED illumination,compound,clinical,Differential count clinical
+92,beetle specimens,opaque,research,no,30,1300,Dual light,stereo,research,Entomology taxonomy
+93,fibroblasts,transparent,research,yes,1200,1890,Mechanical stage|USB camera,inverted,research,Tissue engineering
+94,root hairs,transparent,education,yes,350,560,LED illumination|USB camera,compound,education,Plant biology imaging
+95,wire bonding,opaque,research,yes,105,1610,Dual light|USB camera|Mechanical stage,stereo,research,Semiconductor QC
+96,CSF cells,transparent,clinical,yes,650,1150,LED illumination|Mechanical stage,compound,clinical,Cerebrospinal fluid analysis
+97,butterfly scales,opaque,education,no,35,400,Dual light,stereo,education,Lepidopterology education
+98,primary culture,transparent,research,yes,1500,1940,Mechanical stage|USB camera|LED illumination,inverted,research,Primary cell culture
+99,freshwater microbes,transparent,education,no,450,500,LED illumination,compound,education,Limnology education
+100,BGA defects,opaque,research,yes,120,1680,Dual light|USB camera|Mechanical stage,stereo,research,Advanced PCB inspection

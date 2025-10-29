@@ -1,0 +1,149 @@
+[
+  {
+    "id": "gid://shopify/Product/7244581994555",
+    "title": "Standard Service Microscope Cleaning Kit",
+    "handle": "standard-service-microscope-cleaning-kit",
+    "productType": "",
+    "price": 39,
+    "currencyCode": "USD",
+    "metafields": {}
+  },
+  {
+    "id": "gid://shopify/Product/7244582322235",
+    "title": "Universal Microscope Case",
+    "handle": "universal-microscope-case",
+    "productType": "",
+    "price": 324.99,
+    "currencyCode": "USD",
+    "metafields": {}
+  },
+  {
+    "id": "gid://shopify/Product/7244582912059",
+    "title": "Pro Service Microscope Cleaning Kit",
+    "handle": "pro-service-microscope-cleaning-kit",
+    "productType": "",
+    "price": 79,
+    "currencyCode": "USD",
+    "metafields": {}
+  },
+  {
+    "id": "gid://shopify/Product/7244583108667",
+    "title": "Inverted Infinity Microscope",
+    "handle": "inverted",
+    "productType": "",
+    "price": 4541.06,
+    "currencyCode": "USD",
+    "metafields": {
+      "features": "[\"Infinity-corrected optics for flat high-contrast images\",\"Bright cool LED illumination with Köhler setup\",\"Long-working-distance condenser for dish and flask viewing\",\"Optional phase contrast and trinocular camera port available\",\"Smooth coaxial focusing and large mechanical stage travel\",\"Durable metal construction for daily laboratory use\"]",
+      "applications": "[\"Live cell culture observation and tissue culture work\",\"Inverted phase contrast for microbiology and cell growth monitoring\",\"Clinical and research labs requiring long working distance objectives\",\"Educational cell biology training and demonstration\"]",
+      "specs": "[\"Magnification: 40x-400x (4× 10× 20× 40× objectives with 10× eyepieces)\",\"Optical System: Infinity-corrected plan achromatic\",\"Head: Binocular Seidentopf 45° inclined 360° rotatable\",\"Stage: Mechanical stage 120×78mm travel\",\"Condenser: Long-working-distance Abbe NA 0.3 with phase and brightfield\",\"Illumination: 5W LED Köhler with variable intensity\",\"Focusing: Coaxial coarse/fine 2µm graduation\",\"Type: Inverted\"]",
+      "equipment_category": "Research"
+    }
+  },
+  {
+    "id": "gid://shopify/Product/7244584058939",
+    "title": "i4 Lumin Epi-Fluorescence Microscope",
+    "handle": "i4-lumin-epi-fluorescence",
+    "productType": "Microscope",
+    "price": 1949.35,
+    "currencyCode": "USD",
+    "metafields": {
+      "features": "[\"Integrated LED epi-fluorescence illumination for bright, cool light output\",\"Infinity-corrected plan optics for flat, high-contrast images\",\"Interchangeable filter cubes (B, G, R, UV)\",\"Ergonomic trinocular head with camera port\",\"Durable metal frame with smooth coaxial focus\",\"Quiet, low-heat operation for long sessions\"]",
+      "applications": "[\"Fluorescence imaging of cells and tissue samples\",\"Clinical and research diagnostics\",\"Educational training in fluorescence microscopy\",\"Live cell and phase contrast observation\",\"Material science and biochemical fluorescence assays\"]",
+      "specs": "[\"Illumination: LED fluorescence module with multiple excitation filters (B/G/R/UV options)\",\"Optics: Infinity-corrected plan achromatic objectives (4×, 10×, 40×, 100× oil)\",\"Head: Seidentopf trinocular viewing head (30° inclined, 360° rotatable)\",\"Eyepieces: 10× widefield (22 mm field of view)\",\"Stage: Double-layer mechanical stage (140 × 140 mm, travel 75 × 50 mm)\",\"Focus: Coaxial coarse/fine adjustment (2 µm fine graduation)\",\"Condenser: Abbe NA 1.25 with iris diaphragm and phase contrast attachments\",\"Power: 12 V DC illumination supply (> 50 000 h LED life)\"]",
+      "equipment_category": "Microscope"
+    }
+  },
+  {
+    "id": "gid://shopify/Product/7244584288315",
+    "title": "i4 Semen Evaluation Microscope",
+    "handle": "i4-semen-evaluation",
+    "productType": "Incubators & Slide Prep",
+    "price": 3120,
+    "currencyCode": "USD",
+    "metafields": {}
+  },
+  {
+    "id": "gid://shopify/Product/7421335601211",
+    "title": "Revelation III DIN, 4 Objective Microscope",
+    "handle": "revelation-series",
+    "productType": "Microscope",
+    "price": 519.51,
+    "currencyCode": "USD",
+    "metafields": {
+      "features": "[\"Infinity Semi-Plan and Plan Achromat optics deliver sharp flat images\",\"LED daylight long-life illumination with variable brightness\",\"Durable mechanical stage with smooth X-Y travel\",\"Coaxial focus with tension control and safety stop\",\"Ergonomic Seidentopf head for comfortable use\",\"Optional trinocular head for camera integration\"]",
+      "applications": "[\"Clinical laboratories for hematology and cytology\",\"Research and veterinary microscopy\",\"University teaching and training labs\",\"Oil-immersion bacteriology and cell structure examination\"]",
+      "specs": "[\"Magnification: 40x-1000x (4× NA 0.10, 10× NA 0.25, 40XR NA 0.65, 100XR NA 1.25 oil)\",\"Optical System: Infinity Semi-Plan and Plan Achromat\",\"Head: Seidentopf binocular or trinocular 30° inclined 360° rotatable\",\"Eyepieces: WF 10×/18 standard or optional 10×/20 High-Point Super WF\",\"Stage: 142×133mm travel 73×43mm\",\"Condenser: Moveable Abbe NA 1.25 focusable\",\"Illumination: LED daylight long-life variable intensity\",\"Power: AC 100-240V auto-switching\",\"Weight: 16.0 lbs binocular 16.6 lbs trinocular\",\"Dimensions: 14.1″H × 10.7″L × 6.1″W\",\"Type: Compound\"]",
+      "equipment_category": "Clinical"
+    }
+  },
+  {
+    "id": "gid://shopify/Product/7421336518715",
+    "title": "BioVID 1080+ Microscope Camera",
+    "handle": "biovid-hd-1080-microscope-camera",
+    "productType": "Camera",
+    "price": 814.77,
+    "currencyCode": "USD",
+    "metafields": {}
+  },
+  {
+    "id": "gid://shopify/Product/7421336617019",
+    "title": "Optical Microscope Adapter for MiniVID and BioVID Cameras",
+    "handle": "eyepiece-adapter-for-minivid-cameras",
+    "productType": "Camera Accessory",
+    "price": 92.82,
+    "currencyCode": "USD",
+    "metafields": {}
+  },
+  {
+    "id": "gid://shopify/Product/7421336715323",
+    "title": "i4 Infinity, 4 Objective Microscope",
+    "handle": "i4-infinity-4-objective-microscope",
+    "productType": "Microscope",
+    "price": 1606.38,
+    "currencyCode": "USD",
+    "metafields": {
+      "features": "[\"Infinity-corrected Plan Achromatic optics for crisp flat images\",\"Bright 12V LED illumination with variable intensity\",\"Ergonomic Seidentopf head for comfortable viewing\",\"Durable mechanical stage with smooth coaxial controls\",\"Tension-controlled focus with built-in safety stop\",\"Trinocular option for digital imaging\"]",
+      "applications": "[\"Clinical diagnostics and hematology\",\"Research and teaching laboratories\",\"Veterinary and biological analysis\",\"General brightfield and oil immersion observation\"]",
+      "specs": "[\"Magnification: 40x-1000x (4× 10× 40×R 100×R oil objectives with WF 10× eyepieces)\",\"Optical System: Infinity-corrected Plan Achromatic\",\"Head: Seidentopf binocular or trinocular 30° inclined 360° rotatable\",\"Nosepiece: Reverse quadruple ball-bearing click-stopped\",\"Stage: Double-layer mechanical 140×140mm travel 75×50mm\",\"Condenser: Abbe 1.25 NA focusable with iris diaphragm\",\"Illumination: 12V 3W LED Köhler variable intensity\",\"Type: Compound\"]",
+      "equipment_category": "Clinical"
+    }
+  },
+  {
+    "id": "gid://shopify/Product/7421337010235",
+    "title": "Innovation Biological Microscope",
+    "handle": "innovation-biological-microscope",
+    "productType": "Microscope",
+    "price": 1606.38,
+    "currencyCode": "USD",
+    "metafields": {
+      "features": "[\"Infinity-corrected plan achromatic optics for sharp flat images\",\"Bright energy-efficient 3W LED illumination with variable intensity\",\"Durable mechanical stage with smooth X-Y travel\",\"Coaxial focus controls with tension adjustment and safety stop\",\"Ergonomic Seidentopf head for comfortable viewing\",\"Optional trinocular head for digital imaging\"]",
+      "applications": "[\"Routine clinical diagnostics and cytology\",\"Teaching and training laboratories\",\"Biological and veterinary sample examination\",\"Research requiring brightfield and oil immersion work\"]",
+      "specs": "[\"Magnification: 40x-1000x (4× 10× 40×R 100×R oil objectives with WF 10× eyepieces)\",\"Optical System: Infinity-corrected plan achromatic\",\"Head: Seidentopf binocular or trinocular 30° inclined 360° rotatable\",\"Nosepiece: Reverse quadruple ball-bearing click-stopped\",\"Stage: Double-layer mechanical 140×140mm travel 75×50mm\",\"Condenser: Abbe 1.25 NA focusable with iris diaphragm\",\"Illumination: 3W LED variable intensity\",\"Type: Compound\"]",
+      "equipment_category": "Clinical"
+    }
+  },
+  {
+    "id": "gid://shopify/Product/7421338026043",
+    "title": "BioVID 4K 8MP Ultra HD Microscope Camera",
+    "handle": "biovid-4k-8mp-ultra-hd-microscope-camera",
+    "productType": "Camera",
+    "price": 1102.56,
+    "currencyCode": "USD",
+    "metafields": {}
+  },
+  {
+    "id": "gid://shopify/Product/7421338189883",
+    "title": "The Revelation III Portable USB-Powered Microscope",
+    "handle": "portable-rechargeable-revelation-lll",
+    "productType": "Microscope",
+    "price": 807.3,
+    "currencyCode": "USD",
+    "metafields": {
+      "features": "[\"Infinity-corrected plan optics for sharp flat images\",\"Bright 3W LED illumination with adjustable intensity\",\"Optional rechargeable power for cord-free operation\",\"Compact metal frame with integrated carry handle for easy transport\",\"Smooth coaxial focus and mechanical stage controls\",\"Ergonomic design optimized for comfort and portability\"]",
+      "applications": "[\"Mobile and field laboratories\",\"Clinical and veterinary diagnostics\",\"Educational and training environments\",\"Research and cytology applications requiring portable precision\"]",
+      "specs": "[\"Magnification: 40x-1000x (4× 10× 40×R 100×R oil objectives with WF 10× eyepieces)\",\"Optical System: Infinity-corrected Plan Achromatic\",\"Head: Seidentopf binocular or trinocular 30° inclined 360° rotatable\",\"Nosepiece: Reverse quadruple positive click-stops\",\"Stage: Double-layer mechanical 140×140mm travel 75×50mm\",\"Condenser: Abbe 1.25 NA focusable with iris diaphragm\",\"Illumination: 3W LED variable intensity with field diaphragm\",\"Power: Optional rechargeable battery for field use\",\"Type: Compound\"]",
+      "equipment_category": "Clinical"
+    }
+  }
+]
