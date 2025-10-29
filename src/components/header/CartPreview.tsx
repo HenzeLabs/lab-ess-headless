@@ -62,9 +62,15 @@ export default function CartPreview({
 }: CartPreviewProps) {
   // Get cart state from context - this automatically updates when cart changes
   const { cart, isRefreshing } = useCartContext();
+  const [hasHydrated, setHasHydrated] = useState(false);
+
+  useEffect(() => {
+    setHasHydrated(true);
+  }, []);
 
   // Calculate cart count from context
-  const liveCartCount = cart?.totalQuantity ?? initialCartCount ?? 0;
+  const liveCartCount =
+    cart?.totalQuantity ?? (hasHydrated ? 0 : initialCartCount ?? 0);
 
   // Note: Periodic refresh removed - CartContext handles all cart state updates
 

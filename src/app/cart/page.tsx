@@ -181,14 +181,7 @@ export default function CartPage() {
           const json = (await res.json()) as { cart: Cart | null };
 
           // Update context with the new cart state
-          // If cart is null or empty, set to null to show empty state
-          const isEmpty = !json.cart || !json.cart.lines?.edges || json.cart.lines.edges.length === 0;
-
-          if (isEmpty) {
-            updateCartState(null);
-          } else {
-            updateCartState(json.cart);
-          }
+          updateCartState(json.cart ?? null);
         } else {
           await refreshCart();
         }

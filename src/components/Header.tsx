@@ -57,7 +57,15 @@ export default function Header({
 
   // Get live cart count from context instead of local state
   const { cart } = useCartContext();
-  const liveCartCount = cart?.totalQuantity ?? cartItemCount ?? 0;
+  const [hasHydrated, setHasHydrated] = useState(false);
+
+  useEffect(() => {
+    setHasHydrated(true);
+  }, []);
+
+  const liveCartCount =
+    cart?.totalQuantity ??
+    (hasHydrated ? 0 : cartItemCount ?? 0);
 
   const menuItems = collections.map((item) => ({
     ...item,
@@ -148,12 +156,14 @@ export default function Header({
                       data-test-id="nav-cart"
                     >
                       <ShoppingCart className="h-9 w-9" />
-                      <span
-                        className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white text-xs font-medium z-10"
-                        data-test-id="cart-count"
-                      >
-                        {liveCartCount}
-                      </span>
+                      {liveCartCount > 0 && (
+                        <span
+                          className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white text-xs font-medium z-10"
+                          data-test-id="cart-count"
+                        >
+                          {liveCartCount}
+                        </span>
+                      )}
                     </Link>
                   </Button>
                 </div>
