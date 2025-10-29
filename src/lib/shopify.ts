@@ -49,10 +49,16 @@ export async function shopifyFetch<T>({
   query,
   variables,
   timeout = 15000,
+  cache,
+  revalidate,
+  tags,
 }: {
   query: string;
   variables?: Record<string, unknown>;
   timeout?: number;
+  cache?: RequestCache;
+  revalidate?: number | false;
+  tags?: string[];
 }): Promise<ShopifyFetchResponse<T>> {
   if (!SHOPIFY_STORE_DOMAIN || !SHOPIFY_STOREFRONT_API_TOKEN) {
     throw new Error(
@@ -61,8 +67,13 @@ export async function shopifyFetch<T>({
   }
 
   const endpoint = `https://${SHOPIFY_STORE_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
+  const resolvedCache = cache ?? 'force-cache';
+  const resolvedRevalidate = revalidate ?? 60;
+  const resolvedTags = tags ?? ['shopify'];
 
-  const options: RequestInit = {
+  const options: RequestInit & {
+    next?: { revalidate?: number; tags?: string[] };
+  } = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -70,9 +81,21 @@ export async function shopifyFetch<T>({
     },
     body: JSON.stringify({ query, variables }),
     signal: AbortSignal.timeout(timeout),
-    // Next.js cache: revalidate after 60s, serve stale while revalidating
-    next: { revalidate: 60, tags: ['shopify'] },
+    cache: resolvedCache,
   };
+
+  if (resolvedCache !== 'no-store') {
+    const nextOptions: { revalidate?: number; tags?: string[] } = {};
+    if (resolvedRevalidate !== false) {
+      nextOptions.revalidate = resolvedRevalidate;
+    }
+    if (resolvedTags?.length) {
+      nextOptions.tags = resolvedTags;
+    }
+    if (Object.keys(nextOptions).length > 0) {
+      options.next = nextOptions;
+    }
+  }
 
   try {
     const res = await fetchWithRetry(endpoint, options);

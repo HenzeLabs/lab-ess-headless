@@ -45,6 +45,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const applyCart = useCallback((next: Cart | null) => {
     cartRef.current = next;
     setCart(next);
+    setHasResolved(true);
 
     if (typeof window !== 'undefined') {
       if (next?.id && isValidCartId(next.id)) {
