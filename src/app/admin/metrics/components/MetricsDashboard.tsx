@@ -7,6 +7,7 @@ import ConfigImpactWidget from './ConfigImpactWidget';
 import BehaviorHighlights from './BehaviorHighlights';
 import SessionsChart from './SessionsChart';
 import ConversionChart from './ConversionChart';
+import ShopifyMetrics from './ShopifyMetrics';
 
 interface MetricsData {
   ga4: {
@@ -314,6 +315,14 @@ CLARITY_API_KEY=your-api-key`}
 
       {/* Behavior Highlights */}
       <BehaviorHighlights data={displayMetrics.clarity} />
+
+      {/* Shopify Metrics */}
+      <div className="border-t border-gray-200 pt-6 mt-6">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          🛍️ Shopify Sales & Customers
+        </h2>
+        <ShopifyMetrics startDate={dateRange.start} endDate={dateRange.end} />
+      </div>
 
       {/* Footer Info */}
       <div className="bg-gray-50 rounded-lg border border-gray-200 p-4 text-center">
