@@ -160,13 +160,35 @@ export async function fetchClarityMetrics(
     const data = await response.json();
 
     // Extract metrics from Clarity's response structure
-    // The API returns aggregated insights for the specified period
+    // The API returns an array of metric objects
+    const getMetric = (metricName: string, field = 'subTotal') => {
+      const metric = data.find((m: any) => m.metricName === metricName);
+      if (!metric || !metric.information || metric.information.length === 0) {
+        return 0;
+      }
+      return parseInt(metric.information[0][field] || '0');
+    };
+
+    const getMetricValue = (metricName: string, field: string) => {
+      const metric = data.find((m: any) => m.metricName === metricName);
+      if (!metric || !metric.information || metric.information.length === 0) {
+        return 0;
+      }
+      return parseFloat(metric.information[0][field] || '0');
+    };
+
+    // Extract traffic data
+    const trafficMetric = data.find((m: any) => m.metricName === 'Traffic');
+    const totalSessions = trafficMetric?.information?.[0]?.totalSessionCount
+      ? parseInt(trafficMetric.information[0].totalSessionCount)
+      : 0;
+
     return {
-      totalSessions: data.sessions || data.totalSessions || 0,
-      deadClicks: data.deadClicks || data.deadClickCount || 0,
-      rageClicks: data.rageClicks || data.rageClickCount || 0,
-      quickBacks: data.quickBacks || data.quickBackCount || 0,
-      avgScrollDepth: data.scrollDepth || data.avgScrollDepth || 0,
+      totalSessions,
+      deadClicks: getMetric('DeadClickCount'),
+      rageClicks: getMetric('RageClickCount'),
+      quickBacks: getMetric('QuickbackClick'),
+      avgScrollDepth: getMetricValue('ScrollDepth', 'averageScrollDepth'),
       heatmapUrl: `https://clarity.microsoft.com/projects/view/${projectId}/heatmaps`,
     };
   } catch (error) {
