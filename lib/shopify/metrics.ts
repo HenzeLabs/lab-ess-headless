@@ -78,9 +78,18 @@ async function shopifyAdminFetch<T>(
 
   const result = await response.json();
 
-  if (result.errors) {
+  // GraphQL can return both errors and data - only fail if there's no data
+  if (result.errors && !result.data) {
     console.error('Shopify GraphQL errors:', result.errors);
     throw new Error('Shopify GraphQL query failed');
+  }
+
+  // Log access scope warnings but continue with available data
+  if (result.errors) {
+    console.warn(
+      'Shopify GraphQL warnings (continuing with available data):',
+      result.errors,
+    );
   }
 
   return result.data as T;
