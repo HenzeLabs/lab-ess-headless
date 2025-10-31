@@ -2,13 +2,28 @@ import { NextRequest, NextResponse } from 'next/server';
 import { fetchShopifyMetrics } from '../../../../../lib/shopify/metrics';
 
 export async function GET(req: NextRequest) {
+  console.log('[Shopify API Route] Request received', {
+    url: req.url,
+    method: req.method,
+  });
+
   try {
     const { searchParams } = new URL(req.url);
     const startDate =
       searchParams.get('start') || format(subDays(new Date(), 7), 'yyyy-MM-dd');
     const endDate = searchParams.get('end') || format(new Date(), 'yyyy-MM-dd');
 
+    console.log('[Shopify API Route] Calling fetchShopifyMetrics...', {
+      startDate,
+      endDate,
+    });
+
     const metrics = await fetchShopifyMetrics(startDate, endDate);
+
+    console.log('[Shopify API Route] fetchShopifyMetrics returned:', {
+      isNull: metrics === null,
+      hasData: !!metrics,
+    });
 
     if (!metrics) {
       return NextResponse.json(
