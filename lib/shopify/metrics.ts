@@ -314,7 +314,7 @@ export async function fetchShopifyMetrics(
       currentOrders.orders.edges[0]?.node?.totalPriceSet?.shopMoney
         ?.currencyCode || 'USD';
 
-    return {
+    const metrics = {
       revenue: {
         total: currentRevenue,
         currency,
@@ -349,7 +349,7 @@ export async function fetchShopifyMetrics(
       recentOrdersCount: recentOrders.length,
     });
 
-    return result;
+    return metrics;
   } catch (error) {
     console.error('[Shopify Metrics] Error fetching metrics:', {
       error: error instanceof Error ? error.message : String(error),
