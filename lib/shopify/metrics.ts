@@ -102,7 +102,24 @@ export async function fetchShopifyMetrics(
   startDate: string,
   endDate: string,
 ): Promise<ShopifyMetrics | null> {
+  console.log('[Shopify Metrics] Starting fetch...', {
+    startDate,
+    endDate,
+    hasStoreDomain: !!SHOPIFY_STORE_DOMAIN,
+    hasAccessToken: !!SHOPIFY_ADMIN_ACCESS_TOKEN,
+    storeDomain: SHOPIFY_STORE_DOMAIN,
+    apiVersion: SHOPIFY_API_VERSION,
+  });
+
   try {
+    if (!SHOPIFY_STORE_DOMAIN || !SHOPIFY_ADMIN_ACCESS_TOKEN) {
+      console.error('[Shopify Metrics] Missing credentials:', {
+        hasStoreDomain: !!SHOPIFY_STORE_DOMAIN,
+        hasAccessToken: !!SHOPIFY_ADMIN_ACCESS_TOKEN,
+      });
+      return null;
+    }
+
     // Calculate previous period for comparison
     const start = new Date(startDate);
     const end = new Date(endDate);
@@ -163,6 +180,11 @@ export async function fetchShopifyMetrics(
     const currentQuery = `created_at:>='${formatDate(start)}' AND created_at:<='${formatDate(end)}'`;
     const previousQuery = `created_at:>='${formatDate(prevStart)}' AND created_at:<='${formatDate(prevEnd)}'`;
 
+    console.log('[Shopify Metrics] Fetching orders...', {
+      currentQuery,
+      previousQuery,
+    });
+
     const [currentOrders, previousOrders] = await Promise.all([
       shopifyAdminFetch<{
         orders: { edges: Array<{ node: any }> };
@@ -171,6 +193,11 @@ export async function fetchShopifyMetrics(
         orders: { edges: Array<{ node: any }> };
       }>(ordersQuery, { query: previousQuery }),
     ]);
+
+    console.log('[Shopify Metrics] Orders fetched successfully:', {
+      currentOrdersCount: currentOrders.orders.edges.length,
+      previousOrdersCount: previousOrders.orders.edges.length,
+    });
 
     // Calculate revenue
     const currentRevenue = currentOrders.orders.edges.reduce(
@@ -313,8 +340,21 @@ export async function fetchShopifyMetrics(
       topProducts,
       recentOrders,
     };
+
+    console.log('[Shopify Metrics] Successfully returning metrics:', {
+      revenue: currentRevenue,
+      orders: currentOrderCount,
+      customers: customerIds.size,
+      topProductsCount: topProducts.length,
+      recentOrdersCount: recentOrders.length,
+    });
+
+    return result;
   } catch (error) {
-    console.error('Error fetching Shopify metrics:', error);
+    console.error('[Shopify Metrics] Error fetching metrics:', {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return null;
   }
 }
