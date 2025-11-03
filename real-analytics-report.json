@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-10-31T20:52:48.328Z",
+  "platforms": {
+    "ga4": {
+      "status": "working",
+      "message": "Events successfully sent to GA4"
+    },
+    "meta": {
+      "status": "setup_needed",
+      "message": "Meta Access Token needed for real data",
+      "instructions": "Get token from: https://business.facebook.com/events_manager2/list"
+    },
+    "website": {
+      "status": "error",
+      "message": "request to http://localhost:3002/ failed, reason: "
+    }
+  },
+  "summary": {
+    "working": [
+      "GA4"
+    ],
+    "needsSetup": [
+      "Meta Access Token"
+    ],
+    "errors": [
+      "Website"
+    ]
+  }
+}

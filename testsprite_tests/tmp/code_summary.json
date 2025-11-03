@@ -1,0 +1,229 @@
+{
+  "project_name": "Lab Essentials Headless Storefront",
+  "project_type": "frontend",
+  "description": "Production-ready headless e-commerce storefront built on Next.js App Router with Shopify Storefront API integration. Features strong accessibility baselines, comprehensive test suites, and a lightweight design system.",
+  "tech_stack": {
+    "frontend_framework": "Next.js 15 (App Router)",
+    "ui_library": "React 19",
+    "styling": "Tailwind CSS with custom design tokens",
+    "language": "TypeScript",
+    "state_management": "React Hooks, Server Components",
+    "routing": "Next.js App Router",
+    "build_tool": "Next.js",
+    "testing": "Playwright",
+    "analytics": ["Google Analytics 4", "Google Tag Manager", "Microsoft Clarity", "Taboola", "Facebook Pixel", "Reddit Pixel"],
+    "performance": ["Lighthouse CI", "PWA (next-pwa)", "Bundle Analyzer"],
+    "ui_components": ["Radix UI", "Lucide React", "Framer Motion", "Heroicons"],
+    "forms": "React Hook Form with Zod validation",
+    "charts": "Recharts",
+    "image_optimization": "Next.js Image (WebP, AVIF)",
+    "authentication": "JWT (jose library)",
+    "caching": "Upstash Redis"
+  },
+  "integrations": {
+    "ecommerce": "Shopify Storefront API",
+    "storage": "AWS S3",
+    "analytics": "Google Analytics Data API",
+    "caching": "Upstash Redis",
+    "deployment": "Vercel (configured)"
+  },
+  "key_features": [
+    "E-commerce storefront with Shopify integration",
+    "Product browsing and search functionality",
+    "Shopping cart and checkout flow",
+    "User authentication and account management",
+    "Order history and tracking",
+    "Product collections and filtering",
+    "Interactive product quiz/selector",
+    "Newsletter subscription",
+    "Contact and support pages",
+    "Admin dashboard with metrics",
+    "Real-time analytics dashboard",
+    "A/B testing capabilities",
+    "Performance monitoring",
+    "Security monitoring",
+    "SEO optimization with dynamic sitemaps",
+    "Accessibility (a11y) compliance",
+    "PWA support with offline mode",
+    "Server-side webhook tracking",
+    "Image optimization and caching",
+    "Content Security Policy headers"
+  ],
+  "main_routes": [
+    {
+      "path": "/",
+      "description": "Homepage with featured products and hero section"
+    },
+    {
+      "path": "/products/[handle]",
+      "description": "Product detail page with images, specs, and add to cart"
+    },
+    {
+      "path": "/collections",
+      "description": "Product collections listing"
+    },
+    {
+      "path": "/collections/[handle]",
+      "description": "Collection detail page with products"
+    },
+    {
+      "path": "/cart",
+      "description": "Shopping cart with items, summary, and checkout CTA"
+    },
+    {
+      "path": "/search",
+      "description": "Product search functionality"
+    },
+    {
+      "path": "/account",
+      "description": "User account dashboard"
+    },
+    {
+      "path": "/account/login",
+      "description": "User login page"
+    },
+    {
+      "path": "/account/register",
+      "description": "User registration page"
+    },
+    {
+      "path": "/account/orders",
+      "description": "Order history listing"
+    },
+    {
+      "path": "/account/orders/[id]",
+      "description": "Individual order details"
+    },
+    {
+      "path": "/quiz",
+      "description": "Interactive microscope selector quiz"
+    },
+    {
+      "path": "/admin",
+      "description": "Admin dashboard"
+    },
+    {
+      "path": "/admin/metrics",
+      "description": "Analytics and metrics dashboard"
+    },
+    {
+      "path": "/admin/ab-testing",
+      "description": "A/B testing management"
+    },
+    {
+      "path": "/admin/config",
+      "description": "Configuration management"
+    },
+    {
+      "path": "/admin/analytics",
+      "description": "Analytics insights"
+    },
+    {
+      "path": "/admin/performance",
+      "description": "Performance monitoring"
+    },
+    {
+      "path": "/admin/security",
+      "description": "Security monitoring"
+    },
+    {
+      "path": "/support/faq",
+      "description": "Frequently asked questions"
+    },
+    {
+      "path": "/support/contact",
+      "description": "Contact support form"
+    },
+    {
+      "path": "/support/shipping",
+      "description": "Shipping information"
+    },
+    {
+      "path": "/support/returns",
+      "description": "Returns policy"
+    },
+    {
+      "path": "/support/warranty",
+      "description": "Warranty information"
+    }
+  ],
+  "api_routes": [
+    {
+      "path": "/api/cart",
+      "description": "Cart operations (add, update, remove items)"
+    },
+    {
+      "path": "/api/newsletter",
+      "description": "Newsletter subscription"
+    },
+    {
+      "path": "/api/revalidate",
+      "description": "On-demand ISR revalidation"
+    },
+    {
+      "path": "/api/shopify/webhook",
+      "description": "Shopify webhook handler for purchase tracking"
+    }
+  ],
+  "testing_setup": {
+    "framework": "Playwright",
+    "test_types": [
+      "Functional tests (core flows)",
+      "Accessibility tests (a11y)",
+      "SEO tests",
+      "Performance tests",
+      "Visual regression tests",
+      "Analytics validation tests",
+      "GTM validation tests",
+      "E2E tests"
+    ],
+    "test_commands": {
+      "all": "npm run test:all",
+      "core": "npm run test:core",
+      "accessibility": "npm run test:a11y",
+      "seo": "npm run test:seo",
+      "performance": "npm run test:perf",
+      "visual": "npm run test:visual",
+      "analytics": "npm run test:analytics",
+      "gtm": "npm run test:gtm",
+      "e2e": "npm run test:e2e"
+    }
+  },
+  "development": {
+    "port": 3000,
+    "dev_command": "npm run dev",
+    "build_command": "npm run build",
+    "start_command": "npm start",
+    "lint_command": "npm run lint",
+    "typecheck_command": "npm run typecheck"
+  },
+  "deployment": {
+    "platform": "Vercel",
+    "build_output": "standalone",
+    "environment_variables_required": [
+      "SHOPIFY_STORE_DOMAIN",
+      "SHOPIFY_STOREFRONT_ACCESS_TOKEN",
+      "NEXT_PUBLIC_SITE_URL",
+      "SHOPIFY_API_VERSION (optional)"
+    ]
+  },
+  "architecture_notes": {
+    "rendering": "Hybrid SSR/SSG with ISR",
+    "data_fetching": "Server Components + API Routes",
+    "styling_approach": "Utility-first with design tokens",
+    "component_structure": "Server/Client components split",
+    "api_integration": "Typed Shopify Storefront client with retry logic",
+    "security": "CSP headers, HMAC webhook verification, JWT auth",
+    "performance": "Image optimization, code splitting, PWA, caching",
+    "accessibility": "WCAG AA compliance, automated testing"
+  },
+  "critical_files": [
+    "src/lib/shopify.ts - Shopify Storefront API client",
+    "src/lib/cart.ts - Cart operations logic",
+    "src/lib/queries/ - GraphQL queries",
+    "src/app/api/ - API route handlers",
+    "next.config.mjs - Next.js configuration",
+    "tailwind.config.js - Tailwind configuration",
+    "src/lib/ui.ts - Design system tokens"
+  ]
+}

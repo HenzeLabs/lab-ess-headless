@@ -21,43 +21,16 @@ export default function AnalyticsWrapper() {
         win.dataLayer.push(args);
       };
 
-    // Configure Consent Mode V2 (default denied for GDPR/privacy)
+    // Configure Consent Mode V2 (granted by default for analytics tracking)
+    // Note: Change back to 'denied' if you need explicit GDPR consent
     if (win.gtag) {
       win.gtag('consent', 'default', {
-        ad_storage: 'denied',
-        analytics_storage: 'denied',
-        functionality_storage: 'denied',
-        personalization_storage: 'denied',
+        ad_storage: 'granted',
+        analytics_storage: 'granted',
+        functionality_storage: 'granted',
+        personalization_storage: 'granted',
         security_storage: 'granted',
-        wait_for_update: 500,
       });
-
-      // Auto-grant consent on user interaction
-      const grantConsent = () => {
-        if (win.gtag) {
-          win.gtag('consent', 'update', {
-            ad_storage: 'granted',
-            analytics_storage: 'granted',
-            functionality_storage: 'granted',
-            personalization_storage: 'granted',
-          });
-        }
-      };
-
-      // Grant on first interaction (click/scroll/touch)
-      const events = ['click', 'scroll', 'touchstart'];
-      const handleInteraction = () => {
-        grantConsent();
-        events.forEach((e) =>
-          document.removeEventListener(e, handleInteraction),
-        );
-      };
-      events.forEach((e) =>
-        document.addEventListener(e, handleInteraction, {
-          once: true,
-          passive: true,
-        }),
-      );
     }
 
     // Load analytics helpers lazily after idle - reduces TBT

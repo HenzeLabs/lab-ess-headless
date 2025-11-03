@@ -1,0 +1,75 @@
+{
+  "projectName": "Lab Essentials Headless Storefront",
+  "testPlans": [
+    {
+      "id": "homepage-test",
+      "title": "Homepage Functionality and Accessibility",
+      "description": "Test homepage loads correctly with all key elements and meets accessibility standards",
+      "steps": [
+        "Navigate to http://localhost:3000",
+        "Verify page loads within 3 seconds",
+        "Check that hero section is visible and properly formatted",
+        "Verify navigation menu is present and accessible",
+        "Confirm featured products are displayed with images and prices",
+        "Run accessibility check for WCAG AA compliance",
+        "Test responsive design on mobile, tablet, and desktop viewports"
+      ]
+    },
+    {
+      "id": "product-detail-test",
+      "title": "Product Detail Page Functionality",
+      "description": "Test product pages display correctly and add to cart works",
+      "steps": [
+        "Navigate to a product page from homepage",
+        "Verify product title, price, and description are displayed",
+        "Check that product images load correctly",
+        "Verify add to cart button is present and clickable",
+        "Click add to cart button",
+        "Verify cart icon updates with item count",
+        "Check for accessibility violations on product page"
+      ]
+    },
+    {
+      "id": "shopping-cart-test",
+      "title": "Shopping Cart Functionality",
+      "description": "Test cart page displays items correctly and allows updates",
+      "steps": [
+        "Navigate to /cart page",
+        "Verify cart items are displayed with images, titles, and prices",
+        "Test quantity increase and decrease buttons",
+        "Verify cart total updates when quantity changes",
+        "Test remove item functionality",
+        "Verify empty cart state displays when all items removed",
+        "Check checkout button is prominent and accessible",
+        "Test responsive layout on mobile devices"
+      ]
+    },
+    {
+      "id": "search-functionality-test",
+      "title": "Product Search",
+      "description": "Test search functionality returns relevant results",
+      "steps": [
+        "Locate search input in header",
+        "Enter a search term (e.g., 'microscope')",
+        "Submit search form",
+        "Verify search results page loads",
+        "Check that results contain relevant products",
+        "Verify no results message displays for non-existent products",
+        "Test search input accessibility"
+      ]
+    },
+    {
+      "id": "collections-test",
+      "title": "Product Collections",
+      "description": "Test collections page and collection detail pages",
+      "steps": [
+        "Navigate to /collections",
+        "Verify collections are displayed",
+        "Click on a collection",
+        "Verify collection detail page loads with products",
+        "Check product filtering works if available",
+        "Verify mobile responsiveness"
+      ]
+    }
+  ]
+}

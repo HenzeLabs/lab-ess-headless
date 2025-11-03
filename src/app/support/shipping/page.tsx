@@ -3,14 +3,14 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Shipping Information | Lab Essentials',
   description:
-    'Fast, reliable shipping for laboratory equipment and supplies. Free shipping on orders over $100. Standard, expedited, and overnight shipping options available.',
+    'Fast, reliable shipping for laboratory equipment and supplies. Free shipping on orders over $300 and same-day shipping available on qualifying orders.',
   alternates: {
     canonical: 'https://labessentials.com/support/shipping',
   },
   openGraph: {
     title: 'Shipping Information | Lab Essentials',
     description:
-      'Fast, reliable shipping for laboratory equipment and supplies. Free shipping on orders over $100.',
+      'Fast, reliable shipping for laboratory equipment and supplies. Free shipping on orders over $300.',
     url: 'https://labessentials.com/support/shipping',
     type: 'website',
   },
@@ -41,23 +41,15 @@ export default function ShippingPage() {
                     Standard Shipping
                   </h3>
                   <p className="text-body text-sm">
-                    5-7 business days • Free on orders over $100
+                    1-3 business days • Free on orders over $300
                   </p>
                 </div>
                 <div className="border border-gray-200 rounded-lg p-4">
                   <h3 className="font-semibold text-heading">
-                    Expedited Shipping
+                    Same-Day Shipping
                   </h3>
                   <p className="text-body text-sm">
-                    2-3 business days • $25 flat rate
-                  </p>
-                </div>
-                <div className="border border-gray-200 rounded-lg p-4">
-                  <h3 className="font-semibold text-heading">
-                    Overnight Shipping
-                  </h3>
-                  <p className="text-body text-sm">
-                    1 business day • $75 flat rate
+                    Available on eligible orders placed before 2 PM EST • Rates calculated at checkout
                   </p>
                 </div>
               </div>
@@ -73,7 +65,7 @@ export default function ShippingPage() {
                     Order Processing
                   </h3>
                   <p className="text-body text-sm">
-                    Orders placed before 2 PM EST ship the same day
+                    Orders ship within 1-2 business days. Same-day shipping is available for qualifying orders placed before 2 PM EST.
                   </p>
                 </div>
                 <div>

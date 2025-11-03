@@ -1,0 +1,16 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:3000",
+  "executionArgs": {
+    "projectName": "lab-ess-headless",
+    "projectPath": "/Users/laurenadmin/Projects/lab-ess-headless",
+    "testIds": [],
+    "additionalInstruction": "Test the main e-commerce flows: homepage, product browsing, search, and cart functionality. Focus on critical user journeys and ensure accessibility compliance.",
+    "envs": {
+      "API_KEY": "sk-user-gCApDg-08o3L7701rogGrbFo8hFWALWyVgwHagQKmoOPSzisoUtPMqiA2_bmuGS_iVa1QX8EfUwNWjF-WCIBpB-ptY7kjjd7fR1hkJ3THfGN491xho_yiJgELS4ErEfwjT8"
+    }
+  },
+  "proxy": "http://503f93bd-2579-4540-8d2a-f7c9ac4e26e0:Bwlh1hD8aBV2rAdDbRnAPqnFmp6qDFHd@tun.testsprite.com:8080"
+}

@@ -460,7 +460,7 @@ class PersonalizationEngine {
     };
 
     let categories = ['new-arrivals', 'bestsellers', 'sale'];
-    let promotions = ['Free shipping on orders over $100'];
+    let promotions = ['Free shipping on orders over $300'];
 
     if (userProfile) {
       // Personalize based on user preferences
@@ -476,8 +476,8 @@ class PersonalizationEngine {
       // Personalize promotions based on purchase history
       if (userProfile.history.purchases.length > 3) {
         promotions = [
+          'Free shipping on orders over $300',
           'VIP Member: Extra 15% off your next order',
-          'Free shipping on orders over $75 (VIP)',
         ];
       }
     }

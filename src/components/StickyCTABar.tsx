@@ -46,7 +46,7 @@ export default function StickyCTABar({
                 Ready to upgrade your lab equipment?
               </p>
               <p className="text-white/90 text-xs md:text-sm hidden sm:block">
-                Trusted by 1,200+ labs. Free shipping on orders $300+
+                Trusted by 1,200+ labs. Free shipping on orders over $300.
               </p>
             </div>
             <Link
