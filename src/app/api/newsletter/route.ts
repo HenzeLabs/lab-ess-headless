@@ -231,7 +231,7 @@ async function subscribeViaContactForm(
         ok: false,
         status: shopifyResponse.status,
         error: shopifyResponse.status === 403
-          ? 'Newsletter signup is temporarily unavailable. Please email us at support@labessentials.com to subscribe.'
+          ? 'Newsletter signup is temporarily unavailable. Please email us at info@labessentials.com to subscribe.'
           : 'We could not complete your signup. Please try again.',
       };
     }
