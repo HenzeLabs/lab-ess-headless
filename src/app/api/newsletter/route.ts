@@ -84,10 +84,14 @@ async function subscribeViaAdminApi(
     );
 
     if (!searchResponse.ok) {
+      const errorText = await searchResponse.text().catch(() => 'No response');
       console.error(
         '[newsletter] customer search failed',
         searchResponse.status,
+        errorText.substring(0, 200),
       );
+      console.error('[newsletter] API endpoint:', `${baseUrl}/customers/search.json`);
+      console.error('[newsletter] Token prefix:', adminToken.substring(0, 10) + '...');
       return { ok: false, status: searchResponse.status };
     }
 
@@ -217,14 +221,18 @@ async function subscribeViaContactForm(
     });
 
     if (shopifyResponse.status >= 400) {
+      const responseText = await shopifyResponse.text().catch(() => 'No response body');
       console.error(
         '[newsletter] contact form fallback failed',
         shopifyResponse.status,
+        responseText.substring(0, 200),
       );
       return {
         ok: false,
         status: shopifyResponse.status,
-        error: 'We could not complete your signup. Please try again.',
+        error: shopifyResponse.status === 403
+          ? 'Newsletter signup is temporarily unavailable. Please email us at support@labessentials.com to subscribe.'
+          : 'We could not complete your signup. Please try again.',
       };
     }
 
