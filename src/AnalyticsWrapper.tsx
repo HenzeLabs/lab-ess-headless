@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { initClarity } from '@/lib/clarity/events';
+import { initClarity } from '@/lib/clarity-events';
 
 export default function AnalyticsWrapper() {
   useEffect(() => {
