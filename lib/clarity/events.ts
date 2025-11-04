@@ -5,6 +5,27 @@
  * to understand how configuration changes affect UX.
  */
 
+// Type definitions for Microsoft Clarity
+interface ClarityFunction {
+  (command: string, ...args: unknown[]): void;
+  q?: unknown[];
+}
+
+declare global {
+  interface Window {
+    clarity?: ClarityFunction;
+  }
+}
+
+interface ClarityMetricData {
+  metricName: string;
+  information?: Array<{
+    subTotal?: string;
+    totalSessionCount?: string;
+    [key: string]: string | undefined;
+  }>;
+}
+
 export interface ClarityMetrics {
   totalSessions: number;
   deadClicks: number;
@@ -39,26 +60,35 @@ export function initClarity() {
   }
 
   // Check if Clarity is already loaded
-  if ((window as any).clarity) {
+  if (window.clarity) {
     return;
   }
 
-  // Load Clarity script
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (function (c: any, l: any, a: any, r: any, i: any, t?: any, y?: any) {
-    c[a] =
-      c[a] ||
+  // Load Clarity script (vendor loading pattern from Microsoft Clarity docs)
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  (function (
+    c: Window,
+    l: Document,
+    a: string,
+    r: string,
+    i: string,
+    t?: HTMLScriptElement,
+    y?: Element,
+  ) {
+    (c as any)[a] =
+      (c as any)[a] ||
       // eslint-disable-next-line prefer-rest-params
       function () {
         // eslint-disable-next-line prefer-rest-params
-        (c[a].q = c[a].q || []).push(arguments);
+        ((c as any)[a].q = (c as any)[a].q || []).push(arguments);
       };
-    t = l.createElement(r);
-    t.async = 1;
+    t = l.createElement(r) as HTMLScriptElement;
+    t.async = true;
     t.src = 'https://www.clarity.ms/tag/' + i;
     y = l.getElementsByTagName(r)[0];
-    y.parentNode.insertBefore(t, y);
+    y?.parentNode?.insertBefore(t, y);
   })(window, document, 'clarity', 'script', clarityId);
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 }
 
 /**
@@ -70,10 +100,10 @@ export function trackClarityEvent(
   eventName: string,
   metadata?: Record<string, string | number>,
 ) {
-  if (typeof window === 'undefined' || !(window as any).clarity) return;
+  if (typeof window === 'undefined' || !window.clarity) return;
 
   try {
-    (window as any).clarity('event', eventName, metadata);
+    window.clarity('event', eventName, metadata);
   } catch (error) {
     console.error('Error tracking Clarity event:', error);
   }
@@ -84,11 +114,11 @@ export function trackClarityEvent(
  * @param tags - Key-value pairs to tag the session
  */
 export function setClarityTags(tags: Record<string, string>) {
-  if (typeof window === 'undefined' || !(window as any).clarity) return;
+  if (typeof window === 'undefined' || !window.clarity) return;
 
   try {
     Object.entries(tags).forEach(([key, value]) => {
-      (window as any).clarity('set', key, value);
+      window.clarity?.('set', key, value);
     });
   } catch (error) {
     console.error('Error setting Clarity tags:', error);
@@ -106,10 +136,10 @@ export function identifyClarityUser(
   sessionId?: string,
   pageId?: string,
 ) {
-  if (typeof window === 'undefined' || !(window as any).clarity) return;
+  if (typeof window === 'undefined' || !window.clarity) return;
 
   try {
-    (window as any).clarity('identify', userId, sessionId, pageId);
+    window.clarity('identify', userId, sessionId, pageId);
   } catch (error) {
     console.error('Error identifying Clarity user:', error);
   }
@@ -161,8 +191,10 @@ export async function fetchClarityMetrics(
 
     // Extract metrics from Clarity's response structure
     // The API returns an array of metric objects
+    const metricData = data as ClarityMetricData[];
+
     const getMetric = (metricName: string, field = 'subTotal') => {
-      const metric = data.find((m: any) => m.metricName === metricName);
+      const metric = metricData.find((m) => m.metricName === metricName);
       if (!metric || !metric.information || metric.information.length === 0) {
         return 0;
       }
@@ -170,7 +202,7 @@ export async function fetchClarityMetrics(
     };
 
     const getMetricValue = (metricName: string, field: string) => {
-      const metric = data.find((m: any) => m.metricName === metricName);
+      const metric = metricData.find((m) => m.metricName === metricName);
       if (!metric || !metric.information || metric.information.length === 0) {
         return 0;
       }
@@ -178,7 +210,7 @@ export async function fetchClarityMetrics(
     };
 
     // Extract traffic data
-    const trafficMetric = data.find((m: any) => m.metricName === 'Traffic');
+    const trafficMetric = metricData.find((m) => m.metricName === 'Traffic');
     const totalSessions = trafficMetric?.information?.[0]?.totalSessionCount
       ? parseInt(trafficMetric.information[0].totalSessionCount)
       : 0;
