@@ -54,7 +54,7 @@ export async function GET(req: NextRequest) {
 
           <div class="box">
             <h2>Step 1: Click the button below to authorize</h2>
-            <a href="https://ads.reddit.com/oauth2/authorize?client_id=7BTY-2OJl013Gbd2_bKkYA&response_type=code&state=random_${Date.now()}&redirect_uri=https://store.labessentials.com/api/auth/reddit/callback&duration=permanent&scope=ads.reporting" class="button">
+            <a href="https://www.reddit.com/api/v1/authorize?client_id=7BTY-2OJl013Gbd2_bKkYA&response_type=code&state=random_${Date.now()}&redirect_uri=https://store.labessentials.com/api/auth/reddit/callback&duration=permanent&scope=read identity" class="button">
               Authorize Reddit Ads Access
             </a>
           </div>
@@ -94,7 +94,7 @@ export async function GET(req: NextRequest) {
   try {
     const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
 
-    const response = await fetch('https://ads-api.reddit.com/api/v2.0/access_token', {
+    const response = await fetch('https://www.reddit.com/api/v1/access_token', {
       method: 'POST',
       headers: {
         'Authorization': `Basic ${auth}`,

@@ -70,7 +70,7 @@ async function getRedditAccessToken(): Promise<string | null> {
       `${REDDIT_CLIENT_ID}:${REDDIT_CLIENT_SECRET}`,
     ).toString('base64');
 
-    const response = await fetch('https://ads-api.reddit.com/api/v2.0/access_token', {
+    const response = await fetch('https://www.reddit.com/api/v1/access_token', {
       method: 'POST',
       headers: {
         Authorization: `Basic ${auth}`,
