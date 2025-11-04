@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { initClarity } from '@/lib/clarity/events';
 
 export default function AnalyticsWrapper() {
   useEffect(() => {
@@ -32,6 +33,9 @@ export default function AnalyticsWrapper() {
         security_storage: 'granted',
       });
     }
+
+    // Initialize Microsoft Clarity for session recordings and heatmaps
+    initClarity();
 
     // Load analytics helpers lazily after idle - reduces TBT
     if ('requestIdleCallback' in window) {
