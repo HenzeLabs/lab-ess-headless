@@ -52,7 +52,7 @@ export function initClarity() {
 
   // Load Clarity script
   (function (
-    c: Window & Record<string, unknown>,
+    c: typeof window & Record<string, unknown>,
     l: Document,
     a: string,
     r: string,
@@ -71,7 +71,7 @@ export function initClarity() {
     t.src = 'https://www.clarity.ms/tag/' + i;
     y = l.getElementsByTagName(r)[0];
     y?.parentNode?.insertBefore(t, y);
-  })(window as Window & Record<string, unknown>, document, 'clarity', 'script', clarityId);
+  })(window as unknown as typeof window & Record<string, unknown>, document, 'clarity', 'script', clarityId);
 }
 
 /**
