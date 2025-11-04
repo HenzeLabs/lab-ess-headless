@@ -5,10 +5,9 @@
 
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
 
-// Your GA4 property ID (extract number from measurement ID)
-// TODO: Update this with the Property ID for G-QCSHJ4TDMY
-// Find it in GA4: Admin → Property Settings → Property ID
-const GA4_PROPERTY_ID = '432910849'; // OLD - needs update for G-QCSHJ4TDMY
+// Your GA4 property ID for G-7NR2JG1EDP
+// Property ID: 399540912 (from GA4 Admin → Property Settings)
+const GA4_PROPERTY_ID = process.env.GA4_PROPERTY_ID || '399540912';
 
 let analyticsDataClient: BetaAnalyticsDataClient | null = null;
 
@@ -48,7 +47,7 @@ export interface GA4DimensionData {
 export async function fetchGA4Analytics(
   startDate: Date,
   endDate: Date,
-): Promise<GA4MetricsData> {
+): Promise<GA4MetricsData | null> {
   try {
     const client = getAnalyticsClient();
 
@@ -126,23 +125,10 @@ export async function fetchGA4Analytics(
     const errorMessage =
       error instanceof Error ? error.message : 'Unknown error';
     console.error('❌ GA4 API Error:', errorMessage);
+    console.error('📊 Analytics data unavailable - check GA4 API configuration');
 
-    // Return realistic fallback data
-    console.log('🔄 Using realistic GA4 simulation...');
-    return {
-      activeUsers: Math.floor(Math.random() * 800) + 400,
-      totalUsers: Math.floor(Math.random() * 1200) + 600,
-      pageViews: Math.floor(Math.random() * 4000) + 2000,
-      sessions: Math.floor(Math.random() * 600) + 300,
-      bounceRate: Math.random() * 0.3 + 0.4, // 40-70%
-      averageSessionDuration: Math.random() * 180 + 120, // 2-5 minutes
-      conversions: Math.floor(Math.random() * 40) + 20,
-      conversionRate: Math.random() * 0.04 + 0.02, // 2-6%
-      revenue: Math.random() * 8000 + 2000,
-      ecommerceRevenue: Math.random() * 7000 + 1500,
-      purchaseEvents: Math.floor(Math.random() * 25) + 15,
-      addToCartEvents: Math.floor(Math.random() * 80) + 40,
-    };
+    // Return null instead of fake data - let dashboards handle the error state
+    return null;
   }
 }
 
@@ -179,24 +165,8 @@ export async function fetchGA4ConversionEvents(
       error instanceof Error ? error.message : 'Unknown error';
     console.error('❌ GA4 Conversion Events Error:', errorMessage);
 
-    // Generate realistic daily data
-    const days = Math.ceil(
-      (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
-    );
-    const data = [];
-
-    for (let i = 0; i < days; i++) {
-      const date = new Date(startDate);
-      date.setDate(date.getDate() + i);
-
-      data.push({
-        date: date.toISOString().split('T')[0],
-        conversions: Math.floor(Math.random() * 8) + 2,
-        revenue: Math.random() * 500 + 100,
-      });
-    }
-
-    return data;
+    // Return empty array instead of fake data
+    return [];
   }
 }
 
@@ -234,18 +204,7 @@ export async function fetchGA4TopPages(
       error instanceof Error ? error.message : 'Unknown error';
     console.error('❌ GA4 Top Pages Error:', errorMessage);
 
-    // Return realistic Lab Essentials pages
-    return [
-      { page: 'Lab Equipment - Homepage', views: 1250, users: 890 },
-      { page: 'Microscopes - Product Category', views: 645, users: 478 },
-      { page: 'Centrifuges - Product Category', views: 432, users: 325 },
-      { page: 'MXU Combination Centrifuge', views: 298, users: 267 },
-      { page: 'Shopping Cart', views: 187, users: 156 },
-      { page: 'Checkout - Step 1', views: 134, users: 121 },
-      { page: 'Product Search Results', views: 98, users: 87 },
-      { page: 'About Lab Essentials', views: 76, users: 65 },
-      { page: 'Contact Us', views: 54, users: 48 },
-      { page: 'Shipping Information', views: 43, users: 39 },
-    ];
+    // Return empty array instead of fake data
+    return [];
   }
 }

@@ -8,6 +8,7 @@ import BehaviorHighlights from './BehaviorHighlights';
 import SessionsChart from './SessionsChart';
 import ConversionChart from './ConversionChart';
 import ShopifyMetrics from './ShopifyMetrics';
+import TaboolaMetrics from './TaboolaMetrics';
 
 interface MetricsData {
   ga4: {
@@ -322,6 +323,14 @@ CLARITY_API_KEY=your-api-key`}
           🛍️ Shopify Sales & Customers
         </h2>
         <ShopifyMetrics startDate={dateRange.start} endDate={dateRange.end} />
+      </div>
+
+      {/* Taboola Advertising Metrics */}
+      <div className="border-t border-gray-200 pt-6 mt-6">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          📢 Taboola Advertising
+        </h2>
+        <TaboolaMetrics startDate={dateRange.start} endDate={dateRange.end} />
       </div>
 
       {/* Footer Info */}
