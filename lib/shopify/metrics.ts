@@ -273,16 +273,19 @@ export async function fetchShopifyMetrics(
         status: node.displayFinancialStatus,
       }));
 
-    // Fetch abandoned checkouts
+    // Fetch abandoned checkouts using abandonedCheckouts query (Shopify 2023-10+)
     const abandonedCheckoutsQuery = `
-      query GetAbandonedCheckouts($query: String!) {
-        checkouts(first: 250, query: $query) {
+      query GetAbandonedCheckouts {
+        abandonedCheckouts(first: 250) {
           edges {
             node {
               id
-              totalPriceV2 {
-                amount
-                currencyCode
+              createdAt
+              totalPriceSet {
+                shopMoney {
+                  amount
+                  currencyCode
+                }
               }
             }
           }
@@ -290,15 +293,31 @@ export async function fetchShopifyMetrics(
       }
     `;
 
-    const abandonedCheckouts = await shopifyAdminFetch<{
-      checkouts: { edges: Array<{ node: any }> };
-    }>(abandonedCheckoutsQuery, { query: currentQuery });
+    let abandonedCartCount = 0;
+    let abandonedCartValue = 0;
 
-    const abandonedCartCount = abandonedCheckouts.checkouts.edges.length;
-    const abandonedCartValue = abandonedCheckouts.checkouts.edges.reduce(
-      (sum, { node }) => sum + parseFloat(node.totalPriceV2.amount),
-      0,
-    );
+    try {
+      const abandonedCheckouts = await shopifyAdminFetch<{
+        abandonedCheckouts?: { edges: Array<{ node: { id: string; createdAt: string; totalPriceSet: { shopMoney: { amount: string; currencyCode: string } } } }> };
+      }>(abandonedCheckoutsQuery);
+
+      if (abandonedCheckouts.abandonedCheckouts) {
+        // Filter by date range manually since abandonedCheckouts doesn't support query filters
+        const filtered = abandonedCheckouts.abandonedCheckouts.edges.filter(({ node }) => {
+          const createdAt = new Date(node.createdAt);
+          return createdAt >= start && createdAt <= end;
+        });
+
+        abandonedCartCount = filtered.length;
+        abandonedCartValue = filtered.reduce(
+          (sum, { node }) => sum + parseFloat(node.totalPriceSet.shopMoney.amount),
+          0,
+        );
+      }
+    } catch (error) {
+      // If abandonedCheckouts isn't available, continue without it
+      console.warn('[Shopify Metrics] Could not fetch abandoned checkouts:', error);
+    }
 
     // Calculate percentage changes
     const revenueChange =
