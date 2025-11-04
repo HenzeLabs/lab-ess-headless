@@ -47,18 +47,18 @@ export async function GET(request: NextRequest) {
       avgOrderValue: shopifyData.summary?.avgOrderValue || 0,
 
       // User behavior metrics (GA4) - using real data structure
-      activeUsers: ga4Data.activeUsers || 0,
-      totalUsers: ga4Data.totalUsers || 0,
-      newUsers: Math.floor((ga4Data.totalUsers || 0) * 0.6), // Estimate new users as 60%
-      returningUsers: Math.floor((ga4Data.totalUsers || 0) * 0.4), // Estimate returning users as 40%
-      pageViews: ga4Data.pageViews || 0,
-      sessions: ga4Data.sessions || 0,
-      bounceRate: ga4Data.bounceRate || 0,
-      avgSessionDuration: ga4Data.averageSessionDuration || 0,
+      activeUsers: ga4Data?.activeUsers || 0,
+      totalUsers: ga4Data?.totalUsers || 0,
+      newUsers: Math.floor((ga4Data?.totalUsers || 0) * 0.6), // Estimate new users as 60%
+      returningUsers: Math.floor((ga4Data?.totalUsers || 0) * 0.4), // Estimate returning users as 40%
+      pageViews: ga4Data?.pageViews || 0,
+      sessions: ga4Data?.sessions || 0,
+      bounceRate: ga4Data?.bounceRate || 0,
+      avgSessionDuration: ga4Data?.averageSessionDuration || 0,
 
       // Conversion metrics (combined)
       conversionRate: shopifyData.summary?.conversionRate || 0,
-      ecommerceConversionRate: ga4Data.conversionRate || 0,
+      ecommerceConversionRate: ga4Data?.conversionRate || 0,
 
       // User experience metrics (Clarity)
       clarityInsights: clarityData.insights || {},
