@@ -9,6 +9,7 @@ import SessionsChart from './SessionsChart';
 import ConversionChart from './ConversionChart';
 import ShopifyMetrics from './ShopifyMetrics';
 import TaboolaMetrics from './TaboolaMetrics';
+import RedditMetrics from './RedditMetrics';
 
 interface MetricsData {
   ga4: {
@@ -331,6 +332,14 @@ CLARITY_API_KEY=your-api-key`}
           📢 Taboola Advertising
         </h2>
         <TaboolaMetrics startDate={dateRange.start} endDate={dateRange.end} />
+      </div>
+
+      {/* Reddit Advertising Metrics */}
+      <div className="border-t border-gray-200 pt-6 mt-6">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          🔴 Reddit Advertising
+        </h2>
+        <RedditMetrics startDate={dateRange.start} endDate={dateRange.end} />
       </div>
 
       {/* Footer Info */}

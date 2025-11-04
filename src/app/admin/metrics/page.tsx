@@ -4,7 +4,7 @@ import LoadingSkeleton from './components/LoadingSkeleton';
 
 export const metadata = {
   title: 'Analytics Metrics | Lab Essentials Admin',
-  description: 'Real-time analytics from GA4, Microsoft Clarity, Shopify, and Taboola',
+  description: 'Real-time analytics from GA4, Microsoft Clarity, Shopify, Taboola, and Reddit Ads',
 };
 
 export default function MetricsPage() {
@@ -13,7 +13,7 @@ export default function MetricsPage() {
       <div className="mb-6">
         <h2 className="text-3xl font-bold text-gray-900">Analytics Metrics</h2>
         <p className="mt-2 text-gray-600">
-          Real-time performance data from GA4, Clarity, Shopify, and Taboola Ads
+          Real-time performance data from GA4, Clarity, Shopify, Taboola, and Reddit Ads
         </p>
       </div>
 
