@@ -190,8 +190,6 @@ export async function fetchRedditMetrics(
     console.log(`[Reddit Ads] Found ${campaigns.length} campaigns`);
 
     // Fetch metrics for all campaigns
-    const campaignIds = campaigns.map((c) => c.id).join(',');
-
     const response = await fetch(
       `https://ads-api.reddit.com/api/v2.0/accounts/${REDDIT_ACCOUNT_ID}/reports`,
       {
