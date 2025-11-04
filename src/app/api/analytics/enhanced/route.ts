@@ -99,11 +99,11 @@ export async function GET(request: NextRequest) {
       detailedInsights: {
         shopify: shopifyData.storeInfo || {},
         ga4: {
-          activeUsers: ga4Data.activeUsers,
-          pageViews: ga4Data.pageViews,
-          sessions: ga4Data.sessions,
-          conversionRate: ga4Data.conversionRate,
-          revenue: ga4Data.revenue,
+          activeUsers: ga4Data?.activeUsers || 0,
+          pageViews: ga4Data?.pageViews || 0,
+          sessions: ga4Data?.sessions || 0,
+          conversionRate: ga4Data?.conversionRate || 0,
+          revenue: ga4Data?.revenue || 0,
         },
         clarity: clarityData.fullReport || {},
       },
