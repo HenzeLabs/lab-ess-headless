@@ -55,21 +55,28 @@ async function getTaboolaAccessToken(): Promise<string | null> {
   }
 
   try {
-    const response = await fetch('https://backstage.taboola.com/backstage/oauth/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+    const response = await fetch(
+      'https://backstage.taboola.com/backstage/oauth/token',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          client_id: TABOOLA_CLIENT_ID,
+          client_secret: TABOOLA_CLIENT_SECRET,
+          grant_type: 'client_credentials',
+        }),
+        next: { revalidate: 3000 }, // Cache for 50 minutes (tokens last 60 minutes)
       },
-      body: new URLSearchParams({
-        client_id: TABOOLA_CLIENT_ID,
-        client_secret: TABOOLA_CLIENT_SECRET,
-        grant_type: 'client_credentials',
-      }),
-      next: { revalidate: 3000 }, // Cache for 50 minutes (tokens last 60 minutes)
-    });
+    );
 
     if (!response.ok) {
-      console.error('[Taboola] Auth failed:', response.status, response.statusText);
+      console.error(
+        '[Taboola] Auth failed:',
+        response.status,
+        response.statusText,
+      );
       return null;
     }
 
@@ -130,7 +137,11 @@ export async function fetchTaboolaMetrics(
     });
 
     if (!response.ok) {
-      console.error('[Taboola Metrics] Report fetch failed:', response.status, response.statusText);
+      console.error(
+        '[Taboola Metrics] Report fetch failed:',
+        response.status,
+        response.statusText,
+      );
       // Try to read error details
       const errorText = await response.text();
       console.error('[Taboola Metrics] Error details:', errorText);
@@ -143,6 +154,7 @@ export async function fetchTaboolaMetrics(
 
     console.log('[Taboola Metrics] Report fetched:', {
       rowCount: data.results?.length || 0,
+      rawData: JSON.stringify(data, null, 2).substring(0, 500),
     });
 
     if (!data.results || data.results.length === 0) {
@@ -168,7 +180,13 @@ export async function fetchTaboolaMetrics(
 
     const campaignMap = new Map<
       string,
-      { name: string; impressions: number; clicks: number; spent: number; conversions: number }
+      {
+        name: string;
+        impressions: number;
+        clicks: number;
+        spent: number;
+        conversions: number;
+      }
     >();
 
     data.results.forEach((row) => {
@@ -203,9 +221,11 @@ export async function fetchTaboolaMetrics(
     });
 
     // Calculate derived metrics
-    const ctr = totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0;
+    const ctr =
+      totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0;
     const cpc = totalClicks > 0 ? totalSpent / totalClicks : 0;
-    const conversionRate = totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0;
+    const conversionRate =
+      totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0;
     const roas = totalSpent > 0 ? totalConversions / totalSpent : 0;
 
     // Get top 5 campaigns by spent

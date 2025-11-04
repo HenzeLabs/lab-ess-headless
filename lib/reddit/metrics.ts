@@ -104,9 +104,7 @@ async function getRedditAccessToken(): Promise<string | null> {
 /**
  * Fetch campaigns for the account
  */
-async function fetchCampaigns(
-  accessToken: string,
-): Promise<RedditCampaign[]> {
+async function fetchCampaigns(accessToken: string): Promise<RedditCampaign[]> {
   try {
     const response = await fetch(
       `https://ads-api.reddit.com/api/v2.0/accounts/${REDDIT_ACCOUNT_ID}/campaigns`,
@@ -120,9 +118,7 @@ async function fetchCampaigns(
     );
 
     if (!response.ok) {
-      console.error(
-        `[Reddit Ads] Campaigns fetch failed: ${response.status}`,
-      );
+      console.error(`[Reddit Ads] Campaigns fetch failed: ${response.status}`);
       return [];
     }
 
@@ -187,7 +183,10 @@ export async function fetchRedditMetrics(
       };
     }
 
-    console.log(`[Reddit Ads] Found ${campaigns.length} campaigns`);
+    console.log(
+      `[Reddit Ads] Found ${campaigns.length} campaigns:`,
+      campaigns.map((c) => ({ id: c.id, name: c.name, status: c.status })),
+    );
 
     // Fetch metrics for all campaigns
     const response = await fetch(
@@ -229,7 +228,10 @@ export async function fetchRedditMetrics(
     }
 
     const reportData = await response.json();
-    console.log('[Reddit Ads] Report data received');
+    console.log(
+      '[Reddit Ads] Report data received:',
+      JSON.stringify(reportData, null, 2),
+    );
 
     // Aggregate metrics across all campaigns
     let totalImpressions = 0;
@@ -251,35 +253,39 @@ export async function fetchRedditMetrics(
 
     // Process report data
     if (reportData.data && Array.isArray(reportData.data)) {
-      reportData.data.forEach((row: { campaign_id: string; metrics: RedditReportMetrics }) => {
-        const campaign = campaigns.find((c) => c.id === row.campaign_id);
-        const metrics = row.metrics;
+      reportData.data.forEach(
+        (row: { campaign_id: string; metrics: RedditReportMetrics }) => {
+          const campaign = campaigns.find((c) => c.id === row.campaign_id);
+          const metrics = row.metrics;
 
-        totalImpressions += metrics.impressions || 0;
-        totalClicks += metrics.clicks || 0;
-        totalSpend += metrics.spend || 0;
-        totalVideoViews += metrics.video_views || 0;
-        totalEngagement += metrics.post_engagement || 0;
-        totalConversions += metrics.conversions || 0;
-        totalRevenue += metrics.revenue || 0;
+          totalImpressions += metrics.impressions || 0;
+          totalClicks += metrics.clicks || 0;
+          totalSpend += metrics.spend || 0;
+          totalVideoViews += metrics.video_views || 0;
+          totalEngagement += metrics.post_engagement || 0;
+          totalConversions += metrics.conversions || 0;
+          totalRevenue += metrics.revenue || 0;
 
-        if (campaign) {
-          campaignMetrics.push({
-            id: campaign.id,
-            name: campaign.name,
-            impressions: metrics.impressions || 0,
-            clicks: metrics.clicks || 0,
-            spend: metrics.spend || 0,
-            conversions: metrics.conversions || 0,
-          });
-        }
-      });
+          if (campaign) {
+            campaignMetrics.push({
+              id: campaign.id,
+              name: campaign.name,
+              impressions: metrics.impressions || 0,
+              clicks: metrics.clicks || 0,
+              spend: metrics.spend || 0,
+              conversions: metrics.conversions || 0,
+            });
+          }
+        },
+      );
     }
 
     // Calculate derived metrics
-    const ctr = totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0;
+    const ctr =
+      totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0;
     const cpc = totalClicks > 0 ? totalSpend / totalClicks : 0;
-    const conversionRate = totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0;
+    const conversionRate =
+      totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0;
     const roas = totalSpend > 0 ? (totalRevenue / totalSpend) * 100 : 0;
 
     // Sort campaigns by spend and take top 5
@@ -292,7 +298,11 @@ export async function fetchRedditMetrics(
       clicks: totalClicks,
       spend: totalSpend,
       conversions: totalConversions,
+      revenue: totalRevenue,
+      videoViews: totalVideoViews,
+      engagement: totalEngagement,
       topCampaignsCount: topCampaigns.length,
+      rawDataRows: reportData.data?.length || 0,
     });
 
     return {
