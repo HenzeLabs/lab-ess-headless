@@ -54,7 +54,7 @@ export async function GET(req: NextRequest) {
 
           <div class="box">
             <h2>Step 1: Click the button below to authorize</h2>
-            <a href="https://www.reddit.com/api/v1/authorize?client_id=7BTY-2OJl013Gbd2_bKkYA&response_type=code&state=random_${Date.now()}&redirect_uri=https://store.labessentials.com/api/auth/reddit/callback&duration=permanent&scope=ads.reporting" class="button">
+            <a href="https://www.reddit.com/api/v1/authorize?client_id=7BTY-2OJl013Gbd2_bKkYA&response_type=code&state=random_${Date.now()}&redirect_uri=https://store.labessentials.com/api/auth/reddit/callback&duration=permanent&scope=adsaccount" class="button">
               Authorize Reddit Ads Access
             </a>
           </div>
