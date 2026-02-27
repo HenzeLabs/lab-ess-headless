@@ -19,14 +19,6 @@ const nextConfig = {
     styledComponents: true,
   },
 
-  // Advanced performance optimizations
-  modularizeImports: {
-    'lucide-react': {
-      transform: 'lucide-react/dist/esm/icons/{{member}}',
-      skipDefaultConversion: true,
-    },
-  },
-
   // Bundle optimization
   experimental: {
     optimizePackageImports: [
