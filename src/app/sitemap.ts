@@ -48,23 +48,35 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ];
   }
 
-  // Fetch collections and products from Shopify
-  const { data: collectionsData } = await shopifyFetch<CollectionSitemapData>({
-    query: getCollectionsListQuery,
-  });
+  // Fetch collections and products from Shopify gracefully
+  let collectionsData: CollectionSitemapData | null = null;
+  let productsData: ProductSitemapData | null = null;
 
-  const { data: productsData } = await shopifyFetch<ProductSitemapData>({
-    query: getAllProductsQuery,
-  });
+  try {
+    const [collectionsRes, productsRes] = await Promise.all([
+      shopifyFetch<CollectionSitemapData>({ query: getCollectionsListQuery }),
+      shopifyFetch<ProductSitemapData>({ query: getAllProductsQuery })
+    ]);
+    collectionsData = collectionsRes.data;
+    productsData = productsRes.data;
+  } catch (error) {
+    console.error('Failed to fetch Shopify data for sitemap, returning minimal sitemap. Error:', error);
+    return [
+      {
+        url: siteUrl,
+        lastModified: new Date(),
+      },
+    ];
+  }
 
-  const collectionUrls = collectionsData.collections.edges.map((edge) => {
+  const collectionUrls = collectionsData?.collections?.edges?.map((edge) => {
     return {
       url: `${siteUrl}/collections/${edge.node.handle}`,
       lastModified: edge.node.updatedAt,
     };
   });
 
-  const productUrls = productsData.products.edges.map((edge) => {
+  const productUrls = productsData?.products?.edges?.map((edge) => {
     return {
       url: `${siteUrl}/products/${edge.node.handle}`,
       lastModified: edge.node.updatedAt,
