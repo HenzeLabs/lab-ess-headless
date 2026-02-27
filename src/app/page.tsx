@@ -5,6 +5,7 @@ import Hero from '@/components/Hero';
 import CollectionSwitcherWrapper from '@/app/components/CollectionSwitcherWrapper';
 import AboutSection from '@/components/AboutSection';
 import FeaturedHeroProduct from '@/components/FeaturedHeroProduct';
+import FeaturedCollections from '@/components/FeaturedCollections';
 import DeferredHydration from '@/components/DeferredHydration';
 
 import { absoluteUrl, jsonLd } from '@/lib/seo';
@@ -12,11 +13,8 @@ import { absoluteUrl, jsonLd } from '@/lib/seo';
 // Lazy load below-the-fold components to reduce initial JS bundle + TTI
 const CTASection = dynamic(() => import('@/components/CTASection'));
 const EmailSignup = dynamic(() => import('@/components/EmailSignup'));
-const FeaturedCollections = dynamic(
-  () => import('@/components/FeaturedCollections'),
-);
 const TabletOptimizedLayout = dynamic(
-  () => import('@/components/TabletOptimizedLayout')
+  () => import('@/components/TabletOptimizedLayout'),
 );
 
 export const revalidate = 60; // 60s ISR for homepage (frequent updates + static performance)
@@ -67,6 +65,28 @@ const websiteJsonLd = {
 };
 
 export default async function HomePage() {
+  let collectionSwitcherSection: React.ReactNode = null;
+  let featuredHeroSection: React.ReactNode = null;
+  let featuredCollectionsSection: React.ReactNode = null;
+
+  try {
+    collectionSwitcherSection = await CollectionSwitcherWrapper();
+  } catch (error) {
+    console.error('HomePage: CollectionSwitcherWrapper failed', error);
+  }
+
+  try {
+    featuredHeroSection = await FeaturedHeroProduct({});
+  } catch (error) {
+    console.error('HomePage: FeaturedHeroProduct failed', error);
+  }
+
+  try {
+    featuredCollectionsSection = await FeaturedCollections();
+  } catch (error) {
+    console.error('HomePage: FeaturedCollections failed', error);
+  }
+
   return (
     <>
       <script
@@ -100,19 +120,19 @@ export default async function HomePage() {
         />
         {/* Tablet-specific optimized layout */}
         <TabletOptimizedLayout />
-        <CollectionSwitcherWrapper />
+        {collectionSwitcherSection}
         <DeferredHydration
           hydrateOnView
           fallback={<div className="h-64 animate-pulse bg-gray-100" />}
         >
           <CTASection />
         </DeferredHydration>
-        <FeaturedHeroProduct />
+        {featuredHeroSection}
         <DeferredHydration
           hydrateOnView
           fallback={<div className="h-96 animate-pulse bg-gray-100" />}
         >
-          <FeaturedCollections />
+          {featuredCollectionsSection}
         </DeferredHydration>
         <DeferredHydration
           hydrateOnView

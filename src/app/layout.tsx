@@ -11,7 +11,7 @@ import dynamic from 'next/dynamic';
 
 // Dynamic import for mobile quick actions
 const MobileQuickActions = dynamic(
-  () => import('@/components/MobileQuickActions')
+  () => import('@/components/MobileQuickActions'),
 );
 
 // Montserrat for headings (H1-H3) - Optimized: 400, 700 only
@@ -54,6 +54,20 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const headerPromise = SiteHeader()
+    .then((node) => node)
+    .catch((error) => {
+      console.error('RootLayout: SiteHeader failed', error);
+      return null;
+    });
+
+  const footerPromise = FooterServer()
+    .then((node) => node)
+    .catch((error) => {
+      console.error('RootLayout: FooterServer failed', error);
+      return null;
+    });
+
   return (
     <html
       lang="en"
@@ -120,12 +134,14 @@ export default function RootLayout({
             <SearchProvider>
               <AnalyticsWrapper />
               <ErrorBoundary level="component" context="header">
-                <SiteHeader />
+                {/* @ts-expect-error Async Server Component Promise */}
+                {headerPromise}
               </ErrorBoundary>
               {children}
               <MobileQuickActions />
               <ErrorBoundary level="component" context="footer">
-                <FooterServer />
+                {/* @ts-expect-error Async Server Component Promise */}
+                {footerPromise}
               </ErrorBoundary>
             </SearchProvider>
           </CartProvider>
