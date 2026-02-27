@@ -5,7 +5,7 @@ const bundleAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
 });
 
-const pwaEnabled = process.env.ENABLE_PWA === 'true';
+const pwaEnabled = false;
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
