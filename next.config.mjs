@@ -5,6 +5,8 @@ const bundleAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
 });
 
+const pwaEnabled = process.env.ENABLE_PWA === 'true';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
@@ -152,66 +154,12 @@ const nextConfig = {
     ];
   },
 
-  // Webpack optimizations
-  webpack: (config, { dev, isServer }) => {
-    if (!dev && !isServer) {
-      // Enable minification
-      config.optimization.minimize = true;
-
-      // Optimize bundle splitting
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        cacheGroups: {
-          default: false,
-          vendors: false,
-          framework: {
-            chunks: 'all',
-            name: 'framework',
-            test: /(?<!node_modules.*)[\\/]node_modules[\\/](react|react-dom|scheduler|prop-types|use-subscription)[\\/]/,
-            priority: 40,
-            enforce: true,
-          },
-          lib: {
-            test(module) {
-              return (
-                module.size() > 160000 &&
-                /node_modules[/\\]/.test(module.identifier())
-              );
-            },
-            name(module) {
-              // Use a simple hash based on module identifier
-              const identifier = module.identifier();
-              return (
-                identifier.split('/').pop()?.split('.')[0]?.substring(0, 8) ||
-                'chunk'
-              );
-            },
-            priority: 30,
-            minChunks: 1,
-            reuseExistingChunk: true,
-          },
-          commons: {
-            name: 'commons',
-            minChunks: 2,
-            priority: 20,
-          },
-          shared: {
-            name: 'shared',
-            minChunks: 1,
-            priority: 10,
-            reuseExistingChunk: true,
-          },
-        },
-      };
-    }
-
-    return config;
-  },
+  webpack: (config) => config,
 };
 
 const withPWAConfig = withPWA({
   dest: 'public',
-  disable: process.env.NODE_ENV === 'development',
+  disable: process.env.NODE_ENV === 'development' || !pwaEnabled,
   register: true,
   skipWaiting: true,
   sw: '/sw.js',
@@ -220,7 +168,8 @@ const withPWAConfig = withPWA({
   },
   runtimeCaching: [
     {
-      urlPattern: /^https:\/\/cdn\.shopify\.com\/.*\.(jpg|jpeg|png|webp|avif|gif)$/i,
+      urlPattern:
+        /^https:\/\/cdn\.shopify\.com\/.*\.(jpg|jpeg|png|webp|avif|gif)$/i,
       handler: 'CacheFirst',
       options: {
         cacheName: 'shopify-images',

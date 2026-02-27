@@ -10,7 +10,6 @@ import type { Cart, CollectionDetail, MenuItem, Product } from '@/lib/types';
 import { normalizeMenuItems } from '@/lib/menu';
 import Header from './Header';
 import { getCartQuery } from '@/lib/queries'; // Corrected import
-import { deleteCartCookieAction } from '@/app/cart/actions'; // New import
 
 const isCollectionId = (value?: string | null) =>
   typeof value === 'string' && value.startsWith('gid://shopify/Collection/');
@@ -54,11 +53,16 @@ const enhanceMenuItems = (
     let description = item.description ?? null;
 
     if (isCollectionId(item.resourceId)) {
-      const collection = item.resourceId ? collectionMap.get(item.resourceId) : undefined;
+      const collection = item.resourceId
+        ? collectionMap.get(item.resourceId)
+        : undefined;
       if (collection) {
         description = collection.description ?? null;
         if (!image) {
-          const candidate = collection.image ?? collection.products?.edges?.[0]?.node.featuredImage ?? null;
+          const candidate =
+            collection.image ??
+            collection.products?.edges?.[0]?.node.featuredImage ??
+            null;
           if (candidate?.url) {
             image = {
               url: candidate.url,
@@ -68,7 +72,9 @@ const enhanceMenuItems = (
         }
       }
     } else if (isProductId(item.resourceId)) {
-      const product = item.resourceId ? productMap.get(item.resourceId) : undefined;
+      const product = item.resourceId
+        ? productMap.get(item.resourceId)
+        : undefined;
       if (product && !image) {
         const candidate = product.featuredImage ?? null;
         if (candidate?.url) {
@@ -112,11 +118,14 @@ export default async function HeaderServer() {
       cart = res.data.cart;
     } catch (e) {
       console.error('Error fetching cart in HeaderServer:', e);
-      await deleteCartCookieAction(); // Call Server Action to delete cookie
+      // Do not mutate cookies in a Server Component render path.
+      // Next.js only allows cookie mutation in Route Handlers or Server Actions.
+      // Keep rendering with an empty cart instead of escalating to global-error.
     }
   }
 
-  const cartItemCount = cart?.lines.edges.reduce((acc, item) => acc + item.node.quantity, 0) || 0;
+  const cartItemCount =
+    cart?.lines?.edges?.reduce((acc, item) => acc + item.node.quantity, 0) || 0;
 
   // --- Start of data fetching logic moved from SiteHeader.tsx ---
   let menuData: MainMenuData | null = null;
@@ -130,7 +139,10 @@ export default async function HeaderServer() {
     menuData = menuResponse.data;
     shopData = shopResponse.data;
   } catch (error) {
-    console.error('HeaderServer Error: Failed to fetch menu or shop brand:', error);
+    console.error(
+      'HeaderServer Error: Failed to fetch menu or shop brand:',
+      error,
+    );
   }
 
   const menuItems = menuData?.menu?.items ?? [];
@@ -145,7 +157,9 @@ export default async function HeaderServer() {
   let collectionsMap = new Map<string, CollectionDetail>();
   if (collectionIds.size > 0) {
     try {
-      const { data: collectionData } = await shopifyFetch<{ nodes: (CollectionDetail | null)[] }>({
+      const { data: collectionData } = await shopifyFetch<{
+        nodes: (CollectionDetail | null)[];
+      }>({
         query: getCollectionsByIdQuery,
         variables: { ids: Array.from(collectionIds) },
       });
@@ -163,7 +177,9 @@ export default async function HeaderServer() {
   let productsMap = new Map<string, Product>();
   if (productIds.size > 0) {
     try {
-      const { data: productData } = await shopifyFetch<{ nodes: (Product | null)[] }>({
+      const { data: productData } = await shopifyFetch<{
+        nodes: (Product | null)[];
+      }>({
         query: getProductsByIdQuery,
         variables: { ids: Array.from(productIds) },
       });
@@ -178,7 +194,11 @@ export default async function HeaderServer() {
     }
   }
 
-  const enrichedMenu = enhanceMenuItems(normalizedMenu, collectionsMap, productsMap);
+  const enrichedMenu = enhanceMenuItems(
+    normalizedMenu,
+    collectionsMap,
+    productsMap,
+  );
   // --- End of data fetching logic moved from SiteHeader.tsx ---
 
   return (
