@@ -1,0 +1,904 @@
+{
+  "test_plan_name": "Lab Essentials Backend API Test Plan",
+  "project_type": "backend_api",
+  "test_framework": "Playwright/Jest",
+  "base_url": "http://localhost:3000/api",
+  "api_categories": [
+    {
+      "category": "Authentication APIs",
+      "priority": "critical",
+      "endpoints": [
+        {
+          "id": "AUTH-API-001",
+          "endpoint": "/api/auth/register",
+          "method": "POST",
+          "description": "User registration endpoint",
+          "test_cases": [
+            {
+              "name": "Successful Registration",
+              "request": {
+                "body": {
+                  "email": "newuser@example.com",
+                  "password": "SecurePass123!",
+                  "firstName": "John",
+                  "lastName": "Doe"
+                }
+              },
+              "expected_response": {
+                "status": 201,
+                "body": {
+                  "success": true,
+                  "user": {
+                    "email": "newuser@example.com",
+                    "firstName": "John",
+                    "lastName": "Doe"
+                  },
+                  "token": "jwt_token_string"
+                }
+              }
+            },
+            {
+              "name": "Duplicate Email Registration",
+              "request": {
+                "body": {
+                  "email": "existing@example.com",
+                  "password": "SecurePass123!",
+                  "firstName": "Jane",
+                  "lastName": "Doe"
+                }
+              },
+              "expected_response": {
+                "status": 409,
+                "body": {
+                  "error": "Email already registered"
+                }
+              }
+            },
+            {
+              "name": "Invalid Email Format",
+              "request": {
+                "body": {
+                  "email": "invalid-email",
+                  "password": "SecurePass123!",
+                  "firstName": "Test",
+                  "lastName": "User"
+                }
+              },
+              "expected_response": {
+                "status": 400,
+                "body": {
+                  "error": "Invalid email format"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "AUTH-API-002",
+          "endpoint": "/api/auth/login",
+          "method": "POST",
+          "description": "User login endpoint",
+          "test_cases": [
+            {
+              "name": "Successful Login",
+              "request": {
+                "body": {
+                  "email": "user@example.com",
+                  "password": "CorrectPassword123!"
+                }
+              },
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "success": true,
+                  "token": "jwt_token_string",
+                  "refreshToken": "refresh_token_string",
+                  "user": {
+                    "email": "user@example.com",
+                    "id": "user_id"
+                  }
+                }
+              }
+            },
+            {
+              "name": "Invalid Credentials",
+              "request": {
+                "body": {
+                  "email": "user@example.com",
+                  "password": "WrongPassword"
+                }
+              },
+              "expected_response": {
+                "status": 401,
+                "body": {
+                  "error": "Invalid credentials"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "AUTH-API-003",
+          "endpoint": "/api/auth/refresh",
+          "method": "POST",
+          "description": "Token refresh endpoint",
+          "test_cases": [
+            {
+              "name": "Successful Token Refresh",
+              "request": {
+                "headers": {
+                  "Authorization": "Bearer valid_refresh_token"
+                }
+              },
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "token": "new_jwt_token",
+                  "refreshToken": "new_refresh_token"
+                }
+              }
+            },
+            {
+              "name": "Invalid Refresh Token",
+              "request": {
+                "headers": {
+                  "Authorization": "Bearer invalid_token"
+                }
+              },
+              "expected_response": {
+                "status": 401,
+                "body": {
+                  "error": "Invalid refresh token"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "AUTH-API-004",
+          "endpoint": "/api/auth/logout",
+          "method": "POST",
+          "description": "User logout endpoint",
+          "test_cases": [
+            {
+              "name": "Successful Logout",
+              "request": {
+                "headers": {
+                  "Authorization": "Bearer valid_jwt_token"
+                }
+              },
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "success": true,
+                  "message": "Logged out successfully"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Product APIs",
+      "priority": "critical",
+      "endpoints": [
+        {
+          "id": "PROD-API-001",
+          "endpoint": "/api/products",
+          "method": "GET",
+          "description": "Get all products",
+          "test_cases": [
+            {
+              "name": "Get Products List",
+              "request": {
+                "query": {
+                  "limit": 10,
+                  "page": 1
+                }
+              },
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "products": "array",
+                  "total": "number",
+                  "page": 1,
+                  "limit": 10
+                }
+              }
+            },
+            {
+              "name": "Filter Products by Category",
+              "request": {
+                "query": {
+                  "category": "microscopes",
+                  "limit": 5
+                }
+              },
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "products": "array_of_microscopes",
+                  "total": "number"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "PROD-API-002",
+          "endpoint": "/api/product-by-handle",
+          "method": "GET",
+          "description": "Get product by handle",
+          "test_cases": [
+            {
+              "name": "Get Valid Product",
+              "request": {
+                "query": {
+                  "handle": "sample-microscope"
+                }
+              },
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "product": {
+                    "id": "string",
+                    "title": "string",
+                    "handle": "sample-microscope",
+                    "price": "object",
+                    "images": "array",
+                    "description": "string"
+                  }
+                }
+              }
+            },
+            {
+              "name": "Product Not Found",
+              "request": {
+                "query": {
+                  "handle": "non-existent-product"
+                }
+              },
+              "expected_response": {
+                "status": 404,
+                "body": {
+                  "error": "Product not found"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "PROD-API-003",
+          "endpoint": "/api/featured-products",
+          "method": "GET",
+          "description": "Get featured products",
+          "test_cases": [
+            {
+              "name": "Get Featured Products",
+              "request": {},
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "products": "array",
+                  "count": "number"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Cart APIs",
+      "priority": "critical",
+      "endpoints": [
+        {
+          "id": "CART-API-001",
+          "endpoint": "/api/cart",
+          "method": "POST",
+          "description": "Cart operations",
+          "test_cases": [
+            {
+              "name": "Add Item to Cart",
+              "request": {
+                "body": {
+                  "action": "add",
+                  "productId": "product_123",
+                  "quantity": 2
+                }
+              },
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "cart": {
+                    "id": "string",
+                    "items": "array",
+                    "total": "number"
+                  }
+                }
+              }
+            },
+            {
+              "name": "Update Cart Item Quantity",
+              "request": {
+                "body": {
+                  "action": "update",
+                  "itemId": "item_123",
+                  "quantity": 3
+                }
+              },
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "cart": {
+                    "items": "array_with_updated_quantity"
+                  }
+                }
+              }
+            },
+            {
+              "name": "Remove Item from Cart",
+              "request": {
+                "body": {
+                  "action": "remove",
+                  "itemId": "item_123"
+                }
+              },
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "cart": {
+                    "items": "array_without_removed_item"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "CART-API-002",
+          "endpoint": "/api/cart",
+          "method": "GET",
+          "description": "Get cart contents",
+          "test_cases": [
+            {
+              "name": "Get Current Cart",
+              "request": {
+                "headers": {
+                  "Cookie": "cart_id=cart_123"
+                }
+              },
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "cart": {
+                    "id": "cart_123",
+                    "items": "array",
+                    "subtotal": "number",
+                    "total": "number"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Search APIs",
+      "priority": "high",
+      "endpoints": [
+        {
+          "id": "SEARCH-API-001",
+          "endpoint": "/api/search",
+          "method": "GET",
+          "description": "Product search",
+          "test_cases": [
+            {
+              "name": "Search Products",
+              "request": {
+                "query": {
+                  "q": "microscope",
+                  "limit": 10
+                }
+              },
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "results": "array",
+                  "total": "number",
+                  "query": "microscope"
+                }
+              }
+            },
+            {
+              "name": "Empty Search Query",
+              "request": {
+                "query": {
+                  "q": ""
+                }
+              },
+              "expected_response": {
+                "status": 400,
+                "body": {
+                  "error": "Search query required"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "SEARCH-API-002",
+          "endpoint": "/api/search/predictive",
+          "method": "GET",
+          "description": "Predictive search suggestions",
+          "test_cases": [
+            {
+              "name": "Get Search Suggestions",
+              "request": {
+                "query": {
+                  "q": "mic",
+                  "limit": 5
+                }
+              },
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "suggestions": ["microscope", "micro pipette", "microcentrifuge"],
+                  "products": "array"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Customer APIs",
+      "priority": "high",
+      "endpoints": [
+        {
+          "id": "CUST-API-001",
+          "endpoint": "/api/customer/profile",
+          "method": "GET",
+          "description": "Get customer profile",
+          "test_cases": [
+            {
+              "name": "Get Authenticated User Profile",
+              "request": {
+                "headers": {
+                  "Authorization": "Bearer valid_jwt_token"
+                }
+              },
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "customer": {
+                    "id": "string",
+                    "email": "string",
+                    "firstName": "string",
+                    "lastName": "string",
+                    "addresses": "array"
+                  }
+                }
+              }
+            },
+            {
+              "name": "Unauthorized Access",
+              "request": {
+                "headers": {}
+              },
+              "expected_response": {
+                "status": 401,
+                "body": {
+                  "error": "Authentication required"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "CUST-API-002",
+          "endpoint": "/api/customer/orders",
+          "method": "GET",
+          "description": "Get customer orders",
+          "test_cases": [
+            {
+              "name": "Get Order History",
+              "request": {
+                "headers": {
+                  "Authorization": "Bearer valid_jwt_token"
+                },
+                "query": {
+                  "limit": 10,
+                  "page": 1
+                }
+              },
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "orders": "array",
+                  "total": "number",
+                  "page": 1
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Analytics APIs",
+      "priority": "medium",
+      "endpoints": [
+        {
+          "id": "ANALYTICS-API-001",
+          "endpoint": "/api/analytics",
+          "method": "POST",
+          "description": "Track analytics events",
+          "test_cases": [
+            {
+              "name": "Track Page View",
+              "request": {
+                "body": {
+                  "event": "page_view",
+                  "page": "/products/sample",
+                  "timestamp": "2024-01-01T00:00:00Z"
+                }
+              },
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "success": true
+                }
+              }
+            },
+            {
+              "name": "Track Add to Cart",
+              "request": {
+                "body": {
+                  "event": "add_to_cart",
+                  "productId": "product_123",
+                  "quantity": 1,
+                  "value": 299.99
+                }
+              },
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "success": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "ANALYTICS-API-002",
+          "endpoint": "/api/analytics/shopify",
+          "method": "GET",
+          "description": "Get Shopify analytics data",
+          "test_cases": [
+            {
+              "name": "Get Analytics Summary",
+              "request": {
+                "headers": {
+                  "Authorization": "Bearer admin_token"
+                },
+                "query": {
+                  "startDate": "2024-01-01",
+                  "endDate": "2024-01-31"
+                }
+              },
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "metrics": {
+                    "totalOrders": "number",
+                    "totalRevenue": "number",
+                    "averageOrderValue": "number"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Newsletter APIs",
+      "priority": "low",
+      "endpoints": [
+        {
+          "id": "NEWS-API-001",
+          "endpoint": "/api/newsletter",
+          "method": "POST",
+          "description": "Newsletter subscription",
+          "test_cases": [
+            {
+              "name": "Subscribe to Newsletter",
+              "request": {
+                "body": {
+                  "email": "subscriber@example.com",
+                  "preferences": {
+                    "products": true,
+                    "promotions": true
+                  }
+                }
+              },
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "success": true,
+                  "message": "Successfully subscribed"
+                }
+              }
+            },
+            {
+              "name": "Duplicate Subscription",
+              "request": {
+                "body": {
+                  "email": "existing@example.com"
+                }
+              },
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "success": true,
+                  "message": "Already subscribed"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Webhook APIs",
+      "priority": "high",
+      "endpoints": [
+        {
+          "id": "WEBHOOK-API-001",
+          "endpoint": "/api/webhooks/shopify/orders",
+          "method": "POST",
+          "description": "Shopify order webhook",
+          "test_cases": [
+            {
+              "name": "Process Order Created Webhook",
+              "request": {
+                "headers": {
+                  "X-Shopify-Hmac-SHA256": "valid_hmac_signature",
+                  "X-Shopify-Topic": "orders/create"
+                },
+                "body": {
+                  "id": "order_123",
+                  "email": "customer@example.com",
+                  "total_price": "299.99",
+                  "line_items": []
+                }
+              },
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "success": true
+                }
+              }
+            },
+            {
+              "name": "Invalid HMAC Signature",
+              "request": {
+                "headers": {
+                  "X-Shopify-Hmac-SHA256": "invalid_signature",
+                  "X-Shopify-Topic": "orders/create"
+                },
+                "body": {}
+              },
+              "expected_response": {
+                "status": 401,
+                "body": {
+                  "error": "Invalid webhook signature"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Health Check APIs",
+      "priority": "medium",
+      "endpoints": [
+        {
+          "id": "HEALTH-API-001",
+          "endpoint": "/api/health-check",
+          "method": "GET",
+          "description": "API health check",
+          "test_cases": [
+            {
+              "name": "Check API Health",
+              "request": {},
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "status": "healthy",
+                  "timestamp": "string",
+                  "services": {
+                    "database": "connected",
+                    "redis": "connected",
+                    "shopify": "connected"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "HEALTH-API-002",
+          "endpoint": "/api/cache/health",
+          "method": "GET",
+          "description": "Cache health check",
+          "test_cases": [
+            {
+              "name": "Check Cache Health",
+              "request": {},
+              "expected_response": {
+                "status": 200,
+                "body": {
+                  "status": "healthy",
+                  "provider": "redis",
+                  "connected": true
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "test_scenarios": {
+    "integration_tests": [
+      {
+        "name": "Complete Purchase Flow",
+        "description": "Test full purchase journey from browse to order",
+        "steps": [
+          "Search for product",
+          "View product details",
+          "Add to cart",
+          "Update cart quantity",
+          "Proceed to checkout",
+          "Complete purchase",
+          "Verify order in history"
+        ]
+      },
+      {
+        "name": "User Registration and Login",
+        "description": "Test account creation and authentication",
+        "steps": [
+          "Register new account",
+          "Verify email (if applicable)",
+          "Login with credentials",
+          "Access protected endpoints",
+          "Refresh token",
+          "Logout"
+        ]
+      }
+    ],
+    "load_tests": [
+      {
+        "name": "Concurrent Users",
+        "description": "Test API performance under load",
+        "parameters": {
+          "concurrent_users": 100,
+          "duration": "5 minutes",
+          "ramp_up": "30 seconds"
+        },
+        "endpoints": [
+          "/api/products",
+          "/api/search",
+          "/api/cart"
+        ]
+      }
+    ],
+    "security_tests": [
+      {
+        "name": "Authentication Security",
+        "tests": [
+          "SQL Injection prevention",
+          "XSS prevention",
+          "JWT token validation",
+          "Rate limiting verification",
+          "CORS policy validation"
+        ]
+      },
+      {
+        "name": "Data Validation",
+        "tests": [
+          "Input sanitization",
+          "File upload restrictions",
+          "Parameter tampering prevention"
+        ]
+      }
+    ]
+  },
+  "test_data": {
+    "users": [
+      {
+        "type": "admin",
+        "email": "admin@labessentials.com",
+        "password": "AdminSecure123!",
+        "token": "admin_jwt_token"
+      },
+      {
+        "type": "customer",
+        "email": "customer@example.com",
+        "password": "CustomerPass123!",
+        "token": "customer_jwt_token"
+      },
+      {
+        "type": "guest",
+        "email": null,
+        "password": null,
+        "token": null
+      }
+    ],
+    "products": [
+      {
+        "id": "prod_001",
+        "handle": "advanced-microscope",
+        "title": "Advanced Research Microscope",
+        "price": 2999.99
+      },
+      {
+        "id": "prod_002",
+        "handle": "lab-centrifuge",
+        "title": "Laboratory Centrifuge",
+        "price": 1499.99
+      }
+    ],
+    "carts": [
+      {
+        "id": "cart_001",
+        "items": [
+          {
+            "productId": "prod_001",
+            "quantity": 1
+          }
+        ]
+      }
+    ]
+  },
+  "automation_config": {
+    "base_url": "http://localhost:3000",
+    "timeout": 30000,
+    "retry_count": 2,
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    "authentication": {
+      "type": "JWT",
+      "token_header": "Authorization",
+      "token_prefix": "Bearer"
+    }
+  },
+  "reporting": {
+    "formats": ["JSON", "HTML", "JUnit"],
+    "metrics": [
+      "Response time",
+      "Success rate",
+      "Error rate",
+      "Throughput"
+    ],
+    "alerts": {
+      "response_time_threshold": 1000,
+      "error_rate_threshold": 5,
+      "email_notifications": ["qa-team@labessentials.com"]
+    }
+  },
+  "success_criteria": {
+    "api_availability": "99.9%",
+    "response_time_p95": "< 500ms",
+    "error_rate": "< 1%",
+    "test_pass_rate": "100% for critical paths"
+  }
+}

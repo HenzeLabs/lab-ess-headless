@@ -149,7 +149,7 @@ export default function AboutPage() {
               <div className="relative bg-gradient-to-r from-[hsl(var(--brand))] to-[hsl(var(--brand-dark))] text-white rounded-2xl p-8 md:p-10 shadow-xl border-t-4 border-[hsl(var(--accent))] flex flex-col">
                 <h2 className={`${textStyles.h3} mb-4 text-white`}>Our Mission</h2>
                 <p className="text-base md:text-lg leading-relaxed text-white/95">
-                  We make lab operations simpler by providing reliable, affordable equipment that's easy to use. Whether you're teaching future scientists or managing a clinical lab, you deserve quality products without high prices or complicated service.
+                  We make lab operations simpler by providing reliable, affordable equipment that&apos;s easy to use. Whether you&apos;re teaching future scientists or managing a clinical lab, you deserve quality products without high prices or complicated service.
                 </p>
               </div>
 
@@ -158,7 +158,7 @@ export default function AboutPage() {
                 <h2 className={`${textStyles.h3} mb-4`}>Our Story</h2>
                 <div className="space-y-4 text-[hsl(var(--ink))] leading-relaxed">
                   <p className="text-base md:text-lg leading-relaxed">
-                    Lab Essentials started with a straightforward idea: modern lab equipment should be accessible and dependable. Too often, labs have to choose between expensive name brands and products that don't hold up. We set out to change that—partnering with trusted manufacturers to deliver well-built products without the markups or hassle.
+                    Lab Essentials started with a straightforward idea: modern lab equipment should be accessible and dependable. Too often, labs have to choose between expensive name brands and products that don&apos;t hold up. We set out to change that—partnering with trusted manufacturers to deliver well-built products without the markups or hassle.
                   </p>
                 </div>
               </div>

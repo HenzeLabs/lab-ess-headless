@@ -45,7 +45,7 @@ const Hero: React.FC<HeroProps> = ({
   return (
     <section
       className={`relative isolate flex flex-col items-center justify-center overflow-hidden ${layout.section} text-center`}
-      style={{ minHeight: '70vh' }}
+      style={{ minHeight: '60vh' }}
       data-test-id="hero-section"
     >
       {videoUrl ? (
@@ -77,21 +77,26 @@ const Hero: React.FC<HeroProps> = ({
       <div
         className={`relative z-10 ${layout.container} flex flex-col items-center justify-center gap-8 md:gap-10`}
       >
-        <div
-          className={
+        {/* Make title clickable to prevent dead clicks */}
+        <Link
+          href="/products"
+          className={`group cursor-pointer transition-transform hover:scale-105 ${
             hasMedia
-              ? 'bg-[hsl(var(--brand))]/75 backdrop-blur-sm rounded-3xl px-12 py-8 border-2 border-white/20'
-              : ''
-          }
+              ? 'bg-[hsl(var(--brand))]/75 backdrop-blur-sm rounded-3xl px-12 py-8 border-2 border-white/20 hover:bg-[hsl(var(--brand))]/85'
+              : 'hover:bg-gray-50 rounded-3xl px-12 py-8'
+          }`}
         >
           <h1
             className={`text-balance max-w-3xl ${textStyles.h1} drop-shadow-2xl ${
               hasMedia ? 'text-white' : ''
-            }`}
+            } group-hover:drop-shadow-[0_2px_10px_rgba(255,255,255,0.3)]`}
           >
             {title}
           </h1>
-        </div>
+          <p className={`mt-2 text-sm ${hasMedia ? 'text-white/90' : 'text-gray-600'} opacity-0 group-hover:opacity-100 transition-opacity`}>
+            Click to explore our full catalog →
+          </p>
+        </Link>
         {(ctaText && ctaHref) ||
         (ctaSecondaryText && ctaSecondaryHref) ||
         (ctaTertiaryText && ctaTertiaryHref) ? (
@@ -130,6 +135,25 @@ const Hero: React.FC<HeroProps> = ({
             )}
           </div>
         ) : null}
+
+        {/* Scroll indicator to encourage exploration */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <svg
+            className={`w-6 h-6 ${hasMedia ? 'text-white/70' : 'text-gray-400'}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 14l-7 7m0 0l-7-7m7 7V3"
+            />
+          </svg>
+          <span className={`sr-only`}>Scroll down for more</span>
+        </div>
       </div>
     </section>
   );

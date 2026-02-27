@@ -14,6 +14,7 @@ import TechnicalSummaryCard from '@/components/product/TechnicalSummaryCard';
 import ProductHighlights from '@/components/product/ProductHighlights';
 import ProductComparisonCTA from '@/components/product/ProductComparisonCTA';
 import Breadcrumbs from '@/components/Breadcrumbs';
+import { getFallbackProduct } from '@/lib/fallback/catalog';
 
 export const revalidate = 60;
 
@@ -27,10 +28,20 @@ async function getProduct(handle: string): Promise<Product | null> {
       query: getProductByHandleQuery,
       variables: { handle },
     });
-    return response.data.product ?? null;
+    const product = response.data.product ?? null;
+    if (product) {
+      return product;
+    }
   } catch (error) {
-    return null;
+    console.error(`Failed to load Shopify product for handle "${handle}"`, error);
   }
+
+  const fallback = getFallbackProduct(handle);
+  if (fallback) {
+    return fallback;
+  }
+
+  return null;
 }
 
 export async function generateMetadata({

@@ -5,10 +5,16 @@
  * to understand how configuration changes affect UX.
  */
 
+// Type definitions for Microsoft Clarity
+interface ClarityFunction {
+  (command: string, ...args: unknown[]): void;
+  q?: unknown[];
+}
+
 // Extend Window interface to include Clarity
 declare global {
   interface Window {
-    clarity?: (...args: unknown[]) => void;
+    clarity?: ClarityFunction;
   }
 }
 

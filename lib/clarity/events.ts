@@ -265,7 +265,17 @@ export async function getClaritySessions(
 
     const data = await response.json();
 
-    return (data.sessions || []).map((session: any) => ({
+    interface SessionData {
+      id: string;
+      url: string;
+      duration: number;
+      deadClicks?: number;
+      rageClicks?: number;
+      scrollDepth?: number;
+      timestamp?: number;
+    }
+
+    return (data.sessions || []).map((session: SessionData) => ({
       id: session.id,
       url: session.url,
       duration: session.duration,

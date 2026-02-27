@@ -1,0 +1,579 @@
+{
+  "test_plan_name": "Lab Essentials Frontend Test Plan",
+  "project_type": "frontend",
+  "test_framework": "Playwright",
+  "base_url": "http://localhost:3000",
+  "test_categories": [
+    {
+      "category": "Homepage Tests",
+      "priority": "critical",
+      "test_cases": [
+        {
+          "id": "HOME-001",
+          "name": "Homepage Load Test",
+          "description": "Verify homepage loads successfully with all key elements",
+          "steps": [
+            "Navigate to homepage (/)",
+            "Wait for page load",
+            "Verify hero section is visible",
+            "Verify featured products section",
+            "Verify footer is present"
+          ],
+          "expected_results": [
+            "Page loads within 3 seconds",
+            "Hero section displays with video/image",
+            "Featured products show with prices",
+            "Navigation menu is functional",
+            "Footer links are clickable"
+          ],
+          "test_data": null
+        },
+        {
+          "id": "HOME-002",
+          "name": "Homepage Responsive Design",
+          "description": "Test homepage responsiveness across devices",
+          "steps": [
+            "Load homepage on desktop (1920x1080)",
+            "Load homepage on tablet (768x1024)",
+            "Load homepage on mobile (375x667)",
+            "Check layout adjustments",
+            "Verify touch interactions on mobile"
+          ],
+          "expected_results": [
+            "Layout adapts to screen size",
+            "Navigation becomes mobile menu on small screens",
+            "Images scale appropriately",
+            "Text remains readable",
+            "Touch targets meet minimum size"
+          ],
+          "test_data": {
+            "viewports": [
+              {"width": 1920, "height": 1080, "device": "desktop"},
+              {"width": 768, "height": 1024, "device": "tablet"},
+              {"width": 375, "height": 667, "device": "mobile"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "category": "Product Catalog Tests",
+      "priority": "critical",
+      "test_cases": [
+        {
+          "id": "PROD-001",
+          "name": "Product Listing Page",
+          "description": "Verify products display correctly in collections",
+          "steps": [
+            "Navigate to /collections",
+            "Select a collection",
+            "Verify product grid loads",
+            "Check product card information",
+            "Test pagination/infinite scroll"
+          ],
+          "expected_results": [
+            "Collections page displays all collections",
+            "Product grid shows products with images",
+            "Product prices are visible",
+            "Add to cart buttons are present",
+            "Pagination works correctly"
+          ],
+          "test_data": {
+            "collections": ["microscopes", "centrifuges", "lab-equipment"]
+          }
+        },
+        {
+          "id": "PROD-002",
+          "name": "Product Detail Page",
+          "description": "Test individual product page functionality",
+          "steps": [
+            "Navigate to a product page",
+            "Verify product images load",
+            "Check product information display",
+            "Test image gallery/zoom",
+            "Verify technical specifications",
+            "Test add to cart functionality"
+          ],
+          "expected_results": [
+            "Product images display correctly",
+            "Product title, price, description visible",
+            "Image gallery is interactive",
+            "Technical specs are formatted properly",
+            "Add to cart button works",
+            "Quantity selector functions"
+          ],
+          "test_data": {
+            "test_products": [
+              "/products/sample-microscope",
+              "/products/test-centrifuge"
+            ]
+          }
+        },
+        {
+          "id": "PROD-003",
+          "name": "Product Search",
+          "description": "Test search functionality",
+          "steps": [
+            "Click search icon in header",
+            "Enter search query",
+            "Submit search",
+            "Review search results",
+            "Test search filters",
+            "Test no results scenario"
+          ],
+          "expected_results": [
+            "Search modal opens",
+            "Search executes on submit",
+            "Relevant results display",
+            "Product information shown in results",
+            "Filters work correctly",
+            "No results message displays appropriately"
+          ],
+          "test_data": {
+            "search_queries": ["microscope", "lab equipment", "xyz123nonexistent"]
+          }
+        }
+      ]
+    },
+    {
+      "category": "Shopping Cart Tests",
+      "priority": "critical",
+      "test_cases": [
+        {
+          "id": "CART-001",
+          "name": "Add to Cart",
+          "description": "Test adding products to cart",
+          "steps": [
+            "Navigate to product page",
+            "Select quantity",
+            "Click add to cart",
+            "Verify cart update",
+            "Check cart icon badge"
+          ],
+          "expected_results": [
+            "Product adds to cart successfully",
+            "Cart count updates",
+            "Success message displays",
+            "Cart preview shows item",
+            "Price calculates correctly"
+          ],
+          "test_data": null
+        },
+        {
+          "id": "CART-002",
+          "name": "Cart Management",
+          "description": "Test cart page functionality",
+          "steps": [
+            "Navigate to /cart",
+            "Verify cart items display",
+            "Update item quantity",
+            "Remove item from cart",
+            "Test empty cart state"
+          ],
+          "expected_results": [
+            "Cart page loads with items",
+            "Quantity updates work",
+            "Totals recalculate correctly",
+            "Remove item works",
+            "Empty cart message displays"
+          ],
+          "test_data": null
+        },
+        {
+          "id": "CART-003",
+          "name": "Cart Persistence",
+          "description": "Test cart data persistence",
+          "steps": [
+            "Add items to cart",
+            "Refresh page",
+            "Close and reopen browser",
+            "Navigate back to cart",
+            "Verify items remain"
+          ],
+          "expected_results": [
+            "Cart items persist after refresh",
+            "Cart data survives browser restart",
+            "Quantities remain correct",
+            "Prices stay accurate"
+          ],
+          "test_data": null
+        }
+      ]
+    },
+    {
+      "category": "User Authentication Tests",
+      "priority": "high",
+      "test_cases": [
+        {
+          "id": "AUTH-001",
+          "name": "User Registration",
+          "description": "Test new user registration flow",
+          "steps": [
+            "Navigate to /account/register",
+            "Fill registration form",
+            "Submit form",
+            "Verify account creation",
+            "Check redirect behavior"
+          ],
+          "expected_results": [
+            "Registration form displays",
+            "Form validation works",
+            "Account creates successfully",
+            "User is logged in",
+            "Redirects to account page"
+          ],
+          "test_data": {
+            "test_user": {
+              "email": "testuser@example.com",
+              "password": "TestPass123!",
+              "firstName": "Test",
+              "lastName": "User"
+            }
+          }
+        },
+        {
+          "id": "AUTH-002",
+          "name": "User Login",
+          "description": "Test user login functionality",
+          "steps": [
+            "Navigate to /account/login",
+            "Enter credentials",
+            "Submit login form",
+            "Verify login success",
+            "Check session persistence"
+          ],
+          "expected_results": [
+            "Login form displays",
+            "Credentials validate",
+            "Login succeeds",
+            "User session established",
+            "Account page accessible"
+          ],
+          "test_data": {
+            "credentials": {
+              "email": "testuser@example.com",
+              "password": "TestPass123!"
+            }
+          }
+        },
+        {
+          "id": "AUTH-003",
+          "name": "Password Reset",
+          "description": "Test password reset flow",
+          "steps": [
+            "Click forgot password link",
+            "Enter email address",
+            "Submit reset request",
+            "Check confirmation message"
+          ],
+          "expected_results": [
+            "Reset form displays",
+            "Email validation works",
+            "Reset request submits",
+            "Confirmation message shows"
+          ],
+          "test_data": null
+        }
+      ]
+    },
+    {
+      "category": "Checkout Tests",
+      "priority": "critical",
+      "test_cases": [
+        {
+          "id": "CHECK-001",
+          "name": "Guest Checkout",
+          "description": "Test checkout without login",
+          "steps": [
+            "Add items to cart",
+            "Navigate to checkout",
+            "Fill shipping information",
+            "Select shipping method",
+            "Enter payment details",
+            "Complete order"
+          ],
+          "expected_results": [
+            "Checkout page loads",
+            "Forms accept input",
+            "Shipping calculates",
+            "Payment processes",
+            "Order confirmation displays"
+          ],
+          "test_data": {
+            "shipping": {
+              "firstName": "John",
+              "lastName": "Doe",
+              "address": "123 Test St",
+              "city": "Test City",
+              "state": "CA",
+              "zip": "12345"
+            }
+          }
+        },
+        {
+          "id": "CHECK-002",
+          "name": "Logged-in Checkout",
+          "description": "Test checkout with user account",
+          "steps": [
+            "Login to account",
+            "Add items to cart",
+            "Proceed to checkout",
+            "Use saved address",
+            "Complete purchase"
+          ],
+          "expected_results": [
+            "Saved addresses available",
+            "Information pre-fills",
+            "Order associates with account",
+            "Order appears in history"
+          ],
+          "test_data": null
+        }
+      ]
+    },
+    {
+      "category": "Navigation Tests",
+      "priority": "high",
+      "test_cases": [
+        {
+          "id": "NAV-001",
+          "name": "Main Navigation",
+          "description": "Test header navigation functionality",
+          "steps": [
+            "Click each navigation link",
+            "Verify page loads",
+            "Test dropdown menus",
+            "Check active states",
+            "Test mobile menu"
+          ],
+          "expected_results": [
+            "All links navigate correctly",
+            "Dropdowns open/close properly",
+            "Active states display",
+            "Mobile menu toggles",
+            "Navigation is keyboard accessible"
+          ],
+          "test_data": {
+            "nav_links": [
+              "/collections",
+              "/products",
+              "/about",
+              "/support/contact"
+            ]
+          }
+        },
+        {
+          "id": "NAV-002",
+          "name": "Footer Navigation",
+          "description": "Test footer links and functionality",
+          "steps": [
+            "Scroll to footer",
+            "Click each footer link",
+            "Verify destinations",
+            "Test newsletter signup",
+            "Check social links"
+          ],
+          "expected_results": [
+            "Footer links work",
+            "Pages load correctly",
+            "Newsletter form submits",
+            "Social links open in new tabs"
+          ],
+          "test_data": null
+        }
+      ]
+    },
+    {
+      "category": "Performance Tests",
+      "priority": "high",
+      "test_cases": [
+        {
+          "id": "PERF-001",
+          "name": "Page Load Performance",
+          "description": "Test page load times",
+          "steps": [
+            "Measure homepage load time",
+            "Measure product page load time",
+            "Measure collection page load time",
+            "Check Core Web Vitals",
+            "Test on slow connection"
+          ],
+          "expected_results": [
+            "Homepage loads < 3s",
+            "Product pages load < 2s",
+            "LCP < 2.5s",
+            "FID < 100ms",
+            "CLS < 0.1"
+          ],
+          "test_data": {
+            "network_conditions": ["3G", "4G", "Cable"]
+          }
+        },
+        {
+          "id": "PERF-002",
+          "name": "Image Optimization",
+          "description": "Verify image optimization",
+          "steps": [
+            "Check image formats",
+            "Verify lazy loading",
+            "Test responsive images",
+            "Measure image load times"
+          ],
+          "expected_results": [
+            "Images use WebP/AVIF",
+            "Lazy loading works",
+            "Responsive images serve",
+            "Images load progressively"
+          ],
+          "test_data": null
+        }
+      ]
+    },
+    {
+      "category": "Accessibility Tests",
+      "priority": "high",
+      "test_cases": [
+        {
+          "id": "A11Y-001",
+          "name": "Keyboard Navigation",
+          "description": "Test keyboard accessibility",
+          "steps": [
+            "Navigate using Tab key",
+            "Test focus indicators",
+            "Use Enter/Space for actions",
+            "Test skip links",
+            "Navigate forms with keyboard"
+          ],
+          "expected_results": [
+            "All elements reachable by keyboard",
+            "Focus indicators visible",
+            "Actions work with keyboard",
+            "Skip links function",
+            "Forms are keyboard accessible"
+          ],
+          "test_data": null
+        },
+        {
+          "id": "A11Y-002",
+          "name": "Screen Reader Compatibility",
+          "description": "Test screen reader support",
+          "steps": [
+            "Test with NVDA/JAWS",
+            "Verify ARIA labels",
+            "Check heading hierarchy",
+            "Test form labels",
+            "Verify alt text"
+          ],
+          "expected_results": [
+            "Content readable by screen reader",
+            "ARIA labels present",
+            "Headings properly structured",
+            "Forms have labels",
+            "Images have alt text"
+          ],
+          "test_data": null
+        }
+      ]
+    },
+    {
+      "category": "Analytics Tests",
+      "priority": "medium",
+      "test_cases": [
+        {
+          "id": "ANALYTICS-001",
+          "name": "GA4 Event Tracking",
+          "description": "Verify analytics events fire correctly",
+          "steps": [
+            "Open browser dev tools",
+            "Navigate through site",
+            "View product",
+            "Add to cart",
+            "Check GA4 events"
+          ],
+          "expected_results": [
+            "Page view events fire",
+            "Product view events track",
+            "Add to cart events send",
+            "Checkout events trigger",
+            "Purchase events complete"
+          ],
+          "test_data": null
+        },
+        {
+          "id": "ANALYTICS-002",
+          "name": "GTM Container",
+          "description": "Test Google Tag Manager integration",
+          "steps": [
+            "Verify GTM loads",
+            "Check data layer",
+            "Test custom events",
+            "Verify tags fire"
+          ],
+          "expected_results": [
+            "GTM container loads",
+            "Data layer populates",
+            "Custom events trigger",
+            "Tags fire correctly"
+          ],
+          "test_data": null
+        }
+      ]
+    }
+  ],
+  "test_environment": {
+    "browsers": ["Chrome", "Firefox", "Safari", "Edge"],
+    "devices": ["Desktop", "Tablet", "Mobile"],
+    "operating_systems": ["Windows", "macOS", "iOS", "Android"],
+    "test_data": {
+      "test_accounts": [
+        {
+          "type": "regular",
+          "email": "test@example.com",
+          "password": "TestPass123!"
+        },
+        {
+          "type": "admin",
+          "email": "admin@example.com",
+          "password": "AdminPass123!"
+        }
+      ],
+      "test_products": [
+        "sample-microscope",
+        "test-centrifuge",
+        "demo-pipette"
+      ],
+      "test_payment": {
+        "card_number": "4242424242424242",
+        "expiry": "12/25",
+        "cvv": "123",
+        "name": "Test User"
+      }
+    }
+  },
+  "automation_strategy": {
+    "framework": "Playwright",
+    "language": "TypeScript",
+    "ci_cd": "GitHub Actions",
+    "parallel_execution": true,
+    "retry_strategy": {
+      "max_retries": 2,
+      "retry_on_failure": true
+    },
+    "reporting": {
+      "formats": ["HTML", "JSON", "JUnit"],
+      "screenshots": "on_failure",
+      "videos": "on_failure"
+    }
+  },
+  "success_criteria": {
+    "pass_rate": "95%",
+    "critical_tests": "100%",
+    "performance_metrics": {
+      "page_load": "< 3 seconds",
+      "api_response": "< 500ms",
+      "time_to_interactive": "< 5 seconds"
+    },
+    "accessibility_score": "100%",
+    "browser_compatibility": "All major browsers"
+  }
+}

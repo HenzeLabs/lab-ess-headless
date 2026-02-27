@@ -26,11 +26,16 @@ function resolveHref(item: MenuItem): string {
 }
 
 export default async function FooterServer() {
-  const { data } = await shopifyFetch<MainMenuResponse>({
-    query: getMainMenuQuery,
-  });
+  let items: MenuItem[] = [];
+  try {
+    const { data } = await shopifyFetch<MainMenuResponse>({
+      query: getMainMenuQuery,
+    });
+    items = data?.menu?.items ?? [];
+  } catch (error) {
+    console.error('FooterServer Error: shopifyFetch Failed:', error);
+  }
 
-  const items = data.menu?.items ?? [];
   const normalized = normalizeMenuItems(items);
 
   const collectLinks = (menuItems: MenuItem[]): FooterLink[] => {

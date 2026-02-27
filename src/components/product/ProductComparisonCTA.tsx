@@ -15,16 +15,16 @@ export default function ProductComparisonCTA() {
           Compare Products
         </h3>
         <p className="mb-6 max-w-md text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
-          Not sure if this is the right model? Compare specifications, features,
-          and pricing across our complete centrifuge lineup to find your perfect
-          match.
+          Not sure if this is the right fit? Review key specifications, standout
+          features, and ideal workflows for our highlighted microscopes and
+          centrifuges before you decide.
         </p>
         <a
           href="/compare"
           className={`${buttonStyles.primary} group`}
-          aria-label="Compare all centrifuge models"
+          aria-label="Compare featured lab equipment"
         >
-          Compare All Models
+          Compare Featured Equipment
           <ArrowRight
             className="h-4 w-4 transition-transform group-hover:translate-x-1"
             aria-hidden="true"

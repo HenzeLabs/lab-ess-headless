@@ -2,6 +2,7 @@ import ProductRail from '@/components/ProductRail';
 import { getCollectionByHandleQuery } from '@/lib/queries';
 import { shopifyFetch } from '@/lib/shopify';
 import type { Product } from '@/lib/types';
+import { getFallbackCollection } from '@/lib/fallback/catalog';
 
 const BEST_SELLERS_HANDLE = 'best-sellers';
 const PRODUCT_LIMIT = 12;
@@ -20,6 +21,8 @@ interface CollectionResponse {
 }
 
 export default async function FeaturedCollections() {
+  let collection: CollectionResponse['collection'] | null = null;
+
   try {
     const response = await shopifyFetch<CollectionResponse>({
       query: getCollectionByHandleQuery,
@@ -28,39 +31,31 @@ export default async function FeaturedCollections() {
         first: PRODUCT_LIMIT,
       },
     });
-
-    const bestSellers = response.data.collection;
-    const products =
-      bestSellers?.products?.edges.map((edge) => edge.node) ?? [];
-
-    if (!products.length) {
-      console.log(
-        'FeaturedCollections: No products found for best-sellers collection',
-      );
-      return (
-        <section className="w-full py-12 lg:py-24 bg-background">
-          <div className="max-w-[1440px] mx-auto px-4 lg:px-8 text-center">
-            <h2 className="text-2xl font-bold">Best Sellers</h2>
-            <p>No products found in the best-sellers collection.</p>
-          </div>
-        </section>
-      );
-    }
-
-    return (
-      <section className="w-full py-12 lg:pb-16 bg-background">
-        <div className="max-w-[1440px] mx-auto px-4 lg:px-8">
-          <ProductRail
-            heading="Best Sellers"
-            products={products}
-            viewAllHref={`/collections/${
-              bestSellers?.handle ?? BEST_SELLERS_HANDLE
-            }`}
-          />
-        </div>
-      </section>
-    );
+    collection = response.data.collection;
   } catch (error) {
+    console.error('Failed to load best-sellers collection', error);
+  }
+
+  const fallbackCollection = getFallbackCollection(BEST_SELLERS_HANDLE);
+  const resolvedCollection = collection ?? fallbackCollection;
+  const products =
+    resolvedCollection?.products?.edges.map((edge) => edge.node) ?? [];
+
+  if (!products.length) {
     return null;
   }
+
+  return (
+    <section className="w-full py-12 lg:pb-16 bg-background">
+      <div className="max-w-[1440px] mx-auto px-4 lg:px-8">
+        <ProductRail
+          heading={resolvedCollection?.title ?? 'Best Sellers'}
+          products={products}
+          viewAllHref={`/collections/${
+            resolvedCollection?.handle ?? BEST_SELLERS_HANDLE
+          }`}
+        />
+      </div>
+    </section>
+  );
 }

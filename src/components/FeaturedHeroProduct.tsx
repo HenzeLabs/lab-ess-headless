@@ -6,6 +6,7 @@ import { stripHtml } from '@/lib/seo';
 import { shopifyFetch } from '@/lib/shopify';
 import type { Product } from '@/lib/types';
 import { layout, buttonStyles } from '@/lib/ui';
+import { getFallbackCollection } from '@/lib/fallback/catalog';
 
 interface FeaturedHeroProductProps {
   lifestyleImage?: string;
@@ -35,6 +36,8 @@ interface FeaturedProductData {
 const FEATURED_COLLECTION_HANDLE = 'featured-products';
 
 async function getFeaturedProduct(): Promise<FeaturedProductData | null> {
+  let featuredCollection: FeaturedCollectionResponse['collection'] | null = null;
+
   try {
     const response = await shopifyFetch<FeaturedCollectionResponse>({
       query: getCollectionByHandleQuery,
@@ -44,34 +47,43 @@ async function getFeaturedProduct(): Promise<FeaturedProductData | null> {
       },
     });
 
-    const featuredCollection = response.data.collection;
-
-    // Try to find the centrifuge product first
-    const centrifugeProduct = featuredCollection?.products?.edges?.find(
-      (edge) =>
-        edge.node.handle === 'centrinova-6-place-centrifuge' ||
-        edge.node.title?.toLowerCase().includes('centrifuge'),
-    )?.node;
-
-    // Fall back to first product if centrifuge not found
-    const product =
-      centrifugeProduct || featuredCollection?.products?.edges?.[0]?.node;
-
-    if (!product) {
-      console.error('No products found in featured collection');
-      return null;
-    }
-
-    return {
-      product,
-      collectionTitle: featuredCollection?.title ?? undefined,
-      collectionHandle: featuredCollection?.handle ?? undefined,
-      collectionDescription: featuredCollection?.description ?? null,
-    };
+    featuredCollection = response.data.collection;
   } catch (error) {
     console.error('Error fetching featured product:', error);
+  }
+
+  if (!featuredCollection) {
+    const fallback = getFallbackCollection(FEATURED_COLLECTION_HANDLE);
+    if (fallback) {
+      featuredCollection = {
+        handle: fallback.handle,
+        title: fallback.title,
+        description: fallback.description ?? null,
+        products: fallback.products ?? { edges: [] },
+      };
+    }
+  }
+
+  const centrifugeProduct = featuredCollection?.products?.edges?.find(
+    (edge) =>
+      edge.node.handle === 'centrinova-6-place-centrifuge' ||
+      edge.node.handle === 'zipcombo-centrifuge' ||
+      edge.node.title?.toLowerCase().includes('centrifuge'),
+  )?.node;
+
+  const product =
+    centrifugeProduct || featuredCollection?.products?.edges?.[0]?.node;
+
+  if (!product) {
     return null;
   }
+
+  return {
+    product,
+    collectionTitle: featuredCollection?.title ?? undefined,
+    collectionHandle: featuredCollection?.handle ?? undefined,
+    collectionDescription: featuredCollection?.description ?? null,
+  };
 }
 
 export default async function FeaturedHeroProduct({

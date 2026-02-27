@@ -119,23 +119,19 @@ export default async function HeaderServer() {
   const cartItemCount = cart?.lines.edges.reduce((acc, item) => acc + item.node.quantity, 0) || 0;
 
   // --- Start of data fetching logic moved from SiteHeader.tsx ---
-  const { data: menuData } = await shopifyFetch<MainMenuData>({
-    query: getMainMenuQuery,
-  });
+  let menuData: MainMenuData | null = null;
+  let shopData: any = null;
 
-  const { data: shopData } = await fetchShopBrand<{
-    shop: {
-      name: string;
-      brand: {
-        logo: {
-          image: {
-            url: string;
-            altText?: string;
-          } | null;
-        } | null;
-      } | null;
-    } | null;
-  }>();
+  try {
+    const [menuResponse, shopResponse] = await Promise.all([
+      shopifyFetch<MainMenuData>({ query: getMainMenuQuery }),
+      fetchShopBrand<any>(),
+    ]);
+    menuData = menuResponse.data;
+    shopData = shopResponse.data;
+  } catch (error) {
+    console.error('HeaderServer Error: Failed to fetch menu or shop brand:', error);
+  }
 
   const menuItems = menuData?.menu?.items ?? [];
   const normalizedMenu = menuItems.length ? normalizeMenuItems(menuItems) : [];
@@ -148,30 +144,38 @@ export default async function HeaderServer() {
 
   let collectionsMap = new Map<string, CollectionDetail>();
   if (collectionIds.size > 0) {
-    const { data: collectionData } = await shopifyFetch<{ nodes: (CollectionDetail | null)[] }>({
-      query: getCollectionsByIdQuery,
-      variables: { ids: Array.from(collectionIds) },
-    });
+    try {
+      const { data: collectionData } = await shopifyFetch<{ nodes: (CollectionDetail | null)[] }>({
+        query: getCollectionsByIdQuery,
+        variables: { ids: Array.from(collectionIds) },
+      });
 
-    collectionsMap = new Map(
-      (collectionData.nodes || [])
-        .filter((node): node is CollectionDetail => Boolean(node))
-        .map((node) => [node.id, node]),
-    );
+      collectionsMap = new Map(
+        (collectionData.nodes || [])
+          .filter((node): node is CollectionDetail => Boolean(node))
+          .map((node) => [node.id, node]),
+      );
+    } catch (error) {
+      console.error('HeaderServer Error: Failed to fetch collections:', error);
+    }
   }
 
   let productsMap = new Map<string, Product>();
   if (productIds.size > 0) {
-    const { data: productData } = await shopifyFetch<{ nodes: (Product | null)[] }>({
-      query: getProductsByIdQuery,
-      variables: { ids: Array.from(productIds) },
-    });
+    try {
+      const { data: productData } = await shopifyFetch<{ nodes: (Product | null)[] }>({
+        query: getProductsByIdQuery,
+        variables: { ids: Array.from(productIds) },
+      });
 
-    productsMap = new Map(
-      (productData.nodes || [])
-        .filter((node): node is Product => Boolean(node))
-        .map((node) => [node.id, node]),
-    );
+      productsMap = new Map(
+        (productData.nodes || [])
+          .filter((node): node is Product => Boolean(node))
+          .map((node) => [node.id, node]),
+      );
+    } catch (error) {
+      console.error('HeaderServer Error: Failed to fetch products:', error);
+    }
   }
 
   const enrichedMenu = enhanceMenuItems(normalizedMenu, collectionsMap, productsMap);

@@ -1,6 +1,17 @@
-import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
 
-export default function AccountPage() {
-  // Redirect to login for now, full account functionality will be added later
-  redirect('/account/login');
+import AccountClient from './AccountClient';
+import { layout } from '@/lib/ui';
+
+export default async function AccountPage() {
+  const cookieStore = await cookies();
+  const hasRefreshToken = Boolean(cookieStore.get('refreshToken'));
+
+  return (
+    <main className='bg-[hsl(var(--bg))] text-[hsl(var(--ink))]'>
+      <section className={`${layout.container} py-12 md:py-16`}>
+        <AccountClient hasRefreshToken={hasRefreshToken} />
+      </section>
+    </main>
+  );
 }

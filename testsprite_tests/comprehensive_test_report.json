@@ -1,0 +1,89 @@
+{
+  "timestamp": "2025-11-04T13:29:17.597776",
+  "base_url": "http://localhost:3000",
+  "summary": {
+    "total": 11,
+    "passed": 11,
+    "failed": 0,
+    "success_rate": 100.0
+  },
+  "tests": [
+    {
+      "name": "Health Check Success",
+      "success": true,
+      "message": "Health check returned status: healthy",
+      "response_time_ms": 188.798,
+      "status_code": 200
+    },
+    {
+      "name": "Products API - Get All",
+      "success": true,
+      "message": "Found 5 products",
+      "response_time_ms": 30.845000000000002,
+      "status_code": 200
+    },
+    {
+      "name": "Products API - Empty Response",
+      "success": true,
+      "message": "Returned 5 products (limit=0)",
+      "response_time_ms": 41.614,
+      "status_code": 200
+    },
+    {
+      "name": "Featured Products API",
+      "success": true,
+      "message": "Found 5 featured products (max 12)",
+      "response_time_ms": 67.956,
+      "status_code": 200
+    },
+    {
+      "name": "Collections API - Get All",
+      "success": true,
+      "message": "Found 5 collections",
+      "response_time_ms": 138.905,
+      "status_code": 200
+    },
+    {
+      "name": "Collections API - With Limit",
+      "success": true,
+      "message": "Returned 5 collections (limit=5)",
+      "response_time_ms": 32.381,
+      "status_code": 200
+    },
+    {
+      "name": "Menu API - Get Structure",
+      "success": true,
+      "message": "Menu has 7 items",
+      "response_time_ms": 51.992,
+      "status_code": 200
+    },
+    {
+      "name": "Product by Handle - Valid Handle",
+      "success": true,
+      "message": "Status 404 - Response structure valid",
+      "response_time_ms": 33.236000000000004,
+      "status_code": 404
+    },
+    {
+      "name": "Product by Handle - Invalid Handle",
+      "success": true,
+      "message": "Status 404 - Invalid handle handled correctly",
+      "response_time_ms": 21.63,
+      "status_code": 404
+    },
+    {
+      "name": "Checkout API - Create Session",
+      "success": true,
+      "message": "Status 400 - Response valid",
+      "response_time_ms": 62.565,
+      "status_code": 400
+    },
+    {
+      "name": "Cache Health API",
+      "success": true,
+      "message": "Cache status: healthy",
+      "response_time_ms": 16.279999999999998,
+      "status_code": 200
+    }
+  ]
+}

@@ -7,6 +7,12 @@ import AnalyticsWrapper from '@/AnalyticsWrapper';
 import { ErrorBoundary } from '@/components/error-boundaries/ErrorBoundary';
 import { SearchProvider } from '@/components/providers/SearchProvider';
 import { CartProvider } from '@/components/providers/CartContext';
+import dynamic from 'next/dynamic';
+
+// Dynamic import for mobile quick actions
+const MobileQuickActions = dynamic(
+  () => import('@/components/MobileQuickActions')
+);
 
 // Montserrat for headings (H1-H3) - Optimized: 400, 700 only
 const heading = Montserrat({
@@ -117,6 +123,7 @@ export default function RootLayout({
                 <SiteHeader />
               </ErrorBoundary>
               {children}
+              <MobileQuickActions />
               <ErrorBoundary level="component" context="footer">
                 <FooterServer />
               </ErrorBoundary>

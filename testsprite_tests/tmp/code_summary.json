@@ -1,229 +1,362 @@
 {
-  "project_name": "Lab Essentials Headless Storefront",
-  "project_type": "frontend",
-  "description": "Production-ready headless e-commerce storefront built on Next.js App Router with Shopify Storefront API integration. Features strong accessibility baselines, comprehensive test suites, and a lightweight design system.",
-  "tech_stack": {
-    "frontend_framework": "Next.js 15 (App Router)",
-    "ui_library": "React 19",
-    "styling": "Tailwind CSS with custom design tokens",
-    "language": "TypeScript",
-    "state_management": "React Hooks, Server Components",
-    "routing": "Next.js App Router",
-    "build_tool": "Next.js",
-    "testing": "Playwright",
-    "analytics": ["Google Analytics 4", "Google Tag Manager", "Microsoft Clarity", "Taboola", "Facebook Pixel", "Reddit Pixel"],
-    "performance": ["Lighthouse CI", "PWA (next-pwa)", "Bundle Analyzer"],
-    "ui_components": ["Radix UI", "Lucide React", "Framer Motion", "Heroicons"],
-    "forms": "React Hook Form with Zod validation",
-    "charts": "Recharts",
-    "image_optimization": "Next.js Image (WebP, AVIF)",
-    "authentication": "JWT (jose library)",
-    "caching": "Upstash Redis"
-  },
-  "integrations": {
-    "ecommerce": "Shopify Storefront API",
-    "storage": "AWS S3",
-    "analytics": "Google Analytics Data API",
-    "caching": "Upstash Redis",
-    "deployment": "Vercel (configured)"
-  },
-  "key_features": [
-    "E-commerce storefront with Shopify integration",
-    "Product browsing and search functionality",
-    "Shopping cart and checkout flow",
-    "User authentication and account management",
-    "Order history and tracking",
-    "Product collections and filtering",
-    "Interactive product quiz/selector",
-    "Newsletter subscription",
-    "Contact and support pages",
-    "Admin dashboard with metrics",
-    "Real-time analytics dashboard",
-    "A/B testing capabilities",
-    "Performance monitoring",
-    "Security monitoring",
-    "SEO optimization with dynamic sitemaps",
-    "Accessibility (a11y) compliance",
-    "PWA support with offline mode",
-    "Server-side webhook tracking",
-    "Image optimization and caching",
-    "Content Security Policy headers"
+  "tech_stack": [
+    "TypeScript",
+    "Next.js 15.5.2",
+    "React 19.1.0",
+    "Tailwind CSS",
+    "Shopify GraphQL API",
+    "Redis/Upstash",
+    "PostgreSQL",
+    "AWS S3",
+    "Google Analytics 4",
+    "Vercel",
+    "PWA"
   ],
-  "main_routes": [
+  "features": [
     {
-      "path": "/",
-      "description": "Homepage with featured products and hero section"
+      "name": "Product Management API",
+      "description": "Fetches and manages product data from Shopify",
+      "files": [
+        "src/app/api/products/route.ts",
+        "src/app/api/product-by-handle/route.ts",
+        "src/app/api/featured-products/route.ts",
+        "src/app/api/debug-products/route.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/api/products": {
+            "get": {
+              "summary": "Get all products",
+              "responses": {
+                "200": {
+                  "description": "List of products",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": { "type": "string" },
+                            "title": { "type": "string" },
+                            "handle": { "type": "string" },
+                            "featuredImage": { "type": "object" },
+                            "priceRange": { "type": "object" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     {
-      "path": "/products/[handle]",
-      "description": "Product detail page with images, specs, and add to cart"
+      "name": "Collections API",
+      "description": "Manages product collections and categories",
+      "files": [
+        "src/app/api/collections/route.ts",
+        "src/app/api/collection-products/route.ts",
+        "src/app/api/debug-collections/route.ts",
+        "src/app/api/diagnose-collections/route.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/api/collections": {
+            "get": {
+              "summary": "Get all collections",
+              "responses": {
+                "200": {
+                  "description": "List of collections"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     {
-      "path": "/collections",
-      "description": "Product collections listing"
+      "name": "Authentication API",
+      "description": "Handles customer authentication and session management",
+      "files": [
+        "src/app/api/auth/login/route.ts",
+        "src/app/api/auth/register/route.ts",
+        "src/app/api/auth/logout/route.ts",
+        "src/app/api/auth/refresh/route.ts",
+        "src/app/api/auth/verify/route.ts",
+        "src/app/api/auth/recover/route.ts",
+        "src/app/api/auth/reset/route.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/api/auth/login": {
+            "post": {
+              "summary": "Customer login",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "email": { "type": "string" },
+                        "password": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Login successful"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     {
-      "path": "/collections/[handle]",
-      "description": "Collection detail page with products"
+      "name": "Customer API",
+      "description": "Manages customer profiles and order history",
+      "files": [
+        "src/app/api/customer/profile/route.ts",
+        "src/app/api/customer/orders/route.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/api/customer/profile": {
+            "get": {
+              "summary": "Get customer profile",
+              "responses": {
+                "200": {
+                  "description": "Customer profile data"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     {
-      "path": "/cart",
-      "description": "Shopping cart with items, summary, and checkout CTA"
+      "name": "Checkout API",
+      "description": "Handles cart and checkout operations",
+      "files": [
+        "src/app/api/checkout/route.ts",
+        "src/app/cart/actions.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/api/checkout": {
+            "post": {
+              "summary": "Create checkout session",
+              "responses": {
+                "200": {
+                  "description": "Checkout session created"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     {
-      "path": "/search",
-      "description": "Product search functionality"
+      "name": "Orders API",
+      "description": "Manages customer orders",
+      "files": [
+        "src/app/api/orders/route.ts",
+        "src/app/api/orders/[id]/route.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/api/orders": {
+            "get": {
+              "summary": "Get orders",
+              "responses": {
+                "200": {
+                  "description": "List of orders"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     {
-      "path": "/account",
-      "description": "User account dashboard"
+      "name": "Analytics API",
+      "description": "Tracks user behavior and provides analytics data",
+      "files": [
+        "src/app/api/analytics/route.ts",
+        "src/app/api/analytics/enhanced/route.ts",
+        "src/app/api/analytics/shopify/route.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/api/analytics": {
+            "post": {
+              "summary": "Track analytics event",
+              "responses": {
+                "200": {
+                  "description": "Event tracked"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     {
-      "path": "/account/login",
-      "description": "User login page"
+      "name": "A/B Testing API",
+      "description": "Manages A/B testing experiments",
+      "files": [
+        "src/app/api/ab-tests/[testId]/route.ts",
+        "src/app/api/experiments/route.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/api/experiments": {
+            "get": {
+              "summary": "Get active experiments",
+              "responses": {
+                "200": {
+                  "description": "List of experiments"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     {
-      "path": "/account/register",
-      "description": "User registration page"
+      "name": "Menu API",
+      "description": "Provides navigation menu data",
+      "files": [
+        "src/app/api/menu/route.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/api/menu": {
+            "get": {
+              "summary": "Get menu structure",
+              "responses": {
+                "200": {
+                  "description": "Menu data"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     {
-      "path": "/account/orders",
-      "description": "Order history listing"
+      "name": "Health Check API",
+      "description": "Monitors application health and cache status",
+      "files": [
+        "src/app/api/health-check/route.ts",
+        "src/app/api/cache/health/route.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/api/health-check": {
+            "get": {
+              "summary": "Check application health",
+              "responses": {
+                "200": {
+                  "description": "Health status"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     {
-      "path": "/account/orders/[id]",
-      "description": "Individual order details"
+      "name": "Translations API",
+      "description": "Provides internationalization support",
+      "files": [
+        "src/app/api/translations/[locale]/route.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/api/translations/{locale}": {
+            "get": {
+              "summary": "Get translations for locale",
+              "parameters": [
+                {
+                  "name": "locale",
+                  "in": "path",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "Translation data"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     {
-      "path": "/quiz",
-      "description": "Interactive microscope selector quiz"
+      "name": "Revalidation API",
+      "description": "Handles cache revalidation",
+      "files": [
+        "src/app/api/revalidate/route.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/api/revalidate": {
+            "post": {
+              "summary": "Revalidate cache",
+              "responses": {
+                "200": {
+                  "description": "Cache revalidated"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     {
-      "path": "/admin",
-      "description": "Admin dashboard"
-    },
-    {
-      "path": "/admin/metrics",
-      "description": "Analytics and metrics dashboard"
-    },
-    {
-      "path": "/admin/ab-testing",
-      "description": "A/B testing management"
-    },
-    {
-      "path": "/admin/config",
-      "description": "Configuration management"
-    },
-    {
-      "path": "/admin/analytics",
-      "description": "Analytics insights"
-    },
-    {
-      "path": "/admin/performance",
-      "description": "Performance monitoring"
-    },
-    {
-      "path": "/admin/security",
-      "description": "Security monitoring"
-    },
-    {
-      "path": "/support/faq",
-      "description": "Frequently asked questions"
-    },
-    {
-      "path": "/support/contact",
-      "description": "Contact support form"
-    },
-    {
-      "path": "/support/shipping",
-      "description": "Shipping information"
-    },
-    {
-      "path": "/support/returns",
-      "description": "Returns policy"
-    },
-    {
-      "path": "/support/warranty",
-      "description": "Warranty information"
+      "name": "Error Tracking API",
+      "description": "Logs and tracks application errors",
+      "files": [
+        "src/app/api/errors/route.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/api/errors": {
+            "post": {
+              "summary": "Log error",
+              "responses": {
+                "200": {
+                  "description": "Error logged"
+                }
+              }
+            }
+          }
+        }
+      }
     }
-  ],
-  "api_routes": [
-    {
-      "path": "/api/cart",
-      "description": "Cart operations (add, update, remove items)"
-    },
-    {
-      "path": "/api/newsletter",
-      "description": "Newsletter subscription"
-    },
-    {
-      "path": "/api/revalidate",
-      "description": "On-demand ISR revalidation"
-    },
-    {
-      "path": "/api/shopify/webhook",
-      "description": "Shopify webhook handler for purchase tracking"
-    }
-  ],
-  "testing_setup": {
-    "framework": "Playwright",
-    "test_types": [
-      "Functional tests (core flows)",
-      "Accessibility tests (a11y)",
-      "SEO tests",
-      "Performance tests",
-      "Visual regression tests",
-      "Analytics validation tests",
-      "GTM validation tests",
-      "E2E tests"
-    ],
-    "test_commands": {
-      "all": "npm run test:all",
-      "core": "npm run test:core",
-      "accessibility": "npm run test:a11y",
-      "seo": "npm run test:seo",
-      "performance": "npm run test:perf",
-      "visual": "npm run test:visual",
-      "analytics": "npm run test:analytics",
-      "gtm": "npm run test:gtm",
-      "e2e": "npm run test:e2e"
-    }
-  },
-  "development": {
-    "port": 3000,
-    "dev_command": "npm run dev",
-    "build_command": "npm run build",
-    "start_command": "npm start",
-    "lint_command": "npm run lint",
-    "typecheck_command": "npm run typecheck"
-  },
-  "deployment": {
-    "platform": "Vercel",
-    "build_output": "standalone",
-    "environment_variables_required": [
-      "SHOPIFY_STORE_DOMAIN",
-      "SHOPIFY_STOREFRONT_ACCESS_TOKEN",
-      "NEXT_PUBLIC_SITE_URL",
-      "SHOPIFY_API_VERSION (optional)"
-    ]
-  },
-  "architecture_notes": {
-    "rendering": "Hybrid SSR/SSG with ISR",
-    "data_fetching": "Server Components + API Routes",
-    "styling_approach": "Utility-first with design tokens",
-    "component_structure": "Server/Client components split",
-    "api_integration": "Typed Shopify Storefront client with retry logic",
-    "security": "CSP headers, HMAC webhook verification, JWT auth",
-    "performance": "Image optimization, code splitting, PWA, caching",
-    "accessibility": "WCAG AA compliance, automated testing"
-  },
-  "critical_files": [
-    "src/lib/shopify.ts - Shopify Storefront API client",
-    "src/lib/cart.ts - Cart operations logic",
-    "src/lib/queries/ - GraphQL queries",
-    "src/app/api/ - API route handlers",
-    "next.config.mjs - Next.js configuration",
-    "tailwind.config.js - Tailwind configuration",
-    "src/lib/ui.ts - Design system tokens"
   ]
 }

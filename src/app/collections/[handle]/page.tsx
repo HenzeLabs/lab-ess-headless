@@ -10,6 +10,7 @@ import { shopifyFetch } from '@/lib/shopify';
 import { absoluteUrl, jsonLd, stripHtml } from '@/lib/seo';
 import CollectionViewTracker from '@/components/analytics/CollectionViewTracker';
 import { layout } from '@/lib/ui';
+import { getFallbackCollection } from '@/lib/fallback/catalog';
 
 export const revalidate = 60;
 
@@ -76,11 +77,20 @@ async function getCollection(handle: string): Promise<CollectionData | null> {
       query: getCollectionByHandleQuery,
       variables: { handle, first: 16 },
     });
-    return response.data.collection ?? null;
+    const collection = response.data.collection ?? null;
+    if (collection) {
+      return collection;
+    }
   } catch (error) {
     console.error(`Failed to load collection ${handle}`, error);
-    return null;
   }
+
+  const fallback = getFallbackCollection(handle);
+  if (fallback) {
+    return fallback;
+  }
+
+  return null;
 }
 
 export async function generateMetadata({

@@ -248,11 +248,17 @@ export function trackConfigEvent(
 ) {
   // This would typically use gtag or Measurement Protocol
   // For server-side tracking, use Measurement Protocol API
-  if (typeof window !== 'undefined' && (window as any).gtag) {
-    (window as any).gtag('event', action, {
-      event_category: 'Configuration',
-      event_label: configKey,
-      ...metadata,
-    });
+  interface WindowWithGtag extends Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+  if (typeof window !== 'undefined') {
+    const windowWithGtag = window as WindowWithGtag;
+    if (windowWithGtag.gtag) {
+      windowWithGtag.gtag('event', action, {
+        event_category: 'Configuration',
+        event_label: configKey,
+        ...metadata,
+      });
+    }
   }
 }

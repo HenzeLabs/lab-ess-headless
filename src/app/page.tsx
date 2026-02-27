@@ -15,6 +15,9 @@ const EmailSignup = dynamic(() => import('@/components/EmailSignup'));
 const FeaturedCollections = dynamic(
   () => import('@/components/FeaturedCollections'),
 );
+const TabletOptimizedLayout = dynamic(
+  () => import('@/components/TabletOptimizedLayout')
+);
 
 export const revalidate = 60; // 60s ISR for homepage (frequent updates + static performance)
 
@@ -95,6 +98,8 @@ export default async function HomePage() {
           title="Why Labs Choose Lab Essentials"
           subtitle="Trusted performance, expert support, built for daily use"
         />
+        {/* Tablet-specific optimized layout */}
+        <TabletOptimizedLayout />
         <CollectionSwitcherWrapper />
         <DeferredHydration
           hydrateOnView
