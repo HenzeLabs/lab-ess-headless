@@ -15,7 +15,7 @@ const GET_ONE_COLLECTION_QUERY = /* GraphQL */ `
   }
 `;
 
-export async function GET() {
+export async function GET(request: Request) {
   console.log('Starting health check...');
 
   try {
@@ -25,15 +25,17 @@ export async function GET() {
 
     if (!collection) {
       return NextResponse.json({
-        status: 'unhealthy',
+        status: 'degraded',
         error: 'No collections found in Shopify.',
         timestamp: new Date().toISOString()
-      }, { status: 500 });
+      });
     }
 
     // 2. Check that the collection page for that collection can be rendered
-    const collectionPageUrl = `http://localhost:3000/collections/${collection.handle}`;
-    const collectionPageResponse = await fetch(collectionPageUrl);
+    const collectionPageUrl = new URL(`/collections/${collection.handle}`, request.url).toString();
+    const collectionPageResponse = await fetch(collectionPageUrl, {
+      cache: 'no-store'
+    });
 
     if (!collectionPageResponse.ok) {
       return NextResponse.json({
@@ -41,7 +43,7 @@ export async function GET() {
         error: `Collection page for ${collection.handle} failed to load`,
         collectionPageStatus: collectionPageResponse.status,
         timestamp: new Date().toISOString()
-      }, { status: 500 });
+      });
     }
 
     return NextResponse.json({
