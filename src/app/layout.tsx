@@ -134,13 +134,11 @@ export default function RootLayout({
             <SearchProvider>
               <AnalyticsWrapper />
               <ErrorBoundary level="component" context="header">
-                {/* @ts-expect-error Async Server Component Promise */}
                 {headerPromise}
               </ErrorBoundary>
               {children}
               <MobileQuickActions />
               <ErrorBoundary level="component" context="footer">
-                {/* @ts-expect-error Async Server Component Promise */}
                 {footerPromise}
               </ErrorBoundary>
             </SearchProvider>
