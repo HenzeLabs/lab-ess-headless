@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Button } from './ui/button';
 import { useState, useEffect } from 'react';
 import type { MenuItem } from '@/lib/types';
-import { Search, User, ShoppingCart, X as _X } from 'lucide-react';
+import { Search, User, ShoppingCart, Menu, X } from 'lucide-react';
 import AnnouncementBar from '@/components/AnnouncementBar';
 import SearchModal from '@/components/SearchModal';
 import { buttonStyles } from '@/lib/ui';
@@ -52,6 +52,7 @@ export default function Header({
   cartItemCount,
 }: HeaderProps) {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -79,11 +80,23 @@ export default function Header({
       if (e.key === 'Escape') {
         setActiveMenu(null);
         setIsSearchOpen(false);
+        setMobileMenuOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [mobileMenuOpen]);
 
   const handleMouseEnter = (handle: string) => setActiveMenu(handle);
   const handleMouseLeave = () => setActiveMenu(null);
@@ -104,7 +117,22 @@ export default function Header({
             <div className="max-w-[1440px] mx-auto px-4 lg:px-8">
               <div className="grid grid-cols-3 items-center py-4">
                 {/* Left empty for spacing or future elements */}
-                <div></div>
+                <div className="flex items-center">
+                  <Button
+                    variant="ghost"
+                    onClick={() => setMobileMenuOpen((current) => !current)}
+                    aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+                    aria-expanded={mobileMenuOpen}
+                    data-test-id="mobile-menu-button"
+                    className="lg:hidden h-14 w-14 rounded-full hover:bg-[hsl(var(--brand))] hover:text-white"
+                  >
+                    {mobileMenuOpen ? (
+                      <X className="h-8 w-8" />
+                    ) : (
+                      <Menu className="h-8 w-8" />
+                    )}
+                  </Button>
+                </div>
                 {/* Logo */}
                 <div className="flex justify-center">
                   <Link
@@ -239,6 +267,86 @@ export default function Header({
                 </nav>
               </div>
             </div>
+
+            {/* Mobile nav */}
+            {mobileMenuOpen && (
+              <div className="fixed inset-0 z-50 lg:hidden bg-white">
+                <div className="flex items-center justify-between border-b border-border px-4 py-4">
+                  <h2 className="text-lg font-semibold text-[hsl(var(--ink))]">
+                    Menu
+                  </h2>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setMobileMenuOpen(false)}
+                      aria-label="Close mobile menu"
+                      className="h-10 w-10 rounded-full hover:bg-[hsl(var(--brand))] hover:text-white"
+                    >
+                      <X className="h-6 w-6" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      onClick={() => setMobileMenuOpen(false)}
+                      aria-label="Close mobile menu"
+                      className="rounded-xl border border-border/60 px-3 text-sm text-[hsl(var(--ink))]"
+                    >
+                      Close
+                    </Button>
+                  </div>
+                </div>
+
+                <nav
+                  aria-label="Mobile"
+                  className="max-h-[calc(100vh-72px)] overflow-y-auto px-4 py-3"
+                >
+                  <ul className="space-y-1">
+                    {menuItems
+                      .filter((item) => item.title)
+                      .map((menuItem) => (
+                        <li
+                          key={menuItem.handle || menuItem.title}
+                          className="border-b border-border/40 py-2 last:border-b-0"
+                        >
+                          <Link
+                            href={
+                              menuItem.url || `/collections/${menuItem.handle}`
+                            }
+                            className="block text-base font-semibold text-[hsl(var(--ink))] py-1"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            {menuItem.title}
+                          </Link>
+
+                          {menuItem.items && menuItem.items.length > 0 && (
+                            <ul className="mt-1 ml-3 space-y-1">
+                              {menuItem.items
+                                .filter((subMenuItem) => subMenuItem.title)
+                                .map((subMenuItem) => (
+                                  <li
+                                    key={
+                                      subMenuItem.handle || subMenuItem.title
+                                    }
+                                  >
+                                    <Link
+                                      href={
+                                        subMenuItem.url ||
+                                        `/collections/${subMenuItem.handle}`
+                                      }
+                                      className="block text-sm text-[hsl(var(--muted-foreground))] py-1"
+                                      onClick={() => setMobileMenuOpen(false)}
+                                    >
+                                      {subMenuItem.title}
+                                    </Link>
+                                  </li>
+                                ))}
+                            </ul>
+                          )}
+                        </li>
+                      ))}
+                  </ul>
+                </nav>
+              </div>
+            )}
 
             {/* Mega Menu Panels */}
             {menuItems
@@ -460,7 +568,10 @@ export default function Header({
       </div>
 
       {/* Search Modal */}
-      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+      <SearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
     </>
   );
 }
