@@ -98,6 +98,21 @@ function setCartCookie(response: NextResponse, cartId: string) {
   });
 }
 
+function isInvalidCartError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false;
+
+  const message = error.message.toLowerCase();
+  if (!message.includes('cart')) return false;
+
+  return (
+    message.includes('does not exist') ||
+    message.includes('not found') ||
+    message.includes('invalid id') ||
+    message.includes('invalid global id') ||
+    message.includes('resource not found')
+  );
+}
+
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const providedCartId = normalizeCartId(url.searchParams.get('cartId'));
@@ -123,15 +138,27 @@ export async function GET(request: Request) {
       console.log('GET /api/cart - checkoutUrl:', data.cart?.checkoutUrl);
     }
 
-    const response = NextResponse.json({ cart: data.cart ?? null });
+    const hasCart = Boolean(data.cart?.id);
+    const response = NextResponse.json(
+      { cart: data.cart ?? null },
+      { status: hasCart ? 200 : 404 },
+    );
 
-    if (data.cart?.id) {
+    if (hasCart && data.cart?.id) {
       setCartCookie(response, data.cart.id);
+    } else {
+      response.cookies.delete('cartId');
     }
 
     return response;
   } catch (error) {
     console.error('GET /api/cart - Error fetching cart:', error);
+    if (isInvalidCartError(error)) {
+      const response = NextResponse.json({ cart: null }, { status: 404 });
+      response.cookies.delete('cartId');
+      return response;
+    }
+
     return NextResponse.json({ error: 'Shopify API failure' }, { status: 500 });
   }
 }

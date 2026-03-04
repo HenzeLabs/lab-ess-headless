@@ -60,6 +60,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return next;
   }, []);
 
+  const clearServerCartCookie = useCallback(async () => {
+    try {
+      await fetch('/api/cart/cookie', {
+        method: 'DELETE',
+        cache: 'no-store',
+      });
+    } catch (error) {
+      console.error('failed to clear server cart cookie', error);
+    }
+  }, []);
+
   const refreshCart = useCallback(
     async (options: RefreshOptions = {}) => {
       const { silent = false, cartIdOverride } = options;
@@ -86,6 +97,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
           if (!response.ok) {
             if (response.status === 404) {
+              await clearServerCartCookie();
               return applyCart(null);
             }
             console.warn(
@@ -109,7 +121,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       inFlight.current = doRefresh;
       return doRefresh;
     },
-    [applyCart, cartId],
+    [applyCart, cartId, clearServerCartCookie],
   );
 
   useEffect(() => {
