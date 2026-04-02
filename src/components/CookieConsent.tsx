@@ -64,6 +64,9 @@ export default function CookieConsent({ onConsentChange }: CookieConsentProps) {
     if (prefs.analytics) {
       window.dispatchEvent(new CustomEvent('analytics-consent-granted'));
     }
+    if (prefs.marketing) {
+      window.dispatchEvent(new CustomEvent('marketing-consent-granted'));
+    }
   };
 
   const handleAcceptAll = () => {
