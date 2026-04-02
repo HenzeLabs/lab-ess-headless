@@ -9,6 +9,7 @@ import { SearchProvider } from '@/components/providers/SearchProvider';
 import { CartProvider } from '@/components/providers/CartContext';
 import { generateOrganizationSchema, jsonLd } from '@/lib/seo';
 import dynamic from 'next/dynamic';
+import CookieConsent from '@/components/CookieConsent';
 
 // Dynamic import for mobile quick actions
 const MobileQuickActions = dynamic(
@@ -105,7 +106,7 @@ export default function RootLayout({
         {/* LOW priority - dns-prefetch for deferred scripts */}
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://cdn.taboola.com" />
-        <link rel="dns-prefetch" href="https://connect.facebook.net" />
+        <link rel="dns-prefetch" href="https://static.klaviyo.com" />
 
         {/* GTM - Inline for immediate execution before React hydration */}
         <script
@@ -146,6 +147,7 @@ export default function RootLayout({
               <ErrorBoundary level="component" context="footer">
                 {footerPromise}
               </ErrorBoundary>
+              <CookieConsent />
             </SearchProvider>
           </CartProvider>
         </ErrorBoundary>

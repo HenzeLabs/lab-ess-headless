@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { layout, buttonStyles } from '@/lib/ui';
 import { trackNewsletterSignup } from '@/lib/analytics';
+import { klaviyoIdentify } from '@/lib/klaviyo';
 
 interface EmailSignupProps {
   title?: string;
@@ -100,6 +101,7 @@ const EmailSignup: React.FC<EmailSignupProps> = ({
       );
       setEmail('');
       trackNewsletterSignup(email);
+      klaviyoIdentify(email, { source: 'headless-newsletter' });
       setAutoReset();
     } catch (error) {
       console.error('Newsletter signup failed', error);
