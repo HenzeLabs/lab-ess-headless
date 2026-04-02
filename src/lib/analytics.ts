@@ -266,18 +266,13 @@ export function trackPurchase(order: AnalyticsOrderInput) {
   });
 }
 
-export function trackNewsletterSignup(email?: string) {
+export function trackNewsletterSignup(_email?: string) {
+  // Note: email intentionally NOT passed to dataLayer/GA4 to avoid PII in analytics
   pushDataLayer('newsletter_signup', {
     engagement_type: 'newsletter',
-    items: undefined,
-    email,
   });
-  pushTaboola('newsletter_signup', {
-    email,
-  });
-  pushReddit('Lead', {
-    email,
-  });
+  pushTaboola('newsletter_signup');
+  pushReddit('Lead');
 }
 
 export function trackViewCheckout(items: AnalyticsItemInput[]) {

@@ -11,7 +11,15 @@ interface MainMenuResponse {
 }
 
 function resolveHref(item: MenuItem): string {
-  if (item.url && /^https?:\/\//i.test(item.url)) return item.url;
+  if (item.url && /^https?:\/\//i.test(item.url)) {
+    try {
+      const u = new URL(item.url);
+      if (/^(store\.)?labessentials\.com$/i.test(u.hostname)) {
+        return u.pathname + u.search + u.hash || '/';
+      }
+    } catch { /* fall through */ }
+    return item.url;
+  }
   if (item.url && item.url.startsWith('/')) return item.url;
   if (item.handle) return `/collections/${item.handle}`;
   return '#';
@@ -67,12 +75,12 @@ export default async function FooterServerStatic() {
             <ul className="space-y-2">
               {deduped.map((link) => (
                 <li key={link.href}>
-                  <a
+                  <Link
                     href={link.href}
                     className="text-sm font-medium text-[hsl(var(--ink))]"
                   >
                     {link.title}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { absoluteUrl } from '@/lib/seo';
 import ContactForm from '@/components/ContactForm';
 
 export const metadata: Metadata = {
@@ -6,13 +7,13 @@ export const metadata: Metadata = {
   description:
     'Get in touch with Lab Essentials for support, sales inquiries, and technical assistance. Call 1-800-LAB-HELP or email support@labessentials.com. 24-hour response guarantee.',
   alternates: {
-    canonical: 'https://labessentials.com/support/contact',
+    canonical: absoluteUrl('/support/contact'),
   },
   openGraph: {
     title: 'Contact Us | Lab Essentials',
     description:
       'Get in touch with Lab Essentials for support, sales inquiries, and technical assistance. 24-hour response guarantee.',
-    url: 'https://labessentials.com/support/contact',
+    url: absoluteUrl('/support/contact'),
     type: 'website',
   },
 };

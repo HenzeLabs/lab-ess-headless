@@ -10,12 +10,7 @@ import TrustSignals from '@/components/TrustSignals';
 import type { Cart } from '@/lib/types';
 import { textStyles } from '@/lib/ui';
 import { useCartContext } from '@/components/providers/CartContext';
-
-declare global {
-  interface Window {
-    gtag?: (...args: unknown[]) => void;
-  }
-}
+import { trackBeginCheckout } from '@/lib/analytics';
 
 export default function CartPage() {
   const [error, setError] = useState<string | null>(null);
@@ -87,14 +82,8 @@ export default function CartPage() {
   async function handleCheckout() {
     startTransition(async () => {
       try {
-        // Fire analytics event
-        if (typeof window !== 'undefined' && window.gtag) {
-          window.gtag('event', 'begin_checkout', {
-            currency: cart?.cost?.totalAmount?.currencyCode || 'USD',
-            value: parseFloat(cart?.cost?.totalAmount?.amount || '0'),
-            items: analyticsItems.map((item) => item.item),
-          });
-        }
+        // Fire analytics event via shared tracker (dataLayer → GTM only, no duplicate gtag call)
+        trackBeginCheckout(analyticsItems.map((item) => item.item));
 
         // Get secure checkout URL from API
         const response = await fetch('/api/checkout', {

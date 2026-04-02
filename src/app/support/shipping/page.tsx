@@ -1,17 +1,18 @@
 import type { Metadata } from 'next';
+import { absoluteUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Shipping Information | Lab Essentials',
   description:
     'Fast, reliable shipping for laboratory equipment and supplies. Free shipping on orders over $300 and same-day shipping available on qualifying orders.',
   alternates: {
-    canonical: 'https://labessentials.com/support/shipping',
+    canonical: absoluteUrl('/support/shipping'),
   },
   openGraph: {
     title: 'Shipping Information | Lab Essentials',
     description:
       'Fast, reliable shipping for laboratory equipment and supplies. Free shipping on orders over $300.',
-    url: 'https://labessentials.com/support/shipping',
+    url: absoluteUrl('/support/shipping'),
     type: 'website',
   },
 };

@@ -1,17 +1,18 @@
 import type { Metadata } from 'next';
+import { absoluteUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Warranty Information | Lab Essentials',
   description:
     'Comprehensive warranty coverage for laboratory equipment. Standard 1-year warranty with extended options up to 5 years. Learn about our warranty policies and how to file claims.',
   alternates: {
-    canonical: 'https://labessentials.com/support/warranty',
+    canonical: absoluteUrl('/support/warranty'),
   },
   openGraph: {
     title: 'Warranty Information | Lab Essentials',
     description:
       'Comprehensive warranty coverage for laboratory equipment. Standard 1-year warranty with extended options up to 5 years.',
-    url: 'https://labessentials.com/support/warranty',
+    url: absoluteUrl('/support/warranty'),
     type: 'website',
   },
 };

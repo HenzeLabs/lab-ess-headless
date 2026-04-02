@@ -1,17 +1,18 @@
 import type { Metadata } from 'next';
+import { absoluteUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Return Policy | Lab Essentials',
   description:
     '30-day return policy on laboratory equipment and supplies. Easy returns process with full refunds on items in original condition. Learn about our hassle-free return policy.',
   alternates: {
-    canonical: 'https://labessentials.com/support/returns',
+    canonical: absoluteUrl('/support/returns'),
   },
   openGraph: {
     title: 'Return Policy | Lab Essentials',
     description:
       '30-day return policy on laboratory equipment and supplies. Easy returns process with full refunds.',
-    url: 'https://labessentials.com/support/returns',
+    url: absoluteUrl('/support/returns'),
     type: 'website',
   },
 };

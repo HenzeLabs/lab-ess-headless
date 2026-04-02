@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { buttonStyles, textStyles, layout } from '@/lib/ui';
@@ -32,7 +32,15 @@ const Hero: React.FC<HeroProps> = ({
   videoUrl = '/hero.mp4',
   poster = '/hero.avif', // AVIF poster for instant display (36KB vs 2.5MB video)
 }) => {
+  const [videoLoaded, setVideoLoaded] = useState(false);
   const hasMedia = Boolean(videoUrl || imageUrl);
+
+  // Lazy-load video after 3s delay when both image and video are provided
+  useEffect(() => {
+    if (!videoUrl || !imageUrl) return;
+    const timer = setTimeout(() => setVideoLoaded(true), 3000);
+    return () => clearTimeout(timer);
+  }, [videoUrl, imageUrl]);
 
   const ctaPrimaryClass = hasMedia
     ? `${buttonStyles.primary} text-white text-base px-8 py-4 shadow-[0_15px_35px_-10px_rgba(255,255,255,0.4)] hover:shadow-[0_20px_45px_-10px_rgba(255,255,255,0.6)] hover:scale-105 transition-all duration-300`
@@ -42,13 +50,42 @@ const Hero: React.FC<HeroProps> = ({
     ? `${buttonStyles.outline} border-2 border-white text-white bg-white/10 backdrop-blur-sm text-base px-8 py-4 hover:bg-white hover:text-[hsl(var(--brand))] hover:scale-105 transition-all duration-300`
     : `${buttonStyles.ghost} text-base px-8 py-4 hover:scale-105 transition-all duration-300`;
 
+  // Show image immediately when imageUrl is provided; layer video on top once loaded
+  const showImageFirst = Boolean(imageUrl);
+  const showVideo = videoUrl && (!imageUrl || videoLoaded);
+
   return (
     <section
       className={`relative isolate flex flex-col items-center justify-center overflow-hidden ${layout.section} text-center`}
       style={{ minHeight: '60vh' }}
       data-test-id="hero-section"
     >
-      {videoUrl ? (
+      {showImageFirst && (
+        <Image
+          src={imageUrl}
+          alt={imageAlt || title}
+          fill
+          className="absolute inset-0 -z-20 h-full w-full object-cover"
+          priority
+          fetchPriority="high"
+          sizes="100vw"
+        />
+      )}
+      {showVideo && (
+        <video
+          className="absolute inset-0 -z-10 h-full w-full min-h-full object-cover"
+          poster={!imageUrl ? poster : undefined}
+          preload="none"
+          autoPlay
+          loop
+          muted
+          playsInline
+        >
+          <source src={videoUrl} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      )}
+      {!showImageFirst && !showVideo && videoUrl && (
         <video
           className="absolute inset-0 -z-20 h-full w-full min-h-full object-cover"
           poster={poster}
@@ -61,18 +98,6 @@ const Hero: React.FC<HeroProps> = ({
           <source src={videoUrl} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-      ) : (
-        imageUrl && (
-          <Image
-            src={imageUrl}
-            alt={imageAlt || title}
-            fill
-            className="absolute inset-0 -z-20 h-full w-full object-cover"
-            priority
-            fetchPriority="high"
-            sizes="100vw"
-          />
-        )
       )}
       <div
         className={`relative z-10 ${layout.container} flex flex-col items-center justify-center gap-8 md:gap-10`}

@@ -4,7 +4,13 @@ import { notFound } from 'next/navigation';
 import type { Product } from '@/lib/types';
 import { getProductByHandleQuery } from '@/lib/queries';
 import { shopifyFetch } from '@/lib/shopify';
-import { absoluteUrl, jsonLd, stripHtml } from '@/lib/seo';
+import {
+  absoluteUrl,
+  generateBreadcrumbSchema,
+  generateProductSchema,
+  jsonLd,
+  stripHtml,
+} from '@/lib/seo';
 import { layout } from '@/lib/ui';
 import ProductViewTracker from '@/components/analytics/ProductViewTracker';
 import ProductInfoPanelClient from './ProductInfoPanelClient';
@@ -113,67 +119,49 @@ export default async function ProductPage({
   const description = stripHtml(product.descriptionHtml);
   const price = product.priceRange?.minVariantPrice?.amount ?? null;
   const currency = product.priceRange?.minVariantPrice?.currencyCode ?? 'USD';
+  const primaryCollection = product.collections?.edges?.[0]?.node;
 
   // Extract brand from metafields
   const brand =
     safeMetafields.find((field) => field && field.key === 'brand')?.value ??
     null;
 
+  // Use the first variant's price (the default selected variant) rather than
+  // minVariantPrice, which may differ from what's displayed on page load
+  const firstVariantPrice = product.variants?.edges?.[0]?.node?.price?.amount ?? price;
+  const firstVariantTitle = product.variants?.edges?.[0]?.node?.title ?? null;
+
   const analyticsProduct = {
     id: product.id,
     name: product.title,
-    price,
+    price: firstVariantPrice,
     currency,
     category: product.tags?.[0] ?? null,
     brand,
-    variant: null, // Will be set when variant is selected
+    variant: firstVariantTitle,
   };
   // ProductInfoPanel will be imported via a client wrapper
 
-  const productJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: product.title,
-    image: product.featuredImage?.url ? [product.featuredImage.url] : undefined,
-    description,
-    sku: product.id,
-    brand: {
-      '@type': 'Brand',
-      name: 'Lab Essentials',
+  const productJsonLd = generateProductSchema(product);
+  const breadcrumbJsonLd = generateBreadcrumbSchema([
+    {
+      name: 'Home',
+      item: absoluteUrl('/'),
     },
-    offers: {
-      '@type': 'Offer',
-      priceCurrency: product.priceRange?.minVariantPrice?.currencyCode ?? 'USD',
-      price: product.priceRange?.minVariantPrice?.amount ?? '',
-      availability: 'https://schema.org/InStock',
-      url: productUrl,
+    primaryCollection
+      ? {
+          name: primaryCollection.title,
+          item: absoluteUrl(`/collections/${primaryCollection.handle}`),
+        }
+      : {
+          name: 'Collections',
+          item: absoluteUrl('/collections'),
+        },
+    {
+      name: product.title,
+      item: productUrl,
     },
-  };
-
-  const breadcrumbJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      {
-        '@type': 'ListItem',
-        position: 1,
-        name: 'Home',
-        item: absoluteUrl('/'),
-      },
-      {
-        '@type': 'ListItem',
-        position: 2,
-        name: 'Collections',
-        item: absoluteUrl('/collections'),
-      },
-      {
-        '@type': 'ListItem',
-        position: 3,
-        name: product.title,
-        item: productUrl,
-      },
-    ],
-  };
+  ]);
 
   return (
     <>

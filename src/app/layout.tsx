@@ -7,6 +7,7 @@ import AnalyticsWrapper from '@/AnalyticsWrapper';
 import { ErrorBoundary } from '@/components/error-boundaries/ErrorBoundary';
 import { SearchProvider } from '@/components/providers/SearchProvider';
 import { CartProvider } from '@/components/providers/CartContext';
+import { generateOrganizationSchema, jsonLd } from '@/lib/seo';
 import dynamic from 'next/dynamic';
 
 // Dynamic import for mobile quick actions
@@ -54,6 +55,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const organizationJsonLd = generateOrganizationSchema();
+
   const headerPromise = SiteHeader()
     .then((node) => node)
     .catch((error) => {
@@ -104,9 +107,6 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://cdn.taboola.com" />
         <link rel="dns-prefetch" href="https://connect.facebook.net" />
 
-        {/* Prefetch hero video for faster playback (low priority) */}
-        <link rel="prefetch" href="/hero.mp4" as="video" type="video/mp4" />
-
         {/* GTM - Inline for immediate execution before React hydration */}
         <script
           suppressHydrationWarning
@@ -119,6 +119,10 @@ export default function RootLayout({
               })(window,document,'script','dataLayer','GTM-WNG6Z9ZD');
             `,
           }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={jsonLd(organizationJsonLd)}
         />
       </head>
       <body>
