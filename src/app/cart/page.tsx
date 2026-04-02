@@ -6,6 +6,7 @@ import { useEffect, useState, useTransition } from 'react';
 
 import { Button } from '@/components/ui/button';
 import CartAnalyticsTracker from '@/components/analytics/CartAnalyticsTracker';
+import CartCrossSell from '@/components/CartCrossSell';
 import TrustSignals from '@/components/TrustSignals';
 import type { Cart } from '@/lib/types';
 import { textStyles } from '@/lib/ui';
@@ -492,6 +493,9 @@ export default function CartPage() {
                     </div>
                   </div>
                 </div>
+
+                {/* Cross-sell recommendations */}
+                <CartCrossSell />
 
                 {/* Trust Signals moved below cart */}
                 <div className="mt-10 lg:mt-12">
