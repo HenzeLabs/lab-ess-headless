@@ -5,6 +5,11 @@ import type {
   AnalyticsOrderInput,
   LabAnalytics,
 } from '@/lib/types';
+import {
+  trackKlaviyoViewedProduct,
+  trackKlaviyoAddedToCart,
+  trackKlaviyoStartedCheckout,
+} from '@/lib/klaviyo';
 
 export const TABOOLA_PIXEL_ID = 1759164;
 const DEFAULT_CURRENCY = 'USD';
@@ -83,7 +88,8 @@ function pushReddit(event: string, payload: Record<string, unknown> = {}) {
 export function trackViewItem(product: AnalyticsItemInput) {
   const items = [mapItem(product)];
   const currency = normaliseCurrency(product.currency);
-  pushDataLayer('view_item', { currency, items });
+  const value = (toNumber(product.price) || 0) * (product.quantity ?? 1);
+  pushDataLayer('view_item', { currency, value, items });
   pushTaboola('view_item', {
     item_id: product.id,
     item_name: product.name,
@@ -109,6 +115,14 @@ export function trackViewItem(product: AnalyticsItemInput) {
       category: product.category,
     }],
   });
+  trackKlaviyoViewedProduct({
+    id: product.id,
+    name: product.name,
+    price: toNumber(product.price),
+    currency,
+    category: product.category ?? undefined,
+    brand: product.brand ?? undefined,
+  });
 }
 
 export function trackViewItemList(
@@ -117,9 +131,15 @@ export function trackViewItemList(
 ) {
   const items = products.map(mapItem);
   const currency = normaliseCurrency(products[0]?.currency || undefined);
+  const value = products.reduce((acc, item) => {
+    const price = toNumber(item.price) || 0;
+    const qty = item.quantity ?? 1;
+    return acc + price * qty;
+  }, 0);
   pushDataLayer('view_item_list', {
     item_list_name: listName,
     currency,
+    value,
     items,
   });
   pushTaboola('view_item_list', {
@@ -134,9 +154,11 @@ export function trackSelectItem(
 ) {
   const items = [mapItem(product)];
   const currency = normaliseCurrency(product.currency);
+  const value = (toNumber(product.price) || 0) * (product.quantity ?? 1);
   pushDataLayer('select_item', {
     item_list_name: listName || undefined,
     currency,
+    value,
     items,
   });
   pushTaboola('select_item', {
@@ -195,6 +217,15 @@ export function trackAddToCart(item: AnalyticsItemInput) {
       category: item.category,
     }],
   });
+  trackKlaviyoAddedToCart({
+    id: item.id,
+    name: item.name,
+    price: toNumber(item.price),
+    quantity: item.quantity ?? 1,
+    currency,
+    category: item.category ?? undefined,
+    brand: item.brand ?? undefined,
+  });
 }
 
 export function trackRemoveFromCart(item: AnalyticsItemInput) {
@@ -229,6 +260,16 @@ export function trackBeginCheckout(items: AnalyticsItemInput[]) {
     currency,
     value,
   });
+  trackKlaviyoStartedCheckout(
+    items.map((item) => ({
+      id: item.id,
+      name: item.name,
+      price: toNumber(item.price),
+      quantity: item.quantity ?? 1,
+      currency: normaliseCurrency(item.currency),
+    })),
+    value,
+  );
 }
 
 export function trackPurchase(order: AnalyticsOrderInput) {

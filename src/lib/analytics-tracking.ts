@@ -56,29 +56,25 @@ export interface AnalyticsEvent {
 }
 
 /**
- * Send event to Google Analytics 4
+ * Send event to Google Analytics 4 via dataLayer (GTM)
  */
 export function trackGA4Event(event: AnalyticsEvent): void {
   try {
-    // Check if gtag is available (Google Analytics is loaded)
-    if (typeof window !== 'undefined' && 'gtag' in window) {
-      const gtag = (window as unknown as Record<string, unknown>).gtag as (
-        ...args: unknown[]
-      ) => void;
-
-      gtag('event', event.event_name, {
+    if (typeof window !== 'undefined') {
+      const win = window as unknown as { dataLayer: Record<string, unknown>[] };
+      win.dataLayer = win.dataLayer || [];
+      win.dataLayer.push({
+        event: event.event_name,
         event_category: event.event_category,
         event_label: event.page_title,
-        custom_map: {
-          session_id: event.session_id,
-          page_url: event.page_url,
-        },
+        session_id: event.session_id,
+        page_url: event.page_url,
         ...event.parameters,
       });
 
-      console.log('📊 GA4 Event Tracked:', event.event_name, event.parameters);
-    } else {
-      console.warn('GA4 not available, event not tracked:', event.event_name);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('GA4 Event (via dataLayer):', event.event_name, event.parameters);
+      }
     }
   } catch (error) {
     console.error('Error tracking GA4 event:', error);

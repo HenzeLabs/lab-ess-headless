@@ -216,15 +216,10 @@ export class AdvancedAnalytics {
     this.gtmEnabled = true;
   }
 
-  private sendToGA4(event: AnalyticsEvent): void {
-    if (typeof window !== 'undefined' && typeof window.gtag !== 'undefined') {
-      window.gtag('event', event.name, {
-        ...event.properties,
-        value: event.value,
-        event_category: event.category,
-        user_id: event.userId,
-      });
-    }
+  private sendToGA4(_event: AnalyticsEvent): void {
+    // GA4 events are sent via dataLayer → GTM (see sendToGTM).
+    // Direct gtag() calls bypass GTM and cause duplicate tracking.
+    // All GA4 tracking is handled through the GTM container.
   }
 
   private sendToGTM(event: AnalyticsEvent): void {

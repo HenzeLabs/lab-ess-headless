@@ -67,12 +67,13 @@ export default function Search({
   const openSearch = useCallback(() => {
     setIsSearchOpen(true);
 
-    // Analytics event for search modal opened
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', 'search_modal_opened', {
+    // Analytics event for search modal opened (via dataLayer → GTM)
+    if (typeof window !== 'undefined') {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'search_modal_opened',
         event_category: 'Search',
         event_label: 'Header Search Button',
-        value: 1,
       });
     }
   }, []);
@@ -89,12 +90,13 @@ export default function Search({
       searchButtonRef.current?.focus();
     }, 100);
 
-    // Analytics event for search modal closed
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', 'search_modal_closed', {
+    // Analytics event for search modal closed (via dataLayer → GTM)
+    if (typeof window !== 'undefined') {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'search_modal_closed',
         event_category: 'Search',
         event_label: 'Modal Closed',
-        value: 1,
       });
     }
   }, []);
@@ -306,14 +308,16 @@ export interface SearchAnalytics {
  * @param analytics - Search analytics data
  */
 export function trackSearchAnalytics(analytics: SearchAnalytics): void {
-  // Google Analytics 4 event
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'search', {
+  // Google Analytics 4 event (via dataLayer → GTM)
+  if (typeof window !== 'undefined') {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'search',
       search_term: analytics.query,
       event_category: 'Search',
       event_label: `Search from ${analytics.source}`,
-      custom_parameter_1: analytics.resultCount?.toString(),
-      custom_parameter_2: analytics.searchTime?.toString(),
+      result_count: analytics.resultCount,
+      search_time: analytics.searchTime,
     });
   }
 

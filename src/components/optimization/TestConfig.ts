@@ -248,19 +248,18 @@ export const handleAnalyticsEvent = (event: AnalyticsEvent) => {
     console.log('Analytics Event:', event);
   }
 
-  // Google Analytics 4
-  if (typeof window !== 'undefined' && 'gtag' in window) {
-    const gtag = (window as { gtag?: (...args: unknown[]) => void }).gtag;
-
-    if (gtag) {
-      gtag('event', event.event, {
-        event_category: 'ab_testing',
-        event_label: event.testId,
-        custom_parameter_1: event.variant,
-        custom_parameter_2: event.properties?.testName,
-        value: event.properties?.value || 0,
-      });
-    }
+  // Google Analytics 4 (via dataLayer → GTM)
+  if (typeof window !== 'undefined') {
+    (window as unknown as { dataLayer: Record<string, unknown>[] }).dataLayer =
+      (window as unknown as { dataLayer: Record<string, unknown>[] }).dataLayer || [];
+    (window as unknown as { dataLayer: Record<string, unknown>[] }).dataLayer.push({
+      event: event.event,
+      event_category: 'ab_testing',
+      event_label: event.testId,
+      ab_test_variant: event.variant,
+      ab_test_name: event.properties?.testName,
+      value: event.properties?.value || 0,
+    });
   }
 
   // Custom analytics endpoint
