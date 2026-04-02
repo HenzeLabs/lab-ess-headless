@@ -44,6 +44,11 @@ function formatTitleCase(title: string) {
   return trimmed;
 }
 
+function isAccentDesktopNavLink(title: string) {
+  const normalized = title.trim().toLowerCase();
+  return normalized === 'about' || normalized === 'contact';
+}
+
 export default function Header({
   collections,
   logoUrl,
@@ -247,8 +252,12 @@ export default function Header({
                             ) : (
                               <Button
                                 asChild
-                                variant="link"
-                                className="px-4 py-2 text-base font-medium"
+                                variant="ghost"
+                                className={`px-4 py-2 text-base font-medium hover:bg-transparent ${
+                                  isAccentDesktopNavLink(menuItem.title)
+                                    ? 'text-[hsl(var(--brand))] underline underline-offset-4 hover:text-[hsl(var(--ink))]'
+                                    : 'text-[hsl(var(--ink))] hover:text-[hsl(var(--ink))]'
+                                }`}
                               >
                                 <Link
                                   href={
