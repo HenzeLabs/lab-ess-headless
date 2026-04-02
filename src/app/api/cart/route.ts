@@ -18,6 +18,7 @@ type CartLineBody = {
 
 type PostBody = {
   cartId?: unknown;
+  forceNew?: boolean;
   lines?: CartLineBody[];
   variantId?: unknown;
   quantity?: unknown;
@@ -178,7 +179,7 @@ export async function POST(req: Request) {
     const cookieStore = await cookies();
     const cookieCartId = normalizeCartId(cookieStore.get('cartId')?.value);
     const providedCartId = normalizeCartId(body.cartId);
-    const cartId = providedCartId ?? cookieCartId;
+    const cartId = body.forceNew ? null : (providedCartId ?? cookieCartId);
 
     if (!cartId) {
       const { data } = await shopifyFetch<{
@@ -207,7 +208,10 @@ export async function POST(req: Request) {
       }
 
       const response = NextResponse.json({ cart });
-      setCartCookie(response, cart.id);
+      // Don't overwrite the user's main cart cookie for Buy Now (forceNew) flows
+      if (!body.forceNew) {
+        setCartCookie(response, cart.id);
+      }
 
       return response;
     }

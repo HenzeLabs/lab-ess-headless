@@ -1,9 +1,10 @@
 'use client';
 import React, { useState, useTransition } from 'react';
+import { Zap } from 'lucide-react';
 import TrustBar from '@/components/product/TrustBar';
 import StickyAddToCart from '@/components/StickyAddToCart';
 import { buttonStyles, textStyles } from '@/lib/ui';
-import { trackAddToCart } from '@/lib/analytics';
+import { trackAddToCart, trackBeginCheckout } from '@/lib/analytics';
 import { useCartContext } from '@/components/providers/CartContext';
 
 type Variant = {
@@ -38,6 +39,7 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
     product.variants?.edges?.[0]?.node.id,
   );
   const [isPending, startTransition] = useTransition();
+  const [isBuyingNow, setIsBuyingNow] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [isError, setIsError] = useState(false);
   const { cartId, updateCartState } = useCartContext();
@@ -135,6 +137,68 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
         setIsError(true);
       }
     });
+  };
+
+  const handleBuyNow = async () => {
+    if (!selectedVariant) return;
+
+    setIsBuyingNow(true);
+    setFeedback(null);
+    setIsError(false);
+
+    try {
+      // Create a fresh cart with just this item (forceNew bypasses existing cart)
+      const cartRes = await fetch('/api/cart', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          forceNew: true,
+          lines: [{ merchandiseId: selectedVariant, quantity: 1 }],
+        }),
+      });
+
+      if (!cartRes.ok) {
+        const err = await cartRes.json();
+        throw new Error(err.error || 'Failed to create cart');
+      }
+
+      const { cart } = await cartRes.json();
+      if (!cart?.id) throw new Error('Cart creation failed');
+
+      // Fire begin_checkout analytics
+      trackBeginCheckout([{
+        id: product.id,
+        name: product.title,
+        price: currentPrice,
+        currency: currentCurrency,
+        quantity: 1,
+        category: product.tags?.[0] ?? null,
+        brand,
+        variant: currentVariantTitle,
+      }]);
+
+      // Get checkout URL
+      const checkoutRes = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ cartId: cart.id }),
+      });
+
+      if (!checkoutRes.ok) {
+        const err = await checkoutRes.json();
+        throw new Error(err.error || 'Failed to start checkout');
+      }
+
+      const { checkoutUrl } = await checkoutRes.json();
+      if (!checkoutUrl) throw new Error('No checkout URL returned');
+
+      // Redirect to Shopify checkout
+      window.location.href = checkoutUrl;
+    } catch (e) {
+      setFeedback(e instanceof Error ? e.message : 'Error starting checkout');
+      setIsError(true);
+      setIsBuyingNow(false);
+    }
   };
 
   return (
@@ -268,43 +332,14 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
             )}
           </button>
 
-          {feedback && (
-            <div
-              className={`${
-                isError
-                  ? 'border-[hsl(var(--destructive))]/30 bg-[hsl(var(--destructive))]/10 text-[hsl(var(--destructive))]'
-                  : 'border-[hsl(var(--brand))]/30 bg-[hsl(var(--brand))]/10 text-[hsl(var(--brand))]'
-              } rounded-lg border px-4 py-3 text-sm font-medium`}
-              data-test-id="cart-feedback"
-            >
-              {feedback}
-            </div>
-          )}
-        </div>
-
-        {/* Trust Bar */}
-        <TrustBar />
-      </div>
-
-      {/* Sticky Mobile CTA */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/98 p-4 shadow-[0_-8px_16px_rgba(0,0,0,0.08)] backdrop-blur-lg md:hidden">
-        <div className="flex items-center gap-3">
-          <div className="flex flex-col">
-            <span className="text-xs text-[hsl(var(--muted-foreground))]">
-              Price
-            </span>
-            <span className="text-lg font-bold text-[hsl(var(--ink))]">
-              ${currentPrice ? Number(currentPrice).toFixed(2) : '0.00'}
-            </span>
-          </div>
           <button
             type="button"
-            className={`${buttonStyles.primary} flex-1 py-4 text-base font-bold shadow-lg disabled:cursor-not-allowed disabled:opacity-50 transition-all`}
-            disabled={isPending || !selectedVariant}
-            onClick={handleAddToCart}
-            data-test-id="add-to-cart-button-mobile"
+            className={`${buttonStyles.outline} w-full py-4 text-base font-bold disabled:opacity-50 disabled:cursor-not-allowed transition-all`}
+            disabled={isBuyingNow || isPending || !selectedVariant}
+            onClick={handleBuyNow}
+            data-test-id="buy-now-button"
           >
-            {isPending ? (
+            {isBuyingNow ? (
               <span className="flex items-center justify-center gap-2">
                 <svg
                   className="h-5 w-5 animate-spin"
@@ -325,10 +360,116 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
-                Adding...
+                Redirecting...
               </span>
             ) : (
-              'Add to Cart'
+              <span className="flex items-center justify-center gap-2">
+                <Zap className="h-5 w-5" aria-hidden="true" />
+                Buy Now
+              </span>
+            )}
+          </button>
+
+          {feedback && (
+            <div
+              className={`${
+                isError
+                  ? 'border-[hsl(var(--destructive))]/30 bg-[hsl(var(--destructive))]/10 text-[hsl(var(--destructive))]'
+                  : 'border-[hsl(var(--brand))]/30 bg-[hsl(var(--brand))]/10 text-[hsl(var(--brand))]'
+              } rounded-lg border px-4 py-3 text-sm font-medium`}
+              data-test-id="cart-feedback"
+            >
+              {feedback}
+            </div>
+          )}
+        </div>
+
+        {/* Trust Bar */}
+        <TrustBar />
+      </div>
+
+      {/* Sticky Mobile CTA */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/98 p-4 shadow-[0_-8px_16px_rgba(0,0,0,0.08)] backdrop-blur-lg md:hidden">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-3">
+            <div className="flex flex-col">
+              <span className="text-xs text-[hsl(var(--muted-foreground))]">
+                Price
+              </span>
+              <span className="text-lg font-bold text-[hsl(var(--ink))]">
+                ${currentPrice ? Number(currentPrice).toFixed(2) : '0.00'}
+              </span>
+            </div>
+            <button
+              type="button"
+              className={`${buttonStyles.primary} flex-1 py-4 text-base font-bold shadow-lg disabled:cursor-not-allowed disabled:opacity-50 transition-all`}
+              disabled={isPending || !selectedVariant}
+              onClick={handleAddToCart}
+              data-test-id="add-to-cart-button-mobile"
+            >
+              {isPending ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg
+                    className="h-5 w-5 animate-spin"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      className="opacity-25"
+                    ></circle>
+                    <path
+                      fill="currentColor"
+                      className="opacity-75"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Adding...
+                </span>
+              ) : (
+                'Add to Cart'
+              )}
+            </button>
+          </div>
+          <button
+            type="button"
+            className={`${buttonStyles.outline} w-full py-3 text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed transition-all`}
+            disabled={isBuyingNow || isPending || !selectedVariant}
+            onClick={handleBuyNow}
+            data-test-id="buy-now-button-mobile"
+          >
+            {isBuyingNow ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg
+                  className="h-4 w-4 animate-spin"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    className="opacity-25"
+                  ></circle>
+                  <path
+                    fill="currentColor"
+                    className="opacity-75"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Redirecting...
+              </span>
+            ) : (
+              <span className="flex items-center justify-center gap-2">
+                <Zap className="h-4 w-4" aria-hidden="true" />
+                Buy Now
+              </span>
             )}
           </button>
         </div>
@@ -341,7 +482,9 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
           price={currentPrice}
           currencyCode={currentCurrency}
           onAddToCart={handleAddToCart}
+          onBuyNow={handleBuyNow}
           isAdding={isPending}
+          isBuyingNow={isBuyingNow}
           showAfterScroll={500}
         />
       )}

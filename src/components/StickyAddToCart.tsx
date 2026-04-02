@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Zap } from 'lucide-react';
 import { buttonStyles } from '@/lib/ui';
 
 interface StickyAddToCartProps {
@@ -9,8 +9,10 @@ interface StickyAddToCartProps {
   price: string;
   currencyCode?: string;
   onAddToCart: () => void;
+  onBuyNow?: () => void;
   showAfterScroll?: number;
   isAdding?: boolean;
+  isBuyingNow?: boolean;
 }
 
 export default function StickyAddToCart({
@@ -18,8 +20,10 @@ export default function StickyAddToCart({
   price,
   currencyCode = 'USD',
   onAddToCart,
+  onBuyNow,
   showAfterScroll = 500,
   isAdding = false,
+  isBuyingNow = false,
 }: StickyAddToCartProps) {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -66,19 +70,35 @@ export default function StickyAddToCart({
               </p>
             </div>
 
-            {/* Add to Cart Button */}
-            <button
-              onClick={onAddToCart}
-              disabled={isAdding}
-              className={`${buttonStyles.primary} px-6 md:px-8 py-3 md:py-4 text-sm md:text-base font-bold shadow-lg hover:shadow-xl flex-shrink-0`}
-              aria-label={`Add ${productTitle} to cart`}
-            >
-              <ShoppingCart
-                className="h-4 w-4 md:h-5 md:w-5 mr-2"
-                aria-hidden="true"
-              />
-              {isAdding ? 'Adding...' : 'Add to Cart'}
-            </button>
+            {/* Action Buttons */}
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <button
+                onClick={onAddToCart}
+                disabled={isAdding || isBuyingNow}
+                className={`${buttonStyles.primary} px-6 md:px-8 py-3 md:py-4 text-sm md:text-base font-bold shadow-lg hover:shadow-xl`}
+                aria-label={`Add ${productTitle} to cart`}
+              >
+                <ShoppingCart
+                  className="h-4 w-4 md:h-5 md:w-5 mr-2"
+                  aria-hidden="true"
+                />
+                {isAdding ? 'Adding...' : 'Add to Cart'}
+              </button>
+              {onBuyNow && (
+                <button
+                  onClick={onBuyNow}
+                  disabled={isBuyingNow || isAdding}
+                  className={`${buttonStyles.outline} px-4 md:px-6 py-3 md:py-4 text-sm md:text-base font-bold`}
+                  aria-label={`Buy ${productTitle} now`}
+                >
+                  <Zap
+                    className="h-4 w-4 md:h-5 md:w-5 mr-1"
+                    aria-hidden="true"
+                  />
+                  {isBuyingNow ? 'Redirecting...' : 'Buy Now'}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
