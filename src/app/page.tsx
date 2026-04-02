@@ -8,7 +8,7 @@ import FeaturedHeroProduct from '@/components/FeaturedHeroProduct';
 import FeaturedCollections from '@/components/FeaturedCollections';
 import DeferredHydration from '@/components/DeferredHydration';
 
-import { absoluteUrl, jsonLd } from '@/lib/seo';
+import { absoluteUrl, generateWebsiteSchema, jsonLd } from '@/lib/seo';
 
 // Lazy load below-the-fold components to reduce initial JS bundle + TTI
 const CTASection = dynamic(() => import('@/components/CTASection'));
@@ -43,28 +43,8 @@ export const metadata: Metadata = {
   },
 };
 
-const organizationJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: 'Lab Essentials',
-  url: absoluteUrl('/'),
-  logo: absoluteUrl('/logo.svg'),
-  sameAs: ['https://www.facebook.com/labessentials'],
-};
-
-const websiteJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'Lab Essentials',
-  url: absoluteUrl('/'),
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: `${absoluteUrl('/search')}?q={search_term_string}`,
-    'query-input': 'required name=search_term_string',
-  },
-};
-
 export default async function HomePage() {
+  const websiteJsonLd = generateWebsiteSchema();
   let collectionSwitcherSection: React.ReactNode = null;
   let featuredHeroSection: React.ReactNode = null;
   let featuredCollectionsSection: React.ReactNode = null;
@@ -89,10 +69,6 @@ export default async function HomePage() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={jsonLd(organizationJsonLd)}
-      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={jsonLd(websiteJsonLd)}

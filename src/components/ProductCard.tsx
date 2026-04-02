@@ -4,6 +4,8 @@ import Link from 'next/link';
 import type { Product } from '@/lib/types';
 import { textStyles, buttonStyles } from '@/lib/ui';
 import { trackSelectItem } from '@/lib/analytics';
+import StarRating from '@/components/StarRating';
+import { getReviewsForProduct, getReviewSummary } from '@/lib/reviews';
 
 type ProductWithExtras = Product & {
   description?: string;
@@ -73,6 +75,10 @@ export default function ProductCard({
     }
   }
 
+  // Get review summary for star display
+  const productReviews = getReviewsForProduct(product.handle);
+  const reviewSummary = getReviewSummary(productReviews);
+
   const handleProductClick = () => {
     trackSelectItem(
       {
@@ -135,6 +141,17 @@ export default function ProductCard({
               </div>
             )}
           </div>
+
+          {/* Star Rating */}
+          {reviewSummary.totalCount > 0 && (
+            <div className="mt-2">
+              <StarRating
+                rating={reviewSummary.averageRating}
+                count={reviewSummary.totalCount}
+                size="sm"
+              />
+            </div>
+          )}
 
           {/* Key Features */}
           {features.length > 0 && (

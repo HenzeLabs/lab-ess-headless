@@ -12,6 +12,7 @@ import {
   stripHtml,
 } from '@/lib/seo';
 import { layout } from '@/lib/ui';
+import { getReviewsForProduct, getReviewSummary, generateReviewSchema } from '@/lib/reviews';
 import ProductViewTracker from '@/components/analytics/ProductViewTracker';
 import ProductInfoPanelClient from './ProductInfoPanelClient';
 import ProductImageGallery from '@/components/product/ProductImageGallery';
@@ -19,6 +20,7 @@ import ProductAccordions from '@/components/product/ProductAccordions';
 import TechnicalSummaryCard from '@/components/product/TechnicalSummaryCard';
 import ProductHighlights from '@/components/product/ProductHighlights';
 import ProductComparisonCTA from '@/components/product/ProductComparisonCTA';
+import ProductReviewsSection from '@/components/reviews/ProductReviewsSection';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { getFallbackProduct } from '@/lib/fallback/catalog';
 
@@ -142,7 +144,15 @@ export default async function ProductPage({
   };
   // ProductInfoPanel will be imported via a client wrapper
 
-  const productJsonLd = generateProductSchema(product);
+  // Reviews
+  const reviews = getReviewsForProduct(product.handle);
+  const reviewSummary = getReviewSummary(reviews);
+  const reviewSchemaData = generateReviewSchema(reviews, product.handle);
+
+  const baseProductJsonLd = generateProductSchema(product);
+  const productJsonLd = reviewSchemaData
+    ? { ...baseProductJsonLd, ...reviewSchemaData }
+    : baseProductJsonLd;
   const breadcrumbJsonLd = generateBreadcrumbSchema([
     {
       name: 'Home',
@@ -232,6 +242,8 @@ export default async function ProductPage({
                 variants: product.variants ?? { edges: [] },
                 descriptionHtml: product.descriptionHtml,
               }}
+              reviewCount={reviewSummary.totalCount}
+              averageRating={reviewSummary.averageRating}
             />
           </div>
         </div>
@@ -254,6 +266,15 @@ export default async function ProductPage({
         {/* Product Highlights Section */}
         <div className={`${layout.container} mt-8 md:mt-12`}>
           <ProductHighlights />
+        </div>
+
+        {/* Customer Reviews Section */}
+        <div className={`${layout.container} mt-12 md:mt-16`}>
+          <ProductReviewsSection
+            productHandle={product.handle}
+            reviews={reviews}
+            summary={reviewSummary}
+          />
         </div>
 
         {/* Bottom Section */}

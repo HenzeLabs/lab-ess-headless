@@ -3,18 +3,24 @@ import React from 'react';
 export default function StarRating({
   rating,
   count,
+  hideCount = false,
+  size = 'md',
 }: {
   rating: number;
   count: number;
+  hideCount?: boolean;
+  size?: 'sm' | 'md';
 }) {
+  const starSize = size === 'sm' ? 'h-4 w-4' : 'h-5 w-5';
+
   return (
     <div className="flex items-center gap-2">
       <div className="flex text-[hsl(var(--brand))]">
         {Array.from({ length: 5 }).map((_, i) => (
           <svg
             key={i}
-            className={`h-5 w-5 ${
-              i < rating
+            className={`${starSize} ${
+              i < Math.round(rating)
                 ? 'fill-[hsl(var(--brand))]'
                 : 'fill-[hsl(var(--muted))]'
             }`}
@@ -25,7 +31,9 @@ export default function StarRating({
           </svg>
         ))}
       </div>
-      <span className="text-sm text-muted-foreground">({count} reviews)</span>
+      {!hideCount && (
+        <span className="text-sm text-muted-foreground">({count} reviews)</span>
+      )}
     </div>
   );
 }
