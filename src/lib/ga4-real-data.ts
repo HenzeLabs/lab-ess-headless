@@ -5,8 +5,8 @@
 
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
 
-// Your GA4 property ID for G-7NR2JG1EDP
-// Property ID: 399540912 (from GA4 Admin → Property Settings)
+// GA4 property ID for Lab Essentials (measurement ID: G-QCSHJ4TDMY)
+// Property ID: 394300830 (from GA4 Admin → Property Settings)
 const GA4_PROPERTY_ID = process.env.GA4_PROPERTY_ID || '399540912';
 
 let analyticsDataClient: BetaAnalyticsDataClient | null = null;
