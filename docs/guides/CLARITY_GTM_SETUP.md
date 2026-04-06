@@ -221,7 +221,7 @@ If no data after 10 minutes:
 | Platform | ID | Load Method | Status |
 |----------|-----|-------------|---------|
 | **GTM** | GTM-WNG6Z9ZD | Direct script | ✅ Active |
-| **GA4** | G-QCSHJ4TDMY | Via GTM | ✅ Active |
+| **GA4** | G-7NR2JG1EDP | Via GTM | ✅ Active |
 | **Reddit** | a2_hwuo2umsdjch | Via GTM | ✅ Active |
 | **Taboola** | Official Tag | Via GTM | ✅ Active |
 | **Meta Pixel** | - | Via GTM | ✅ Active |

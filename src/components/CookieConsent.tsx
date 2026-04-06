@@ -60,9 +60,19 @@ export default function CookieConsent({ onConsentChange }: CookieConsentProps) {
     setIsVisible(false);
     onConsentChange?.(prefs);
 
-    // Trigger analytics initialization if consent given
+    // Update consent state via gtag
     if (prefs.analytics) {
       window.dispatchEvent(new CustomEvent('analytics-consent-granted'));
+    } else {
+      // Revoke US auto-grant if user explicitly rejected analytics
+      const win = window as typeof window & { gtag?: (...args: unknown[]) => void };
+      if (win.gtag) {
+        win.gtag('consent', 'update', {
+          analytics_storage: 'denied',
+          ad_storage: 'denied',
+          personalization_storage: 'denied',
+        });
+      }
     }
     if (prefs.marketing) {
       window.dispatchEvent(new CustomEvent('marketing-consent-granted'));

@@ -15,26 +15,8 @@ export default function AnalyticsWrapper() {
       __labAnalytics?: Record<string, unknown>;
     };
 
-    // Initialize dataLayer and gtag immediately (before GTM script loads)
-    win.dataLayer = win.dataLayer || [];
-    win.gtag =
-      win.gtag ||
-      function (...args) {
-        win.dataLayer = win.dataLayer || [];
-        win.dataLayer.push(args);
-      };
-
-    // Configure Consent Mode V2 - default to denied for GDPR compliance
-    // functionality_storage and security_storage stay granted (essential)
-    if (win.gtag) {
-      win.gtag('consent', 'default', {
-        ad_storage: 'denied',
-        analytics_storage: 'denied',
-        functionality_storage: 'granted',
-        personalization_storage: 'denied',
-        security_storage: 'granted',
-      });
-    }
+    // dataLayer and consent defaults are set inline in layout.tsx <head>
+    // before GTM loads — no need to initialize or set consent here.
 
     // Check if user already granted consent (returning visitor)
     const consentAlreadyGranted = hasAnalyticsConsent();
@@ -63,8 +45,8 @@ export default function AnalyticsWrapper() {
 
   return (
     <>
-      {/* GTM now loads inline in layout.tsx <head> for immediate execution */}
-      {/* This component initializes dataLayer and configures Consent Mode V2 */}
+      {/* Consent defaults + GTM load inline in layout.tsx <head> */}
+      {/* This component handles consent updates and lazy-loads analytics helpers */}
     </>
   );
 }

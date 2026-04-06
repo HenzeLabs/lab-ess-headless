@@ -108,6 +108,51 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://cdn.taboola.com" />
         <link rel="dns-prefetch" href="https://static.klaviyo.com" />
 
+        {/* Consent Mode V2 defaults — MUST run before GTM loads */}
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+
+              // Check if returning visitor already accepted analytics
+              var prefs = null;
+              try { prefs = JSON.parse(localStorage.getItem('cookie-preferences')); } catch(e) {}
+              var analyticsGranted = prefs && prefs.analytics === true;
+
+              // EEA countries: default denied (GDPR)
+              gtag('consent', 'default', {
+                ad_storage: 'denied',
+                analytics_storage: 'denied',
+                personalization_storage: 'denied',
+                functionality_storage: 'granted',
+                security_storage: 'granted',
+                region: ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','GB','IS','LI','NO'],
+                wait_for_update: 500
+              });
+
+              // Rest of world (US): analytics granted by default
+              gtag('consent', 'default', {
+                ad_storage: 'denied',
+                analytics_storage: 'granted',
+                functionality_storage: 'granted',
+                personalization_storage: 'denied',
+                security_storage: 'granted'
+              });
+
+              // Returning visitor who previously accepted — upgrade immediately
+              if (analyticsGranted) {
+                gtag('consent', 'update', {
+                  ad_storage: 'granted',
+                  analytics_storage: 'granted',
+                  personalization_storage: 'granted'
+                });
+              }
+            `,
+          }}
+        />
+
         {/* GTM - Inline for immediate execution before React hydration */}
         <script
           suppressHydrationWarning
