@@ -22,7 +22,7 @@ console.log(document.querySelector('script[src*="googletagmanager.com/gtm.js"]')
 
 ### 2. GA4 Configuration
 
-**Measurement ID:** `G-7NR2JG1EDP` (configured in GTM)
+**Measurement ID:** `G-QCSHJ4TDMY` (configured in GTM)
 
 #### Required Events & Parameters
 

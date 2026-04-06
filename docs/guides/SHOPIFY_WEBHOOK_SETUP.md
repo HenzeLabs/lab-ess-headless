@@ -208,7 +208,7 @@ await sendMetaPurchase(order);  // Add this line
 
 ### Events not appearing in GA4
 - Check Vercel logs for successful webhook processing
-- Verify GA4 Measurement ID is correct (`G-7NR2JG1EDP`)
+- Verify GA4 Measurement ID is correct (`G-QCSHJ4TDMY`)
 - Wait 24-48 hours for data to appear in standard reports (use DebugView for real-time)
 
 ### Webhook not firing
