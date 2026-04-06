@@ -71,3 +71,12 @@ migrate-*.sh
 # Lighthouse CI artifacts (these are directories, not log files!)
 static-audit-details.log/
 unused-empty-todo-parse.log/
+
+# Lighthouse CI
+.lighthouseci/
+
+# TestSprite
+testsprite_tests/
+
+# Quiz testing env
+quiz-testing/.env
